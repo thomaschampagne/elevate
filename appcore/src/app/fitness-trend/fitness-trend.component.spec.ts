@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FitnessTrendComponent } from "./fitness-trend.component";
 import { SharedModule } from "../shared/shared.module";
 import { CoreModule } from "../core/core.module";
-import { TEST_SYNCED_ACTIVITIES } from "../../shared-fixtures/activities-2015.fixture";
+import ACTIVITIES_FIXTURES from "../../shared-fixtures/activities-2015.fixture.json";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { FitnessTrendModule } from "./fitness-trend.module";
@@ -12,13 +12,13 @@ import { ActivityService } from "../shared/services/activity/activity.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { Injectable } from "@angular/core";
 import { AppService } from "../shared/services/app-service/app.service";
-import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import { IPC_TUNNEL_SERVICE } from "../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../desktop/ipc/ipc-renderer-tunnel-service.mock";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("FitnessTrendComponent", () => {
   let activityService: ActivityService;
@@ -46,9 +46,9 @@ describe("FitnessTrendComponent", () => {
     syncService = TestBed.inject(SyncService);
 
     // Mocking
-    spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+    spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(ACTIVITIES_FIXTURES)));
     spyOn(userSettingsService, "fetch").and.returnValue(
-      Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+      Promise.resolve(_.cloneDeep(DesktopUserSettings.DEFAULT_MODEL))
     );
 
     spyOn(syncService, "getSyncState").and.returnValue(Promise.resolve(SyncState.SYNCED));

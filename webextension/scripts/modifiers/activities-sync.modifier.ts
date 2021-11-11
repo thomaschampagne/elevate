@@ -1,13 +1,13 @@
 import { ExtensionEnv } from "../../config/extension-env";
 import { ActivitiesSynchronize } from "../processors/activities-synchronize";
-import { SyncResultModel } from "@elevate/shared/models";
 import { SyncNotifyModel } from "../models/sync/sync-notify.model";
 import { AbstractModifier } from "./abstract.modifier";
 import { AppStorageUsage } from "../models/app-storage-usage.model";
 import { BrowserStorageType } from "../models/browser-storage-type.enum";
-import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
 import { BrowserStorage } from "../browser-storage";
-import { Time } from "@elevate/shared/tools";
+import { SyncResultModel } from "@elevate/shared/models/sync/sync-result.model";
+import { DistributedEndpointsResolver } from "@elevate/shared/resolvers/distributed-endpoints.resolver";
+import { Time } from "@elevate/shared/tools/time";
 
 export class ActivitiesSyncModifier extends AbstractModifier {
   public closeWindowIntervalId = -1;
@@ -58,7 +58,7 @@ export class ActivitiesSyncModifier extends AbstractModifier {
     html += "        </div>";
     html += '        <div id="syncStatusError" style="display: none;">';
     html +=
-      "           <span style='color: crimson; font-weight: 600;'>Please continue your synchronization in 4~5 hours: you have reached the quota of activities which can be synced at the moment. Of course already synced activities will not be re-synced on next sync.<br/><br/> This limit is intended to avoid Strava servers errors or potential overload.</span>";
+      "           <span><strong>This message is not an error:</strong> please continue your synchronization in 4~5 hours. Indeed, you actually reached the quota of activities which can be synced from Strava servers at the moment. Of course already synced activities will not be re-synced on next sync.<br/><br/> This limit is intended to avoid Strava servers errors or potential overload.</span>";
     html += "        </div>";
     html += '       <div id="syncInfos">';
     html += '           <div style="padding-bottom: 10px;" id="totalActivities"></div>';

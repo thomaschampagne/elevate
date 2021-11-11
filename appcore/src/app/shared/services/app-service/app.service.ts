@@ -2,10 +2,10 @@ import { Inject } from "@angular/core";
 import { ActivityService } from "../activity/activity.service";
 import { SyncService } from "../sync/sync.service";
 import { SyncState } from "../sync/sync-state.enum";
-import { sleep } from "@elevate/shared/tools";
 import { Observable, Subject } from "rxjs";
 import { filter, map } from "rxjs/operators";
 import { Theme } from "../../enums/theme.enum";
+import { sleep } from "@elevate/shared/tools/sleep";
 
 export abstract class AppService {
   public static readonly VERIFY_ATHLETE_HISTORY_COMPLIANCE_TIMEOUT: number = 1500;
@@ -19,7 +19,7 @@ export abstract class AppService {
 
   protected constructor(
     @Inject(ActivityService) protected readonly activityService: ActivityService,
-    @Inject(SyncService) private readonly syncService: SyncService<any>
+    @Inject(SyncService) public readonly syncService: SyncService<any>
   ) {
     this.themeChanges$ = new Subject<Theme>();
 

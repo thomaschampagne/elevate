@@ -1,7 +1,9 @@
 import { container } from "tsyringe";
 import { UpdateHandler } from "./update-handler";
-import { Arch, Platform } from "@elevate/shared/enums";
-import { AutoUpdateNotify, GhAsset, GhRelease, StaticUpdateNotify } from "@elevate/shared/models";
+import { Platform } from "@elevate/shared/enums/platform.enum";
+import { Arch } from "@elevate/shared/enums/arch";
+import { GhAsset, GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { AutoUpdateNotify, StaticUpdateNotify } from "@elevate/shared/models/updates/update-notify";
 
 describe("UpdateHandler", () => {
   let updateHandler: UpdateHandler;

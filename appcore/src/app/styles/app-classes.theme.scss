@@ -46,6 +46,22 @@
     border-radius: 5px;
   }
 
+  .note-padding {
+    padding: 5px 15px;
+  }
+
+  .primary-note {
+    @extend .primary-bg, .note-padding;
+  }
+
+  .accent-note {
+    @extend .accent-bg, .note-padding;
+  }
+
+  .warn-note {
+    @extend .warn-bg, .note-padding;
+  }
+
   // Style of custom dual-split-button
   $border-color: mat-color($foreground, divider);
 

@@ -11,7 +11,6 @@ import { HeartRateImpulseMode } from "./shared/enums/heart-rate-impulse-mode.enu
 import { AppError } from "../shared/models/app-error.model";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { FitnessTrendWelcomeDialogComponent } from "./fitness-trend-welcome-dialog/fitness-trend-welcome-dialog.component";
 import { FitnessTrendConfigModel } from "./shared/models/fitness-trend-config.model";
 import { FitnessTrendInputsComponent } from "./fitness-trend-inputs/fitness-trend-inputs.component";
 import { FitnessTrendConfigDialogData } from "./shared/models/fitness-trend-config-dialog-data.model";
@@ -66,7 +65,7 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
   public isEBikeRidesEnabled: boolean;
   public skipActivityTypes: string[] = [];
   public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
-  public areSyncedActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
+  public areActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
   public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
   public historyChangesSub: Subscription;
 
@@ -237,9 +236,9 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
       .then(
         (fitnessTrend: DayFitnessTrendModel[]) => {
           this.fitnessTrend = fitnessTrend;
-          this.areSyncedActivitiesCompliant = !_.isEmpty(this.fitnessTrend);
+          this.areActivitiesCompliant = !_.isEmpty(this.fitnessTrend);
 
-          if (this.areSyncedActivitiesCompliant) {
+          if (this.areActivitiesCompliant) {
             this.updateDateRangeAndPeriods();
 
             const lastDayFitnessTrendModel = _.findLast(
@@ -252,8 +251,6 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
             this.lastFitnessActiveDate =
               lastDayFitnessTrendModel && lastDayFitnessTrendModel.date ? lastDayFitnessTrendModel.date : null;
 
-            this.showFitnessWelcomeDialog();
-
             return Promise.resolve();
           }
         },
@@ -264,7 +261,7 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
             appError.code === AppError.FT_NO_ACTIVITIES ||
             appError.code === AppError.FT_ALL_ACTIVITIES_FILTERED
           ) {
-            this.areSyncedActivitiesCompliant = false;
+            this.areActivitiesCompliant = false;
           } else if (appError.code === AppError.FT_NO_ACTIVITY_ATHLETE_MODEL) {
             this.isReSyncRequired = true;
           } else {
@@ -421,23 +418,6 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
       key: !_.isEmpty(lastPeriodViewedSaved) ? lastPeriodViewedSaved : FitnessTrendComponent.DEFAULT_LAST_PERIOD_KEY
     });
     this.lastPeriodViewed = this.periodViewed as LastPeriodModel;
-  }
-
-  public showFitnessWelcomeDialog(): void {
-    const show: boolean = _.isEmpty(
-      localStorage.getItem(FitnessTrendWelcomeDialogComponent.LS_HIDE_FITNESS_WELCOME_DIALOG)
-    );
-
-    if (show) {
-      _.delay(
-        () =>
-          this.dialog.open(FitnessTrendWelcomeDialogComponent, {
-            minWidth: FitnessTrendWelcomeDialogComponent.MIN_WIDTH,
-            maxWidth: FitnessTrendWelcomeDialogComponent.MAX_WIDTH
-          }),
-        1000
-      );
-    }
   }
 
   /**

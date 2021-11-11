@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
-import { DeflatedActivityStreams } from "@elevate/shared/models";
 import { CollectionDef } from "../../data-store/collection-def";
+import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
 
 @Injectable()
 export class StreamsDao extends BaseDao<DeflatedActivityStreams> {

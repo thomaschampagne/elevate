@@ -2,9 +2,10 @@ import { Inject, Injectable } from "@angular/core";
 import { UserSettingsService } from "../user-settings.service";
 import { UserSettingsDao } from "../../../dao/user-settings/user-settings.dao";
 import { LoggerService } from "../../logging/logger.service";
-import { UserSettings, ZoneModel } from "@elevate/shared/models";
 import { ZoneDefinitionModel } from "../../../models/zone-definition.model";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 @Injectable()
 export class ExtensionUserSettingsService extends UserSettingsService {
@@ -27,8 +28,6 @@ export class ExtensionUserSettingsService extends UserSettingsService {
    * Clear local storage on next reload
    */
   public clearLocalStorageOnNextLoad(): Promise<void> {
-    return this.updateOption<ExtensionUserSettingsModel>("localStorageMustBeCleared", true).then(() =>
-      Promise.resolve()
-    );
+    return this.updateOption<ExtensionUserSettings>("localStorageMustBeCleared", true).then(() => Promise.resolve());
   }
 }

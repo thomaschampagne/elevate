@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { HelpComponent } from "./help.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";

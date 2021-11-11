@@ -4,6 +4,7 @@ import { environment } from "../../environments/environment";
 import semver from "semver/preload";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { ReleaseNoteService } from "./release-note.service";
+import { AppPackage } from "../app-package";
 
 interface ReleaseNote {
   version: string;
@@ -18,6 +19,8 @@ interface ReleaseNote {
 })
 export class ReleasesNotesComponent implements OnInit {
   public releaseNotes: ReleaseNote[];
+
+  public readonly repositoryUrl: string = AppPackage.getRepositoryUrl();
 
   constructor(
     @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,

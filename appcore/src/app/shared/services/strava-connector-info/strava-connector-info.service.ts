@@ -1,10 +1,13 @@
 import { Inject, Injectable } from "@angular/core";
 import { StravaConnectorInfoDao } from "../../dao/strava-connector-info/strava-connector-info.dao";
-import { StravaConnectorInfo, StravaCredentialsUpdateSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { filter } from "rxjs/operators";
 import _ from "lodash";
 import { LoggerService } from "../logging/logger.service";
 import { Subject } from "rxjs";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { StravaCredentialsUpdateSyncEvent } from "@elevate/shared/sync/events/strava-credentials-update-sync.event";
 
 @Injectable()
 export class StravaConnectorInfoService {

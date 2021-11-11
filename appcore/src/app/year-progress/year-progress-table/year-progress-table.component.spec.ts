@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { YearProgressTableComponent } from "./year-progress-table.component";
 import { SharedModule } from "../../shared/shared.module";
 import { CoreModule } from "../../core/core.module";
@@ -12,22 +11,22 @@ import { ProgressAtDayModel } from "../shared/models/progress-at-date.model";
 import { ProgressionAtDayRow } from "./models/progression-at-day-row.model";
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import { DeltaType } from "./models/delta-type.enum";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { YearProgressModule } from "../year-progress.module";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
-import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 import { IpcRendererTunnelServiceMock } from "../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 describe("YearProgressTableComponent", () => {
   const isMetric = true;
   let component: YearProgressTableComponent;
   let fixture: ComponentFixture<YearProgressTableComponent>;
   let yearProgressService: YearProgressService;
-  let syncedActivityModels: SyncedActivityModel[];
+  let activities: Activity[];
 
   beforeEach(done => {
     TestBed.configureTestingModule({
@@ -45,7 +44,7 @@ describe("YearProgressTableComponent", () => {
   });
 
   beforeEach(done => {
-    syncedActivityModels = YearProgressActivitiesFixture.provide();
+    activities = YearProgressActivitiesFixture.provide();
 
     fixture = TestBed.createComponent(YearProgressTableComponent);
     component = fixture.componentInstance;
@@ -65,10 +64,10 @@ describe("YearProgressTableComponent", () => {
       true
     );
 
-    component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, syncedActivityModels);
+    component.yearProgressions = yearProgressService.progressions(progressConfig, isMetric, activities);
 
-    // Inject selected years (here all from syncedActivityModels)
-    component.selectedYears = yearProgressService.availableYears(syncedActivityModels);
+    // Inject selected years (here all from activities)
+    component.selectedYears = yearProgressService.availableYears(activities);
 
     // Inject progress type
     component.selectedProgressType = new YearProgressTypeModel(

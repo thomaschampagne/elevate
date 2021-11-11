@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@angular/core";
 import { AthleteDao } from "../../../dao/athlete/athlete.dao";
 import { AthleteService } from "../athlete.service";
-import { AthleteModel } from "@elevate/shared/models";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { ExtensionUserSettingsService } from "../../user-settings/extension/extension-user-settings.service";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Injectable()
 export class ExtensionAthleteService extends AthleteService {

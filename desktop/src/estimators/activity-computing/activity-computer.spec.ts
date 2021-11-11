@@ -1,17 +1,21 @@
-import { AnalysisDataModel, AthleteSettingsModel, AthleteSnapshotModel, Gender, Streams } from "@elevate/shared/models";
-import { ElevateSport } from "@elevate/shared/enums";
-import { ActivityComputer } from "@elevate/shared/sync";
-import { Time } from "@elevate/shared/tools";
+import { Time } from "@elevate/shared/tools/time";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 describe("ActivityComputer", () => {
   describe("compute scores", () => {
-    let _ATHLETE_MODEL_SNAP_: AthleteSnapshotModel;
+    let _ATHLETE_MODEL_SNAP_: AthleteSnapshot;
 
     beforeEach(done => {
-      _ATHLETE_MODEL_SNAP_ = new AthleteSnapshotModel(
+      _ATHLETE_MODEL_SNAP_ = new AthleteSnapshot(
         Gender.MEN,
         30,
-        new AthleteSettingsModel(
+        new AthleteSettings(
           190,
           60,
           {
@@ -125,13 +129,13 @@ describe("ActivityComputer", () => {
   });
 
   describe("manage lthr preferences", () => {
-    let _ATHLETE_MODEL_SNAP_: AthleteSnapshotModel;
+    let _ATHLETE_MODEL_SNAP_: AthleteSnapshot;
 
     beforeEach(done => {
-      _ATHLETE_MODEL_SNAP_ = new AthleteSnapshotModel(
+      _ATHLETE_MODEL_SNAP_ = new AthleteSnapshot(
         Gender.MEN,
         30,
-        new AthleteSettingsModel(
+        new AthleteSettings(
           190,
           60,
           {
@@ -384,13 +388,13 @@ describe("ActivityComputer", () => {
     let movingTime = 100;
     let elapsedTime = 100;
 
-    let analysisDataModel: AnalysisDataModel;
-    let athleteSettingsModel: AthleteSettingsModel;
+    let activityStats: ActivityStats;
+    let athleteSettingsModel: AthleteSettings;
     let streams: Streams;
 
     beforeEach(done => {
-      analysisDataModel = new AnalysisDataModel();
-      athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
+      activityStats = new ActivityStats();
+      athleteSettingsModel = AthleteSettings.DEFAULT_MODEL;
       streams = new Streams();
       done();
     });
@@ -409,7 +413,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               cyclingType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -432,7 +436,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               cyclingType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -455,7 +459,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               cyclingType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -478,7 +482,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               cyclingType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -503,7 +507,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               runningType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -526,7 +530,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               runningType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -549,7 +553,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               runningType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -572,7 +576,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               runningType,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -596,7 +600,7 @@ describe("ActivityComputer", () => {
             movingTime,
             elapsedTime,
             type,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -621,7 +625,7 @@ describe("ActivityComputer", () => {
             movingTime,
             elapsedTime,
             type,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -641,7 +645,7 @@ describe("ActivityComputer", () => {
               movingTime,
               elapsedTime,
               type,
-              analysisDataModel,
+              activityStats,
               athleteSettingsModel,
               streams
             );
@@ -668,12 +672,14 @@ describe("ActivityComputer", () => {
           athleteSettingsModel.cyclingFtp = null;
           athleteSettingsModel.runningFtp = null;
           athleteSettingsModel.swimFtp = null;
-          analysisDataModel = {
-            heartRateData: {
-              HRSS: 100,
-              TRIMP: 100
+          activityStats = {
+            scores: {
+              stress: {
+                hrss: 100,
+                trimp: 100
+              }
             }
-          } as AnalysisDataModel;
+          } as ActivityStats;
 
           // When
           const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -681,7 +687,7 @@ describe("ActivityComputer", () => {
             movingTime,
             elapsedTime,
             type,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );

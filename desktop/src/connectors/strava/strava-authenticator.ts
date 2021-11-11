@@ -1,13 +1,12 @@
 import http from "http";
 import queryString from "querystring";
 import { app, BrowserWindow } from "electron";
-import { HttpCodes } from "typed-rest-client/HttpClient";
 import { inject, singleton } from "tsyringe";
-import { HttpClient } from "../../clients/http.client";
 import _ from "lodash";
 import { Logger } from "../../logger";
 import { Subject } from "rxjs";
 import pDefer from "p-defer";
+import { HttpClient } from "../../clients/http.client";
 
 @singleton()
 export class StravaAuthenticator {
@@ -108,12 +107,12 @@ export class StravaAuthenticator {
 
   public exchangeForTokens(body: any, callback: (error, body: any) => void): void {
     this.httpClient
-      .post(StravaAuthenticator.TOKEN_URL, queryString.stringify(body))
+      .post(StravaAuthenticator.TOKEN_URL, body)
       .then(response => {
-        return response.message.statusCode === HttpCodes.OK ? response.readBody() : Promise.reject(response.message);
+        return Promise.resolve(response.data);
       })
       .then(bodyResponse => {
-        callback(null, JSON.parse(bodyResponse));
+        callback(null, bodyResponse);
       })
       .catch((error: http.IncomingMessage) => {
         callback(error, null);

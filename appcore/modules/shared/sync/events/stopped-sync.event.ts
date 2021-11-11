@@ -1,6 +1,6 @@
 import { SyncEventType } from "./sync-event-type";
-import { ConnectorType } from "../connectors";
 import { SyncEvent } from "./sync.event";
+import { ConnectorType } from "../connectors/connector-type.enum";
 
 export class StoppedSyncEvent extends SyncEvent {
   constructor(fromConnectorType: ConnectorType, description: string = null) {

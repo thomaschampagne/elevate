@@ -1,9 +1,9 @@
 import { TestBed } from "@angular/core/testing";
-
 import { ReleaseNoteService } from "./release-note.service";
-import { BuildTarget } from "@elevate/shared/enums";
+
 import { ReleasesNotesModule } from "./releases-notes.module";
-import { GhRelease } from "@elevate/shared/models";
+import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 
 describe("ReleaseNoteService", () => {
   let service: ReleaseNoteService;

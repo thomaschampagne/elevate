@@ -1,10 +1,14 @@
 import _ from "lodash";
 import { Helper } from "../helper";
-import { ActivityInfoModel, ActivitySourceDataModel, Gender, Streams, UserSettings } from "@elevate/shared/models";
 import { AbstractModifier } from "./abstract.modifier";
 import { VacuumProcessor } from "../processors/vacuum-processor";
-import { Time } from "@elevate/shared/tools";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ActivityEssentials } from "@elevate/shared/models/activity-data/activity-essentials.model";
+import { Time } from "@elevate/shared/tools/time";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 declare let L: any; // Injected by strava.com
 
@@ -414,7 +418,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
   private streams: Streams;
   private vacuumProcessor: VacuumProcessor;
   private activityInfo: ActivityInfoModel;
-  private userSettings: ExtensionUserSettingsModel;
+  private userSettings: ExtensionUserSettings;
   private readonly splitsConfiguration: any;
   private readonly saveSplitsConfigurationMethod: Function;
   private distanceUnit: number;
@@ -423,7 +427,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
   constructor(
     vacuumProcessor: VacuumProcessor,
     activityInfo: ActivityInfoModel,
-    userSettings: ExtensionUserSettingsModel,
+    userSettings: ExtensionUserSettings,
     splitsConfiguration: any,
     saveSplitsConfigrationMethod: Function
   ) {
@@ -506,7 +510,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
       this.vacuumProcessor.getActivityStream(
         this.activityInfo,
         (
-          activitySourceData: ActivitySourceDataModel,
+          activityEssentials: ActivityEssentials,
           streams: Streams,
           athleteWeight: number,
           athleteGender: Gender,

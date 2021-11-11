@@ -5,12 +5,14 @@ import { ZONE_DEFINITIONS } from "./zone-definitions";
 import { ZonesService } from "./shared/zones.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutes } from "../shared/models/app-routes";
-import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ZoneType } from "@elevate/shared/enums";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @Component({
   selector: "app-zones-settings",
@@ -41,7 +43,7 @@ export class ZonesSettingsComponent implements OnInit, OnDestroy {
     // Check zoneValue provided in URL
     this.routeParamsSubscription = this.route.params.subscribe(routeParams => {
       // Load user zones config
-      this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+      this.userSettingsService.fetch().then((userSettings: BaseUserSettings) => {
         // Load user zones data
         this.userZonesModel = userSettings.zones;
 

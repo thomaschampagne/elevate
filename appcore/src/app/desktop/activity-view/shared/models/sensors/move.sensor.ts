@@ -1,15 +1,18 @@
-import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
 import { Sensor } from "./sensor.model";
-import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
-import { Constant } from "@elevate/shared/constants";
 import _ from "lodash";
-import { Movement, Time } from "@elevate/shared/tools";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { ActivityStats, Peaks } from "@elevate/shared/models/sync/activity.model";
+import { Movement } from "@elevate/shared/tools/movement";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Constant } from "@elevate/shared/constants/constant";
+import { Time } from "@elevate/shared/tools/time";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
 
 export abstract class MoveSensor extends Sensor {
   public defaultRoundDecimals = 1;
   public color = "#52bdff";
   public streamKey: keyof Streams = "velocity_smooth";
-  public peaksPath: [keyof AnalysisDataModel, keyof PeaksData] = ["speedData", "peaks"];
+  public peaksPath: [keyof ActivityStats, keyof Peaks] = ["speed", "peaks"];
 }
 
 export class SpeedSensor extends MoveSensor {
@@ -39,8 +42,12 @@ export class SpeedSensor extends MoveSensor {
       : zoneBoundValue;
   }
 
-  public fromStatsConvert(kphStatValue: number, measureSystem: MeasureSystem, roundDecimals?: number): number | string {
-    const speed = kphStatValue * (measureSystem === MeasureSystem.IMPERIAL ? Constant.KM_TO_MILE_FACTOR : 1);
+  public fromStatsConvert(
+    statValue: number | string,
+    measureSystem: MeasureSystem,
+    roundDecimals: number = this.defaultRoundDecimals
+  ): number | string {
+    const speed = (statValue as number) * (measureSystem === MeasureSystem.IMPERIAL ? Constant.KM_TO_MILE_FACTOR : 1);
     return Number.isFinite(roundDecimals) ? _.round(speed, roundDecimals) : speed;
   }
 }
@@ -88,13 +95,27 @@ export class PaceSensor extends MoveSensor {
   }
 
   public fromStatsConvert(
-    paceAsSeconds: number,
+    statValue: number | string,
     measureSystem: MeasureSystem,
-    roundDecimals?: number
+    roundDecimals: number = this.defaultRoundDecimals
   ): number | string {
+    const paceAsSeconds = statValue as number;
     const systemConvertedZoneBoundValue =
       measureSystem === MeasureSystem.IMPERIAL ? _.round(paceAsSeconds / Constant.KM_TO_MILE_FACTOR, 1) : paceAsSeconds;
     return Time.secToMilitary(systemConvertedZoneBoundValue, true);
+  }
+}
+
+export class GradeAdjustedPaceSensor extends PaceSensor {
+  public static readonly NAME: string = "Grade Adj. Pace";
+  public static readonly DEFAULT: GradeAdjustedPaceSensor = new GradeAdjustedPaceSensor();
+
+  public name = GradeAdjustedPaceSensor.NAME;
+  public color = "#966bff";
+
+  constructor() {
+    super();
+    this.streamKey = "grade_adjusted_speed";
   }
 }
 
@@ -124,7 +145,12 @@ export class SwimmingPaceSensor extends PaceSensor {
     }
   }
 
-  public fromStatsConvert(secondsPerKm: number, measureSystem: MeasureSystem, roundDecimals?: number): number | string {
+  public fromStatsConvert(
+    statValue: number | string,
+    measureSystem: MeasureSystem,
+    roundDecimals: number = this.defaultRoundDecimals
+  ): number | string {
+    const secondsPerKm = statValue as number;
     const secondsPer100m = (secondsPerKm / 1000) * 100;
     return Time.secToMilitary(
       measureSystem === MeasureSystem.IMPERIAL ? secondsPer100m * Constant.METER_TO_YARD_FACTOR : secondsPer100m,

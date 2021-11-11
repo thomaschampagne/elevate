@@ -1,21 +1,20 @@
+// tslint:disable:no-console
 import _ from "lodash";
 import $ from "jquery";
 import { Helper } from "../../helper";
-import {
-  ActivityInfoModel,
-  AnalysisDataModel,
-  AthleteSnapshotModel,
-  SpeedUnitDataModel,
-  UserSettings
-} from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractDataView } from "./views/abstract-data.view";
 import { FeaturedDataView } from "./views/featured-data.view";
 import { HeaderView } from "./views/header.view";
 import { HeartRateDataView } from "./views/heart-rate-data.view";
-import { Time } from "@elevate/shared/tools";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { SpeedUnitDataModel } from "@elevate/shared/models/activity-data/speed-unit-data.model";
+import { Time } from "@elevate/shared/tools/time";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export abstract class AbstractExtendedDataModifier {
   public static TYPE_ACTIVITY = 0;
@@ -24,12 +23,13 @@ export abstract class AbstractExtendedDataModifier {
   protected activityProcessor: ActivityProcessor;
   protected activityType: string;
   protected appResources: AppResourcesModel;
-  protected userSettings: ExtensionUserSettingsModel;
-  protected athleteSnapshot: AthleteSnapshotModel;
+  protected userSettings: ExtensionUserSettings;
+  protected athleteSnapshot: AthleteSnapshot;
   protected activityInfo: ActivityInfoModel;
   protected speedUnitsData: SpeedUnitDataModel;
   protected type: number;
-  protected analysisData: AnalysisDataModel;
+  protected stats: ActivityStats;
+  protected hasPowerMeter: boolean;
   protected summaryGrid: JQuery;
   protected segmentEffortButtonId: number;
   protected content: string;
@@ -39,7 +39,7 @@ export abstract class AbstractExtendedDataModifier {
     activityProcessor: ActivityProcessor,
     activityInfo: ActivityInfoModel,
     appResources: AppResourcesModel,
-    userSettings: ExtensionUserSettingsModel,
+    userSettings: ExtensionUserSettings,
     type: number
   ) {
     this.activityProcessor = activityProcessor;
@@ -57,9 +57,10 @@ export abstract class AbstractExtendedDataModifier {
 
     // Getting data to display at least summary panel. Cache will be normally used next if user click 'Show extended stats' in ACTIVITY mode
     this.getFullAnalysisData().then(
-      (result: { athleteSnapshot: AthleteSnapshotModel; analysisData: AnalysisDataModel }) => {
+      (result: { athleteSnapshot: AthleteSnapshot; stats: ActivityStats; hasPowerMeter: boolean }) => {
         this.athleteSnapshot = result.athleteSnapshot;
-        this.analysisData = result.analysisData;
+        this.stats = result.stats;
+        this.hasPowerMeter = result.hasPowerMeter;
 
         if (this.type === AbstractExtendedDataModifier.TYPE_ACTIVITY) {
           this.placeSummaryPanel(() => {
@@ -121,8 +122,8 @@ export abstract class AbstractExtendedDataModifier {
   protected insertContentSummaryGridContent(): void {
     // Insert summary data
     let moveRatio = "-";
-    if (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) {
-      moveRatio = this.printNumber(this.analysisData.moveRatio, 2);
+    if (this.stats.moveRatio && this.userSettings.displayActivityRatio) {
+      moveRatio = this.printNumber(this.stats.moveRatio, 2);
     }
     this.insertContentAtGridPosition(0, 0, moveRatio, "Move Ratio", "", "displayActivityRatio");
 
@@ -134,27 +135,33 @@ export abstract class AbstractExtendedDataModifier {
     let activityHeartRateReserve = "-";
     let activityHeartRateReserveUnit = "";
 
-    if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
-      trainingImpulse =
-        this.printNumber(this.analysisData.heartRateData.TRIMP) +
-        ' <span class="summarySubGridTitle">(' +
-        this.printNumber(this.analysisData.heartRateData.TRIMPPerHour, 1) +
-        " / hour)</span>";
-      hrss =
-        this.printNumber(this.analysisData.heartRateData.HRSS) +
-        ' <span class="summarySubGridTitle">(' +
-        this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1) +
-        " / hour)</span>";
-      activityHeartRateReserve = this.printNumber(this.analysisData.heartRateData.activityHeartRateReserve);
-      if (_.isNumber(this.analysisData.heartRateData.best20min)) {
-        best20minHr = this.printNumber(this.analysisData.heartRateData.best20min);
+    if (this.stats.heartRate && this.userSettings.displayAdvancedHrData) {
+      if (this.stats.scores?.stress?.trimp) {
+        trainingImpulse =
+          this.printNumber(this.stats.scores.stress.trimp) +
+          ' <span class="summarySubGridTitle">(' +
+          this.printNumber(this.stats.scores.stress.trimpPerHour, 1) +
+          " / hour)</span>";
+      }
+
+      if (this.stats.scores?.stress?.hrss) {
+        hrss =
+          this.printNumber(this.stats.scores.stress.hrss) +
+          ' <span class="summarySubGridTitle">(' +
+          this.printNumber(this.stats.scores.stress.hrssPerHour, 1) +
+          " / hour)</span>";
+      }
+
+      activityHeartRateReserve = this.printNumber(this.stats.heartRate.avgReserve);
+      if (_.isNumber(this.stats.heartRate.best20min)) {
+        best20minHr = this.printNumber(this.stats.heartRate.best20min);
         best20minHrUnit = "bpm";
       }
       activityHeartRateReserveUnit =
         '%  <span class="summarySubGridTitle">(Max: ' +
-        this.printNumber(this.analysisData.heartRateData.activityHeartRateReserveMax) +
+        this.printNumber(this.stats.heartRate.maxReserve) +
         "% @ " +
-        this.analysisData.heartRateData.maxHeartRate +
+        this.stats.heartRate.max +
         "bpm)</span>";
     }
 
@@ -180,14 +187,11 @@ export abstract class AbstractExtendedDataModifier {
     // ...
     let climbTime = "-";
     let climbTimeExtra = "";
-    if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-      climbTime = Time.secToMilitary(this.analysisData.gradeData.upFlatDownInSeconds.up);
+    if (this.stats.grade && this.userSettings.displayAdvancedGradeData) {
+      climbTime = Time.secToMilitary(this.stats.grade.slopeTime.up);
       climbTimeExtra =
         '<span class="summarySubGridTitle">(' +
-        this.printNumber(
-          (this.analysisData.gradeData.upFlatDownInSeconds.up / this.analysisData.gradeData.upFlatDownInSeconds.total) *
-            100
-        ) +
+        this.printNumber((this.stats.grade.slopeTime.up / this.stats.grade.slopeTime.total) * 100) +
         "% of time)</span>";
     }
 
@@ -207,12 +211,12 @@ export abstract class AbstractExtendedDataModifier {
       .each(() => {
         $("#extendedStatsButton").click(() => {
           this.getFullAnalysisData().then(
-            (result: { athleteSnapshot: AthleteSnapshotModel; analysisData: AnalysisDataModel }) => {
+            (result: { athleteSnapshot: AthleteSnapshot; stats: ActivityStats; hasPowerMeter: boolean }) => {
               if (!this.athleteSnapshot) {
                 this.athleteSnapshot = result.athleteSnapshot;
               }
 
-              this.analysisData = result.analysisData;
+              this.stats = result.stats;
               this.renderViews();
               this.showResultsAndRefreshGraphs();
             }
@@ -225,16 +229,16 @@ export abstract class AbstractExtendedDataModifier {
   }
 
   protected getFullAnalysisData(): Promise<{
-    athleteSnapshot: AthleteSnapshotModel;
-    analysisData: AnalysisDataModel;
+    athleteSnapshot: AthleteSnapshot;
+    stats: ActivityStats;
   }> {
-    return new Promise<{ athleteSnapshot: AthleteSnapshotModel; analysisData: AnalysisDataModel }>(resolve => {
+    return new Promise<{ athleteSnapshot: AthleteSnapshot; stats: ActivityStats; hasPowerMeter: boolean }>(resolve => {
       this.activityProcessor.getAnalysisData(
         this.activityInfo,
         null,
-        (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => {
+        (athleteSnapshot: AthleteSnapshot, stats: ActivityStats, hasPowerMeter: boolean) => {
           // Callback when analysis data has been computed
-          resolve({ athleteSnapshot: athleteSnapshot, analysisData: analysisData });
+          resolve({ athleteSnapshot: athleteSnapshot, stats: stats, hasPowerMeter: hasPowerMeter });
         }
       );
     });
@@ -257,14 +261,14 @@ export abstract class AbstractExtendedDataModifier {
         this.activityProcessor.getAnalysisData(
           this.activityInfo,
           [segmentInfosResponse.start_index, segmentInfosResponse.end_index], // Bounds given, full activity requested
-          (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => {
+          (athleteSnapshot: AthleteSnapshot, stats: ActivityStats) => {
             // Callback when analysis data has been computed
 
             if (!this.athleteSnapshot) {
               this.athleteSnapshot = athleteSnapshot;
             }
 
-            this.analysisData = analysisData;
+            this.stats = stats;
             this.renderViews();
             this.showResultsAndRefreshGraphs();
           }
@@ -358,11 +362,12 @@ export abstract class AbstractExtendedDataModifier {
 
     // By default we have... If data exist of course...
     // Featured view
-    if (this.analysisData) {
+    if (this.stats) {
       const featuredDataView: FeaturedDataView = new FeaturedDataView(
-        this.analysisData,
+        this.stats,
+        this.activityInfo,
         this.userSettings,
-        this.activityInfo
+        this.hasPowerMeter
       );
       featuredDataView.setAppResources(this.appResources);
       featuredDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
@@ -372,9 +377,10 @@ export abstract class AbstractExtendedDataModifier {
     }
 
     // Heart view
-    if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
+    if (this.stats.heartRate && this.userSettings.displayAdvancedHrData) {
       const heartRateDataView: HeartRateDataView = new HeartRateDataView(
-        this.analysisData.heartRateData,
+        this.stats.heartRate,
+        this.stats.scores.stress,
         "hrr",
         this.athleteSnapshot
       );

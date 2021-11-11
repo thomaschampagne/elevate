@@ -1,12 +1,11 @@
 import { ExtensionSyncService } from "./extension-sync.service";
 import { SyncDateTimeDao } from "../../../dao/sync/sync-date-time.dao";
 import { TestBed } from "@angular/core/testing";
-import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { SyncService } from "../sync.service";
 import { SharedModule } from "../../../shared.module";
 import { SyncState } from "../sync-state.enum";
 import { MockedVersionsProvider } from "../../versions/impl/mock/mocked-versions-provider";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
+import ACTIVITIES_FIXTURES from "../../../../../shared-fixtures/activities-2015.fixture.json";
 import { CoreModule } from "../../../../core/core.module";
 import _ from "lodash";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
@@ -20,6 +19,9 @@ import { LoggerService } from "../../logging/logger.service";
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { ExtensionBackupModel } from "../../../models/extension-backup.model";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Injectable()
 class ChromiumServiceMock extends ChromiumService {
@@ -182,17 +184,17 @@ describe("ExtensionSyncService", () => {
     // Given
     const syncDateTime = new SyncDateTime(99);
 
-    const expectedPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-      new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
-      new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
-      new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
+    const expectedPeriodAthleteSettings: DatedAthleteSettings[] = [
+      new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, null, 190, null, null, 75)),
+      new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, null, null, 150, null, null, 76)),
+      new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, null, 110, null, null, 78)),
+      new DatedAthleteSettings(null, new AthleteSettings(190, 65, null, 110, null, null, 78))
     ];
 
     athleteModel.datedAthleteSettings = expectedPeriodAthleteSettings;
 
     spyOn(extensionSyncService.syncDateTimeDao, "findOne").and.returnValue(Promise.resolve(syncDateTime));
-    spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+    spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(ACTIVITIES_FIXTURES));
     spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(athleteModel));
 
     // When
@@ -204,7 +206,7 @@ describe("ExtensionSyncService", () => {
         expect(extensionBackupModel).not.toBeNull();
         expect(extensionBackupModel.pluginVersion).toEqual(installedVersion);
         expect(extensionBackupModel.syncDateTime).toEqual(syncDateTime);
-        expect(extensionBackupModel.syncedActivities).toEqual(TEST_SYNCED_ACTIVITIES);
+        expect(extensionBackupModel.activities).toEqual(ACTIVITIES_FIXTURES as any[]);
         expect(extensionBackupModel.athleteModel).toEqual(athleteModel);
         done();
       },
@@ -220,7 +222,7 @@ describe("ExtensionSyncService", () => {
     const syncDateTime = new SyncDateTime(99);
 
     spyOn(extensionSyncService.syncDateTimeDao, "findOne").and.returnValue(Promise.resolve(syncDateTime));
-    spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
+    spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(ACTIVITIES_FIXTURES));
     spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
 
     const prepareForExportSpy = spyOn(extensionSyncService, "prepareForExport").and.callThrough();
@@ -243,48 +245,22 @@ describe("ExtensionSyncService", () => {
     );
   });
 
-  it("should not export athlete activities without last sync date", done => {
-    // Given
-    spyOn(extensionSyncService.syncDateTimeDao, "findOne").and.returnValue(null);
-    spyOn(extensionSyncService.activityService, "fetch").and.returnValue(Promise.resolve(TEST_SYNCED_ACTIVITIES));
-    spyOn(extensionSyncService.athleteService, "fetch").and.returnValue(Promise.resolve(AthleteModel.DEFAULT_MODEL));
-
-    const prepareForExportSpy = spyOn(extensionSyncService, "prepareForExport").and.callThrough();
-    const saveAsSpy = spyOn(extensionSyncService, "saveAs").and.stub();
-
-    // When
-    const promise: Promise<any> = extensionSyncService.backup();
-
-    // Then
-    promise.then(
-      () => {
-        expect(prepareForExportSpy).toHaveBeenCalledTimes(1);
-        expect(saveAsSpy).toHaveBeenCalledTimes(0);
-        throw new Error("Whoops! I should not be here!");
-      },
-      error => {
-        expect(error).toEqual("Cannot export. No last synchronization date found.");
-        done();
-      }
-    );
-  });
-
   it("should import athlete activities with a 1.0.0 backup and 1.0.0 compatible backup version threshold (with datedAthleteSettings)", done => {
     // Given
     const syncDateTime = new SyncDateTime(99);
     const importedBackupVersion = "1.0.0";
     const compatibleBackupVersionThreshold = "1.0.0";
     athleteModel.datedAthleteSettings = [
-      new DatedAthleteSettingsModel("2018-05-10", new AthleteSettingsModel(200, 50, null, 190, null, null, 75)),
-      new DatedAthleteSettingsModel("2018-04-15", new AthleteSettingsModel(195, null, null, 150, null, null, 76)),
-      new DatedAthleteSettingsModel("2018-02-01", new AthleteSettingsModel(190, 65, null, 110, null, null, 78)),
-      new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, null, 110, null, null, 78))
+      new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, null, 190, null, null, 75)),
+      new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, null, null, 150, null, null, 76)),
+      new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, null, 110, null, null, 78)),
+      new DatedAthleteSettings(null, new AthleteSettings(190, 65, null, 110, null, null, 78))
     ];
 
     spyOn(DataStore, "getMinBackupVersion").and.returnValue(compatibleBackupVersionThreshold);
 
     const extensionBackupModel: ExtensionBackupModel = {
-      syncedActivities: TEST_SYNCED_ACTIVITIES,
+      activities: ACTIVITIES_FIXTURES as any[],
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
       pluginVersion: importedBackupVersion
@@ -350,7 +326,7 @@ describe("ExtensionSyncService", () => {
     athleteModel = null;
 
     const extensionBackupModel: ExtensionBackupModel = {
-      syncedActivities: TEST_SYNCED_ACTIVITIES,
+      activities: ACTIVITIES_FIXTURES as any[],
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
       pluginVersion: importedBackupVersion
@@ -424,7 +400,7 @@ describe("ExtensionSyncService", () => {
     athleteModel.datedAthleteSettings = [];
 
     const extensionBackupModel: ExtensionBackupModel = {
-      syncedActivities: TEST_SYNCED_ACTIVITIES,
+      activities: ACTIVITIES_FIXTURES as any[],
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
       pluginVersion: importedBackupVersion
@@ -460,7 +436,7 @@ describe("ExtensionSyncService", () => {
     athleteModel.datedAthleteSettings = [];
 
     const extensionBackupModel: ExtensionBackupModel = {
-      syncedActivities: TEST_SYNCED_ACTIVITIES,
+      activities: ACTIVITIES_FIXTURES as any[],
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
       pluginVersion: null
@@ -493,7 +469,7 @@ describe("ExtensionSyncService", () => {
       "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync.";
 
     const syncedBackupModelPartial: Partial<ExtensionBackupModel> = {
-      syncedActivities: TEST_SYNCED_ACTIVITIES,
+      activities: ACTIVITIES_FIXTURES as any[],
       syncDateTime: syncDateTime
     };
 
@@ -527,7 +503,7 @@ describe("ExtensionSyncService", () => {
     athleteModel.datedAthleteSettings = [];
 
     const extensionBackupModel: ExtensionBackupModel = {
-      syncedActivities: null,
+      activities: null,
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
       pluginVersion: importedBackupVersion
@@ -594,7 +570,7 @@ describe("ExtensionSyncService", () => {
     athleteModel.datedAthleteSettings = [];
 
     const extensionBackupModel: ExtensionBackupModel = {
-      syncedActivities: [],
+      activities: [],
       athleteModel: athleteModel,
       syncDateTime: syncDateTime,
       pluginVersion: importedBackupVersion
@@ -628,7 +604,7 @@ describe("ExtensionSyncService", () => {
     const persistSpy = spyOn(extensionSyncService.dataStore, "persist").and.returnValue(Promise.resolve());
 
     // When
-    const promise: Promise<void> = extensionSyncService.clearSyncedActivities();
+    const promise: Promise<void> = extensionSyncService.clearActivities();
 
     // Then
     promise.then(
@@ -652,7 +628,7 @@ describe("ExtensionSyncService", () => {
     spyOn(extensionSyncService.activityService, "clear").and.returnValue(Promise.reject("Houston we have a problem"));
 
     // When
-    const promise: Promise<void> = extensionSyncService.clearSyncedActivities();
+    const promise: Promise<void> = extensionSyncService.clearActivities();
 
     // Then
     promise.then(
@@ -689,9 +665,7 @@ describe("ExtensionSyncService", () => {
     // Given
     const expectedState = SyncState.PARTIALLY_SYNCED;
     spyOn(extensionSyncService.syncDateTimeDao, "findOne").and.returnValue(Promise.resolve(null));
-    spyOn(extensionSyncService.activityService, "count").and.returnValue(
-      Promise.resolve(TEST_SYNCED_ACTIVITIES.length)
-    );
+    spyOn(extensionSyncService.activityService, "count").and.returnValue(Promise.resolve(ACTIVITIES_FIXTURES.length));
 
     // When
     const promise: Promise<SyncState> = extensionSyncService.getSyncState();
@@ -708,9 +682,7 @@ describe("ExtensionSyncService", () => {
     const expectedState = SyncState.SYNCED;
     const syncDateTime = new SyncDateTime(9999);
     spyOn(extensionSyncService.syncDateTimeDao, "findOne").and.returnValue(Promise.resolve(syncDateTime));
-    spyOn(extensionSyncService.activityService, "count").and.returnValue(
-      Promise.resolve(TEST_SYNCED_ACTIVITIES.length)
-    );
+    spyOn(extensionSyncService.activityService, "count").and.returnValue(Promise.resolve(ACTIVITIES_FIXTURES.length));
 
     // When
     const promise: Promise<SyncState> = extensionSyncService.getSyncState();

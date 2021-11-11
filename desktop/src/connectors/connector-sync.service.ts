@@ -1,24 +1,21 @@
 import { container, inject, InjectionToken, singleton } from "tsyringe";
-import {
-  ActivityComputer,
-  ActivitySyncEvent,
-  CompleteSyncEvent,
-  ConnectorInfo,
-  ConnectorType,
-  ErrorSyncEvent,
-  SyncEvent,
-  SyncEventType
-} from "@elevate/shared/sync";
 import { BaseConnector } from "./base.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { FileConnector } from "./file/file.connector";
 import { ConnectorConfig } from "./connector-config.model";
-import { AthleteModel, AthleteSnapshotModel, Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import _ from "lodash";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import { Logger } from "../logger";
-import UserSettingsModel = UserSettings.UserSettingsModel;
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { ConnectorInfo } from "@elevate/shared/sync/connectors/connector-info.model";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
+import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @singleton()
 export class ConnectorSyncService {
@@ -42,7 +39,7 @@ export class ConnectorSyncService {
     connectorType: ConnectorType,
     connectorInfo: ConnectorInfo,
     athleteModel: AthleteModel,
-    userSettingsModel: UserSettingsModel,
+    userSettings: BaseUserSettings,
     syncFromDateTime: number
   ): Promise<string> {
     if (this.currentConnector && this.currentConnector.isSyncing) {
@@ -57,7 +54,7 @@ export class ConnectorSyncService {
     // Build connector config from startSyncMessage
     const connectorConfig: ConnectorConfig = {
       athleteModel: athleteModel,
-      userSettingsModel: userSettingsModel,
+      userSettings: userSettings,
       syncFromDateTime: syncFromDateTime,
       info: connectorInfo
     };
@@ -77,7 +74,7 @@ export class ConnectorSyncService {
           const activitySyncEvent = syncEvent as ActivitySyncEvent;
           this.logger.debug(
             "[Connector (" + connectorType + ")]",
-            `Notify to insert or update activity name: "${activitySyncEvent.activity.name}", started on "${activitySyncEvent.activity.start_time}", isNew: "${activitySyncEvent.isNew}"`
+            `Upsert of activity id: ${activitySyncEvent.activity.id}, name: ${activitySyncEvent.activity.name}, on: ${activitySyncEvent.activity.startTime}, isNew: ${activitySyncEvent.isNew}`
           );
         } else if (syncEvent.type === SyncEventType.ERROR) {
           this.logger.error("[Connector (" + connectorType + ")]", syncEvent);
@@ -128,53 +125,6 @@ export class ConnectorSyncService {
           `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${this.currentConnector.type}`
         );
       }
-    }
-  }
-
-  public computeActivity(
-    syncedActivityModel: SyncedActivityModel,
-    userSettingsModel: DesktopUserSettingsModel,
-    athleteSnapshotModel: AthleteSnapshotModel,
-    streams: Streams
-  ): Promise<SyncedActivityModel> {
-    try {
-      const analysisDataModel = ActivityComputer.calculate(
-        syncedActivityModel,
-        athleteSnapshotModel,
-        userSettingsModel,
-        streams,
-        false,
-        null,
-        true,
-        null
-      );
-
-      // Compute bary center from lat/lng stream
-      syncedActivityModel.latLngCenter = BaseConnector.geoBaryCenter(streams);
-
-      // Update synced activity with new AthleteSnapshotModel & stats results
-      syncedActivityModel.athleteSnapshot = athleteSnapshotModel;
-      syncedActivityModel.extendedStats = analysisDataModel;
-      syncedActivityModel = BaseConnector.updatePrimitiveStatsFromComputation(syncedActivityModel, streams);
-
-      // Check if user missed some athlete settings. Goal: avoid missing stress scores because of missing settings.
-      syncedActivityModel.settingsLack = ActivityComputer.hasAthleteSettingsLacks(
-        syncedActivityModel.distance_raw,
-        syncedActivityModel.moving_time_raw,
-        syncedActivityModel.elapsed_time_raw,
-        syncedActivityModel.type,
-        syncedActivityModel.extendedStats,
-        syncedActivityModel.athleteSnapshot.athleteSettings,
-        streams
-      );
-
-      // Compute activity hash
-      syncedActivityModel.hash = BaseConnector.activityHash(syncedActivityModel);
-
-      return Promise.resolve(syncedActivityModel);
-    } catch (error) {
-      this.logger.error(error);
-      return Promise.reject(error);
     }
   }
 }

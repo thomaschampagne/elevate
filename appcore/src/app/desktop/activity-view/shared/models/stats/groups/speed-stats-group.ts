@@ -1,13 +1,12 @@
 import { StatsGroup } from "../stat-group.model";
 import { Stat } from "../stat.model";
-import { SpeedDataModel } from "@elevate/shared/models";
 import { SpeedSensor } from "../../sensors/move.sensor";
 import { StatsDef } from "../stats-def.namespace";
+import { SpeedStats } from "@elevate/shared/models/sync/activity.model";
 
 export class SpeedStatsGroup extends StatsGroup {
-  private static readonly STATS: Stat<SpeedDataModel>[] = [
+  private static readonly STATS: Stat<SpeedStats>[] = [
     StatsDef.Speed.avg,
-    StatsDef.Speed.fullAvg,
     StatsDef.Speed.max,
     StatsDef.Speed.threshold,
     StatsDef.Speed.avgPace,

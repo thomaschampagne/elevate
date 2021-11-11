@@ -73,7 +73,6 @@ import { UserSettingsService } from "../shared/services/user-settings/user-setti
     `
       .ribbon {
         padding: 10px 20px;
-        border-bottom: 1px solid #bfbfbf;
       }
 
       button {

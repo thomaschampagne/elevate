@@ -2,7 +2,7 @@
   <mat-card *ngFor="let releaseNote of releaseNotes; let i = index;">
     <mat-card-title>
       <a
-        href="{{versionsProvider.getRepositoryUrl()}}/compare/{{releaseNotes[i + 1] ? releaseNotes[i + 1].version : releaseNote.version}}...{{releaseNote.version}}"
+        href="{{repositoryUrl}}/compare/{{releaseNotes[i + 1] ? releaseNotes[i + 1].version : releaseNote.version}}...{{releaseNote.version}}"
         target="_blank">Version {{releaseNote.version}}</a>
     </mat-card-title>
     <mat-card-subtitle *ngIf="releaseNote.date">

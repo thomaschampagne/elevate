@@ -1,14 +1,14 @@
 import crypto, { BinaryLike } from "crypto";
 
 export class Hash {
-  public static readonly SHA1: string = "sha1";
+  public static readonly SHA256: string = "sha256";
 
   public static apply(
     data: BinaryLike,
-    algorithm: string = Hash.SHA1,
+    algorithm: string = Hash.SHA256,
     options: { cut?: number; divide?: number } = {}
   ): string {
-    const sha1 = crypto.createHash(algorithm).update(data).digest("hex");
+    const sha256 = crypto.createHash(algorithm).update(data).digest("hex");
 
     const hasCut = options.cut && options.cut > 0;
     const hasDivide = options.divide && options.divide > 0;
@@ -18,17 +18,17 @@ export class Hash {
     }
 
     if (hasCut) {
-      return sha1.slice(0, options.cut);
+      return sha256.slice(0, options.cut);
     }
 
     if (hasDivide) {
-      return sha1.slice(0, sha1.length / options.divide);
+      return sha256.slice(0, sha256.length / options.divide);
     }
 
-    return sha1;
+    return sha256;
   }
 
-  public static asObjectId(data: BinaryLike, algorithm: string = Hash.SHA1): string {
+  public static asObjectId(data: BinaryLike, algorithm: string = Hash.SHA256): string {
     return Hash.apply(data, algorithm, { cut: 24 });
   }
 }

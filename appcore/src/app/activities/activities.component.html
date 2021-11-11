@@ -43,7 +43,29 @@
       </button>
     </mat-form-field>
     <span fxFlex="1"></span>
-    <mat-form-field fxFlex="60">
+    <mat-form-field fxFlex="8">
+      <input (dateChange)="onDateToDateChange()"
+             [(ngModel)]="preferences.fromDate"
+             [matDatepicker]="datePickerFrom"
+             [max]="today"
+             matInput
+             placeholder="From">
+      <mat-datepicker-toggle [for]="datePickerFrom" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #datePickerFrom color="primary"></mat-datepicker>
+    </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex="8">
+      <input (dateChange)="onDateToDateChange()"
+             [(ngModel)]="preferences.toDate"
+             [matDatepicker]="datePickerTo"
+             [max]="today"
+             matInput
+             placeholder="To">
+      <mat-datepicker-toggle [for]="datePickerTo" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #datePickerTo></mat-datepicker>
+    </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex>
       <mat-select (selectionChange)="onSelectedColumns()"
                   [(ngModel)]="selectedColumns"
                   multiple placeholder="Columns displayed selection">
@@ -92,8 +114,8 @@
             {{column.header}}
           </mat-header-cell>
           <mat-cell *matCellDef="let activity" [fxFlex]="column.width"
-                    matTooltip="[{{activity.start_time | date}}] {{activity.name | shorten: 42: '...'}}"
-                    matTooltipPosition="left">
+                    matTooltip="[{{activity.startTime | date}}] {{activity.name | shorten: 42: '...'}}"
+                    matTooltipPosition="left" (dblclick)="openActivity(activity.id)">
             <ng-container *ngIf="column.type === ColumnType.DATE">
               {{column.print(activity, column.path)}}
             </ng-container>
@@ -135,6 +157,9 @@
                      [pageSizeOptions]="[5, 10, 15, 30, 50]"
                      [pageSize]="10" showFirstLastButtons>
       </mat-paginator>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" class="mat-caption">
+      <i>Hint: Double-click on rows to open activities</i>
     </div>
   </div>
   <div *ngIf="!hasActivities" class="no-activities-found">

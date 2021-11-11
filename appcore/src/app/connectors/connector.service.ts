@@ -1,4 +1,4 @@
-import { ConnectorType } from "@elevate/shared/sync";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 
 export abstract class ConnectorService {
   public static printType(connectorType: ConnectorType): string {

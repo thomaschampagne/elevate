@@ -1,20 +1,17 @@
-import { DatedAthleteSettingsModel } from "@elevate/shared/models";
 import moment from "moment";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 
-export class DatedAthleteSettingsTableModel extends DatedAthleteSettingsModel {
+export class DatedAthleteSettingsTable extends DatedAthleteSettings {
   public sinceAsDate: Date;
   public untilAsDate: Date;
 
-  constructor(
-    datedAthleteSettingsModel: DatedAthleteSettingsModel,
-    previousDatedAthleteSettingsModel: DatedAthleteSettingsModel
-  ) {
-    super(datedAthleteSettingsModel.since, datedAthleteSettingsModel);
+  constructor(datedAthleteSettings: DatedAthleteSettings, previousDatedAthleteSettings: DatedAthleteSettings) {
+    super(datedAthleteSettings.since, datedAthleteSettings);
 
     this.sinceAsDate = this.since ? new Date(this.since) : null;
     this.untilAsDate =
-      previousDatedAthleteSettingsModel && previousDatedAthleteSettingsModel.since
-        ? moment(previousDatedAthleteSettingsModel.since, DatedAthleteSettingsModel.SINCE_DATE_FORMAT)
+      previousDatedAthleteSettings && previousDatedAthleteSettings.since
+        ? moment(previousDatedAthleteSettings.since, DatedAthleteSettings.SINCE_DATE_FORMAT)
             .subtract(1, "days")
             .toDate()
         : null;

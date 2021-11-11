@@ -1,7 +1,8 @@
 import { Inject, Injectable } from "@angular/core";
 import { CollectionDef } from "../data-store/collection-def";
 import { DataStore } from "../data-store/data-store";
-import { ElevateException, NotImplementedException } from "@elevate/shared/exceptions";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { NotImplementedException } from "@elevate/shared/exceptions/not-implemented.exception";
 
 @Injectable()
 export abstract class BaseDao<T> {

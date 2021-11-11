@@ -4,12 +4,12 @@ import { Sensor } from "../../shared/models/sensors/sensor.model";
 import { BarsChart } from "../../shared/models/plot-chart.model";
 import { Datum, Layout } from "plotly.js";
 import _ from "lodash";
-import { MeasureSystem } from "@elevate/shared/enums";
-import { ZoneModel } from "@elevate/shared/models";
 import moment from "moment";
 import { AppService } from "../../../../shared/services/app-service/app.service";
 import { PlotlyService } from "angular-plotly.js";
 import { PaceSensor } from "../../shared/models/sensors/move.sensor";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 @Component({
   selector: "app-time-in-zones-chart",

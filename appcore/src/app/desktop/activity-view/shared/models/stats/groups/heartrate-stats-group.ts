@@ -1,17 +1,17 @@
 import { StatsGroup } from "../stat-group.model";
 import { Stat } from "../stat.model";
-import { HeartRateDataModel } from "@elevate/shared/models";
 import { HeartRateSensor } from "../../sensors/heart-rate.sensor";
 import { StatsDef } from "../stats-def.namespace";
+import { HeartRateStats, StressScores } from "@elevate/shared/models/sync/activity.model";
 
 export class HearRateStatsGroup extends StatsGroup {
-  private static readonly STATS: Stat<HeartRateDataModel>[] = [
+  private static readonly STATS: Stat<HeartRateStats & StressScores>[] = [
     StatsDef.HeartRate.avg,
     StatsDef.HeartRate.max,
-    StatsDef.HeartRate.hrss,
-    StatsDef.HeartRate.hrssPerHour,
-    StatsDef.HeartRate.trimp,
-    StatsDef.HeartRate.trimpPerHour,
+    StatsDef.Scores.Stress.hrss,
+    StatsDef.Scores.Stress.hrssPerHour,
+    StatsDef.Scores.Stress.trimp,
+    StatsDef.Scores.Stress.trimpPerHour,
     StatsDef.HeartRate.threshold,
     StatsDef.HeartRate.thresholdHour,
     StatsDef.HeartRate.hrr,

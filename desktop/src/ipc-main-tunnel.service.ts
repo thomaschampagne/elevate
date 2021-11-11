@@ -1,6 +1,8 @@
 import { singleton } from "tsyringe";
-import { Channel, IpcChannelSub, IpcMessage, IpcTunnel, IpcTunnelService } from "@elevate/shared/electron";
 import { BrowserWindow, IpcMain } from "electron";
+import { IpcChannelSub, IpcTunnel, IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @singleton()
 export class IpcMainTunnelService implements IpcTunnelService {

@@ -6,8 +6,8 @@ import { ActivityService } from "../../activity/activity.service";
 import { ExtensionSyncService } from "../../sync/impl/extension-sync.service";
 import { SyncService } from "../../sync/sync.service";
 import { filter } from "rxjs/operators";
-import { CoreMessages } from "@elevate/shared/models";
 import { ChromiumService } from "../../../../extension/chromium.service";
+import { CoreMessages } from "@elevate/shared/models/core-messages";
 
 @Injectable()
 export class ExtensionAppService extends AppService {

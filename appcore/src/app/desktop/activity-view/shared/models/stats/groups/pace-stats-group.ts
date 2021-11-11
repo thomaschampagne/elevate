@@ -1,40 +1,39 @@
 import { StatsGroup } from "../stat-group.model";
 import { Stat } from "../stat.model";
-import { PaceDataModel, SyncedActivityModel } from "@elevate/shared/models";
 import { PaceSensor, SwimmingPaceSensor } from "../../sensors/move.sensor";
 import { StatsDef } from "../stats-def.namespace";
+import { Activity, PaceStats, StressScores } from "@elevate/shared/models/sync/activity.model";
 
 export class RunningPaceStatsGroup extends StatsGroup {
-  public static getDefault(activity: SyncedActivityModel): RunningPaceStatsGroup {
+  public static getDefault(activity: Activity): RunningPaceStatsGroup {
     return new RunningPaceStatsGroup(activity);
   }
 
-  private static getStats(activity: SyncedActivityModel): Stat<PaceDataModel>[] {
+  private static getStats(activity: Activity): Stat<PaceStats & StressScores>[] {
     return [
       StatsDef.Pace.Running.avg,
-      StatsDef.Pace.Running.fullAvg,
       StatsDef.Pace.Running.gap,
       StatsDef.Pace.Running.max,
       StatsDef.Pace.Running.threshold,
       StatsDef.Pace.Running.q25,
       StatsDef.Pace.Running.q50,
       StatsDef.Pace.Running.q75,
-      StatsDef.Pace.Running.runningStressScore(activity.start_time),
-      StatsDef.Pace.Running.runningStressScorePerHour(activity.start_time)
+      StatsDef.Scores.Stress.Running.runningStressScore(activity.startTime),
+      StatsDef.Scores.Stress.Running.runningStressScorePerHour(activity.startTime)
     ];
   }
 
-  constructor(activity: SyncedActivityModel) {
+  constructor(activity: Activity) {
     super(PaceSensor.DEFAULT.name, RunningPaceStatsGroup.getStats(activity), PaceSensor.DEFAULT.color);
   }
 }
 
 export class SwimmingPaceStatsGroup extends StatsGroup {
-  public static getDefault(activity: SyncedActivityModel): SwimmingPaceStatsGroup {
+  public static getDefault(activity: Activity): SwimmingPaceStatsGroup {
     return new SwimmingPaceStatsGroup(activity);
   }
 
-  private static getStats(activity: SyncedActivityModel): Stat<PaceDataModel>[] {
+  private static getStats(activity: Activity): Stat<PaceStats & StressScores>[] {
     return [
       StatsDef.Pace.Swimming.avg,
       StatsDef.Pace.Swimming.max,
@@ -42,12 +41,12 @@ export class SwimmingPaceStatsGroup extends StatsGroup {
       StatsDef.Pace.Swimming.q25,
       StatsDef.Pace.Swimming.q50,
       StatsDef.Pace.Swimming.q75,
-      StatsDef.Pace.Swimming.swimStressScore(activity.start_time),
-      StatsDef.Pace.Swimming.swimStressScorePerHour(activity.start_time)
+      StatsDef.Scores.Stress.Swimming.swimStressScore(activity.startTime),
+      StatsDef.Scores.Stress.Swimming.swimStressScorePerHour(activity.startTime)
     ];
   }
 
-  constructor(activity: SyncedActivityModel) {
+  constructor(activity: Activity) {
     super(SwimmingPaceSensor.DEFAULT.name, SwimmingPaceStatsGroup.getStats(activity), SwimmingPaceSensor.DEFAULT.color);
   }
 }

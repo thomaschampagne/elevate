@@ -1,6 +1,8 @@
 import { Sensor } from "./sensor.model";
-import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
-import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { ActivityStats, Peaks } from "@elevate/shared/models/sync/activity.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
 
 export class HeartRateSensor extends Sensor {
   public static readonly NAME: string = "Heart Rate";
@@ -17,6 +19,6 @@ export class HeartRateSensor extends Sensor {
     full: "Beats / minute"
   };
 
-  public peaksPath: [keyof AnalysisDataModel, keyof PeaksData] = ["heartRateData", "peaks"];
+  public peaksPath: [keyof ActivityStats, keyof Peaks] = ["heartRate", "peaks"];
   public zoneType: ZoneType = ZoneType.HEART_RATE;
 }

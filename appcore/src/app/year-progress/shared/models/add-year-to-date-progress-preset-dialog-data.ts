@@ -1,6 +1,6 @@
 import { YearProgressTypeModel } from "./year-progress-type.model";
 import { ProgressMode } from "../enums/progress-mode.enum";
-import { ElevateSport } from "@elevate/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 export class AddYearToDateProgressPresetDialogData {
   public readonly mode: ProgressMode = ProgressMode.YEAR_TO_DATE;

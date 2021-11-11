@@ -1,9 +1,12 @@
+// tslint:disable:forin
 import Chart, { ChartPoint, LinearTickOptions } from "chart.js";
 import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AppResourcesModel } from "../../../models/app-resources.model";
-import { PeakModel, SpeedUnitDataModel, ZoneModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { SpeedUnitDataModel } from "@elevate/shared/models/activity-data/speed-unit-data.model";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { Time } from "@elevate/shared/tools/time";
+import { Peak } from "@elevate/shared/models/sync/activity.model";
 
 type GraphTypes = "histogram" | "scatter-line";
 
@@ -204,7 +207,7 @@ export abstract class AbstractDataView {
     tooltip.body[0].lines[0] = "Zone held during " + Time.secToMilitary(parseFloat(timeInMinutes) * 60);
   }
 
-  protected setupPointDataTable(pointDataModel: PeakModel[]): void {
+  protected setupPointDataTable(peaks: Peak[]): void {
     if (!this.units) {
       console.error("View must have units.");
       return;
@@ -222,7 +225,7 @@ export abstract class AbstractDataView {
     htmlTable += "</tr>";
 
     // Table body
-    htmlTable += pointDataModel
+    htmlTable += peaks
       .map(p => {
         return (
           "<tr>" +

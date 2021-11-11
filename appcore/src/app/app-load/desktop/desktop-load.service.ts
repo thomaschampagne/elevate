@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { RuntimeInfo } from "@elevate/shared/electron";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
@@ -11,14 +10,19 @@ import { concatMap, delay, retryWhen } from "rxjs/operators";
 import { of, throwError } from "rxjs";
 import { DesktopBoot } from "./desktop-boot";
 import { StatusCodes } from "http-status-codes";
-import { StravaConnectorInfo } from "@elevate/shared/sync";
-import { DesktopMigrationService } from "../../desktop/migration/desktop-migration.service";
+import { DesktopMigrationService, UpgradeResult } from "../../desktop/migration/desktop-migration.service";
 import { DataStore } from "../../shared/data-store/data-store";
 import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
 import { DesktopUnauthorizedMachineIdDialogComponent } from "./desktop-unauthorized-machine-id-dialog/desktop-unauthorized-machine-id-dialog.component";
 import { DesktopUpdateService } from "../../desktop/app-update/desktop-update.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { DesktopAppService } from "../../shared/services/app-service/desktop/desktop-app.service";
+import { AppRoutes } from "../../shared/models/app-routes";
+import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
+import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -39,6 +43,7 @@ export class DesktopLoadService extends AppLoadService {
     @Inject(FileConnectorInfoService) private readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(Router) private readonly router: Router,
     @Inject(MatDialog) private readonly dialog: MatDialog,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     super(dataStore);
@@ -47,12 +52,11 @@ export class DesktopLoadService extends AppLoadService {
 
   public loadApp(): Promise<void> {
     return super.loadApp().then(() => {
-      let hasBeenUpgradedToVersion = null;
-
+      let upgradeResult: UpgradeResult;
       return this.desktopMigrationService
         .upgrade()
-        .then((upgradedToVersion: string) => {
-          hasBeenUpgradedToVersion = upgradedToVersion;
+        .then(migrationUpgradeResult => {
+          upgradeResult = migrationUpgradeResult;
           return this.desktopUpdateService.handleUpdate();
         })
         .then(() => {
@@ -83,18 +87,32 @@ export class DesktopLoadService extends AppLoadService {
               // Make sure local file connector source directory exists
               return this.fsConnectorInfoService.ensureSourceDirectoryCompliance();
             })
-            .then(() => {
-              return Promise.resolve(hasBeenUpgradedToVersion);
-            })
             .catch(error => {
               this.logger.error(error);
               return Promise.reject(error);
             });
         })
-        .then((hasBeenUpgradedToVersionVersion: string) => {
+        .then(() => {
           // Check if a version has been installed. If so show release note popup
-          if (hasBeenUpgradedToVersionVersion) {
-            this.versionsProvider.notifyInstalledVersion(hasBeenUpgradedToVersionVersion);
+          if (upgradeResult.toVersion) {
+            this.versionsProvider.notifyInstalledVersion(upgradeResult.toVersion);
+          }
+
+          if (upgradeResult.firstInstall) {
+            this.dialog
+              .open(GotItDialogComponent, {
+                minWidth: GotItDialogComponent.MIN_WIDTH,
+                maxWidth: GotItDialogComponent.MAX_WIDTH,
+                data: new GotItDialogDataModel(
+                  "First install detected: please configure your athlete settings",
+                  "It's the first time Elevate is started. Please configure your athlete settings before syncing any connectors.",
+                  "Let's configure my athlete settings"
+                ),
+                disableClose: true
+              })
+              .afterClosed()
+              .toPromise()
+              .then(() => this.router.navigate([AppRoutes.athleteSettings]));
           }
         });
     });

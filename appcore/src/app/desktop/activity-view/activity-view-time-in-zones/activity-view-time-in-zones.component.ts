@@ -1,10 +1,13 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { Streams, SyncedActivityModel } from "@elevate/shared/models";
 import { TimeInZonesService } from "./services/time-in-zones.service";
-import { MeasureSystem } from "@elevate/shared/enums";
 import { SensorTimeInZones } from "./models/sensor-time-in-zones.model";
 import { TimeInZonesChartComponent } from "./time-in-zones-chart/time-in-zones-chart.component";
 import { ActivitySensorsService } from "../shared/activity-sensors.service";
+import { StreamsService } from "../../../shared/services/streams/streams.service";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { ProcessStreamMode } from "@elevate/shared/sync/compute/stream-processor";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Component({
   selector: "app-activity-view-time-in-zones",
@@ -22,10 +25,7 @@ export class ActivityViewTimeInZonesComponent implements OnInit {
   ];
 
   @Input()
-  public activity: SyncedActivityModel;
-
-  @Input()
-  public streams: Streams;
+  public activity: Activity;
 
   @Input()
   public measureSystem: MeasureSystem;
@@ -34,7 +34,8 @@ export class ActivityViewTimeInZonesComponent implements OnInit {
 
   constructor(
     @Inject(ActivitySensorsService) private readonly activitySensorsService: ActivitySensorsService,
-    @Inject(TimeInZonesService) private readonly timeInZonesService: TimeInZonesService
+    @Inject(TimeInZonesService) private readonly timeInZonesService: TimeInZonesService,
+    @Inject(StreamsService) protected readonly streamsService: StreamsService
   ) {}
 
   public ngOnInit(): void {
@@ -44,10 +45,19 @@ export class ActivityViewTimeInZonesComponent implements OnInit {
       ActivityViewTimeInZonesComponent.CHERRY_PICKED_STREAMS_ORDER
     );
 
-    // Looping on each sensor definitions to get peaks if available
-    this.timeInZonesService.calculate(sensors, this.streams).then((timeInZonesResults: SensorTimeInZones[]) => {
-      this.sensorTimeInZones = timeInZonesResults;
-    });
+    // Getting streams to calculate time in zone for each sensors
+    this.streamsService
+      .getProcessedById(ProcessStreamMode.COMPUTE, this.activity.id, {
+        type: this.activity.type,
+        hasPowerMeter: this.activity.hasPowerMeter,
+        isSwimPool: this.activity.isSwimPool,
+        athleteSnapshot: this.activity.athleteSnapshot
+      })
+      .then(streams => {
+        this.timeInZonesService.calculate(sensors, streams).then((timeInZonesResults: SensorTimeInZones[]) => {
+          this.sensorTimeInZones = timeInZonesResults;
+        });
+      });
   }
 
   public getGridRowHeight(): number {

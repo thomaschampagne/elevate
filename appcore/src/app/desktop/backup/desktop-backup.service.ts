@@ -1,24 +1,29 @@
 import { Inject, Injectable } from "@angular/core";
 import { IPC_TUNNEL_SERVICE } from "../ipc/ipc-tunnel-service.token";
-import { Channel, IpcChannelSub, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { DataStore } from "../../shared/data-store/data-store";
 import moment from "moment";
 import { Subject } from "rxjs";
-import { BackupChunk, BackupEvent, BackupMetadata, RestoreEvent } from "@elevate/shared/models";
 import _ from "lodash";
 import { DesktopDataStore } from "../../shared/data-store/impl/desktop-data-store.service";
+import { IpcChannelSub, IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { BackupEvent } from "@elevate/shared/models/backup/backup-event.int";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { BackupMetadata } from "@elevate/shared/models/backup/backup-metadata.int";
+import { RestoreEvent } from "@elevate/shared/models/backup/restore-event.int";
+import { BackupChunk } from "@elevate/shared/models/backup/backup-chunk.int";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @Injectable()
 export class DesktopBackupService {
+  public static readonly BACKUP_EXT: string = "elv";
+  private static readonly BACKUP_CHUNK_SIZE: number = 10;
+
   constructor(
     @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
     @Inject(LoggerService) protected readonly logger: LoggerService,
     @Inject(DataStore) public readonly desktopDataStore: DesktopDataStore<object>
   ) {}
-
-  public static readonly BACKUP_EXT: string = "elv";
-  private static readonly BACKUP_CHUNK_SIZE: number = 10;
 
   private static formatBackupFilename(appVersion: string): string {
     return `${moment().format("Y.MM.DD-H.mm")}-v${appVersion}.${DesktopBackupService.BACKUP_EXT}`;

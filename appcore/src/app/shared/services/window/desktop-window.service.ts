@@ -1,9 +1,10 @@
 import { Inject, Injectable } from "@angular/core";
 import { WindowService } from "./window.service";
 import { MediaObserver } from "@angular/flex-layout";
-import { Channel, IpcTunnelService } from "@elevate/shared/electron";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 import { Subject } from "rxjs";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
 
 @Injectable({
   providedIn: "root"

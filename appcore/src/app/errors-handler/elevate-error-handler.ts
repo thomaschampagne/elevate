@@ -3,7 +3,9 @@ import { LoggerService } from "../shared/services/logging/logger.service";
 import { MatDialog } from "@angular/material/dialog";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ElevateException, SyncException, WarningException } from "@elevate/shared/exceptions";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { WarningException } from "@elevate/shared/exceptions/warning.exception";
+import { SyncException } from "@elevate/shared/exceptions/sync.exception";
 
 export abstract class ElevateErrorHandler implements ErrorHandler {
   protected constructor(

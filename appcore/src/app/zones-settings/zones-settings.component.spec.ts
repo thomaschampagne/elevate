@@ -1,16 +1,15 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { ZonesSettingsComponent } from "./zones-settings.component";
 import { CoreModule } from "../core/core.module";
 import { SharedModule } from "../shared/shared.module";
 import _ from "lodash";
-import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import { IpcRendererTunnelServiceMock } from "../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { IPC_TUNNEL_SERVICE } from "../desktop/ipc/ipc-tunnel-service.token";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("ZonesSettingsComponent", () => {
   let component: ZonesSettingsComponent;
@@ -33,7 +32,7 @@ describe("ZonesSettingsComponent", () => {
     component = fixture.componentInstance;
 
     spyOn(component.userSettingsService, "fetch").and.returnValue(
-      Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+      Promise.resolve(_.cloneDeep(DesktopUserSettings.DEFAULT_MODEL))
     );
 
     fixture.detectChanges();

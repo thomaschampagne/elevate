@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
 import { CollectionDef } from "../../data-store/collection-def";
-import { StravaConnectorInfo } from "@elevate/shared/sync";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 
 @Injectable()
 export class StravaConnectorInfoDao extends BaseDao<StravaConnectorInfo> {

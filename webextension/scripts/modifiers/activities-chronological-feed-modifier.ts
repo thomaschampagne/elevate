@@ -1,14 +1,14 @@
 import { AbstractModifier } from "./abstract.modifier";
 import _ from "lodash";
-import { UserSettings } from "@elevate/shared/models";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class ActivitiesChronologicalFeedModifier extends AbstractModifier {
   private static readonly DEBOUNCE_ORDER_FEED_ITEMS_TIME: number = 1000;
 
-  protected userSettings: ExtensionUserSettingsModel;
+  protected userSettings: ExtensionUserSettings;
 
-  constructor(userSettings: ExtensionUserSettingsModel) {
+  constructor(userSettings: ExtensionUserSettings) {
     super();
     this.userSettings = userSettings;
   }

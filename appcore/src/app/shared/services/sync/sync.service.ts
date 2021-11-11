@@ -41,7 +41,7 @@ export abstract class SyncService<T> {
 
   public abstract redirect(): void;
 
-  public clearSyncedActivities(): Promise<void> {
+  public clearActivities(): Promise<void> {
     return this.clearSyncTime()
       .then(() => {
         return this.activityService.clear();

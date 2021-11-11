@@ -1,22 +1,22 @@
 import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { PaceDataModel, ZoneModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { PaceStats, StressScores } from "@elevate/shared/models/sync/activity.model";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { Time } from "@elevate/shared/tools/time";
 
 export class PaceDataView extends AbstractDataView {
-  protected paceData: PaceDataModel;
   protected supportsGap: boolean;
 
-  constructor(paceData: PaceDataModel, units: string) {
+  constructor(protected pace: PaceStats, protected stressScores: StressScores, units: string) {
     super(units);
     this.mainColor = [9, 183, 219];
     this.setGraphTitleFromUnits();
-    this.paceData = paceData;
+    this.pace = pace;
     this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
 
-    this.setupDistributionGraph(this.paceData.paceZones, 1 / this.speedUnitsData.speedUnitFactor);
-    this.setupDistributionTable(this.paceData.paceZones, 1 / this.speedUnitsData.speedUnitFactor);
+    this.setupDistributionGraph(this.pace.zones, 1 / this.speedUnitsData.speedUnitFactor);
+    this.setupDistributionTable(this.pace.zones, 1 / this.speedUnitsData.speedUnitFactor);
   }
 
   public render(): void {
@@ -45,9 +45,7 @@ export class PaceDataView extends AbstractDataView {
 
   protected insertDataIntoGrid(): void {
     if (this.isSegmentEffortView) {
-      const paceTimePerDistance: string = Time.secToMilitary(
-        this.paceData.avgPace / this.speedUnitsData.speedUnitFactor
-      );
+      const paceTimePerDistance: string = Time.secToMilitary(this.pace.avg / this.speedUnitsData.speedUnitFactor);
       this.insertContentAtGridPosition(
         0,
         0,
@@ -57,11 +55,11 @@ export class PaceDataView extends AbstractDataView {
         "displayAdvancedSpeedData"
       );
     } else {
-      if (_.isNumber(this.paceData.best20min)) {
+      if (_.isNumber(this.pace.best20min)) {
         this.insertContentAtGridPosition(
           0,
           0,
-          Time.secToMilitary(this.paceData.best20min / this.speedUnitsData.speedUnitFactor),
+          Time.secToMilitary(this.pace.best20min / this.speedUnitsData.speedUnitFactor),
           "Best 20min Pace <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
           this.units,
           "displayAdvancedSpeedData"
@@ -69,11 +67,11 @@ export class PaceDataView extends AbstractDataView {
       }
     }
 
-    if (this.isOwner && this.supportsGap && _.isNumber(this.paceData.runningStressScore)) {
+    if (this.isOwner && this.supportsGap && _.isNumber(this.stressScores.rss)) {
       this.insertContentAtGridPosition(
         1,
         0,
-        this.printNumber(this.paceData.runningStressScore, 0),
+        this.printNumber(this.stressScores.rss, 0),
         "<strong>R</strong>unning <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
         "",
         "displayAdvancedSpeedData"
@@ -81,7 +79,7 @@ export class PaceDataView extends AbstractDataView {
       this.insertContentAtGridPosition(
         2,
         0,
-        this.printNumber(this.paceData.runningStressScorePerHour, 1),
+        this.printNumber(this.stressScores.rssPerHour, 1),
         "RSS / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
         "",
         "displayAdvancedSpeedData"
@@ -92,7 +90,7 @@ export class PaceDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       1,
-      Time.secToMilitary(this.paceData.lowerQuartilePace / this.speedUnitsData.speedUnitFactor),
+      Time.secToMilitary(this.pace.lowQ / this.speedUnitsData.speedUnitFactor),
       "25% Quartile Pace",
       this.units,
       "displayAdvancedSpeedData"
@@ -100,7 +98,7 @@ export class PaceDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       1,
-      Time.secToMilitary(this.paceData.medianPace / this.speedUnitsData.speedUnitFactor),
+      Time.secToMilitary(this.pace.median / this.speedUnitsData.speedUnitFactor),
       "50% Quartile Pace",
       this.units,
       "displayAdvancedSpeedData"
@@ -108,7 +106,7 @@ export class PaceDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       1,
-      Time.secToMilitary(this.paceData.upperQuartilePace / this.speedUnitsData.speedUnitFactor),
+      Time.secToMilitary(this.pace.upperQ / this.speedUnitsData.speedUnitFactor),
       "75% Quartile Pace",
       this.units,
       "displayAdvancedSpeedData"

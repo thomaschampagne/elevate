@@ -1,5 +1,5 @@
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
 import { ZoneCustomDisplayModel } from "./zone-custom-display.model";
-import { ZoneType } from "@elevate/shared/enums";
 
 export class ZoneDefinitionModel {
   public name: string;

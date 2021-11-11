@@ -1,5 +1,4 @@
 import { TestBed } from "@angular/core/testing";
-
 import { SyncDateTimeDao } from "./sync-date-time.dao";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";

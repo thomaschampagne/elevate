@@ -2,11 +2,10 @@ import { Component, EventEmitter, Inject, OnInit, Output } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
-import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { AthleteService } from "../../../shared/services/athlete/athlete.service";
 import { EditDatedAthleteSettingsDialogComponent } from "../edit-dated-athlete-settings-dialog/edit-dated-athlete-settings-dialog.component";
 import _ from "lodash";
-import { DatedAthleteSettingsTableModel } from "./models/dated-athlete-settings-table.model";
+import { DatedAthleteSettingsTable } from "./models/dated-athlete-settings-table.model";
 import { DatedAthleteSettingsAction } from "../edit-dated-athlete-settings-dialog/dated-athlete-settings-action.enum";
 import { DatedAthleteSettingsDialogData } from "../edit-dated-athlete-settings-dialog/dated-athlete-settings-dialog-data.model";
 import { ConfirmDialogComponent } from "../../../shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -15,6 +14,8 @@ import { AppError } from "../../../shared/models/app-error.model";
 import { LoggerService } from "../../../shared/services/logging/logger.service";
 import { ClipboardService, IClipboardResponse } from "ngx-clipboard";
 import { AppService } from "../../../shared/services/app-service/app.service";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Component({
   selector: "app-dated-athlete-settings-manager",
@@ -52,16 +53,16 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
     DatedAthleteSettingsManagerComponent.COLUMN_ACTION_DELETE
   ];
 
-  public datedAthleteSettingsModels: DatedAthleteSettingsModel[];
+  public datedAthleteSettings: DatedAthleteSettings[];
 
-  public dataSource: MatTableDataSource<DatedAthleteSettingsTableModel>;
+  public dataSource: MatTableDataSource<DatedAthleteSettingsTable>;
 
   public showExport: boolean;
   public showImport: boolean;
   public exportedSettings: string;
 
   @Output()
-  public datedAthleteSettingsModelsChange: EventEmitter<void> = new EventEmitter<void>();
+  public datedAthleteSettingsChange: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     @Inject(AppService) public readonly appService: AppService,
@@ -73,21 +74,19 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<DatedAthleteSettingsTableModel>();
+    this.dataSource = new MatTableDataSource<DatedAthleteSettingsTable>();
     this.hideExportImportForm();
     this.loadData();
   }
 
   public onAdd(): void {
-    const datedAthleteSettingsModelBase: DatedAthleteSettingsModel = _.cloneDeep(
-      _.first(this.datedAthleteSettingsModels)
-    );
+    const datedAthleteSettingsBase: DatedAthleteSettings = _.cloneDeep(_.first(this.datedAthleteSettings));
 
-    datedAthleteSettingsModelBase.since = DatedAthleteSettingsModel.DEFAULT_SINCE;
+    datedAthleteSettingsBase.since = DatedAthleteSettings.DEFAULT_SINCE;
 
     const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
       action: DatedAthleteSettingsAction.ACTION_ADD,
-      datedAthleteSettingsModel: datedAthleteSettingsModelBase
+      datedAthleteSettings: datedAthleteSettingsBase
     };
 
     const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
@@ -95,34 +94,31 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
       data: datedAthleteSettingsDialogData
     });
 
-    const afterClosedSubscription = dialogRef
-      .afterClosed()
-      .subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
-        if (datedAthleteSettingsModel) {
-          this.athleteService.addSettings(datedAthleteSettingsModel).then(
-            () => {
-              this.datedAthleteSettingsModelsChange.emit();
-              this.loadData();
-            },
-            error => {
-              this.handleErrors(error);
-            }
-          );
-        }
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettings: DatedAthleteSettings) => {
+      if (datedAthleteSettings) {
+        this.athleteService.addSettings(datedAthleteSettings).then(
+          () => {
+            this.datedAthleteSettingsChange.emit();
+            this.loadData();
+          },
+          error => {
+            this.handleErrors(error);
+          }
+        );
+      }
 
-        afterClosedSubscription.unsubscribe();
-      });
+      afterClosedSubscription.unsubscribe();
+    });
   }
 
   public onEdit(sinceIdentifier: string): void {
-    const datedAthleteSettingsModelToEdit: DatedAthleteSettingsModel = _.find<DatedAthleteSettingsModel>(
-      this.datedAthleteSettingsModels,
-      { since: sinceIdentifier }
-    );
+    const datedAthleteSettingsToEdit: DatedAthleteSettings = _.find<DatedAthleteSettings>(this.datedAthleteSettings, {
+      since: sinceIdentifier
+    });
 
     const datedAthleteSettingsDialogData: DatedAthleteSettingsDialogData = {
       action: DatedAthleteSettingsAction.ACTION_EDIT,
-      datedAthleteSettingsModel: datedAthleteSettingsModelToEdit
+      datedAthleteSettings: datedAthleteSettingsToEdit
     };
 
     const dialogRef = this.dialog.open(EditDatedAthleteSettingsDialogComponent, {
@@ -130,23 +126,21 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
       data: datedAthleteSettingsDialogData
     });
 
-    const afterClosedSubscription = dialogRef
-      .afterClosed()
-      .subscribe((datedAthleteSettingsModel: DatedAthleteSettingsModel) => {
-        if (datedAthleteSettingsModel) {
-          this.athleteService.editSettings(sinceIdentifier, datedAthleteSettingsModel).then(
-            () => {
-              this.datedAthleteSettingsModelsChange.emit();
-              this.loadData();
-            },
-            error => {
-              this.handleErrors(error);
-            }
-          );
-        }
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((datedAthleteSettings: DatedAthleteSettings) => {
+      if (datedAthleteSettings) {
+        this.athleteService.editSettings(sinceIdentifier, datedAthleteSettings).then(
+          () => {
+            this.datedAthleteSettingsChange.emit();
+            this.loadData();
+          },
+          error => {
+            this.handleErrors(error);
+          }
+        );
+      }
 
-        afterClosedSubscription.unsubscribe();
-      });
+      afterClosedSubscription.unsubscribe();
+    });
   }
 
   public onRemove(sinceIdentifier: string): void {
@@ -163,7 +157,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
       if (confirmed) {
         this.athleteService.removeSettings(sinceIdentifier).then(
           () => {
-            this.datedAthleteSettingsModelsChange.emit();
+            this.datedAthleteSettingsChange.emit();
             this.loadData();
           },
           error => {
@@ -191,7 +185,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
       if (confirm) {
         this.athleteService.resetSettings().then(
           () => {
-            this.datedAthleteSettingsModelsChange.emit();
+            this.datedAthleteSettingsChange.emit();
             this.loadData();
           },
           error => {
@@ -207,7 +201,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
   public onShowExport(): void {
     this.showExport = true;
     this.showImport = !this.showExport;
-    this.exportedSettings = btoa(JSON.stringify(this.datedAthleteSettingsModels));
+    this.exportedSettings = btoa(JSON.stringify(this.datedAthleteSettings));
   }
 
   public onShowImport(): void {
@@ -220,22 +214,22 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
 
     promiseSettings.then(settings => {
       try {
-        let datedAthleteSettingsModels: DatedAthleteSettingsModel[];
+        let datedAthleteSettings: DatedAthleteSettings[];
         try {
           const decodedSettings = atob(settings);
-          datedAthleteSettingsModels = JSON.parse(decodedSettings);
+          datedAthleteSettings = JSON.parse(decodedSettings);
         } catch (e) {
           throw new Error("Data provided is corrupted");
         }
 
         // Check import consistency
-        this.assertSettingsValid(datedAthleteSettingsModels);
+        this.assertSettingsValid(datedAthleteSettings);
 
         // Persist new settings
         this.athleteService
           .fetch()
           .then((athleteModel: AthleteModel) => {
-            athleteModel.datedAthleteSettings = datedAthleteSettingsModels;
+            athleteModel.datedAthleteSettings = datedAthleteSettings;
             return this.athleteService.validateUpdate(athleteModel);
           })
           .then(() => {
@@ -244,7 +238,7 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
             // Hide import input
             this.showImport = false;
 
-            this.datedAthleteSettingsModelsChange.emit();
+            this.datedAthleteSettingsChange.emit();
             this.loadData();
           })
           .catch(err => {
@@ -257,54 +251,54 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
     });
   }
 
-  public assertSettingsValid(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): void {
-    if (!_.isArray(datedAthleteSettingsModels)) {
+  public assertSettingsValid(datedAthleteSettings: DatedAthleteSettings[]): void {
+    if (!_.isArray(datedAthleteSettings)) {
       this.logger.error("Dated athlete settings model provided should be an array");
       throw new Error("Invalid dated athlete settings set.");
     }
 
-    datedAthleteSettingsModels.forEach((datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
-      if (datedAthleteSettingsModel.since !== null && !_.isString(datedAthleteSettingsModel.since)) {
+    datedAthleteSettings.forEach((datedAthleteSettings: DatedAthleteSettings, index: number) => {
+      if (datedAthleteSettings.since !== null && !_.isString(datedAthleteSettings.since)) {
         throw new Error("Invalid since date detected");
       }
 
-      if (!datedAthleteSettingsModel.weight) {
+      if (!datedAthleteSettings.weight) {
         throw new Error("Invalid weight detected");
       }
 
-      if (!datedAthleteSettingsModel.maxHr) {
+      if (!datedAthleteSettings.maxHr) {
         throw new Error("Invalid maxHr detected");
       }
 
-      if (!datedAthleteSettingsModel.restHr) {
+      if (!datedAthleteSettings.restHr) {
         throw new Error("Invalid restHr detected");
       }
 
-      if (!datedAthleteSettingsModel.lthr) {
+      if (!datedAthleteSettings.lthr) {
         throw new Error("Missing LTHR property detected");
       } else {
-        if (datedAthleteSettingsModel.lthr.default !== null && !_.isNumber(datedAthleteSettingsModel.lthr.default)) {
+        if (datedAthleteSettings.lthr.default !== null && !_.isNumber(datedAthleteSettings.lthr.default)) {
           throw new Error("Missing LTHR default detected");
         }
 
-        if (datedAthleteSettingsModel.lthr.cycling !== null && !_.isNumber(datedAthleteSettingsModel.lthr.cycling)) {
+        if (datedAthleteSettings.lthr.cycling !== null && !_.isNumber(datedAthleteSettings.lthr.cycling)) {
           throw new Error("Missing LTHR cycling detected");
         }
 
-        if (datedAthleteSettingsModel.lthr.running !== null && !_.isNumber(datedAthleteSettingsModel.lthr.running)) {
+        if (datedAthleteSettings.lthr.running !== null && !_.isNumber(datedAthleteSettings.lthr.running)) {
           throw new Error("Missing LTHR running detected");
         }
       }
 
-      if (datedAthleteSettingsModel.cyclingFtp !== null && !_.isNumber(datedAthleteSettingsModel.cyclingFtp)) {
+      if (datedAthleteSettings.cyclingFtp !== null && !_.isNumber(datedAthleteSettings.cyclingFtp)) {
         throw new Error("Missing cycling FTP detected");
       }
 
-      if (datedAthleteSettingsModel.runningFtp !== null && !_.isNumber(datedAthleteSettingsModel.runningFtp)) {
+      if (datedAthleteSettings.runningFtp !== null && !_.isNumber(datedAthleteSettings.runningFtp)) {
         throw new Error("Missing running FTP detected");
       }
 
-      if (datedAthleteSettingsModel.swimFtp !== null && !_.isNumber(datedAthleteSettingsModel.swimFtp)) {
+      if (datedAthleteSettings.swimFtp !== null && !_.isNumber(datedAthleteSettings.swimFtp)) {
         throw new Error("Missing swim FTP detected");
       }
     });
@@ -328,13 +322,13 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
     this.hideExportImportForm();
 
     this.athleteService.fetch().then((athleteModel: AthleteModel) => {
-      this.datedAthleteSettingsModels = athleteModel.datedAthleteSettings;
+      this.datedAthleteSettings = athleteModel.datedAthleteSettings;
 
       // Auto creates a dated athlete settings if no one exists
-      if (this.datedAthleteSettingsModels.length === 0) {
+      if (this.datedAthleteSettings.length === 0) {
         this.athleteService.resetSettings().then(
           () => {
-            this.datedAthleteSettingsModelsChange.emit();
+            this.datedAthleteSettingsChange.emit();
             this.loadData();
           },
           error => {
@@ -342,18 +336,16 @@ export class DatedAthleteSettingsManagerComponent implements OnInit {
           }
         );
       } else {
-        this.dataSource.data = this.generateTableData(this.datedAthleteSettingsModels);
+        this.dataSource.data = this.generateTableData(this.datedAthleteSettings);
       }
     });
   }
 
-  private generateTableData(datedAthleteSettingsModels: DatedAthleteSettingsModel[]): DatedAthleteSettingsTableModel[] {
-    const datedAthleteSettingsTableModels: DatedAthleteSettingsTableModel[] = [];
-    _.forEach(datedAthleteSettingsModels, (datedAthleteSettingsModel: DatedAthleteSettingsModel, index: number) => {
-      const previousDatedAthleteSettingsModel = datedAthleteSettingsModels[index - 1];
-      datedAthleteSettingsTableModels.push(
-        new DatedAthleteSettingsTableModel(datedAthleteSettingsModel, previousDatedAthleteSettingsModel)
-      );
+  private generateTableData(datedAthleteSettings: DatedAthleteSettings[]): DatedAthleteSettingsTable[] {
+    const datedAthleteSettingsTableModels: DatedAthleteSettingsTable[] = [];
+    _.forEach(datedAthleteSettings, (settings: DatedAthleteSettings, index: number) => {
+      const previousDatedAthleteSettings = datedAthleteSettings[index - 1];
+      datedAthleteSettingsTableModels.push(new DatedAthleteSettingsTable(settings, previousDatedAthleteSettings));
     });
     return datedAthleteSettingsTableModels;
   }

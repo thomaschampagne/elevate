@@ -1,6 +1,6 @@
 import { BaseSensor } from "./base.sensor";
-import { MeasureSystem } from "@elevate/shared/enums";
-import { Time } from "@elevate/shared/tools";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Time } from "@elevate/shared/tools/time";
 
 export class TimeSensor extends BaseSensor {
   public static readonly NAME: string = "Time";
@@ -11,7 +11,7 @@ export class TimeSensor extends BaseSensor {
 
   public displayUnit: { short: string; full: string } | Map<MeasureSystem, { short: string; full: string }> = null;
 
-  public fromStatsConvert(seconds: number): number | string {
-    return Time.secToMilitary(seconds, true);
+  public fromStatsConvert(statValue: number | string): number | string {
+    return Time.secToMilitary(statValue as number, true);
   }
 }

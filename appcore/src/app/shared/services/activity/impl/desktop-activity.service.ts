@@ -3,17 +3,23 @@ import { ActivityService } from "../activity.service";
 import { ActivityDao } from "../../../dao/activity/activity.dao";
 import { AthleteSnapshotResolverService } from "../../athlete-snapshot-resolver/athlete-snapshot-resolver.service";
 import { LoggerService } from "../../logging/logger.service";
-import { AthleteSnapshotModel, Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { Subject } from "rxjs";
-import { ElevateException, WarningException } from "@elevate/shared/exceptions";
 import { StreamsService } from "../../streams/streams.service";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { WarningException } from "@elevate/shared/exceptions/warning.exception";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 export class ActivityRecalculateNotification {
   private constructor(
-    public syncedActivityModel: SyncedActivityModel,
+    public activity: Activity,
     public currentlyProcessed: number,
     public toProcessCount: number,
     public started: boolean,
@@ -21,13 +27,13 @@ export class ActivityRecalculateNotification {
   ) {}
 
   public static create(
-    syncedActivityModel: SyncedActivityModel,
+    activity: Activity,
     currentlyProcessed: number,
     toProcessCount: number,
     started: boolean,
     ended: boolean
   ): ActivityRecalculateNotification {
-    return new ActivityRecalculateNotification(syncedActivityModel, currentlyProcessed, toProcessCount, started, ended);
+    return new ActivityRecalculateNotification(activity, currentlyProcessed, toProcessCount, started, ended);
   }
 }
 
@@ -50,70 +56,64 @@ export class DesktopActivityService extends ActivityService {
   public recalculate$: Subject<ActivityRecalculateNotification>;
 
   public isRecalculating: boolean;
+
   /**
    * Single compute of an activity
    */
   public compute(
-    syncedActivityModel: SyncedActivityModel,
-    athleteSnapshotModel: AthleteSnapshotModel,
+    activity: Activity,
+    athleteSnapshotModel: AthleteSnapshot,
     streams: Streams,
-    userSettingsModel: DesktopUserSettingsModel
-  ): Promise<SyncedActivityModel> {
+    userSettings: DesktopUserSettings
+  ): Promise<Activity> {
     const computeActivityMessage = new IpcMessage(
       Channel.computeActivity,
-      syncedActivityModel,
+      activity,
       athleteSnapshotModel,
       streams,
-      userSettingsModel
+      userSettings
     );
 
-    return this.ipcTunnelService.send<IpcMessage, SyncedActivityModel>(computeActivityMessage);
+    return this.ipcTunnelService.send<IpcMessage, Activity>(computeActivityMessage);
   }
 
-  public recalculateSingle(
-    syncedActivityModel: SyncedActivityModel,
-    userSettingsModel: UserSettings.DesktopUserSettingsModel
-  ): Promise<SyncedActivityModel> {
-    let athleteSnapshot: AthleteSnapshotModel = null;
+  public recalculateSingle(activity: Activity, userSettings: UserSettings.DesktopUserSettings): Promise<Activity> {
+    let athleteSnapshot: AthleteSnapshot = null;
 
     return this.athleteSnapshotResolver
       .update()
       .then(() => {
-        return this.athleteSnapshotResolver.resolve(new Date(syncedActivityModel.start_time));
+        return this.athleteSnapshotResolver.resolve(new Date(activity.startTime));
       })
-      .then((athleteSnapshotModel: AthleteSnapshotModel) => {
+      .then((athleteSnapshotModel: AthleteSnapshot) => {
         athleteSnapshot = athleteSnapshotModel;
-        return this.streamsService.getInflatedById(syncedActivityModel.id);
+        return this.streamsService.getInflatedById(activity.id);
       })
       .then(streams => {
-        return this.compute(syncedActivityModel, athleteSnapshot, streams, userSettingsModel).then(
-          newSyncedActivityModel => {
-            return this.put(newSyncedActivityModel);
-          }
-        );
+        return this.compute(activity, athleteSnapshot, streams, userSettings).then(computedActivity => {
+          computedActivity.lastEditTime = new Date().toISOString();
+          return this.put(computedActivity);
+        });
       });
   }
 
-  public recalculate(
-    syncedActivityModels: SyncedActivityModel[],
-    userSettingsModel: UserSettings.DesktopUserSettingsModel
-  ): Promise<void> {
+  public recalculate(activities: Activity[], userSettings: UserSettings.DesktopUserSettings): Promise<void> {
     if (this.isRecalculating) {
       return Promise.reject(new WarningException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE));
     }
 
     this.isRecalculating = true;
 
-    return syncedActivityModels
-      .reduce((previousRefreshDone: Promise<void>, syncedActivityModel: SyncedActivityModel, index: number) => {
+    return activities
+      .reduce((previousRefreshDone: Promise<void>, activity: Activity, index: number) => {
         return previousRefreshDone.then(() => {
-          return this.recalculateSingle(syncedActivityModel, userSettingsModel).then(syncedActivityRefreshed => {
+          return this.recalculateSingle(activity, userSettings).then(activityRefreshed => {
             const recalculateNotification = ActivityRecalculateNotification.create(
-              syncedActivityRefreshed,
+              activityRefreshed,
               index + 1,
-              syncedActivityModels.length,
+              activities.length,
               index === 0,
-              index === syncedActivityModels.length - 1
+              index === activities.length - 1
             );
             this.recalculate$.next(recalculateNotification);
             return Promise.resolve();
@@ -132,7 +132,7 @@ export class DesktopActivityService extends ActivityService {
 
   public recalculateFromIds(
     activityIds: (number | string)[],
-    userSettingsModel: UserSettings.DesktopUserSettingsModel
+    userSettings: UserSettings.DesktopUserSettings
   ): Promise<void> {
     if (this.isRecalculating) {
       return Promise.reject(new WarningException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE));
@@ -144,12 +144,12 @@ export class DesktopActivityService extends ActivityService {
       .reduce((previousRefreshDone: Promise<void>, activityId: number | string, index: number) => {
         return previousRefreshDone.then(() => {
           return this.getById(activityId)
-            .then(syncedActivityModel => {
-              return this.recalculateSingle(syncedActivityModel, userSettingsModel);
+            .then(activity => {
+              return this.recalculateSingle(activity, userSettings);
             })
-            .then(syncedActivityRefreshed => {
+            .then(activityRefreshed => {
               const recalculateNotification = ActivityRecalculateNotification.create(
-                syncedActivityRefreshed,
+                activityRefreshed,
                 index + 1,
                 activityIds.length,
                 index === 0,
@@ -169,13 +169,13 @@ export class DesktopActivityService extends ActivityService {
       });
   }
 
-  public recalculateAll(userSettingsModel: UserSettings.DesktopUserSettingsModel): Promise<void> {
+  public recalculateAll(userSettings: UserSettings.DesktopUserSettings): Promise<void> {
     if (this.isRecalculating) {
       return Promise.reject(new WarningException(DesktopActivityService.JOB_ALREADY_RUNNING_MESSAGE));
     }
 
-    return this.fetch().then(syncedActivityModels => {
-      return this.recalculate(syncedActivityModels, userSettingsModel);
+    return this.fetch().then(activities => {
+      return this.recalculate(activities, userSettings);
     });
   }
 

@@ -1,5 +1,4 @@
 import { TestBed } from "@angular/core/testing";
-import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { SharedModule } from "../../shared.module";
 import { UserSettingsService } from "./user-settings.service";
 import { ZoneDefinitionModel } from "../../models/zone-definition.model";
@@ -7,13 +6,17 @@ import { CoreModule } from "../../../core/core.module";
 import _ from "lodash";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
-import { BuildTarget, ZoneType } from "@elevate/shared/enums";
 import { TargetModule } from "../../modules/target/desktop-target.module";
 import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
-import UserSettingsModel = UserSettings.UserSettingsModel;
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import BaseUserSettings = UserSettings.BaseUserSettings;
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("UserSettingsService", () => {
   let userSettingsService: UserSettingsService;
@@ -39,17 +42,17 @@ describe("UserSettingsService", () => {
 
   it("should fetch user settings", done => {
     // Given
-    const expectedSettings = _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
+    const expectedSettings = _.cloneDeep(DesktopUserSettings.DEFAULT_MODEL);
     const fetchDaoSpy = spyOn(userSettingsService.userSettingsDao, "findOne").and.returnValue(
       Promise.resolve(expectedSettings)
     );
 
     // When
-    const promiseFetch: Promise<UserSettingsModel> = userSettingsService.fetch();
+    const promiseFetch: Promise<BaseUserSettings> = userSettingsService.fetch();
 
     // Then
     promiseFetch.then(
-      (result: UserSettingsModel) => {
+      (result: BaseUserSettings) => {
         expect(result).not.toBeNull();
         expect(result).toEqual(expectedSettings);
         expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -67,8 +70,8 @@ describe("UserSettingsService", () => {
     // Given
     const key = "displayAdvancedHrData";
     const displayAdvancedHrData = false;
-    const userSettingsData = UserSettings.getDefaultsByBuildTarget(BuildTarget.EXTENSION) as ExtensionUserSettingsModel;
-    const expectedSettings: ExtensionUserSettingsModel = _.cloneDeep(userSettingsData);
+    const userSettingsData = UserSettings.getDefaultsByBuildTarget(BuildTarget.EXTENSION) as ExtensionUserSettings;
+    const expectedSettings: ExtensionUserSettings = _.cloneDeep(userSettingsData);
     expectedSettings.displayAdvancedHrData = displayAdvancedHrData;
 
     const updateDaoSpy = spyOn(userSettingsService.userSettingsDao, "update").and.returnValue(
@@ -76,14 +79,14 @@ describe("UserSettingsService", () => {
     );
 
     // When
-    const promiseUpdate: Promise<ExtensionUserSettingsModel> = userSettingsService.updateOption<ExtensionUserSettingsModel>(
+    const promiseUpdate: Promise<ExtensionUserSettings> = userSettingsService.updateOption<ExtensionUserSettings>(
       key,
       displayAdvancedHrData
-    ) as Promise<ExtensionUserSettingsModel>;
+    ) as Promise<ExtensionUserSettings>;
 
     // Then
     promiseUpdate.then(
-      (result: ExtensionUserSettingsModel) => {
+      (result: ExtensionUserSettings) => {
         expect(result).not.toBeNull();
         expect(result.displayAdvancedHrData).toEqual(displayAdvancedHrData);
         expect(result).toEqual(expectedSettings);
@@ -159,11 +162,11 @@ describe("UserSettingsService", () => {
     );
 
     // When
-    const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.resetGlobalSettings();
+    const promiseUpdate: Promise<BaseUserSettings> = userSettingsService.resetGlobalSettings();
 
     // Then
     promiseUpdate.then(
-      (result: UserSettingsModel) => {
+      (result: BaseUserSettings) => {
         expect(result).not.toBeNull();
         expect(result).toEqual(expectedUserSettings);
         expect(insertDaoSpy).toHaveBeenCalledTimes(1);
@@ -190,11 +193,11 @@ describe("UserSettingsService", () => {
     );
 
     // When
-    const promiseUpdate: Promise<UserSettingsModel> = userSettingsService.resetZonesSettings();
+    const promiseUpdate: Promise<BaseUserSettings> = userSettingsService.resetZonesSettings();
 
     // Then
     promiseUpdate.then(
-      (result: UserSettingsModel) => {
+      (result: BaseUserSettings) => {
         expect(result).not.toBeNull();
         expect(result).toEqual(expectedUserSettings);
         expect(updateDaoSpy).toHaveBeenCalledTimes(1);

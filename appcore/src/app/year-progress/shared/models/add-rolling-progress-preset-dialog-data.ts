@@ -1,7 +1,7 @@
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { AddYearToDateProgressPresetDialogData } from "./add-year-to-date-progress-preset-dialog-data";
 import { YearProgressTypeModel } from "./year-progress-type.model";
-import { ElevateSport } from "@elevate/shared/enums";
 
 export class AddRollingProgressPresetDialogData extends AddYearToDateProgressPresetDialogData {
   public readonly mode: ProgressMode = ProgressMode.ROLLING;

@@ -1,20 +1,20 @@
 import { AbstractDataView } from "./abstract-data.view";
-import { PowerDataModel } from "@elevate/shared/models";
+import { PowerStats } from "@elevate/shared/models/sync/activity.model";
 
 export class CyclingPowerCurveView extends AbstractDataView {
-  protected powerData: PowerDataModel;
+  protected power: PowerStats;
 
-  constructor(powerData: PowerDataModel, units: string) {
+  constructor(power: PowerStats, units: string) {
     super(units, "scatter-line", true);
     this.mainColor = [63, 64, 72];
-    this.powerData = powerData;
+    this.power = power;
     this.graphTitle = "Power best efforts vs. time";
     this.setupScatterLineGraph(
-      this.powerData.peaks.map(split => {
+      this.power.peaks.map(split => {
         return { x: split.range, y: split.result };
       })
     );
-    this.setupPointDataTable(this.powerData.peaks);
+    this.setupPointDataTable(this.power.peaks);
   }
 
   public render(): void {

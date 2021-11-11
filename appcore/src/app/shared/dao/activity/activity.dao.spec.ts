@@ -1,8 +1,5 @@
 import { TestBed } from "@angular/core/testing";
 import { ActivityDao } from "./activity.dao";
-import _ from "lodash";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";
 import { DataStore } from "../../data-store/data-store";
@@ -10,17 +7,15 @@ import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { TargetModule } from "../../modules/target/desktop-target.module";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import moment from "moment";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 describe("ActivityDao", () => {
   let activityDao: ActivityDao;
 
-  let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
-
-  let activitiesCollection: Collection<SyncedActivityModel>;
+  let activitiesCollection: Collection<Activity>;
 
   beforeEach(done => {
-    _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
-
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, TargetModule],
       providers: [
@@ -38,29 +33,29 @@ describe("ActivityDao", () => {
   });
 
   describe("Find by dated session", () => {
-    let syncedActivityModel01;
-    let syncedActivityModel02;
-    let syncedActivityModel03;
+    let activity01;
+    let activity02;
+    let activity03;
 
     beforeEach(done => {
-      syncedActivityModel01 = {
+      activity01 = {
         name: "My 1st ride",
-        start_time: "2020-06-01T12:00:00.000Z",
-        end_time: "2020-06-01T13:00:00.000Z"
-      } as SyncedActivityModel;
-      syncedActivityModel02 = {
+        startTime: "2020-06-01T12:00:00.000Z",
+        endTime: "2020-06-01T13:00:00.000Z"
+      } as Activity;
+      activity02 = {
         name: "My 2nd ride",
-        start_time: "2020-06-01T14:00:00.000Z",
-        end_time: "2020-06-01T15:00:00.000Z"
-      } as SyncedActivityModel;
-      syncedActivityModel03 = {
+        startTime: "2020-06-01T14:00:00.000Z",
+        endTime: "2020-06-01T15:00:00.000Z"
+      } as Activity;
+      activity03 = {
         name: "My 3rd ride",
-        start_time: "2020-06-01T16:00:00.000Z",
-        end_time: "2020-06-01T17:00:00.000Z"
-      } as SyncedActivityModel;
-      activitiesCollection.insert(syncedActivityModel01);
-      activitiesCollection.insert(syncedActivityModel02);
-      activitiesCollection.insert(syncedActivityModel03);
+        startTime: "2020-06-01T16:00:00.000Z",
+        endTime: "2020-06-01T17:00:00.000Z"
+      } as Activity;
+      activitiesCollection.insert(activity01);
+      activitiesCollection.insert(activity02);
+      activitiesCollection.insert(activity03);
 
       done();
     });
@@ -70,9 +65,10 @@ describe("ActivityDao", () => {
       // 13h15 => 13h45
       const activityStartTime = "2020-06-01T13:15:00.000Z";
       const activityDurationSeconds = 30 * 60; // 30 minutes
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
@@ -86,14 +82,15 @@ describe("ActivityDao", () => {
       // 11h30 => 12h30
       const activityStartTime = "2020-06-01T11:30:00.000Z";
       const activityDurationSeconds = 60 * 60; // 60 minutes
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(1);
-        expect(results[0].name).toEqual(syncedActivityModel01.name);
+        expect(results[0].name).toEqual(activity01.name);
         done();
       });
     });
@@ -103,14 +100,15 @@ describe("ActivityDao", () => {
       // 14h10 => 14h40
       const activityStartTime = "2020-06-01T14:10:00.000Z";
       const activityDurationSeconds = 30 * 60; // 30 minutes
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(1);
-        expect(results[0].name).toEqual(syncedActivityModel02.name);
+        expect(results[0].name).toEqual(activity02.name);
         done();
       });
     });
@@ -120,14 +118,15 @@ describe("ActivityDao", () => {
       // 16h30 => 17h30
       const activityStartTime = "2020-06-01T16:30:00.000Z";
       const activityDurationSeconds = 60 * 60; // 60 minutes
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(1);
-        expect(results[0].name).toEqual(syncedActivityModel03.name);
+        expect(results[0].name).toEqual(activity03.name);
         done();
       });
     });
@@ -137,14 +136,32 @@ describe("ActivityDao", () => {
       // 12h30 => 13h30
       const activityStartTime = "2020-06-01T12:30:00.000Z";
       const activityDurationSeconds = 60 * 60; // 1h
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(1);
-        expect(results[0].name).toEqual(syncedActivityModel01.name);
+        expect(results[0].name).toEqual(activity01.name);
+        done();
+      });
+    });
+
+    it("should find 1 existing activities for a given session (5)", done => {
+      // Given
+      // 14 => 15
+      const activityStartTime = "2020-06-01T14:00:00.000Z";
+      const activityEndTime = "2020-06-01T15:00:00.000Z";
+
+      // When
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
+
+      // Then
+      promise.then(results => {
+        expect(results.length).toEqual(1);
+        expect(results[0].name).toEqual(activity02.name);
         done();
       });
     });
@@ -154,15 +171,16 @@ describe("ActivityDao", () => {
       // 12h30 => 14h30
       const activityStartTime = "2020-06-01T12:30:00.000Z";
       const activityDurationSeconds = 120 * 60; // 2h
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(2);
-        expect(results[0].name).toEqual(syncedActivityModel01.name);
-        expect(results[1].name).toEqual(syncedActivityModel02.name);
+        expect(results[0].name).toEqual(activity01.name);
+        expect(results[1].name).toEqual(activity02.name);
         done();
       });
     });
@@ -172,15 +190,16 @@ describe("ActivityDao", () => {
       // 14h30 => 16h30
       const activityStartTime = "2020-06-01T14:30:00.000Z";
       const activityDurationSeconds = 120 * 60; // 2h
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(2);
-        expect(results[0].name).toEqual(syncedActivityModel02.name);
-        expect(results[1].name).toEqual(syncedActivityModel03.name);
+        expect(results[0].name).toEqual(activity02.name);
+        expect(results[1].name).toEqual(activity03.name);
         done();
       });
     });
@@ -190,15 +209,16 @@ describe("ActivityDao", () => {
       // 14h30 => 17h30
       const activityStartTime = "2020-06-01T14:30:00.000Z";
       const activityDurationSeconds = 180 * 60; // 3h
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(2);
-        expect(results[0].name).toEqual(syncedActivityModel02.name);
-        expect(results[1].name).toEqual(syncedActivityModel03.name);
+        expect(results[0].name).toEqual(activity02.name);
+        expect(results[1].name).toEqual(activity03.name);
         done();
       });
     });
@@ -208,16 +228,17 @@ describe("ActivityDao", () => {
       // 11h00 => 18h00
       const activityStartTime = "2020-06-01T11:00:00.000Z";
       const activityDurationSeconds = 60 * 60 * 7; // 7h
+      const activityEndTime = moment(activityStartTime).add(activityDurationSeconds, "seconds").toISOString();
 
       // When
-      const promise = activityDao.findByDatedSession(activityStartTime, activityDurationSeconds);
+      const promise = activityDao.findByDatedSession(activityStartTime, activityEndTime);
 
       // Then
       promise.then(results => {
         expect(results.length).toEqual(3);
-        expect(results[0].name).toEqual(syncedActivityModel01.name);
-        expect(results[1].name).toEqual(syncedActivityModel02.name);
-        expect(results[2].name).toEqual(syncedActivityModel03.name);
+        expect(results[0].name).toEqual(activity01.name);
+        expect(results[1].name).toEqual(activity02.name);
+        expect(results[2].name).toEqual(activity03.name);
         done();
       });
     });
@@ -226,7 +247,7 @@ describe("ActivityDao", () => {
   describe("Find lacking of athlete settings (= missing stress scores)", () => {
     it("should detect any activities lacking of athlete settings", done => {
       // Given
-      const syncedActivities: Partial<SyncedActivityModel>[] = [
+      const activities: Partial<Activity>[] = [
         { id: "111", name: "111", settingsLack: false },
         { id: "222", name: "222", settingsLack: true },
         { id: "333", name: "333", settingsLack: false },
@@ -235,7 +256,7 @@ describe("ActivityDao", () => {
         { id: "666", name: "666" }
       ];
 
-      activitiesCollection.insert(syncedActivities as any);
+      activitiesCollection.insert(activities as Activity[]);
 
       // When
       const promise = activityDao.hasActivitiesWithSettingsLacks();
@@ -255,7 +276,7 @@ describe("ActivityDao", () => {
 
     it("should NOT detect any activities lacking of athlete settings", done => {
       // Given
-      const syncedActivities: Partial<SyncedActivityModel>[] = [
+      const activities: Partial<Activity>[] = [
         { id: "111", name: "111", settingsLack: false },
         { id: "222", name: "222", settingsLack: false },
         { id: "333", name: "333", settingsLack: false },
@@ -264,7 +285,7 @@ describe("ActivityDao", () => {
         { id: "666", name: "666" }
       ];
 
-      activitiesCollection.insert(syncedActivities as any);
+      activitiesCollection.insert(activities as Activity[]);
 
       // When
       const promise = activityDao.hasActivitiesWithSettingsLacks();
@@ -285,7 +306,7 @@ describe("ActivityDao", () => {
     it("should find activities lacking of athlete settings", done => {
       // Given
       const expectedSize = 2;
-      const syncedActivities: Partial<SyncedActivityModel>[] = [
+      const activities: Partial<Activity>[] = [
         { id: "111", name: "111", settingsLack: false },
         { id: "222", name: "222", settingsLack: true },
         { id: "333", name: "333", settingsLack: false },
@@ -294,17 +315,17 @@ describe("ActivityDao", () => {
         { id: "666", name: "666" }
       ];
 
-      activitiesCollection.insert(syncedActivities as any);
+      activitiesCollection.insert(activities as Activity[]);
 
       // When
       const promise = activityDao.findActivitiesWithSettingsLacks();
 
       // Then
       promise.then(
-        activities => {
-          expect(activities.length).toEqual(expectedSize);
-          expect(activities[0]).toEqual(syncedActivities[1] as SyncedActivityModel);
-          expect(activities[1]).toEqual(syncedActivities[3] as SyncedActivityModel);
+        activitiesResult => {
+          expect(activitiesResult.length).toEqual(expectedSize);
+          expect(activitiesResult[0]).toEqual(activities[1] as Activity);
+          expect(activitiesResult[1]).toEqual(activities[3] as Activity);
           done();
         },
         error => {
@@ -317,7 +338,7 @@ describe("ActivityDao", () => {
     it("should NOT find activities lacking of athlete settings", done => {
       // Given
       const expectedSize = 0;
-      const syncedActivities: Partial<SyncedActivityModel>[] = [
+      const activities: Partial<Activity>[] = [
         { id: "111", name: "111", settingsLack: false },
         { id: "222", name: "222", settingsLack: false },
         { id: "333", name: "333", settingsLack: false },
@@ -326,15 +347,15 @@ describe("ActivityDao", () => {
         { id: "666", name: "666" }
       ];
 
-      activitiesCollection.insert(syncedActivities as any);
+      activitiesCollection.insert(activities as Activity[]);
 
       // When
       const promise = activityDao.findActivitiesWithSettingsLacks();
 
       // Then
       promise.then(
-        activities => {
-          expect(activities.length).toEqual(expectedSize);
+        activitiesResult => {
+          expect(activitiesResult.length).toEqual(expectedSize);
           done();
         },
         error => {

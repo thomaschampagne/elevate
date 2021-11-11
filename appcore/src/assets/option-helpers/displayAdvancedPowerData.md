@@ -1,38 +1,40 @@
-# Weighted Power & Estimated Weighted Power
+_Note: Normalized Power®, Training Stress Score® & Intensity Factor® are TrainingPeaks® registered trademarks_
+
+# Normalized Power® & Estimated Normalized Power®
 ---
 
-Note: If you own a power meter, the true weighted power will be of course computed. Estimated Weighted Power is only a estimation for cyclist who don't have this sensor.  
+Note: If you own a power meter, the true Normalized Power® will be of course computed. Estimated Normalized Power® is only a estimation for cyclist who don't have this sensor.  
 
-The _Estimated Weighted Power_ is basically the _Estimated Average Power_ given by Strava which has been normalized... Weighted Power or estimated is more meaningfull than _Average Power_. Why? While average power simply takes all of the samples of power and divides them by the number of samples, _Weighted Power_ uses a tricky weighting system to come up with a number that is more in line with the true physiological effort for your given activity.  
+The _Estimated Normalized Power®_ is basically the _Estimated Average Power_ given by Strava which has been normalized... Normalized Power® or estimated is more meaningful than _Average Power_. Why? While average power simply takes all of the samples of power and divides them by the number of samples, _Normalized Power®_ uses a tricky weighting system to come up with a number that is more in line with the true physiological effort for your given activity.  
 
-_Weighted Power_ is basically the power that you could have maintained for the same physiological "cost" if your power output had been constant.  
+_Normalized Power®_ is basically the power that you could have maintained for the same physiological "cost" if your power output had been constant.  
 
-_Weighted Power_ is calculated from an algorithm introduced by Dr. Andy Coggan to weight this variability according to its physiological difficulty. Here's the formula:  
+_Normalized Power®_ is calculated from an algorithm introduced by Dr. Andy Coggan to weight this variability according to its physiological difficulty. Here's the formula:  
 
-> $WeightedPower = \sqrt{\sqrt{\sum(powerSample^4/count(powerSample))}}$
+> $NormalizedPower = \sqrt{\sqrt{\sum(powerSample^4/count(powerSample))}}$
 
-Remember that _Estimated Weighted Power_ is an estimation because it's based on _Estimated Average Power_ !  
+Remember that _Estimated Normalized Power®_ is an estimation because it's based on _Estimated Average Power_ !  
 
 # Variability Index:
 ---
-_Variability Index_ is an indication of how your activity was paced. This indication shows how smooth or evenly paced the power output was during a race or work out. Basically _Variability Index_ is _Weighted Power_ over _Average watts_:  
+_Variability Index_ is an indication of how your activity was paced. This indication shows how smooth or evenly paced the power output was during a race or work out. Basically _Variability Index_ is _Normalized Power®_ over _Average watts_:  
 
-> $VariabilityIndex=\frac{WeightedPower}{Averagewatts}$
+> $VariabilityIndex=\frac{NormalizedPower}{Averagewatts}$
 
 # Functional Threshold Power (FTP)
 ---
 Represents your best average power you can sustain for one hour. [Read threshold test protocol by British Cycling](https://www.britishcycling.org.uk/zuvvi/media/bc_files/sportivetrainingplans/THRESHOLD_TEST.pdf).
 
-# Intensity:
+# Intensity Factor®:
 ---
-Although _Weighted Power_ is a better measure of training _intensity_ than average power, it does not take into account differences in fitness within or between individuals.
-_Intensity_ is simply the ratio of the _Weighted Power_ as above over your Functional Threshold Power (FTP) (entered in athlete settings):.  
+Although _Normalized Power®_ is a better measure of training _Intensity Factor®_ than average power, it does not take into account differences in fitness within or between individuals.
+_Intensity Factor®_ is simply the ratio of the _Normalized Power®_ as above over your Functional Threshold Power (FTP) (entered in athlete settings):.  
 
-> $Intensity=\frac{WeightedPower}{Cycling FTP}$
+> $Intensity Factor=\frac{NormalizedPower}{Cycling FTP}$
 
-For example, if your _Weighted Power_ for a long training ride done early in the year is 210 W and your threshold power at the time is 280 W, then the PF for that workout would be 0.75\. However, if you did that same exact ride later in the year after your threshold power had risen to 300 W, then the PF would be lower, i.e., 0.70. _Intensity_ therefore provides a valid and convenient way of comparing the relative _intensity_ of a training session or race either within or between riders, taking into account changes or differences in threshold power.  
+For example, if your _Normalized Power®_ for a long training ride done early in the year is 210 W and your threshold power at the time is 280 W, then the PF for that workout would be 0.75\. However, if you did that same exact ride later in the year after your threshold power had risen to 300 W, then the PF would be lower, i.e., 0.70. _Intensity Factor®_ therefore provides a valid and convenient way of comparing the relative _Intensity Factor®_ of a training session or race either within or between riders, taking into account changes or differences in threshold power.  
 
-Typical _Intensity_ values for various training sessions or races are as follows:  
+Typical _Intensity Factor®_ values for various training sessions or races are as follows:  
 
 Less than 0.75 are recovery rides  
 
@@ -43,11 +45,11 @@ Less than 0.75 are recovery rides
 
 Greater than 1.15 prologue TT, track pursuit, track miss-and-o;
 
-# Power Stress Score
+# Power Stress Score (aka Training Stress Score® (TSS®))
 ---
 If you own a cycling power meter then you get get the "Power Stress Score (PSS)" into your cycling activities. PSS formula is:  
 
-> $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~WeightedPower~\times~Intensity}{Cycling FTP~\times~3600}~\times~100$  
+> $Power Stress Score (PSS)=\frac{EffortInSeconds~\times~NormalizedPower~\times~Intensity Factor}{Cycling FTP~\times~3600}~\times~100$  
 
 Note that _PSS_ is equivalent to [_TSS&reg;_ from TrainingPeaks&trade;](https://help.trainingpeaks.com/hc/en-us/articles/204071944-Training-Stress-Scores-TSS-Explained)
 
@@ -57,11 +59,11 @@ Note that _PSS_ is equivalent to [_TSS&reg;_ from TrainingPeaks&trade;](https://
 
 That's simply your _Average Power_ over your weight.  
 
-# Weighted Watts / Kg
+# Normalized Power® / Kg
 ---
-"Weighted Watts / Kg" is basically an estimation of the power per Kilogram that you could have maintained for the same physiological "cost" if your power output had been constant  
+"Normalized Power® / Kg" is basically an estimation of the power per Kilogram that you could have maintained for the same physiological "cost" if your power output had been constant  
 
-That's simply your _Weighted Power_ over your weight.  
+That's simply your _Normalized Power®_ over your weight.  
 
 # Quartiles and median
 ---

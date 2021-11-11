@@ -1,17 +1,16 @@
 import { Component, Inject, OnInit, ViewChild } from "@angular/core";
-import { AthleteModel, Gender, PracticeLevel } from "@elevate/shared/models";
 import { GenderModel } from "../models/gender.model";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { AppService } from "../../shared/services/app-service/app.service";
-import { ElevateSport } from "@elevate/shared/enums";
 import _ from "lodash";
 import { NgForm } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
-
-// TODO Give a helper guide to find dated settings (how to?)
-// TODO Show athleteSnapshot used on strava activities
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { PracticeLevel } from "@elevate/shared/models/athlete/athlete-level.enum";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Component({
   selector: "app-athlete-settings",
@@ -96,7 +95,7 @@ export class AthleteSettingsComponent implements OnInit {
     this.athleteService.update(this.athleteModel).then(() => this.onAthleteSettingsChanged());
   }
 
-  public onDatedAthleteSettingsModelsChanged(): void {
+  public onDatedAthleteSettingssChanged(): void {
     this.onAthleteSettingsChanged();
   }
 

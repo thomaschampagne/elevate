@@ -1,5 +1,5 @@
-import { MeasureSystem } from "@elevate/shared/enums";
 import _ from "lodash";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 export abstract class BaseSensor {
   public abstract defaultRoundDecimals: number;
@@ -24,7 +24,7 @@ export abstract class BaseSensor {
   public fromStatsConvert(
     statValue: number | string,
     measureSystem: MeasureSystem,
-    roundDecimals: number
+    roundDecimals: number = this.defaultRoundDecimals
   ): number | string {
     return _.round(statValue as number, roundDecimals);
   }

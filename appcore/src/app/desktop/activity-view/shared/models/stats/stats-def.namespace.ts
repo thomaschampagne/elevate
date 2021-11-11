@@ -1,17 +1,7 @@
 // tslint:disable:no-shadowed-variable
 import { Stat } from "./stat.model";
-import {
-  AnalysisDataModel,
-  CadenceDataModel,
-  ElevationDataModel,
-  GradeDataModel,
-  HeartRateDataModel,
-  PaceDataModel,
-  PowerDataModel,
-  SpeedDataModel
-} from "@elevate/shared/models";
 import { TimeSensor } from "../sensors/time.sensor";
-import { DistanceSensor } from "../sensors/distance.sensor";
+import { DistanceSensor, RunningDistanceSensor, SwimDistanceSensor } from "../sensors/distance.sensor";
 import { VoidSensor } from "../sensors/void.sensor";
 import { PaceSensor, SpeedSensor, SwimmingPaceSensor } from "../sensors/move.sensor";
 import { HeartRateSensor } from "../sensors/heart-rate.sensor";
@@ -19,996 +9,1093 @@ import { ElevationAscentSpeedSensor, ElevationSensor } from "../sensors/elevatio
 import { CyclingCadenceSensor, RunningCadenceSensor, SwimmingCadenceSensor } from "../sensors/cadence.sensor";
 import { PowerSensor } from "../sensors/power.sensor";
 import moment from "moment";
-import { Time } from "@elevate/shared/tools";
 import { GradeSensor } from "../sensors/grade.sensor";
-import { ActivityComputer } from "@elevate/shared/sync";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
+import {
+  ActivityStats,
+  CadenceStats,
+  CyclingDynamicsStats,
+  DynamicsStats,
+  ElevationStats,
+  GradeStats,
+  HeartRateStats,
+  LeftRightPercent,
+  PaceStats,
+  PowerStats,
+  RunningDynamicsStats,
+  Scores,
+  SpeedStats,
+  StressScores,
+  TrainingEffect
+} from "@elevate/shared/models/sync/activity.model";
 
 export namespace StatsDef {
   const emptyThreshold20MinMessage = "Empty because activity under 20 min";
 
-  export namespace Generic {
-    export const movingTime = Stat.create<AnalysisDataModel>(TimeSensor.DEFAULT, "Moving Time", ["moving_time_raw"]);
-    export const elapsedTime = Stat.create<AnalysisDataModel>(TimeSensor.DEFAULT, "Elapsed Time", ["elapsed_time_raw"]);
-    export const distance = Stat.create<AnalysisDataModel>(
-      DistanceSensor.DEFAULT,
-      "Distance",
-      ["distance_raw"],
-      null,
-      2
-    );
-    export const accurateDistance = Stat.create<AnalysisDataModel>(
-      DistanceSensor.DEFAULT,
-      "Distance",
-      ["distance_raw"],
-      null,
-      3
-    );
-    export const calories = Stat.create<AnalysisDataModel>(VoidSensor.DEFAULT, "Calories", [
-      "extendedStats",
-      "calories"
-    ]);
+  const missingFtpMessage = (sport: string, dataType: string, activityStartTime: string): string => {
+    return `⚠️ ${sport} threshold ${dataType} required on ${moment(activityStartTime).format("MMM Do YYYY")}`;
+  };
 
-    export const caloriesPerHour = Stat.create<AnalysisDataModel>(VoidSensor.DEFAULT, "Calories / Hour", [
-      "extendedStats",
+  const missingCyclingFtpMessage = (activityStartTime: string): string => {
+    return missingFtpMessage("Cycling", "power", activityStartTime);
+  };
+
+  const missingRunningFtpMessage = (activityStartTime: string): string => {
+    return missingFtpMessage("Running", "pace", activityStartTime);
+  };
+
+  const missingSwimmingFtpMessage = (activityStartTime: string): string => {
+    return missingFtpMessage("Swimming", "pace", activityStartTime);
+  };
+
+  export namespace Generic {
+    export const movingTime = Stat.create<ActivityStats>(TimeSensor.DEFAULT, "Moving Time", ["stats", "movingTime"]);
+    export const elapsedTime = Stat.create<ActivityStats>(TimeSensor.DEFAULT, "Elapsed Time", ["stats", "elapsedTime"]);
+
+    export const calories = Stat.create<ActivityStats>(VoidSensor.DEFAULT, "Calories", ["stats", "calories"]);
+
+    export const caloriesPerHour = Stat.create<ActivityStats>(VoidSensor.DEFAULT, "Calories / Hour", [
+      "stats",
       "caloriesPerHour"
     ]);
 
-    export const moveRatio = Stat.create<AnalysisDataModel>(
+    export const moveRatio = Stat.create<ActivityStats>(
       VoidSensor.DEFAULT,
       "Move Ratio",
-      ["extendedStats", "moveRatio"],
+      ["stats", "moveRatio"],
       "Moving / Elapsed time ratio",
       2
     );
 
-    export const ascentGain = Stat.create<AnalysisDataModel>(ElevationSensor.DEFAULT, "Ascent Gain", [
-      "elevation_gain_raw"
+    export const ascentGain = Stat.create<ActivityStats>(ElevationSensor.DEFAULT, "Ascent Gain", [
+      "stats",
+      "elevationGain"
     ]);
+  }
+
+  export namespace Distance {
+    export const distance = Stat.create<ActivityStats>(DistanceSensor.DEFAULT, "Distance", ["stats", "distance"]);
 
     export namespace Running {
-      export const performanceIndex = Stat.create<AnalysisDataModel>(
-        VoidSensor.DEFAULT,
-        "Perf. Index",
-        ["extendedStats", "runningPerformanceIndex"],
-        "Running Performance Index from Polar company."
-      );
+      export const distance = Stat.create<ActivityStats>(RunningDistanceSensor.DEFAULT, "Distance", [
+        "stats",
+        "distance"
+      ]);
     }
 
     export namespace Swimming {
-      export const swolf = Stat.create<AnalysisDataModel>(
-        VoidSensor.DEFAULT,
-        "SWOLF",
-        ["extendedStats", "swimSwolf"],
-        "Swimming efficiency normalized to a 25 meters pool"
-      );
+      export const distance = Stat.create<ActivityStats>(SwimDistanceSensor.DEFAULT, "Distance", ["stats", "distance"]);
     }
   }
 
   export namespace Speed {
-    export const avg = Stat.create<SpeedDataModel>(
+    export const avg = Stat.create<SpeedStats>(
       SpeedSensor.DEFAULT,
       "Average",
-      ["extendedStats", "speedData", "genuineAvgSpeed"],
-      "Average speed while moving"
+      ["stats", "speed", "avg"],
+      "Average speed"
     );
 
-    export const fullAvg = Stat.create<SpeedDataModel>(
-      SpeedSensor.DEFAULT,
-      "Full Average",
-      ["extendedStats", "speedData", "totalAvgSpeed"],
-      "Average speed including pause time"
-    );
+    export const max = Stat.create<SpeedStats>(SpeedSensor.DEFAULT, "Max", ["stats", "speed", "max"]);
 
-    export const max = Stat.create<SpeedDataModel>(SpeedSensor.DEFAULT, "Max", [
-      "extendedStats",
-      "speedData",
-      "maxSpeed"
-    ]);
-
-    export const threshold = Stat.create<SpeedDataModel>(
+    export const threshold = Stat.create<SpeedStats>(
       SpeedSensor.DEFAULT,
       "Threshold",
-      ["extendedStats", "speedData", "best20min"],
+      ["stats", "speed", "best20min"],
       "Best speed held during 20 min"
-    ).setMissingMessage(emptyThreshold20MinMessage);
+    )
+      .asForceDisplay()
+      .setMissingMessage(emptyThreshold20MinMessage);
 
-    export const avgPace = Stat.create<SpeedDataModel>(PaceSensor.DEFAULT, "Average Pace", [
-      "extendedStats",
-      "speedData",
-      "avgPace"
-    ]);
+    export const avgPace = Stat.create<SpeedStats>(PaceSensor.DEFAULT, "Average Pace", ["stats", "pace", "avg"]);
 
-    export const q25 = Stat.create<SpeedDataModel>(SpeedSensor.DEFAULT, "25% Quartile", [
-      "extendedStats",
-      "speedData",
-      "lowerQuartileSpeed"
-    ]);
+    export const q25 = Stat.create<SpeedStats>(SpeedSensor.DEFAULT, "25% Quartile", ["stats", "speed", "lowQ"]);
 
-    export const q50 = Stat.create<SpeedDataModel>(
+    export const q50 = Stat.create<SpeedStats>(
       SpeedSensor.DEFAULT,
       "50% Quartile",
-      ["extendedStats", "speedData", "medianSpeed"],
+      ["stats", "speed", "median"],
       "Equals to median"
     );
 
-    export const q75 = Stat.create<SpeedDataModel>(SpeedSensor.DEFAULT, "75% Quartile", [
-      "extendedStats",
-      "speedData",
-      "upperQuartileSpeed"
-    ]);
+    export const q75 = Stat.create<SpeedStats>(SpeedSensor.DEFAULT, "75% Quartile", ["stats", "speed", "upperQ"]);
 
-    export const stdDeviation = Stat.create<SpeedDataModel>(
+    export const stdDeviation = Stat.create<SpeedStats>(
       SpeedSensor.DEFAULT,
       "Std Deviation σ",
-      ["extendedStats", "speedData", "standardDeviationSpeed"],
+      ["stats", "speed", "stdDev"],
       "Standard deviation"
     );
   }
 
   export namespace Pace {
     export namespace Running {
-      function missingFtpMessage(activityStartTime: string): string {
-        return `⚠️ Running threshold pace required on ${moment(activityStartTime).format("MMM Do YYYY")}`;
-      }
-
-      export const avg = Stat.create<PaceDataModel>(PaceSensor.DEFAULT, "Average", [
-        "extendedStats",
-        "paceData",
-        "avgPace"
-      ]);
-
-      export const fullAvg = Stat.create<PaceDataModel>(
+      export const avg = Stat.create<PaceStats>(
         PaceSensor.DEFAULT,
-        "Full Average",
-        ["extendedStats", "paceData", "totalAvgPace"],
-        "Average pace including pause time"
+        "Average",
+        ["stats", "pace", "avg"],
+        "Average pace"
       );
 
-      export const max = Stat.create<PaceDataModel>(PaceSensor.DEFAULT, "Fastest", [
-        "extendedStats",
-        "paceData",
-        "maxPace"
-      ]);
+      export const max = Stat.create<PaceStats>(PaceSensor.DEFAULT, "Fastest", ["stats", "pace", "max"]);
 
-      export const threshold = Stat.create<PaceDataModel>(
+      export const threshold = Stat.create<PaceStats>(
         PaceSensor.DEFAULT,
         "Threshold",
-        ["extendedStats", "paceData", "best20min"],
+        ["stats", "pace", "best20min"],
         "Best pace held during 20 min"
-      ).setMissingMessage(emptyThreshold20MinMessage);
+      )
+        .asForceDisplay()
+        .setMissingMessage(emptyThreshold20MinMessage);
 
-      export const gap = Stat.create<PaceDataModel>(
+      export const gap = Stat.create<PaceStats>(
         PaceSensor.DEFAULT,
         "Grade Adj. Pace",
-        ["extendedStats", "paceData", "genuineGradeAdjustedAvgPace"],
+        ["stats", "pace", "gapAvg"],
         "Equals your avg pace performed on a flat slope"
       );
 
-      export const q25 = Stat.create<PaceDataModel>(PaceSensor.DEFAULT, "25% Quartile", [
-        "extendedStats",
-        "paceData",
-        "lowerQuartilePace"
-      ]);
+      export const q25 = Stat.create<PaceStats>(PaceSensor.DEFAULT, "25% Quartile", ["stats", "pace", "lowQ"]);
 
-      export const q50 = Stat.create<PaceDataModel>(
+      export const q50 = Stat.create<PaceStats>(
         PaceSensor.DEFAULT,
         "50% Quartile",
-        ["extendedStats", "paceData", "medianPace"],
+        ["stats", "pace", "median"],
         "Equals to median"
       );
 
-      export const q75 = Stat.create<PaceDataModel>(PaceSensor.DEFAULT, "75% Quartile", [
-        "extendedStats",
-        "paceData",
-        "upperQuartilePace"
-      ]);
-
-      export function runningStressScore(activityStartTime: string): Stat<PaceDataModel> {
-        return Stat.create<PaceDataModel>(
-          VoidSensor.DEFAULT,
-          "RSS",
-          ["extendedStats", "paceData", "runningStressScore"],
-          "Running Stress Score"
-        ).setMissingMessage(missingFtpMessage(activityStartTime));
-      }
-
-      export function runningStressScorePerHour(activityStartTime: string): Stat<PaceDataModel> {
-        return Stat.create<PaceDataModel>(
-          VoidSensor.DEFAULT,
-          "RSS / Hour",
-          ["extendedStats", "paceData", "runningStressScorePerHour"],
-          "Running Stress Score / Hour"
-        ).setMissingMessage(missingFtpMessage(activityStartTime));
-      }
+      export const q75 = Stat.create<PaceStats>(PaceSensor.DEFAULT, "75% Quartile", ["stats", "pace", "upperQ"]);
     }
 
     export namespace Swimming {
-      function missingFtpMessage(activityStartTime: string): string {
-        return `⚠️ Swim threshold pace required on ${moment(activityStartTime).format("MMM Do YYYY")}`;
-      }
-
-      export const avg = Stat.create<PaceDataModel>(
+      export const avg = Stat.create<PaceStats>(
         SwimmingPaceSensor.DEFAULT,
         "Average",
-        ["extendedStats", "paceData", "avgPace"],
+        ["stats", "pace", "avg"],
         "Average time / hundred meters or yards"
       );
 
-      export const max = Stat.create<PaceDataModel>(
+      export const max = Stat.create<PaceStats>(
         SwimmingPaceSensor.DEFAULT,
         "Fastest",
-        ["extendedStats", "paceData", "maxPace"],
+        ["stats", "pace", "max"],
         "Fastest time / hundred meters or yards"
       );
 
-      export const threshold = Stat.create<PaceDataModel>(
+      export const threshold = Stat.create<PaceStats>(
         SwimmingPaceSensor.DEFAULT,
         "Threshold",
-        ["extendedStats", "paceData", "best20min"],
+        ["stats", "pace", "best20min"],
         "Best pace held during 20 min"
-      ).setMissingMessage(emptyThreshold20MinMessage);
+      )
+        .asForceDisplay()
+        .setMissingMessage(emptyThreshold20MinMessage);
 
-      export const q25 = Stat.create<PaceDataModel>(
+      export const q25 = Stat.create<PaceStats>(
         SwimmingPaceSensor.DEFAULT,
         "25% Quartile",
-        ["extendedStats", "paceData", "lowerQuartilePace"],
+        ["stats", "pace", "lowQ"],
         "Lower quartile time / hundred meters or yards"
       );
 
-      export const q50 = Stat.create<PaceDataModel>(
+      export const q50 = Stat.create<PaceStats>(
         SwimmingPaceSensor.DEFAULT,
         "50% Quartile",
-        ["extendedStats", "paceData", "medianPace"],
+        ["stats", "pace", "median"],
         "Median time / hundred meters or yards"
       );
 
-      export const q75 = Stat.create<PaceDataModel>(
+      export const q75 = Stat.create<PaceStats>(
         SwimmingPaceSensor.DEFAULT,
         "75% Quartile",
-        ["extendedStats", "paceData", "upperQuartilePace"],
+        ["stats", "pace", "upperQ"],
         "Upper quartile time / hundred meters or yards"
       );
-
-      export function swimStressScore(activityStartTime: string): Stat<PaceDataModel> {
-        return Stat.create<PaceDataModel>(
-          VoidSensor.DEFAULT,
-          "SSS",
-          ["extendedStats", "paceData", "swimStressScore"],
-          "Swimming Stress Score"
-        ).setMissingMessage(missingFtpMessage(activityStartTime));
-      }
-
-      export function swimStressScorePerHour(activityStartTime: string): Stat<PaceDataModel> {
-        return Stat.create<PaceDataModel>(
-          VoidSensor.DEFAULT,
-          "SSS / Hour",
-          ["extendedStats", "paceData", "swimStressScorePerHour"],
-          "Swimming Stress Score / Hour"
-        ).setMissingMessage(missingFtpMessage(activityStartTime));
-      }
     }
   }
 
   export namespace HeartRate {
-    export const avg = Stat.create<HeartRateDataModel>(HeartRateSensor.DEFAULT, "Average", [
-      "extendedStats",
-      "heartRateData",
-      "averageHeartRate"
-    ]);
+    export const avg = Stat.create<HeartRateStats>(HeartRateSensor.DEFAULT, "Average", ["stats", "heartRate", "avg"]);
 
-    export const max = Stat.create<HeartRateDataModel>(HeartRateSensor.DEFAULT, "Max", [
-      "extendedStats",
-      "heartRateData",
-      "maxHeartRate"
-    ]);
+    export const max = Stat.create<HeartRateStats>(HeartRateSensor.DEFAULT, "Max", ["stats", "heartRate", "max"]);
 
-    export const hrss = Stat.create<HeartRateDataModel>(
-      HeartRateSensor.DEFAULT,
-      "HRSS",
-      ["extendedStats", "heartRateData", "HRSS"],
-      "Heart Rate Stress Score"
-    ).asEmptyUnit();
-
-    export const hrssPerHour = Stat.create<HeartRateDataModel>(
-      HeartRateSensor.DEFAULT,
-      "HRSS / Hour",
-      ["extendedStats", "heartRateData", "HRSSPerHour"],
-      "Heart Rate Stress Score / Hour"
-    ).asEmptyUnit();
-
-    export const trimp = Stat.create<HeartRateDataModel>(
-      HeartRateSensor.DEFAULT,
-      "TRIMP",
-      ["extendedStats", "heartRateData", "TRIMP"],
-      "TRaining IMPulse"
-    ).asEmptyUnit();
-
-    export const trimpPerHour = Stat.create<HeartRateDataModel>(
-      HeartRateSensor.DEFAULT,
-      "TRIMP / Hour",
-      ["extendedStats", "heartRateData", "TRIMPPerHour"],
-      "TRaining IMPulse / Hour"
-    ).asEmptyUnit();
-
-    export const threshold = Stat.create<HeartRateDataModel>(
+    export const threshold = Stat.create<HeartRateStats>(
       HeartRateSensor.DEFAULT,
       "Threshold",
-      ["extendedStats", "heartRateData", "best20min"],
+      ["stats", "heartRate", "best20min"],
       "Best heart rate held during 20 min"
-    ).setMissingMessage(emptyThreshold20MinMessage);
+    )
+      .asForceDisplay()
+      .setMissingMessage(emptyThreshold20MinMessage);
 
-    export const thresholdHour = Stat.create<HeartRateDataModel>(
+    export const thresholdHour = Stat.create<HeartRateStats>(
       HeartRateSensor.DEFAULT,
       "Threshold 60 min",
-      ["extendedStats", "heartRateData", "best60min"],
+      ["stats", "heartRate", "best60min"],
       "Best heart rate held during 60 min"
-    ).setMissingMessage("Empty because activity under 60 min");
+    )
+      .asForceDisplay()
+      .setMissingMessage("Empty because activity under 60 min");
 
-    export const hrr = Stat.create<HeartRateDataModel>(
+    export const hrr = Stat.create<HeartRateStats>(
       HeartRateSensor.DEFAULT,
       "HRR",
-      ["extendedStats", "heartRateData", "activityHeartRateReserve"],
+      ["stats", "heartRate", "avgReserve"],
       "Heart Rate Reserve"
-    ).forceUnit("%");
+    ).setUnit("%");
 
-    export const maxHrr = Stat.create<HeartRateDataModel>(
+    export const maxHrr = Stat.create<HeartRateStats>(
       HeartRateSensor.DEFAULT,
       "Max HRR",
-      ["extendedStats", "heartRateData", "activityHeartRateReserveMax"],
+      ["stats", "heartRate", "maxReserve"],
       "Max Heart Rate Reserve reached"
-    ).forceUnit("%");
+    ).setUnit("%");
 
-    export const q25 = Stat.create<HeartRateDataModel>(HeartRateSensor.DEFAULT, "25% Quartile", [
-      "extendedStats",
-      "heartRateData",
-      "lowerQuartileHeartRate"
+    export const q25 = Stat.create<HeartRateStats>(HeartRateSensor.DEFAULT, "25% Quartile", [
+      "stats",
+      "heartRate",
+      "lowQ"
     ]);
 
-    export const q50 = Stat.create<HeartRateDataModel>(
+    export const q50 = Stat.create<HeartRateStats>(
       HeartRateSensor.DEFAULT,
       "50% Quartile",
-      ["extendedStats", "heartRateData", "medianHeartRate"],
+      ["stats", "heartRate", "median"],
       "Equals to median"
     );
 
-    export const q75 = Stat.create<HeartRateDataModel>(HeartRateSensor.DEFAULT, "75% Quartile", [
-      "extendedStats",
-      "heartRateData",
-      "upperQuartileHeartRate"
+    export const q75 = Stat.create<HeartRateStats>(HeartRateSensor.DEFAULT, "75% Quartile", [
+      "stats",
+      "heartRate",
+      "upperQ"
     ]);
   }
 
   export namespace Power {
-    export function avg(powerSensor: PowerSensor): Stat<PowerDataModel> {
-      return Stat.create<PowerDataModel>(powerSensor, "Average", ["extendedStats", "powerData", "avgWatts"]);
+    export function avg(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(powerSensor, "Average", ["stats", "power", "avg"]);
     }
 
-    export function avgPerKg(powerSensor: PowerSensor): Stat<PowerDataModel> {
-      return Stat.create<PowerDataModel>(
+    export function avgPerKg(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(
         powerSensor,
         "Average /kg",
-        ["extendedStats", "powerData", "avgWattsPerKg"],
+        ["stats", "power", "avgKg"],
         "Average watts / kilograms",
         2
       );
     }
 
-    export function avgWeighted(powerSensor: PowerSensor): Stat<PowerDataModel> {
-      return Stat.create<PowerDataModel>(
-        powerSensor,
-        "Avg Wtd",
-        ["extendedStats", "powerData", "weightedPower"],
-        "Avg Weighted watts"
-      );
+    export function avgWeighted(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(powerSensor, "Avg NP®", ["stats", "power", "weighted"], "Avg Normalized Power®");
     }
 
-    export function avgWeightedPerKg(powerSensor: PowerSensor): Stat<PowerDataModel> {
-      return Stat.create<PowerDataModel>(
+    export function avgWeightedPerKg(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(
         powerSensor,
-        "Avg Wtd. /kg",
-        ["extendedStats", "powerData", "weightedWattsPerKg"],
-        "Avg Weighted watts / kilograms",
+        "Avg NP® /kg",
+        ["stats", "power", "weightedKg"],
+        "Avg Normalized Power® / kilograms",
         2
       );
     }
 
-    export function max(powerSensor: PowerSensor): Stat<PowerDataModel> {
-      return Stat.create<PowerDataModel>(powerSensor, "Max", ["extendedStats", "powerData", "maxPower"]);
+    export function max(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(powerSensor, "Max", ["stats", "power", "max"]);
     }
 
-    export function threshold(powerSensor: PowerSensor): Stat<PowerDataModel> {
-      return Stat.create<PowerDataModel>(
-        powerSensor,
-        "Threshold",
-        ["extendedStats", "powerData", "best20min"],
-        "Best power held during 20 min"
-      ).setMissingMessage(emptyThreshold20MinMessage);
-    }
-
-    export function threshold80Percent(powerSensor: PowerSensor, movingTime: number) {
-      const bestEightyPercentTime = Time.secToMilitary(movingTime * 0.8);
-
-      return Stat.create<PowerDataModel>(
-        powerSensor,
-        "Threshold 80%",
-        ["extendedStats", "powerData", "bestEightyPercent"],
-        `Best power held during 80% of moving time = ${bestEightyPercentTime}`
+    export function work(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(powerSensor, "Work", ["stats", "power", "work"], "Work in Kilojoules").setUnit(
+        "Kj"
       );
     }
 
-    export function variabilityIndex(powerSensor: PowerSensor) {
-      return Stat.create<PowerDataModel>(
+    export function threshold(powerSensor: PowerSensor): Stat<PowerStats> {
+      return Stat.create<PowerStats>(
         powerSensor,
-        "Variability Index",
-        ["extendedStats", "powerData", "variabilityIndex"],
-        "Represents activity pace (Weighted Power / Average Power)",
+        "Threshold",
+        ["stats", "power", "best20min"],
+        "Best power held during 20 min"
+      )
+        .asForceDisplay()
+        .setMissingMessage(emptyThreshold20MinMessage);
+    }
+
+    export function variabilityIndex(powerSensor: PowerSensor) {
+      return Stat.create<PowerStats>(
+        powerSensor,
+        "VI",
+        ["stats", "power", "variabilityIndex"],
+        "Variability Index or activity pace (Normalized Power® / Average Power)",
         2
       ).asEmptyUnit();
     }
 
     export function q25(powerSensor: PowerSensor) {
-      return Stat.create<PowerDataModel>(powerSensor, "25% Quartile", [
-        "extendedStats",
-        "powerData",
-        "lowerQuartileWatts"
-      ]);
+      return Stat.create<PowerStats>(powerSensor, "25% Quartile", ["stats", "power", "lowQ"]);
     }
 
     export function q50(powerSensor: PowerSensor) {
-      return Stat.create<PowerDataModel>(
-        powerSensor,
-        "50% Quartile",
-        ["extendedStats", "powerData", "medianWatts"],
-        "Equals to median"
-      );
+      return Stat.create<PowerStats>(powerSensor, "50% Quartile", ["stats", "power", "median"], "Equals to median");
     }
 
     export function q75(powerSensor: PowerSensor) {
-      return Stat.create<PowerDataModel>(powerSensor, "75% Quartile", [
-        "extendedStats",
-        "powerData",
-        "upperQuartileWatts"
-      ]);
+      return Stat.create<PowerStats>(powerSensor, "75% Quartile", ["stats", "power", "upperQ"]);
     }
 
     export namespace Cycling {
-      function missingFtpMessage(activityStartTime: string): string {
-        return `⚠️ Cycling threshold power required on ${moment(activityStartTime).format("MMM Do YYYY")}`;
-      }
-
-      export function pss(powerSensor: PowerSensor, activityStartTime: string): Stat<PowerDataModel> {
-        return Stat.create<PowerDataModel>(
-          powerSensor,
-          "PSS",
-          ["extendedStats", "powerData", "powerStressScore"],
-          "Power Stress Score"
-        )
-          .asEmptyUnit()
-          .setMissingMessage(missingFtpMessage(activityStartTime));
-      }
-
-      export function pssPerHour(powerSensor: PowerSensor, activityStartTime: string) {
-        return Stat.create<PowerDataModel>(
-          powerSensor,
-          "PSS / Hour",
-          ["extendedStats", "powerData", "powerStressScorePerHour"],
-          "Power Stress Score / Hour"
-        )
-          .asEmptyUnit()
-          .setMissingMessage(missingFtpMessage(activityStartTime));
-      }
-
       export function intensity(powerSensor: PowerSensor, activityStartTime: string) {
-        return Stat.create<PowerDataModel>(
+        return Stat.create<PowerStats>(
           powerSensor,
-          "Intensity",
-          ["extendedStats", "powerData", "punchFactor"],
-          "Represents activity intensity (Weighted Power / Athlete Threshold)",
+          "IF®",
+          ["stats", "power", "intensityFactor"],
+          "Intensity Factor® (Normalized Power® / Functional Power Threshold)",
           2
         )
           .asEmptyUnit()
-          .setMissingMessage(missingFtpMessage(activityStartTime));
+          .asForceDisplay()
+          .setMissingMessage(missingCyclingFtpMessage(activityStartTime));
       }
     }
   }
 
   export namespace Cadence {
     export namespace Cycling {
-      export const avg = Stat.create<CadenceDataModel>(
+      export const avg = Stat.create<CadenceStats>(
         CyclingCadenceSensor.DEFAULT,
         "Average",
-        ["extendedStats", "cadenceData", "averageCadence"],
-        "Average cadence inc. freewheeling & pauses"
+        ["stats", "cadence", "avg"],
+        "Average cadence inc. freewheeling"
       );
 
-      export const activeAvg = Stat.create<CadenceDataModel>(
+      export const activeAvg = Stat.create<CadenceStats>(
         CyclingCadenceSensor.DEFAULT,
         "Active Average",
-        ["extendedStats", "cadenceData", "averageActiveCadence"],
+        ["stats", "cadence", "avgActive"],
         "Average cadence with legs moving"
       );
 
-      export const max = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "Max", [
-        "extendedStats",
-        "cadenceData",
-        "maxCadence"
-      ]);
+      export const max = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "Max", ["stats", "cadence", "max"]);
 
-      export const pedalingTime = Stat.create<CadenceDataModel>(
+      export const pedalingTime = Stat.create<CadenceStats>(
         TimeSensor.DEFAULT,
         "Pedaling Time",
-        ["extendedStats", "cadenceData", "cadenceActiveTime"],
+        ["stats", "cadence", "activeTime"],
         "Active pedaling time"
       );
 
-      export const pedalingRatio = Stat.create<CadenceDataModel>(
+      export const pedalingRatio = Stat.create<CadenceStats>(
         CyclingCadenceSensor.DEFAULT,
         "Pedaling Ratio",
-        ["extendedStats", "cadenceData", "cadenceActivePercentage"],
-        "Pedaling VS Freewheel ratio"
-      ).forceUnit("%");
+        ["stats", "cadence", "activeRatio"],
+        "Pedaling VS Freewheel ratio",
+        2
+      );
 
-      export const avgClimb = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "Avg Climbing", [
-        "extendedStats",
-        "cadenceData",
-        "upFlatDownCadencePaceData",
+      export const avgClimb = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "Avg Climbing", [
+        "stats",
+        "cadence",
+        "slope",
         "up"
       ]);
 
-      export const avgFlat = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "Avg Flat", [
-        "extendedStats",
-        "cadenceData",
-        "upFlatDownCadencePaceData",
+      export const avgFlat = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "Avg Flat", [
+        "stats",
+        "cadence",
+        "slope",
         "flat"
       ]);
 
-      export const avgDown = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "Avg Downhill", [
-        "extendedStats",
-        "cadenceData",
-        "upFlatDownCadencePaceData",
+      export const avgDown = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "Avg Downhill", [
+        "stats",
+        "cadence",
+        "slope",
         "down"
       ]);
 
-      export const stdDeviation = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "Std Deviation σ", [
-        "extendedStats",
-        "cadenceData",
-        "standardDeviationCadence"
+      export const stdDeviation = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "Std Deviation σ", [
+        "stats",
+        "cadence",
+        "stdDev"
       ]);
 
-      export const totalOccurrences = Stat.create<CadenceDataModel>(
+      export const totalOccurrences = Stat.create<CadenceStats>(
         VoidSensor.DEFAULT,
         "Rev. Count",
-        ["extendedStats", "cadenceData", "totalOccurrences"],
+        ["stats", "cadence", "cycles"],
         "Crankset revolutions count"
       ).asEmptyUnit();
 
-      export const q25 = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "25% Quartile", [
-        "extendedStats",
-        "cadenceData",
-        "lowerQuartileCadence"
+      export const q25 = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "25% Quartile", [
+        "stats",
+        "cadence",
+        "lowQ"
       ]);
 
-      export const q50 = Stat.create<CadenceDataModel>(
+      export const q50 = Stat.create<CadenceStats>(
         CyclingCadenceSensor.DEFAULT,
         "50% Quartile",
-        ["extendedStats", "cadenceData", "medianCadence"],
+        ["stats", "cadence", "median"],
         "Equals to median"
       );
 
-      export const q75 = Stat.create<CadenceDataModel>(CyclingCadenceSensor.DEFAULT, "75% Quartile", [
-        "extendedStats",
-        "cadenceData",
-        "upperQuartileCadence"
+      export const q75 = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "75% Quartile", [
+        "stats",
+        "cadence",
+        "upperQ"
       ]);
 
-      export const avgDistPerRev = Stat.create<CadenceDataModel>(
+      export const avgDistPerRev = Stat.create<CadenceStats>(
         VoidSensor.DEFAULT,
         "Avg Dist. / Rev.",
-        ["extendedStats", "cadenceData", "averageDistancePerOccurrence"],
+        ["stats", "cadence", "distPerCycle"],
         "Average distance / crankset revolution",
         2
-      ).forceUnit("m");
+      ).setUnit("m");
     }
 
     export namespace Running {
-      export const avg = Stat.create<CadenceDataModel>(
+      export const avg = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Average",
-        ["extendedStats", "cadenceData", "averageCadence"],
+        ["stats", "cadence", "avg"],
         "Average strides inc. walking & pauses (2 legs)"
       );
 
-      export const activeAvg = Stat.create<CadenceDataModel>(
+      export const activeAvg = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Active Average",
-        ["extendedStats", "cadenceData", "averageActiveCadence"],
+        ["stats", "cadence", "avgActive"],
         "Average strides while running (2 legs)"
       );
 
-      export const max = Stat.create<CadenceDataModel>(
+      export const max = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Max",
-        ["extendedStats", "cadenceData", "maxCadence"],
+        ["stats", "cadence", "max"],
         "Max strides (2 legs)"
       );
 
-      export const avgClimb = Stat.create<CadenceDataModel>(
+      export const avgClimb = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Avg Climbing",
-        ["extendedStats", "cadenceData", "upFlatDownCadencePaceData", "up"],
+        ["stats", "cadence", "slope", "up"],
         "Average strides while climbing (2 legs)"
       );
 
-      export const avgFlat = Stat.create<CadenceDataModel>(
+      export const avgFlat = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Avg Flat",
-        ["extendedStats", "cadenceData", "upFlatDownCadencePaceData", "flat"],
+        ["stats", "cadence", "slope", "flat"],
         "Average strides on flat (2 legs)"
       );
 
-      export const avgDown = Stat.create<CadenceDataModel>(
+      export const avgDown = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Avg Downhill",
-        ["extendedStats", "cadenceData", "upFlatDownCadencePaceData", "down"],
+        ["stats", "cadence", "slope", "down"],
         "Average strides on downhills (2 legs)"
       );
 
-      export const stdDeviation = Stat.create<CadenceDataModel>(
+      export const stdDeviation = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "Std Deviation σ",
-        ["extendedStats", "cadenceData", "standardDeviationCadence"],
+        ["stats", "cadence", "stdDev"],
         "Standard deviation (2 legs)"
       );
 
-      export const totalOccurrences = Stat.create<CadenceDataModel>(
+      export const totalOccurrences = Stat.create<CadenceStats>(
         VoidSensor.DEFAULT,
         "Strides Count",
-        ["extendedStats", "cadenceData", "totalOccurrences"],
+        ["stats", "cadence", "cycles"],
         "Single strides count"
       ).asEmptyUnit();
 
-      export const q25 = Stat.create<CadenceDataModel>(
+      export const q25 = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "25% Quartile",
-        ["extendedStats", "cadenceData", "lowerQuartileCadence"],
+        ["stats", "cadence", "lowQ"],
         "25% quartile (2 legs)"
       );
 
-      export const q50 = Stat.create<CadenceDataModel>(
+      export const q50 = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "50% Quartile",
-        ["extendedStats", "cadenceData", "medianCadence"],
+        ["stats", "cadence", "median"],
         "50% quartile or median (2 legs)"
       );
 
-      export const q75 = Stat.create<CadenceDataModel>(
+      export const q75 = Stat.create<CadenceStats>(
         RunningCadenceSensor.DEFAULT,
         "75% Quartile",
-        ["extendedStats", "cadenceData", "upperQuartileCadence"],
+        ["stats", "cadence", "upperQ"],
         "75% quartile (2 legs)"
       );
 
-      export const avgDistPerStride = Stat.create<CadenceDataModel>(
+      export const avgDistPerStride = Stat.create<CadenceStats>(
         VoidSensor.DEFAULT,
         "Avg Dist. / Stride",
-        ["extendedStats", "cadenceData", "averageDistancePerOccurrence"],
+        ["stats", "cadence", "distPerCycle"],
         "Average distance per single stride",
         2
-      ).forceUnit("m");
+      ).setUnit("m");
     }
 
     export namespace Swimming {
-      export const activeAvg = Stat.create<CadenceDataModel>(
+      export const activeAvg = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "Average",
-        ["extendedStats", "cadenceData", "averageActiveCadence"],
+        ["stats", "cadence", "avgActive"],
         "Average strokes per minutes"
       );
 
-      export const avg = Stat.create<CadenceDataModel>(
+      export const avg = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "Average",
-        ["extendedStats", "cadenceData", "averageCadence"],
+        ["stats", "cadence", "avg"],
         "Average strokes per minutes inc. pauses"
       );
 
-      export const max = Stat.create<CadenceDataModel>(
+      export const max = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "Max",
-        ["extendedStats", "cadenceData", "maxCadence"],
+        ["stats", "cadence", "max"],
         "Max strokes"
       );
 
-      export const stdDeviation = Stat.create<CadenceDataModel>(
+      export const stdDeviation = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "Std Deviation σ",
-        ["extendedStats", "cadenceData", "standardDeviationCadence"],
+        ["stats", "cadence", "stdDev"],
         "Standard deviation"
       );
 
-      export const totalOccurrences = Stat.create<CadenceDataModel>(
+      export const totalOccurrences = Stat.create<CadenceStats>(
         VoidSensor.DEFAULT,
         "Strokes Count",
-        ["extendedStats", "cadenceData", "totalOccurrences"],
+        ["stats", "cadence", "cycles"],
         "Strokes count"
       ).asEmptyUnit();
 
-      export const q25 = Stat.create<CadenceDataModel>(
+      export const q25 = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "25% Quartile",
-        ["extendedStats", "cadenceData", "lowerQuartileCadence"],
+        ["stats", "cadence", "lowQ"],
         "25% quartile"
       );
 
-      export const q50 = Stat.create<CadenceDataModel>(
+      export const q50 = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "50% Quartile",
-        ["extendedStats", "cadenceData", "medianCadence"],
+        ["stats", "cadence", "median"],
         "50% quartile or median"
       );
 
-      export const q75 = Stat.create<CadenceDataModel>(
+      export const q75 = Stat.create<CadenceStats>(
         SwimmingCadenceSensor.DEFAULT,
         "75% Quartile",
-        ["extendedStats", "cadenceData", "upperQuartileCadence"],
+        ["stats", "cadence", "upperQ"],
         "75% quartile"
       );
 
-      export const avgDistPerStroke = Stat.create<CadenceDataModel>(
+      export const avgDistPerStroke = Stat.create<CadenceStats>(
         VoidSensor.DEFAULT,
         "Avg Dist. / Stroke",
-        ["extendedStats", "cadenceData", "averageDistancePerOccurrence"],
+        ["stats", "cadence", "distPerCycle"],
         "Average distance per stroke",
         2
-      ).forceUnit("m");
+      ).setUnit("m");
     }
   }
 
   export namespace Elevation {
-    export const ascentGain = Stat.create<ElevationDataModel>(ElevationSensor.DEFAULT, "Ascent Gain", [
-      "extendedStats",
-      "elevationData",
-      "accumulatedElevationAscent"
+    export const ascentGain = Stat.create<ElevationStats>(ElevationSensor.DEFAULT, "Ascent Gain", [
+      "stats",
+      "elevation",
+      "ascent"
     ]);
 
-    export const descentGain = Stat.create<ElevationDataModel>(ElevationSensor.DEFAULT, "Descent Gain", [
-      "extendedStats",
-      "elevationData",
-      "accumulatedElevationDescent"
+    export const descentGain = Stat.create<ElevationStats>(ElevationSensor.DEFAULT, "Descent Gain", [
+      "stats",
+      "elevation",
+      "descent"
     ]);
 
-    export const max = Stat.create<ElevationDataModel>(ElevationSensor.DEFAULT, "Max", [
-      "extendedStats",
-      "elevationData",
-      "maxElevation"
-    ]);
+    export const max = Stat.create<ElevationStats>(ElevationSensor.DEFAULT, "Max", ["stats", "elevation", "max"]);
 
-    export const min = Stat.create<ElevationDataModel>(ElevationSensor.DEFAULT, "Min", [
-      "extendedStats",
-      "elevationData",
-      "minElevation"
-    ]);
+    export const min = Stat.create<ElevationStats>(ElevationSensor.DEFAULT, "Min", ["stats", "elevation", "min"]);
 
-    export const avgVertSpeed = Stat.create<ElevationDataModel>(
+    export const avgVertSpeed = Stat.create<ElevationStats>(
       ElevationAscentSpeedSensor.DEFAULT,
       "Avg Ascend Speed",
-      ["extendedStats", "elevationData", "ascentSpeed", "avg"],
+      ["stats", "elevation", "ascentSpeed"],
       "Average vertical climbed meters or feet / hour"
     );
 
-    export const q25AvgVertSpeed = Stat.create<ElevationDataModel>(
-      ElevationAscentSpeedSensor.DEFAULT,
-      "25% Ascend Speed",
-      ["extendedStats", "elevationData", "ascentSpeed", "lowerQuartile"],
-      "25% quartile vertical climbed meters or feet / hour"
-    );
-
-    export const q50AvgVertSpeed = Stat.create<ElevationDataModel>(
-      ElevationAscentSpeedSensor.DEFAULT,
-      "50% Ascend Speed",
-      ["extendedStats", "elevationData", "ascentSpeed", "median"],
-      "50% quartile vertical climbed meters or feet / hour"
-    );
-
-    export const q75AvgVertSpeed = Stat.create<ElevationDataModel>(
-      ElevationAscentSpeedSensor.DEFAULT,
-      "75% Ascend Speed",
-      ["extendedStats", "elevationData", "ascentSpeed", "upperQuartile"],
-      "75% quartile vertical climbed meters or feet / hour"
-    );
-
-    export const q25 = Stat.create<ElevationDataModel>(ElevationSensor.DEFAULT, "25% Quartile", [
-      "extendedStats",
-      "elevationData",
-      "lowerQuartileElevation"
+    export const q25 = Stat.create<ElevationStats>(ElevationSensor.DEFAULT, "25% Quartile", [
+      "stats",
+      "elevation",
+      "lowQ"
     ]);
 
-    export const q50 = Stat.create<ElevationDataModel>(
+    export const q50 = Stat.create<ElevationStats>(
       ElevationSensor.DEFAULT,
       "50% Quartile",
-      ["extendedStats", "elevationData", "medianElevation"],
+      ["stats", "elevation", "median"],
       "Equals to median"
     );
 
-    export const q75 = Stat.create<ElevationDataModel>(ElevationSensor.DEFAULT, "75% Quartile", [
-      "extendedStats",
-      "elevationData",
-      "upperQuartileElevation"
+    export const q75 = Stat.create<ElevationStats>(ElevationSensor.DEFAULT, "75% Quartile", [
+      "stats",
+      "elevation",
+      "upperQ"
     ]);
   }
 
   export namespace Grade {
-    export const profile = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Profile", [
-      "extendedStats",
-      "gradeData",
-      "gradeProfile"
+    export const profile = Stat.create<GradeStats>(GradeSensor.DEFAULT, "Profile", [
+      "stats",
+      "grade",
+      "slopeProfile"
     ]).asEmptyUnit();
 
-    export const avg = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Average", [
-      "extendedStats",
-      "gradeData",
-      "avgGrade"
-    ]);
+    export const avg = Stat.create<GradeStats>(GradeSensor.DEFAULT, "Average", ["stats", "grade", "avg"]);
 
-    export const max = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Max", [
-      "extendedStats",
-      "gradeData",
-      "avgMaxGrade"
-    ]);
+    export const max = Stat.create<GradeStats>(GradeSensor.DEFAULT, "Max", ["stats", "grade", "max"]);
 
-    export const min = Stat.create<GradeDataModel>(GradeSensor.DEFAULT, "Min", [
-      "extendedStats",
-      "gradeData",
-      "avgMinGrade"
-    ]);
+    export const min = Stat.create<GradeStats>(GradeSensor.DEFAULT, "Min", ["stats", "grade", "min"]);
 
-    export const timeUp = Stat.create<GradeDataModel>(
+    export const timeUp = Stat.create<GradeStats>(
       TimeSensor.DEFAULT,
       "Climbing Time",
-      ["extendedStats", "gradeData", "upFlatDownInSeconds", "up"],
+      ["stats", "grade", "slopeTime", "up"],
       `Climbing time over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const timeFlat = Stat.create<GradeDataModel>(
+    export const timeFlat = Stat.create<GradeStats>(
       TimeSensor.DEFAULT,
       "Flat Time",
-      ["extendedStats", "gradeData", "upFlatDownInSeconds", "flat"],
+      ["stats", "grade", "slopeTime", "flat"],
       `Time on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const timeDown = Stat.create<GradeDataModel>(
+    export const timeDown = Stat.create<GradeStats>(
       TimeSensor.DEFAULT,
       "Downhill Time",
-      ["extendedStats", "gradeData", "upFlatDownInSeconds", "down"],
+      ["stats", "grade", "slopeTime", "down"],
       `Time in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
     );
 
-    export const distUp = Stat.create<GradeDataModel>(
+    export const distUp = Stat.create<GradeStats>(
       DistanceSensor.DEFAULT,
       "Climbing Distance",
-      ["extendedStats", "gradeData", "upFlatDownDistanceData", "up"],
+      ["stats", "grade", "slopeDistance", "up"],
       `Climbing distance over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const distFlat = Stat.create<GradeDataModel>(
+    export const distFlat = Stat.create<GradeStats>(
       DistanceSensor.DEFAULT,
       "Flat Distance",
-      ["extendedStats", "gradeData", "upFlatDownDistanceData", "flat"],
+      ["stats", "grade", "slopeDistance", "flat"],
       `Distance on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const distDown = Stat.create<GradeDataModel>(
+    export const distDown = Stat.create<GradeStats>(
       DistanceSensor.DEFAULT,
       "Downhill Distance",
-      ["extendedStats", "gradeData", "upFlatDownDistanceData", "down"],
+      ["stats", "grade", "slopeDistance", "down"],
       `Distance in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
     );
 
-    export const speedUp = Stat.create<GradeDataModel>(
+    export const speedUp = Stat.create<GradeStats>(
       SpeedSensor.DEFAULT,
       "Climbing Speed",
-      ["extendedStats", "gradeData", "upFlatDownMoveData", "up"],
+      ["stats", "grade", "slopeSpeed", "up"],
       `Climbing speed over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const speedFlat = Stat.create<GradeDataModel>(
+    export const speedFlat = Stat.create<GradeStats>(
       SpeedSensor.DEFAULT,
       "Flat Speed",
-      ["extendedStats", "gradeData", "upFlatDownMoveData", "flat"],
+      ["stats", "grade", "slopeSpeed", "flat"],
       `Speed on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const speedDown = Stat.create<GradeDataModel>(
+    export const speedDown = Stat.create<GradeStats>(
       SpeedSensor.DEFAULT,
       "Downhill Speed",
-      ["extendedStats", "gradeData", "upFlatDownMoveData", "down"],
+      ["stats", "grade", "slopeSpeed", "down"],
       `Speed in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
     );
 
-    export const cadenceUp = Stat.create<GradeDataModel>(
+    export const cadenceUp = Stat.create<GradeStats>(
       CyclingCadenceSensor.DEFAULT,
       "Climbing Cadence",
-      ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "up"],
+      ["stats", "grade", "slopeCadence", "up"],
       `Climbing cadence over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const cadenceFlat = Stat.create<GradeDataModel>(
+    export const cadenceFlat = Stat.create<GradeStats>(
       CyclingCadenceSensor.DEFAULT,
       "Flat Cadence",
-      ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "flat"],
+      ["stats", "grade", "slopeCadence", "flat"],
       `Cadence on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
     );
 
-    export const cadenceDown = Stat.create<GradeDataModel>(
+    export const cadenceDown = Stat.create<GradeStats>(
       CyclingCadenceSensor.DEFAULT,
       "Downhill Cadence",
-      ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "down"],
+      ["stats", "grade", "slopeCadence", "down"],
       `Cadence in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
     );
 
-    export const q25 = Stat.create<GradeDataModel>(
+    export const q25 = Stat.create<GradeStats>(
       GradeSensor.DEFAULT,
       "25% Quartile",
-      ["extendedStats", "gradeData", "lowerQuartileGrade"],
+      ["stats", "grade", "lowQ"],
       "25% quartile"
     );
 
-    export const q50 = Stat.create<GradeDataModel>(
+    export const q50 = Stat.create<GradeStats>(
       GradeSensor.DEFAULT,
       "50% Quartile",
-      ["extendedStats", "gradeData", "medianGrade"],
+      ["stats", "grade", "median"],
       "50% quartile or median"
     );
 
-    export const q75 = Stat.create<GradeDataModel>(
+    export const q75 = Stat.create<GradeStats>(
       GradeSensor.DEFAULT,
       "75% Quartile",
-      ["extendedStats", "gradeData", "upperQuartileGrade"],
+      ["stats", "grade", "upperQ"],
       "75% quartile"
     );
 
     export namespace Running {
-      export const paceUp = Stat.create<GradeDataModel>(
+      export const paceUp = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
         "Climbing Pace",
-        ["extendedStats", "gradeData", "upFlatDownMoveData", "up"],
+        ["stats", "grade", "slopeSpeed", "up"],
         `Climbing pace over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
       );
 
-      export const paceFlat = Stat.create<GradeDataModel>(
+      export const paceFlat = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
         "Flat Pace",
-        ["extendedStats", "gradeData", "upFlatDownMoveData", "flat"],
+        ["stats", "grade", "slopeSpeed", "flat"],
         `Pace on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
       );
 
-      export const paceDown = Stat.create<GradeDataModel>(
+      export const paceDown = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
         "Downhill Pace",
-        ["extendedStats", "gradeData", "upFlatDownMoveData", "down"],
+        ["stats", "grade", "slopeSpeed", "down"],
         `Pace in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
       );
 
-      export const cadenceUp = Stat.create<GradeDataModel>(
+      export const cadenceUp = Stat.create<GradeStats>(
         RunningCadenceSensor.DEFAULT,
         "Climbing Cadence",
-        ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "up"],
+        ["stats", "grade", "slopeCadence", "up"],
         `Climbing cadence over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
       );
 
-      export const cadenceFlat = Stat.create<GradeDataModel>(
+      export const cadenceFlat = Stat.create<GradeStats>(
         RunningCadenceSensor.DEFAULT,
         "Flat Cadence",
-        ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "flat"],
+        ["stats", "grade", "slopeCadence", "flat"],
         `Cadence on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
       );
 
-      export const cadenceDown = Stat.create<GradeDataModel>(
+      export const cadenceDown = Stat.create<GradeStats>(
         RunningCadenceSensor.DEFAULT,
         "Downhill Cadence",
-        ["extendedStats", "gradeData", "upFlatDownCadencePaceData", "down"],
+        ["stats", "grade", "slopeCadence", "down"],
         `Cadence in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
       );
+    }
+  }
+
+  export namespace Scores {
+    export namespace Stress {
+      const trainingEffectLabel = (value: number) => {
+        if (value <= 0.9) {
+          return "No Effect";
+        } else if (value <= 1.9) {
+          return "Minor Effect";
+        } else if (value <= 2.9) {
+          return "Maintaining";
+        } else if (value <= 3.9) {
+          return "Improving";
+        } else if (value <= 4.9) {
+          return "Highly Improving";
+        } else if (value >= 5) {
+          return "Overloading";
+        } else {
+          return null;
+        }
+      };
+
+      export const hrss = Stat.create<StressScores>(
+        HeartRateSensor.DEFAULT,
+        "HRSS",
+        ["stats", "scores", "stress", "hrss"],
+        "Heart Rate Stress Score"
+      ).asEmptyUnit();
+
+      export const hrssPerHour = Stat.create<StressScores>(
+        HeartRateSensor.DEFAULT,
+        "HRSS / Hour",
+        ["stats", "scores", "stress", "hrssPerHour"],
+        "Heart Rate Stress Score / Hour"
+      ).asEmptyUnit();
+
+      export const trimp = Stat.create<StressScores>(
+        HeartRateSensor.DEFAULT,
+        "TRIMP",
+        ["stats", "scores", "stress", "trimp"],
+        "TRaining IMPulse"
+      ).asEmptyUnit();
+
+      export const trimpPerHour = Stat.create<StressScores>(
+        HeartRateSensor.DEFAULT,
+        "TRIMP / Hour",
+        ["stats", "scores", "stress", "trimpPerHour"],
+        "TRaining IMPulse / Hour"
+      ).asEmptyUnit();
+
+      export const aerobicTrainingEffect = Stat.create<StressScores & TrainingEffect>(
+        VoidSensor.DEFAULT,
+        "Aerobic TE.",
+        ["stats", "scores", "stress", "trainingEffect", "aerobic"],
+        "Aerobic Training Effect",
+        1,
+        (te: number) => (Number.isFinite(te) ? `= ${trainingEffectLabel(te)}` : null)
+      ).asEmptyUnit();
+
+      export const anaerobicTrainingEffect = Stat.create<StressScores & TrainingEffect>(
+        VoidSensor.DEFAULT,
+        "Anaerobic TE.",
+        ["stats", "scores", "stress", "trainingEffect", "anaerobic"],
+        "Anaerobic Training Effect",
+        1,
+        (te: number) => (Number.isFinite(te) ? `= ${trainingEffectLabel(te)}` : null)
+      ).asEmptyUnit();
+
+      export namespace Cycling {
+        export function pss(powerSensor: PowerSensor, activityStartTime: string): Stat<StressScores> {
+          return Stat.create<StressScores>(
+            powerSensor,
+            "PSS",
+            ["stats", "scores", "stress", "pss"],
+            "Power Stress Score"
+          )
+            .asEmptyUnit()
+            .asForceDisplay()
+            .setMissingMessage(missingCyclingFtpMessage(activityStartTime));
+        }
+
+        export function pssPerHour(powerSensor: PowerSensor, activityStartTime: string) {
+          return Stat.create<StressScores>(
+            powerSensor,
+            "PSS / Hour",
+            ["stats", "scores", "stress", "pssPerHour"],
+            "Power Stress Score / Hour"
+          )
+            .asEmptyUnit()
+            .asForceDisplay()
+            .setMissingMessage(missingCyclingFtpMessage(activityStartTime));
+        }
+      }
+
+      export namespace Running {
+        export function runningStressScore(activityStartTime: string): Stat<StressScores> {
+          return Stat.create<StressScores>(
+            VoidSensor.DEFAULT,
+            "RSS",
+            ["stats", "scores", "stress", "rss"],
+            "Running Stress Score"
+          )
+            .asForceDisplay()
+            .setMissingMessage(missingRunningFtpMessage(activityStartTime));
+        }
+
+        export function runningStressScorePerHour(activityStartTime: string): Stat<StressScores> {
+          return Stat.create<StressScores>(
+            VoidSensor.DEFAULT,
+            "RSS / Hour",
+            ["stats", "scores", "stress", "rssPerHour"],
+            "Running Stress Score / Hour"
+          )
+            .asForceDisplay()
+            .setMissingMessage(missingRunningFtpMessage(activityStartTime));
+        }
+      }
+
+      export namespace Swimming {
+        export function swimStressScore(activityStartTime: string): Stat<StressScores> {
+          return Stat.create<StressScores>(
+            VoidSensor.DEFAULT,
+            "SSS",
+            ["stats", "scores", "stress", "sss"],
+            "Swimming Stress Score"
+          )
+            .asForceDisplay()
+            .setMissingMessage(missingSwimmingFtpMessage(activityStartTime));
+        }
+
+        export function swimStressScorePerHour(activityStartTime: string): Stat<StressScores> {
+          return Stat.create<StressScores>(
+            VoidSensor.DEFAULT,
+            "SSS / Hour",
+            ["stats", "scores", "stress", "sssPerHour"],
+            "Swimming Stress Score / Hour"
+          )
+            .asForceDisplay()
+            .setMissingMessage(missingSwimmingFtpMessage(activityStartTime));
+        }
+      }
+    }
+
+    export namespace Cycling {}
+
+    export namespace Running {
+      export const performanceIndex = Stat.create<Scores>(
+        VoidSensor.DEFAULT,
+        "Perf. Index",
+        ["stats", "scores", "runPerfIndex"],
+        "Running Performance Index from Polar company."
+      );
+    }
+
+    export namespace Swimming {
+      export const swolf25 = Stat.create<Scores>(
+        VoidSensor.DEFAULT,
+        "SWOLF 25m",
+        ["stats", "scores", "swolf", "25"],
+        "Swimming efficiency normalized to a 25 meters pool"
+      );
+
+      export const swolf50 = Stat.create<Scores>(
+        VoidSensor.DEFAULT,
+        "SWOLF 50m",
+        ["stats", "scores", "swolf", "50"],
+        "Swimming efficiency normalized to a 50 meters pool"
+      );
+    }
+  }
+
+  export namespace Dynamics {
+    export namespace Cycling {
+      export const balanceLeft = Stat.create<DynamicsStats & CyclingDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Left Balance",
+        ["stats", "dynamics", "cycling", "balance", "left"],
+        null,
+        2
+      ).setUnit("%");
+
+      export const balanceRight = Stat.create<DynamicsStats & CyclingDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Right Balance",
+        ["stats", "dynamics", "cycling", "balance", "right"],
+        null,
+        2
+      ).setUnit("%");
+
+      export const pedalSmoothnessLeft = Stat.create<DynamicsStats & CyclingDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Left Pedal Smth.",
+        ["stats", "dynamics", "cycling", "pedalSmoothness", "left"],
+        "Left Pedaling Smoothness",
+        1
+      ).setUnit("%");
+
+      export const pedalSmoothnessRight = Stat.create<DynamicsStats & CyclingDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Right Pedal Smth.",
+        ["stats", "dynamics", "cycling", "pedalSmoothness", "right"],
+        "Right Pedaling Smoothness",
+        1
+      ).setUnit("%");
+
+      export const torqueEffectivenessLeft = Stat.create<DynamicsStats & CyclingDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Left Torque Eff.",
+        ["stats", "dynamics", "cycling", "torqueEffectiveness", "left"],
+        "Left Torque Effectiveness",
+        1
+      ).setUnit("%");
+
+      export const torqueEffectivenessRight = Stat.create<DynamicsStats & CyclingDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Right Torque Eff.",
+        ["stats", "dynamics", "cycling", "torqueEffectiveness", "right"],
+        "Right Torque Effectiveness",
+        1
+      ).setUnit("%");
+
+      export const standingTime = Stat.create<DynamicsStats & CyclingDynamicsStats>(
+        TimeSensor.DEFAULT,
+        "Standing Time",
+        ["stats", "dynamics", "cycling", "standingTime"]
+      );
+      export const seatedTime = Stat.create<DynamicsStats & CyclingDynamicsStats>(TimeSensor.DEFAULT, "Seated Time", [
+        "stats",
+        "dynamics",
+        "cycling",
+        "seatedTime"
+      ]);
+    }
+
+    export namespace Running {
+      export const stanceTimeBalanceLeft = Stat.create<DynamicsStats & RunningDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Left GCT Balance",
+        ["stats", "dynamics", "running", "stanceTimeBalance", "left"],
+        'Left "Ground Contact Time" balance',
+        1
+      ).setUnit("%");
+
+      export const stanceTimeBalanceRight = Stat.create<DynamicsStats & RunningDynamicsStats & LeftRightPercent>(
+        VoidSensor.DEFAULT,
+        "Right GCT Balance",
+        ["stats", "dynamics", "running", "stanceTimeBalance", "right"],
+        'Right "Ground Contact Time" balance',
+        1
+      ).setUnit("%");
+
+      export const stanceTime = Stat.create<DynamicsStats & RunningDynamicsStats>(
+        VoidSensor.DEFAULT,
+        "Avg Stance Time",
+        ["stats", "dynamics", "running", "stanceTime"],
+        'Average "Ground Contact Time" spent on the ground'
+      ).setUnit("ms");
+
+      export const verticalOscillation = Stat.create<DynamicsStats & RunningDynamicsStats>(
+        VoidSensor.DEFAULT,
+        "Avg Vert. Oscillation",
+        ["stats", "dynamics", "running", "verticalOscillation"],
+        "Average vertical motion of your torso measured in centimeters for each step",
+        1
+      )
+        .setFactor(100) // From meters to centimeters
+        .setUnit("cm");
+
+      export const verticalRatio = Stat.create<DynamicsStats & RunningDynamicsStats>(
+        VoidSensor.DEFAULT,
+        "Avg Vert. Ratio",
+        ["stats", "dynamics", "running", "verticalRatio"],
+        "Ratio of your vertical oscillation over your stride length. A lower number indicates a better running form. (Avg Vertical Ratio does not include zeros from time spent standing)",
+        1
+      ).setUnit("%");
+
+      export const avgStrideLength = Stat.create<DynamicsStats & RunningDynamicsStats>(
+        VoidSensor.DEFAULT,
+        "Avg Stride Length",
+        ["stats", "dynamics", "running", "avgStrideLength"],
+        "Average length of strides from one footfall to the next",
+        2
+      ).setUnit("m");
     }
   }
 }

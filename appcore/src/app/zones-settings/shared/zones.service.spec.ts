@@ -2,7 +2,6 @@ import { inject, TestBed } from "@angular/core/testing";
 import { ZonesService } from "./zones.service";
 import _ from "lodash";
 import { ZONE_DEFINITIONS } from "../zone-definitions";
-import { UserSettings, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
@@ -11,10 +10,13 @@ import { SharedModule } from "../../shared/shared.module";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
-import { ZoneType } from "@elevate/shared/enums";
 import { IpcRendererTunnelServiceMock } from "../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("ZonesService", () => {
   let zonesService: ZonesService;
@@ -553,7 +555,7 @@ describe("ZonesService", () => {
       value: ZoneType.SPEED
     });
 
-    const expectedResetZones = UserZonesModel.deserialize(DesktopUserSettingsModel.DEFAULT_MODEL.zones.speed);
+    const expectedResetZones = UserZonesModel.deserialize(DesktopUserSettings.DEFAULT_MODEL.zones.speed);
 
     zonesService.currentZones = FAKE_EXISTING_ZONES;
     zonesService.zoneDefinition = SPEED_ZONE_DEFINITION_MOCKED;

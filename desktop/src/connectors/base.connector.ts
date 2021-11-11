@@ -1,46 +1,43 @@
-import { of, ReplaySubject, Subject } from "rxjs";
-import { ActivityComputer, ConnectorType, StoppedSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
-import {
-  AnalysisDataModel,
-  AthleteSnapshotModel,
-  BareActivityModel,
-  Streams,
-  SyncedActivityModel,
-  UserSettings
-} from "@elevate/shared/models";
 import { AppService } from "../app-service";
 import { catchError, filter, timeout } from "rxjs/operators";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import _ from "lodash";
 import { ConnectorConfig } from "./connector-config.model";
-import { Hash } from "../tools/hash";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import { Logger } from "../logger";
-import UserSettingsModel = UserSettings.UserSettingsModel;
-
-/**
- * Primitive data provided by the input source plugged on connector (e.g. Strava, activity files)
- */
-export class PrimitiveSourceData {
-  public elapsedTimeRaw: number;
-  public movingTimeRaw: number;
-  public distanceRaw: number;
-  public elevationGainRaw: number;
-
-  constructor(elapsedTimeRaw: number, movingTimeRaw: number, distanceRaw: number, elevationGainRaw: number) {
-    this.elapsedTimeRaw = elapsedTimeRaw;
-    this.movingTimeRaw = movingTimeRaw;
-    this.distanceRaw = distanceRaw;
-    this.elevationGainRaw = elevationGainRaw;
-  }
-}
+import { WorkerService } from "../worker-service";
+import { ActivityComputeWorkerParams } from "../workers/activity-compute.worker";
+import { WorkerType } from "../enum/worker-type.enum";
+import { Hash } from "../tools/hash";
+import FormData from "form-data";
+import fs from "fs";
+import normalizeUrl from "normalize-url";
+import { Environment } from "../environments/environment.interface";
+import { HttpClient } from "../clients/http.client";
+import { of, ReplaySubject, Subject } from "rxjs";
+import pDefer, { DeferredPromise } from "p-defer";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { StoppedSyncEvent } from "@elevate/shared/sync/events/stopped-sync.event";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { BareActivity } from "@elevate/shared/models/sync/bare-activity.model";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 export abstract class BaseConnector {
   protected constructor(
     protected readonly appService: AppService,
+    protected readonly environment: Environment,
     protected readonly ipcSyncMessageSender: IpcSyncMessageSender,
+    protected readonly workerService: WorkerService,
+    protected readonly httpClient: HttpClient,
     protected readonly logger: Logger
-  ) {}
+  ) {
+    this.connectorErrorsReasonsIds = [];
+  }
 
   private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 3000;
 
@@ -53,122 +50,7 @@ export abstract class BaseConnector {
   public syncFromDateTime: number;
   public syncEvents$: ReplaySubject<SyncEvent>;
 
-  public static updatePrimitiveStatsFromComputation(
-    syncedActivityModel: SyncedActivityModel,
-    streams: Streams,
-    primitiveSourceData: PrimitiveSourceData = null
-  ): SyncedActivityModel {
-    if (syncedActivityModel.extendedStats) {
-      // Time
-      syncedActivityModel.elapsed_time_raw = _.isNumber(syncedActivityModel.extendedStats.elapsedTime)
-        ? syncedActivityModel.extendedStats.elapsedTime
-        : null;
-      syncedActivityModel.moving_time_raw = _.isNumber(syncedActivityModel.extendedStats.movingTime)
-        ? syncedActivityModel.extendedStats.movingTime
-        : null;
-
-      // Distance
-      if (streams && streams.distance && streams.distance.length > 0) {
-        syncedActivityModel.distance_raw = _.last(streams.distance);
-      } else {
-        syncedActivityModel.distance_raw = null;
-      }
-
-      // Elevation
-      if (
-        syncedActivityModel.extendedStats.elevationData &&
-        _.isNumber(syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent)
-      ) {
-        syncedActivityModel.elevation_gain_raw = Math.round(
-          syncedActivityModel.extendedStats.elevationData.accumulatedElevationAscent
-        );
-      } else {
-        syncedActivityModel.elevation_gain_raw = null;
-      }
-    } else {
-      syncedActivityModel.elapsed_time_raw = null;
-      syncedActivityModel.moving_time_raw = null;
-      syncedActivityModel.distance_raw = null;
-      syncedActivityModel.elevation_gain_raw = null;
-
-      if (syncedActivityModel.start_time && syncedActivityModel.end_time) {
-        const startTime = new Date(syncedActivityModel.start_time).getTime();
-        const endTime = new Date(syncedActivityModel.end_time).getTime();
-
-        const deltaTime = (endTime - startTime) / 1000;
-
-        if (Number.isFinite(deltaTime) && deltaTime > 0) {
-          syncedActivityModel.elapsed_time_raw = deltaTime;
-          syncedActivityModel.moving_time_raw = deltaTime;
-        }
-      }
-    }
-
-    if (primitiveSourceData) {
-      if (_.isNull(syncedActivityModel.elapsed_time_raw) && _.isNumber(primitiveSourceData.elapsedTimeRaw)) {
-        syncedActivityModel.elapsed_time_raw = primitiveSourceData.elapsedTimeRaw;
-      }
-
-      if (_.isNull(syncedActivityModel.moving_time_raw) && _.isNumber(primitiveSourceData.movingTimeRaw)) {
-        syncedActivityModel.moving_time_raw = primitiveSourceData.movingTimeRaw;
-      }
-
-      if (_.isNull(syncedActivityModel.distance_raw) && _.isNumber(primitiveSourceData.distanceRaw)) {
-        syncedActivityModel.distance_raw = primitiveSourceData.distanceRaw;
-      }
-
-      if (_.isNull(syncedActivityModel.elevation_gain_raw) && _.isNumber(primitiveSourceData.elevationGainRaw)) {
-        syncedActivityModel.elevation_gain_raw = primitiveSourceData.elevationGainRaw;
-      }
-    }
-
-    return syncedActivityModel;
-  }
-
-  public static geoBaryCenter(streams: Partial<Streams>): number[] {
-    if (!streams) {
-      return null;
-    }
-
-    const latLngStream: number[][] = streams.latlng;
-    if (!latLngStream || !Array.isArray(latLngStream) || latLngStream.length === 0) {
-      return null;
-    }
-
-    const lat = latLngStream.map(latLng => latLng[0]);
-    const lng = latLngStream.map(latLng => latLng[1]);
-    const cLat = (Math.min(...lat) + Math.max(...lat)) / 2;
-    const cLng = (Math.min(...lng) + Math.max(...lng)) / 2;
-    return [cLat, cLng];
-  }
-
-  public static activityHash(activity: Partial<SyncedActivityModel>): string {
-    const activityUniqueRepresentation = _.pick(activity, [
-      "id",
-      "type",
-      "start_time",
-      "end_time",
-      "distance_raw",
-      "hasPowerMeter",
-      "trainer",
-      "elevation_gain_raw",
-      "latLngCenter"
-    ]) as any;
-
-    if (activity.extendedStats?.speedData?.maxSpeed) {
-      activityUniqueRepresentation.maxSpeed = activity.extendedStats.speedData.maxSpeed;
-    }
-
-    if (activity.extendedStats?.heartRateData?.maxHeartRate) {
-      activityUniqueRepresentation.maxHr = activity.extendedStats.heartRateData.maxHeartRate;
-    }
-
-    if (activity.extendedStats?.cadenceData?.maxCadence) {
-      activityUniqueRepresentation.maxCadence = activity.extendedStats.cadenceData.maxCadence;
-    }
-
-    return Hash.asObjectId(JSON.stringify(activityUniqueRepresentation));
-  }
+  private readonly connectorErrorsReasonsIds: string[];
 
   public configure(connectorConfig: ConnectorConfig): this {
     this.connectorConfig = connectorConfig;
@@ -183,64 +65,173 @@ export abstract class BaseConnector {
 
   public abstract sync(): Subject<SyncEvent>;
 
+  public abstract getSourceStats<T>(sport: ElevateSport, source: Partial<T>, streams: Streams): Partial<ActivityStats>;
+
   public stop(): Promise<void> {
     this.stopRequested = true;
+    const stopPromise: DeferredPromise<void> = pDefer();
 
-    return new Promise((resolve, reject) => {
-      if (this.isSyncing) {
-        const stopSubscription = this.syncEvents$
-          .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
-          .pipe(
-            timeout(BaseConnector.WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT),
-            catchError(() => {
-              // Timeout for waiting a stop event reached, we have to emulated it...
-              this.logger.warn("Request timed out after waiting for stop event from connector. Emulating one");
-              this.isSyncing = false;
-              this.syncEvents$.next(new StoppedSyncEvent(ConnectorType.STRAVA));
-              resolve();
-              return of();
-            })
-          )
-          .subscribe(() => {
-            stopSubscription.unsubscribe();
-            this.stopRequested = false;
-            resolve();
-          });
-      } else {
-        setTimeout(() => {
+    if (this.isSyncing) {
+      const stopSubscription = this.syncEvents$
+        .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
+        .pipe(
+          timeout(BaseConnector.WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT),
+          catchError(() => {
+            // Timeout for waiting a stop event reached, we have to emulated it...
+            this.logger.warn("Request timed out after waiting for stop event from connector. Emulating one");
+            this.isSyncing = false;
+            this.syncEvents$.next(new StoppedSyncEvent(this.type));
+            return of(null);
+          })
+        )
+        .subscribe(() => {
+          stopSubscription.unsubscribe();
           this.stopRequested = false;
-          reject(this.type + " connector is not syncing currently.");
+          stopPromise.resolve();
         });
+    } else {
+      this.stopRequested = false;
+      stopPromise.reject(this.type + " connector is not syncing currently.");
+    }
+
+    return stopPromise.promise;
+  }
+
+  public findLocalActivities(activityStartDate: string, activityEndDate: string): Promise<Activity[]> {
+    return this.ipcSyncMessageSender.findLocalActivities(activityStartDate, activityEndDate);
+  }
+
+  public findStreams(activityId: number | string): Promise<Streams> {
+    return this.ipcSyncMessageSender.findDeflatedActivityStreams(activityId).then(deflated => {
+      if (deflated) {
+        return Promise.resolve(Streams.inflate(deflated.deflatedStreams));
+      } else {
+        return Promise.resolve(null);
       }
     });
   }
 
-  public findSyncedActivityModels(
-    activityStartDate: string,
-    activityDurationSeconds: number
-  ): Promise<SyncedActivityModel[]> {
-    return this.ipcSyncMessageSender.findSyncedActivityModels(activityStartDate, activityDurationSeconds);
-  }
-
-  public findStreams(activityId: number | string): Promise<Streams> {
-    return this.ipcSyncMessageSender.findStreams(activityId);
-  }
-
-  public computeExtendedStats(
-    syncedActivityModel: Partial<SyncedActivityModel>,
-    athleteSnapshotModel: AthleteSnapshotModel,
-    userSettingsModel: UserSettingsModel,
-    streams: Streams
-  ): AnalysisDataModel {
-    return ActivityComputer.calculate(
-      syncedActivityModel as BareActivityModel,
-      athleteSnapshotModel,
-      userSettingsModel,
-      streams,
-      false,
-      null,
-      true,
-      null
+  private generateActivityId(bareActivity: BareActivity): string {
+    return Hash.asObjectId(
+      `${new Date().toISOString()}:${bareActivity.startTime}:${bareActivity.endTime}:${Math.random()}`
     );
+  }
+
+  protected assignBaseProperties(activity: Partial<Activity>, streams: Streams): Partial<Activity> {
+    // Generate activity id
+    activity.id = this.generateActivityId(activity as BareActivity);
+
+    // Track connector type
+    activity.connector = this.type;
+
+    // Set created activity dates
+    const now = new Date().toISOString();
+    activity.creationTime = now;
+    activity.lastEditTime = now;
+
+    // Sport type not detected (not supported yet)
+    activity.autoDetectedType = false;
+
+    // If swim activity and no position data, it's considered as a pool swim activity
+    if (Activity.isSwim(activity.type)) {
+      activity.isSwimPool = !streams?.latlng?.length;
+    }
+
+    return activity;
+  }
+
+  public computeActivity(
+    activity: Partial<Activity>,
+    athleteSnapshot: AthleteSnapshot,
+    userSettings: BaseUserSettings,
+    streams: Streams,
+    deflateStreams: boolean
+  ): Promise<{ computedActivity: Activity; deflatedStreams: string | null }> {
+    const workerParams: ActivityComputeWorkerParams = {
+      activity: activity,
+      athleteSnapshot: athleteSnapshot,
+      userSettings: userSettings,
+      streams: streams,
+      deflateStreams: deflateStreams,
+      returnPeaks: true,
+      returnZones: false,
+      bounds: null,
+      isOwner: true,
+      activityEssentials: null
+    };
+
+    return this.workerService.exec<
+      ActivityComputeWorkerParams,
+      { computedActivity: Activity; deflatedStreams: string | null }
+    >(WorkerType.ACTIVITY_COMPUTE, workerParams);
+  }
+
+  public uploadToConnectorDebug(
+    connectorSubPath: string,
+    fileType: string,
+    reason: string,
+    pathToFile: string,
+    activityId: number | string = null
+  ): void {
+    if (!this.environment.debugActivityFiles.enabled) {
+      this.logger.debug(`Skip uploading file ${pathToFile} for debug`);
+      return;
+    }
+
+    this.logger.info(`Uploading file ${pathToFile} for debug`);
+
+    // Construct url
+    const requestUrl = normalizeUrl(`${this.environment.debugActivityFiles.endpoint}/connectors/${connectorSubPath}`);
+
+    // Prepare multi-part form
+    const formData = new FormData();
+    formData.append("fileType", fileType);
+    formData.append("machineId", this.appService.getRuntimeInfo().athleteMachineId);
+    formData.append("reason", reason);
+    formData.append("file", fs.createReadStream(pathToFile));
+
+    if (activityId) {
+      formData.append("activityId", activityId);
+    }
+
+    // Push
+    this.httpClient
+      .post(requestUrl, formData, { headers: formData.getHeaders() })
+      .then(() => {
+        this.logger.info(`Uploaded ${pathToFile} file for debug. Reason: ${reason}`);
+      })
+      .catch(err => {
+        this.logger.error(
+          `Unable to upload file ${pathToFile} to ${requestUrl} for debugging purpose: ${err.message}`,
+          err
+        );
+      });
+  }
+
+  protected uploadActivityInError(
+    connectorType: ConnectorType,
+    sport: string,
+    fileType: string,
+    source: string,
+    reason: string,
+    pathToFile: string,
+    activityId: number | string = null
+  ): void {
+    const reasonJson = JSON.stringify({
+      source: source,
+      reason: reason,
+      fileType: fileType,
+      sport: sport
+    });
+
+    const reasonHashId = Hash.asObjectId(reasonJson);
+
+    // Test if an activity with same error has been already uploaded.
+    // If not send the files and track reason hash
+    // Else don't upload
+    if (this.connectorErrorsReasonsIds.indexOf(reasonHashId) === -1) {
+      this.uploadToConnectorDebug(`${connectorType.toLowerCase()}/error`, fileType, reasonJson, pathToFile, activityId);
+      this.connectorErrorsReasonsIds.push(reasonHashId);
+    }
   }
 }

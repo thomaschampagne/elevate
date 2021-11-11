@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, Inject, OnInit } from "@angular/core";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { ElectronService } from "../desktop/electron/electron.service";
 import { TopBarComponent } from "./top-bar.component";
-import { Platform } from "@elevate/shared/enums";
 import { WindowService } from "../shared/services/window/window.service";
 import { DesktopWindowService } from "../shared/services/window/desktop-window.service";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @Component({
   selector: "app-desktop-top-bar",

@@ -1,8 +1,8 @@
 import { Component, HostBinding, Inject, OnInit } from "@angular/core";
 import { UpdateBarComponent } from "./update-bar.component";
-import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models";
 import { DesktopUpdateService } from "../desktop/app-update/desktop-update.service";
 import { ElectronService } from "../desktop/electron/electron.service";
+import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models/updates/update-notify";
 
 @Component({
   selector: "app-desktop-update-bar",
@@ -14,7 +14,7 @@ import { ElectronService } from "../desktop/electron/electron.service";
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <button *ngIf="updateNotify.isAutoUpdatable" (click)="onRestartUpdate()" mat-flat-button>Restart</button>
         <button *ngIf="!updateNotify.isAutoUpdatable" (click)="onStaticDownload()" mat-flat-button>
-          Download & install yourself
+          Download update
         </button>
       </div>
     </div>

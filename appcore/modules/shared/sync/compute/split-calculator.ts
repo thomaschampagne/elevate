@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { WarningException } from "../../exceptions";
+import { WarningException } from "../../exceptions/warning.exception";
 
 export class SplitCalculator {
   public scale: number[];

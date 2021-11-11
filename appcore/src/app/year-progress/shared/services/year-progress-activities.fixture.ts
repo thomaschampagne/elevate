@@ -1,6 +1,6 @@
 import moment from "moment";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { ElevateSport } from "@elevate/shared/enums";
+import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 export class YearProgressActivitiesFixture {
   public static readonly STATES_COUNT = 5;
@@ -13,8 +13,8 @@ export class YearProgressActivitiesFixture {
   public static readonly END_DATE: string = "2017-06-01";
   public static readonly DATE_FORMAT: string = "YYYY-MM-DD";
 
-  public static provide(): SyncedActivityModel[] {
-    const models: SyncedActivityModel[] = [];
+  public static provide(): Activity[] {
+    const models: Activity[] = [];
 
     const currentMoment = moment(
       YearProgressActivitiesFixture.START_DATE,
@@ -70,18 +70,20 @@ export class YearProgressActivitiesFixture {
       }
 
       if (!restDay) {
-        const syncedActivityModel = new SyncedActivityModel();
-        syncedActivityModel.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear(), 10);
-        syncedActivityModel.name = type + " activity" + (commute ? " (commute)" : "");
-        syncedActivityModel.type = type;
-        syncedActivityModel.start_time = currentMoment.toISOString();
-        syncedActivityModel.distance_raw = distanceRaw;
-        syncedActivityModel.moving_time_raw = time;
-        syncedActivityModel.elapsed_time_raw = time;
-        syncedActivityModel.commute = commute;
-        syncedActivityModel.elevation_gain_raw = elevationGainRaw;
+        const activity = new Activity();
+        activity.id = parseInt(currentMoment.year() + "" + currentMoment.dayOfYear(), 10);
+        activity.name = type + " activity" + (commute ? " (commute)" : "");
+        activity.type = type;
+        activity.startTime = currentMoment.toISOString();
+        activity.stats = {
+          distance: distanceRaw,
+          movingTime: time,
+          elapsedTime: time,
+          elevationGain: elevationGainRaw
+        } as ActivityStats;
+        activity.commute = commute;
 
-        models.push(syncedActivityModel);
+        models.push(activity);
       }
 
       currentMoment.add(1, "days");

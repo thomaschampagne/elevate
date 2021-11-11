@@ -10,29 +10,53 @@
             </button>
           </div>
           <div>
-            {{typeDisplay}} - {{activity.name}}<mat-icon *ngIf="activity.hasPowerMeter" fontSet="material-icons-outlined" [inline]="true" color="primary"
-                                                                    matTooltip="Power meter available">bolt
-          </mat-icon>
+            {{typeDisplay}} - {{activity.name}}
           </div>
         </div>
       </mat-card-title>
-      <mat-card-subtitle>On {{startDateDisplay}} <strong
-        matTooltip="Athlete physical attributes during activity">@ {{athleteSnapshotDisplay}}</strong>
-        &nbsp;<span class="primary-color mat-caption clickable" (click)="onConfigureAthleteSettings();">[configure]</span>
+      <mat-card-subtitle>
+        <span matTooltip="Ended on {{ endDateDisplay }}">
+          <mat-icon class="details" fontSet="material-icons-outlined" inline="true"
+                    color="primary">calendar_today</mat-icon>
+          &nbsp;{{ startDateDisplay }}</span>
+        <span *ngIf="activity.device" matTooltip="Device used during activity">&nbsp;
+          <mat-icon class="details" fontSet="material-icons-outlined" inline="true"
+                    color="primary">{{ deviceIcon }}</mat-icon>&nbsp;{{ activity.device }}
+        </span>
+        <span *ngIf="activity.hasPowerMeter" matTooltip="Real power sensor available">&nbsp;
+          <mat-icon class="details" fontSet="material-icons-outlined" inline="true"
+                    color="primary">flash_on</mat-icon>&nbsp;Real Power</span>
+        <span *ngIf="activity.trainer" matTooltip="Indoor training activity">&nbsp;
+          <mat-icon class="details" fontSet="material-icons-outlined" inline="true"
+                    color="primary">home</mat-icon>&nbsp;Indoor</span>
+        <span>&nbsp;
+          <mat-icon class="details" fontSet="material-icons-outlined" inline="true" color="primary">accessibility_new
+          </mat-icon>
+        </span>
+        <span
+          matTooltip="Athlete physical attributes during activity">&nbsp;{{athleteSnapshotDisplay}}</span>
+        &nbsp;<span class="primary-color mat-caption clickable"
+                    (click)="onConfigureAthleteSettings();">[configure]</span>
       </mat-card-subtitle>
     </div>
     <div>
-      <button mat-icon-button [matMenuTriggerFor]="moreMenu">
-        <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
-      </button>
-      <mat-menu #moreMenu="matMenu">
-        <button mat-menu-item *ngIf="hasStravaActivityId()" (click)="onOpenSourceActivity(ConnectorType.STRAVA)">
+      <div fxLayout="row" fxLayoutAlign="end end">
+        <button mat-icon-button matTooltip="Open in Strava" *ngIf="hasStravaActivityId()"
+                (click)="onOpenSourceActivity(ConnectorType.STRAVA)">
           <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
-          Open in Strava
         </button>
-        <button mat-menu-item *ngIf="hasActivityFilePath()" (click)="onOpenSourceActivity(ConnectorType.FILE)">
+        <!--<button mat-icon-button matTooltip="View/edit notes coming during beta">
+                  <mat-icon fontSet="material-icons-outlined">description</mat-icon>
+                </button>-->
+        <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+          <mat-icon fontSet="material-icons-outlined">more_vert</mat-icon>
+        </button>
+      </div>
+      <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item matTooltip="View file location" *ngIf="hasActivityFilePath()"
+                (click)="onOpenSourceActivity(ConnectorType.FILE)">
           <mat-icon fontSet="material-icons-outlined">folder</mat-icon>
-          Open file location
+          View file location
         </button>
         <button mat-menu-item (click)="onEditActivity()">
           <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
@@ -80,11 +104,11 @@
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Peaks" *ngIf="activity?.extendedStats">
+      <mat-tab label="Peaks" *ngIf="activity?.stats">
         <ng-template matTabContent>
           <app-activity-view-peaks [measureSystem]="userSettings.systemUnit"
                                    [activity]="activity"
-                                   [analysisData]="activity.extendedStats">
+                                   [stats]="activity.stats">
           </app-activity-view-peaks>
         </ng-template>
       </mat-tab>
@@ -92,14 +116,15 @@
       <mat-tab label="Time in Zones" *ngIf="streams">
         <ng-template matTabContent>
           <app-activity-view-time-in-zones [measureSystem]="userSettings.systemUnit"
-                                           [activity]="activity"
-                                           [streams]="streams"></app-activity-view-time-in-zones>
+                                           [activity]="activity"></app-activity-view-time-in-zones>
         </ng-template>
       </mat-tab>
 
-      <mat-tab label="Intervals" *ngIf="streams">
+      <mat-tab label="Intervals" *ngIf="activity.laps">
         <ng-template matTabContent>
-          <app-activity-view-intervals></app-activity-view-intervals>
+          <app-activity-view-intervals [activity]="activity"
+                                       [measureSystem]="userSettings.systemUnit"
+                                       [hasMapData]="hasMapData"></app-activity-view-intervals>
         </ng-template>
       </mat-tab>
 

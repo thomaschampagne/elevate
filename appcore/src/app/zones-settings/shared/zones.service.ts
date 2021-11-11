@@ -2,11 +2,12 @@ import { Inject, Injectable } from "@angular/core";
 import _ from "lodash";
 import { Subject } from "rxjs";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import { ZoneChangeWhisperModel } from "./zone-change-whisper.model";
 import { ZoneChangeOrderModel } from "./zone-change-order.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
 
 @Injectable()
 export class ZonesService {

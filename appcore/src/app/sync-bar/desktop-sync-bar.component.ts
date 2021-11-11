@@ -1,13 +1,16 @@
 import { ChangeDetectorRef, Component, HostBinding, Inject, OnInit } from "@angular/core";
-import { ActivitySyncEvent, ErrorSyncEvent, SyncEvent, SyncEventType } from "@elevate/shared/sync";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
-import { SyncException } from "@elevate/shared/exceptions";
 import { DesktopErrorsSyncDetailsDialogComponent } from "./desktop-errors-sync-details-dialog.component";
 import moment from "moment";
 import { SyncBarComponent } from "./sync-bar.component";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { ConnectorService } from "../connectors/connector.service";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
+import { SyncException } from "@elevate/shared/exceptions/sync.exception";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
 
 class CurrentActivitySynced {
   public date: string;
@@ -39,7 +42,7 @@ class CurrentActivitySynced {
             *ngIf="eventErrors && eventErrors.length > 0"
             mat-flat-button
             color="warn"
-            (click)="onActionShowErrors()"
+            (click)="onActionShowWarnings()"
           >
             {{ eventErrors.length }} warning{{ eventErrors.length > 1 ? "s" : "" }}
           </button>
@@ -53,12 +56,12 @@ class CurrentActivitySynced {
         </div>
       </div>
     </div>
+    <mat-progress-bar *ngIf="isSyncing" mode="indeterminate"></mat-progress-bar>
   `,
   styles: [
     `
       .ribbon {
         padding: 10px 20px;
-        border-bottom: 1px solid #bfbfbf;
       }
 
       button {
@@ -119,7 +122,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.hideSyncBar();
   }
 
-  public onActionShowErrors(): void {
+  public onActionShowWarnings(): void {
     this.dialog.open(DesktopErrorsSyncDetailsDialogComponent, {
       minWidth: DesktopErrorsSyncDetailsDialogComponent.MIN_WIDTH,
       maxWidth: DesktopErrorsSyncDetailsDialogComponent.MAX_WIDTH,
@@ -172,7 +175,7 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.activityCounter++;
     const activitySyncEvent = syncEvent as ActivitySyncEvent;
     this.currentActivitySynced = {
-      date: moment(activitySyncEvent.activity.start_time).format("ll"),
+      date: moment(activitySyncEvent.activity.startTime).format("ll"),
       name: activitySyncEvent.activity.name,
       isNew: activitySyncEvent.isNew
     };
@@ -195,13 +198,6 @@ export class DesktopSyncBarComponent extends SyncBarComponent implements OnInit 
     this.syncStatusText =
       'Sync completed on connector "' + ConnectorService.printType(syncEvent.fromConnectorType) + '"';
     this.onSyncEnded();
-
-    if (!this.activityCounter) {
-      // If no activity synced auto close sync bar within 750ms
-      setTimeout(() => {
-        this.hideSyncBar();
-      }, 750);
-    }
   }
 
   private onSyncEnded(): void {

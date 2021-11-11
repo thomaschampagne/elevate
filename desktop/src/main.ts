@@ -13,11 +13,8 @@ import Electron, {
 import path from "path";
 import { AppService } from "./app-service";
 import pkg from "../package.json";
-import { Platform } from "@elevate/shared/enums";
-import { container, inject, singleton } from "tsyringe";
-import { HttpClient } from "./clients/http.client";
+import { container, inject, registry, singleton } from "tsyringe";
 import _ from "lodash";
-import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
 import fs from "fs";
 import { IpcMainTunnelService } from "./ipc-main-tunnel.service";
 import { IpcSyncMessageListener } from "./listeners/ipc-sync-message.listener";
@@ -27,8 +24,21 @@ import { IpcProfileBackupListener } from "./listeners/ipc-profile-backup.listene
 import { Logger } from "./logger";
 import { UpdateHandler } from "./updates/update-handler";
 import { IpcSharedStorageListener } from "./listeners/ipc-shared-storage.listener";
+import { IpcStorageService } from "./ipc-storage-service";
+import { HttpClient } from "./clients/http.client";
+import { EnvironmentToken } from "./environments/environment.interface";
+import { DevEnvironment } from "./environments/environment.dev";
+import { ProdEnvironment } from "./environments/environment.prod";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { Platform } from "@elevate/shared/enums/platform.enum";
+
+const IS_ELECTRON_DEV = !app.isPackaged;
 
 @singleton()
+@registry([{ token: EnvironmentToken, useClass: IS_ELECTRON_DEV ? DevEnvironment : ProdEnvironment }])
 class Main {
   constructor(
     @inject(AppService) private readonly appService: AppService,
@@ -39,12 +49,19 @@ class Main {
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
     @inject(IpcSharedStorageListener) private readonly ipcSharedStorageListener: IpcSharedStorageListener,
+    @inject(IpcStorageService) private readonly ipcStorage: IpcStorageService,
     @inject(HttpClient) private readonly httpClient: HttpClient,
     @inject(Logger) private readonly logger: Logger
   ) {}
 
   private static readonly DEFAULT_SCREEN_RATIO: number = 0.95;
   private static readonly LARGE_SCREEN_RATIO: number = 0.85;
+
+  private static readonly FORBIDDEN_SHORTCUTS: string[] = [
+    "CommandOrControl+Shift+I",
+    "CommandOrControl+R",
+    "CommandOrControl+Shift+R"
+  ];
 
   private app: Electron.App;
   private ipcMain: IpcMain;
@@ -81,10 +98,7 @@ class Main {
         }
       });
 
-      this.startElevate(() => {
-        // Main browser window is ready
-        this.logger.debug("Main browser window is ready");
-      });
+      this.startElevate();
     }
   }
 
@@ -121,6 +135,25 @@ class Main {
       // dock icon is clicked and there are no other windows open.
       if (!this.mainWindow) {
         this.createMainBrowserWindow();
+      }
+    });
+
+    // Configure shortcuts on focus
+    this.app.on("browser-window-focus", () => {
+      // Toggle dev tool shortcut
+      globalShortcut.register("Alt+Shift+D+E+V", () => {
+        this.mainWindow.webContents.toggleDevTools();
+      });
+
+      if (!IS_ELECTRON_DEV) {
+        Main.FORBIDDEN_SHORTCUTS.forEach(shortcut => globalShortcut.register(shortcut, _.noop));
+      }
+    });
+
+    // Un-configure shortcuts on focus
+    this.app.on("browser-window-blur", () => {
+      if (!IS_ELECTRON_DEV) {
+        Main.FORBIDDEN_SHORTCUTS.forEach(shortcut => globalShortcut.unregister(shortcut));
       }
     });
 
@@ -178,6 +211,10 @@ class Main {
       })
       .then(() => {
         return session.clearHostResolverCache();
+      })
+      .then(() => {
+        this.ipcStorage.clear();
+        return Promise.resolve();
       })
       .then(() => {
         return this.restartApp();
@@ -296,7 +333,7 @@ class Main {
     });
   }
 
-  private startElevate(onReady: () => void = null): void {
+  private startElevate(): void {
     // Create the browser window.
     this.createMainBrowserWindow();
 
@@ -304,20 +341,6 @@ class Main {
     (this.ipcTunnelService as IpcMainTunnelService).configure(this.ipcMain, this.mainWindow);
 
     this.setupListeners();
-
-    // Load app
-    const url = new URL(`file:${path.join(__dirname, "app", "index.html")}`);
-    this.mainWindow.loadURL(url.href);
-
-    this.mainWindow.once("ready-to-show", () => {
-      this.mainWindow.show();
-      if (onReady) {
-        onReady();
-      }
-    });
-
-    // Detect a proxy on the system before listening for message from renderer
-    this.httpClient.detectProxy(this.mainWindow);
 
     // Emit window events
     this.mainWindow.on("maximize", () => {
@@ -344,25 +367,21 @@ class Main {
       this.mainWindow = null;
     });
 
-    // Define "development" and "in prod" behavior
-    if (IS_ELECTRON_DEV) {
-      // Development...
-      // Open dev tool by default
-      this.mainWindow.webContents.openDevTools();
-    } else {
-      // Production...
-      // Disable dev tool shortcut
-      globalShortcut.register("CommandOrControl+Shift+I" as Electron.Accelerator, _.noop);
+    // Load app
+    const url = new URL(`file:${path.join(__dirname, "app", "index.html")}`);
+    this.httpClient
+      .configure(this.mainWindow) // Detect a proxy on the system at first
+      .then(() => this.mainWindow.loadURL(url.href)) // Then load the page
+      .then(() => {
+        this.mainWindow.show();
 
-      // Disable app window reload shortcuts
-      globalShortcut.register("CommandOrControl+R" as Electron.Accelerator, _.noop);
-      globalShortcut.register("CommandOrControl+Shift+R" as Electron.Accelerator, _.noop);
-    }
+        // Open dev tool by default if development
+        if (IS_ELECTRON_DEV) {
+          this.mainWindow.webContents.openDevTools();
+        }
 
-    // Toggle dev tool shortcut
-    globalShortcut.register("Alt+Shift+D+E+V" as Electron.Accelerator, () => {
-      this.mainWindow.webContents.toggleDevTools();
-    });
+        this.logger.info("App is ready");
+      });
   }
 
   private createMainBrowserWindow(): void {
@@ -373,13 +392,12 @@ class Main {
       height: workAreaSize.height,
       center: true,
       frame: this.appService.getPlatform() === Platform.MACOS,
-      trafficLightPosition: { x: 15, y: 17 },
+      trafficLightPosition: { x: 15, y: 10 },
       titleBarStyle: "hidden",
       autoHideMenuBar: true,
       webPreferences: {
         contextIsolation: true,
         nodeIntegration: false,
-        enableRemoteModule: false,
         preload: path.join(__dirname, "pre-loader.js")
       }
     };
@@ -411,7 +429,6 @@ class Main {
   }
 }
 
-const IS_ELECTRON_DEV = !app.isPackaged;
 const loggerInstance = container.resolve(Logger);
 loggerInstance.base.transports.file.level = IS_ELECTRON_DEV ? "debug" : "info";
 loggerInstance.base.transports.console.level = IS_ELECTRON_DEV ? "debug" : "info";

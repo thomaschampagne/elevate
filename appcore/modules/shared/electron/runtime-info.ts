@@ -8,7 +8,7 @@ export class RuntimeInfo {
   // Unique machine installation id shared by all local users on the OS.
   public osMachineId: string;
 
-  // Unique user athlete identifier based on sha1(osMachineId + osUsername) given by electron ipc main.
+  // Unique user athlete identifier based on sha256(osMachineId + osUsername) given by electron ipc main.
   public athleteMachineId: string;
 
   public cpu: { name: string; threads: number };

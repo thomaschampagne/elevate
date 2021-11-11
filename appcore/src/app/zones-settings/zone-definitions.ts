@@ -1,7 +1,7 @@
 import moment from "moment";
 import { ZoneDefinitionModel } from "../shared/models/zone-definition.model";
-import { Constant } from "@elevate/shared/constants";
-import { ZoneType } from "@elevate/shared/enums";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import { Constant } from "@elevate/shared/constants/constant";
 
 export const ZONE_DEFINITIONS: ZoneDefinitionModel[] = [
   {

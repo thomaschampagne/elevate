@@ -1,25 +1,25 @@
 import { Helper } from "../../../helper";
 import { AbstractGradeDataView } from "./abstract-grade-data.view";
-import { GradeDataModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { Time } from "@elevate/shared/tools/time";
+import { GradeStats } from "@elevate/shared/models/sync/activity.model";
 
 export class RunningGradeDataView extends AbstractGradeDataView {
-  constructor(gradeData: GradeDataModel, units: string) {
-    super(gradeData, units);
+  constructor(grade: GradeStats, units: string) {
+    super(grade, units);
   }
 
   protected insertDataIntoGrid(): void {
     super.insertDataIntoGrid();
 
-    this.gradeData.upFlatDownMoveData.up = Helper.convertSpeedToPace(this.gradeData.upFlatDownMoveData.up);
-    this.gradeData.upFlatDownMoveData.flat = Helper.convertSpeedToPace(this.gradeData.upFlatDownMoveData.flat);
-    this.gradeData.upFlatDownMoveData.down = Helper.convertSpeedToPace(this.gradeData.upFlatDownMoveData.down);
+    this.grade.slopeSpeed.up = Helper.convertSpeedToPace(this.grade.slopeSpeed.up);
+    this.grade.slopeSpeed.flat = Helper.convertSpeedToPace(this.grade.slopeSpeed.flat);
+    this.grade.slopeSpeed.down = Helper.convertSpeedToPace(this.grade.slopeSpeed.down);
 
     this.insertContentAtGridPosition(
       0,
       4,
-      this.gradeData.upFlatDownMoveData.up / this.speedUnitsData.speedUnitFactor !== 0
-        ? Time.secToMilitary(this.gradeData.upFlatDownMoveData.up / this.speedUnitsData.speedUnitFactor)
+      this.grade.slopeSpeed.up / this.speedUnitsData.speedUnitFactor !== 0
+        ? Time.secToMilitary(this.grade.slopeSpeed.up / this.speedUnitsData.speedUnitFactor)
         : "-",
       "Avg climbing pace",
       "/" + this.speedUnitsData.units,
@@ -28,8 +28,8 @@ export class RunningGradeDataView extends AbstractGradeDataView {
     this.insertContentAtGridPosition(
       1,
       4,
-      this.gradeData.upFlatDownMoveData.flat / this.speedUnitsData.speedUnitFactor !== 0
-        ? Time.secToMilitary(this.gradeData.upFlatDownMoveData.flat / this.speedUnitsData.speedUnitFactor)
+      this.grade.slopeSpeed.flat / this.speedUnitsData.speedUnitFactor !== 0
+        ? Time.secToMilitary(this.grade.slopeSpeed.flat / this.speedUnitsData.speedUnitFactor)
         : "-",
       "Avg flat pace",
       "/" + this.speedUnitsData.units,
@@ -38,8 +38,8 @@ export class RunningGradeDataView extends AbstractGradeDataView {
     this.insertContentAtGridPosition(
       2,
       4,
-      this.gradeData.upFlatDownMoveData.down / this.speedUnitsData.speedUnitFactor !== 0
-        ? Time.secToMilitary(this.gradeData.upFlatDownMoveData.down / this.speedUnitsData.speedUnitFactor)
+      this.grade.slopeSpeed.down / this.speedUnitsData.speedUnitFactor !== 0
+        ? Time.secToMilitary(this.grade.slopeSpeed.down / this.speedUnitsData.speedUnitFactor)
         : "-",
       "Avg downhill pace",
       "/" + this.speedUnitsData.units,

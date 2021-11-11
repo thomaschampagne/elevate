@@ -1,7 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ConnectorType, StravaConnectorInfo } from "@elevate/shared/sync";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "./strava-connector.service";
 import moment from "moment";
@@ -23,6 +22,8 @@ import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { AppRoutes } from "../../shared/models/app-routes";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 
 class GeneratedStravaApiApplication {
   public appName: string;
@@ -161,17 +162,12 @@ export class StravaConnectorComponent extends ConnectorsComponent implements OnI
   }
 
   public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
-    return super
-      .sync()
-      .then(() => {
-        return this.stravaConnectorService.sync(fastSync, forceSync);
-      })
-      .catch(err => {
-        if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
-          return Promise.reject(err);
-        }
-        return Promise.resolve();
-      });
+    return this.stravaConnectorService.sync(fastSync, forceSync).catch(err => {
+      if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+        return Promise.reject(err);
+      }
+      return Promise.resolve();
+    });
   }
 
   public onDisconnect(): void {

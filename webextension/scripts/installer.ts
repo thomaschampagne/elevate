@@ -1,25 +1,25 @@
-import {
-  AthleteModel,
-  AthleteSettingsModel,
-  DatedAthleteSettingsModel,
-  Gender,
-  SyncedActivityModel,
-  UserLactateThresholdModel,
-  UserSettings,
-  UserZonesModel
-} from "@elevate/shared/models";
 import { Helper } from "./helper";
 import semver from "semver";
 import _ from "lodash";
 import { LegacyBrowserStorage } from "./legacy-browser-storage";
-import { Constant } from "@elevate/shared/constants";
-import { YearToDateProgressPresetModel } from "../../appcore/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
-import { ProgressMode } from "../../appcore/src/app/year-progress/shared/enums/progress-mode.enum";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
-import { Identifier, Versioning } from "@elevate/shared/tools";
 import { Migration7x0x0x0 } from "./migrations/Migration7x0x0x0";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { extension } from "@elevate/shared/tools/extension";
+import hash from "hash.js";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { Versioning } from "@elevate/shared/tools/versioning";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { Identifier } from "@elevate/shared/tools/identifier";
+import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { Constant } from "@elevate/shared/constants/constant";
+import { UserLactateThreshold } from "@elevate/shared/models/athlete/athlete-settings/user-lactate-threshold.model";
+import { ActivityFileType } from "@elevate/shared/sync/connectors/activity-file-type.enum";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import BaseUserSettings = UserSettings.BaseUserSettings;
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 class Installer {
   public previousVersion: string;
@@ -181,8 +181,8 @@ class Installer {
         .rm(BrowserStorageType.LOCAL, ["syncWithAthleteProfile"])
         .then(() => {
           return LegacyBrowserStorage.getInstance()
-            .get<SyncedActivityModel[]>(BrowserStorageType.LOCAL, "computedActivities")
-            .then((computedActivities: SyncedActivityModel[]) => {
+            .get<any[]>(BrowserStorageType.LOCAL, "computedActivities")
+            .then((computedActivities: any[]) => {
               if (computedActivities) {
                 return LegacyBrowserStorage.getInstance()
                   .set(BrowserStorageType.LOCAL, "syncedActivities", computedActivities)
@@ -232,22 +232,20 @@ class Installer {
 
       promise = LegacyBrowserStorage.getInstance()
         .get(BrowserStorageType.SYNC)
-        .then((userSettingsModel: any) => {
-          if (userSettingsModel.userGender) {
-            const userGender = userSettingsModel.userGender === "men" ? Gender.MEN : Gender.WOMEN;
+        .then((userSettings: any) => {
+          if (userSettings.userGender) {
+            const userGender = userSettings.userGender === "men" ? Gender.MEN : Gender.WOMEN;
 
             const athleteModel = new AthleteModel(
               userGender,
-              new AthleteSettingsModel(
-                _.isNumber(userSettingsModel.userMaxHr) ? userSettingsModel.userMaxHr : null,
-                _.isNumber(userSettingsModel.userRestHr) ? userSettingsModel.userRestHr : null,
-                !_.isEmpty(userSettingsModel.userLTHR)
-                  ? userSettingsModel.userLTHR
-                  : UserLactateThresholdModel.DEFAULT_MODEL,
-                _.isNumber(userSettingsModel.userFTP) ? userSettingsModel.userFTP : null,
-                _.isNumber(userSettingsModel.userRunningFTP) ? userSettingsModel.userRunningFTP : null,
-                _.isNumber(userSettingsModel.userSwimFTP) ? userSettingsModel.userSwimFTP : null,
-                _.isNumber(userSettingsModel.userWeight) ? userSettingsModel.userWeight : null
+              new AthleteSettings(
+                _.isNumber(userSettings.userMaxHr) ? userSettings.userMaxHr : null,
+                _.isNumber(userSettings.userRestHr) ? userSettings.userRestHr : null,
+                !_.isEmpty(userSettings.userLTHR) ? userSettings.userLTHR : UserLactateThreshold.DEFAULT_MODEL,
+                _.isNumber(userSettings.userFTP) ? userSettings.userFTP : null,
+                _.isNumber(userSettings.userRunningFTP) ? userSettings.userRunningFTP : null,
+                _.isNumber(userSettings.userSwimFTP) ? userSettings.userSwimFTP : null,
+                _.isNumber(userSettings.userWeight) ? userSettings.userWeight : null
               ) as any
             );
 
@@ -289,8 +287,8 @@ class Installer {
       // Migrate storage of zones from ZoneModel[] to number[] => less space on storage
       promise = LegacyBrowserStorage.getInstance()
         .get(BrowserStorageType.SYNC)
-        .then((userSettingsModel: any) => {
-          const userZonesModel = userSettingsModel.zones;
+        .then((userSettings: any) => {
+          const userZonesModel = userSettings.zones;
 
           let promiseMigrate;
 
@@ -313,7 +311,7 @@ class Installer {
             promiseMigrate = LegacyBrowserStorage.getInstance().set(
               BrowserStorageType.SYNC,
               "zones",
-              ExtensionUserSettingsModel.DEFAULT_MODEL.zones
+              ExtensionUserSettings.DEFAULT_MODEL.zones
             ); // Reset to default
           }
 
@@ -336,20 +334,20 @@ class Installer {
       console.log("Migrate to 6.7.0");
 
       promise = LegacyBrowserStorage.getInstance()
-        .get<DatedAthleteSettingsModel[]>(BrowserStorageType.LOCAL, "datedAthleteSettings")
-        .then((localDatedAthleteSettingsModels: DatedAthleteSettingsModel[]) => {
-          if (_.isEmpty(localDatedAthleteSettingsModels)) {
+        .get<DatedAthleteSettings[]>(BrowserStorageType.LOCAL, "datedAthleteSettings")
+        .then((localDatedAthleteSettingss: DatedAthleteSettings[]) => {
+          if (_.isEmpty(localDatedAthleteSettingss)) {
             return LegacyBrowserStorage.getInstance()
               .get(BrowserStorageType.SYNC)
-              .then((userSettingsModel: any) => {
+              .then((userSettings: any) => {
                 const athleteSettings =
-                  userSettingsModel && userSettingsModel.athleteModel && userSettingsModel.athleteModel.athleteSettings
-                    ? userSettingsModel.athleteModel.athleteSettings
-                    : AthleteSettingsModel.DEFAULT_MODEL;
+                  userSettings && userSettings.athleteModel && userSettings.athleteModel.athleteSettings
+                    ? userSettings.athleteModel.athleteSettings
+                    : AthleteSettings.DEFAULT_MODEL;
 
-                const datedAthleteSettings: DatedAthleteSettingsModel[] = [
-                  new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
-                  new DatedAthleteSettingsModel(null, athleteSettings)
+                const datedAthleteSettings: DatedAthleteSettings[] = [
+                  new DatedAthleteSettings(DatedAthleteSettings.DEFAULT_SINCE, athleteSettings),
+                  new DatedAthleteSettings(null, athleteSettings)
                 ];
 
                 return LegacyBrowserStorage.getInstance()
@@ -379,29 +377,25 @@ class Installer {
     if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.8.1")) {
       console.log("Migrate to 6.8.1");
 
-      let userSettingsModel: ExtensionUserSettingsModel;
+      let userSettings: ExtensionUserSettings;
 
       // Move all user settings content inside specific key
       promise = LegacyBrowserStorage.getInstance()
         .get(BrowserStorageType.SYNC)
-        .then((settings: ExtensionUserSettingsModel) => {
+        .then((settings: ExtensionUserSettings) => {
           const hasUserSettingsKey = !_.isEmpty((settings as any).userSettings);
 
           if (hasUserSettingsKey) {
             return Promise.resolve();
           } else {
-            userSettingsModel = settings;
+            userSettings = settings;
 
-            delete (userSettingsModel as any).bestSplitsConfiguration; // Remove best split config from user settings
+            delete (userSettings as any).bestSplitsConfiguration; // Remove best split config from user settings
 
             return LegacyBrowserStorage.getInstance()
               .clear(BrowserStorageType.SYNC)
               .then(() => {
-                return LegacyBrowserStorage.getInstance().set(
-                  BrowserStorageType.SYNC,
-                  "userSettings",
-                  userSettingsModel
-                );
+                return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettings);
               });
           }
         });
@@ -420,20 +414,20 @@ class Installer {
     if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "6.9.0")) {
       console.log("Migrate to 6.9.0");
 
-      let userSettingsModel: ExtensionUserSettingsModel;
+      let userSettings: ExtensionUserSettings;
 
       // Move all user settings content inside specific key
       promise = LegacyBrowserStorage.getInstance()
         .get(BrowserStorageType.SYNC, "userSettings")
-        .then((settings: ExtensionUserSettingsModel) => {
+        .then((settings: ExtensionUserSettings) => {
           const hasOldYearProgressTargets =
             _.isNumber((settings as any).targetsYearRide) || _.isNumber((settings as any).targetsYearRun);
 
           if (hasOldYearProgressTargets) {
-            userSettingsModel = settings;
-            delete (userSettingsModel as any).targetsYearRide;
-            delete (userSettingsModel as any).targetsYearRun;
-            return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettingsModel);
+            userSettings = settings;
+            delete (userSettings as any).targetsYearRide;
+            delete (userSettings as any).targetsYearRun;
+            return LegacyBrowserStorage.getInstance().set(BrowserStorageType.SYNC, "userSettings", userSettings);
           } else {
             return Promise.resolve();
           }
@@ -456,13 +450,13 @@ class Installer {
       // Move all user settings content inside specific key
       promise = LegacyBrowserStorage.getInstance()
         .get(BrowserStorageType.LOCAL, "yearProgressPresets")
-        .then((oldPresetModels: YearToDateProgressPresetModel[]) => {
-          const migratedPresets: YearToDateProgressPresetModel[] = [];
+        .then((oldPresetModels: any[]) => {
+          const migratedPresets: any[] = [];
 
           let hasUpgradedPresets = false;
           _.forEach(oldPresetModels, (presetModel: any /*YearToDateProgressPresetModel*/) => {
             if (_.isUndefined(presetModel.mode)) {
-              presetModel.mode = ProgressMode.YEAR_TO_DATE;
+              presetModel.mode = 0;
               hasUpgradedPresets = true;
             }
             migratedPresets.push(presetModel);
@@ -505,10 +499,10 @@ class Installer {
             throw Error(alreadyMigratedMessage);
           }
 
-          const userSettingsModel: ExtensionUserSettingsModel = result[0] as ExtensionUserSettingsModel;
+          const userSettings: ExtensionUserSettings = result[0] as ExtensionUserSettings;
           const localBrowserStorage: any = (result[1] as any) || ({} as any);
 
-          localBrowserStorage.userSettings = userSettingsModel;
+          localBrowserStorage.userSettings = userSettings;
 
           return LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, null, localBrowserStorage); // Update local storage
         })
@@ -522,22 +516,22 @@ class Installer {
           ]);
         })
         .then(result => {
-          const userSettingsModel: ExtensionUserSettingsModel = result[0] as ExtensionUserSettingsModel;
-          const datedAthleteSettings: DatedAthleteSettingsModel[] = result[1] as DatedAthleteSettingsModel[];
+          const userSettings: ExtensionUserSettings = result[0] as ExtensionUserSettings;
+          const datedAthleteSettings: DatedAthleteSettings[] = result[1] as DatedAthleteSettings[];
 
           // Create new athlete storage local
-          const athleteModel: AthleteModel = (userSettingsModel as any).athleteModel;
-          const isSingleAthleteSettingsMode = (userSettingsModel as any).hasDatedAthleteSettings === false;
+          const athleteModel: AthleteModel = (userSettings as any).athleteModel;
+          const isSingleAthleteSettingsMode = (userSettings as any).hasDatedAthleteSettings === false;
 
           if (isSingleAthleteSettingsMode) {
-            const athleteSettings: AthleteSettingsModel =
+            const athleteSettings: AthleteSettings =
               athleteModel && (athleteModel as any).athleteSettings
                 ? (athleteModel as any).athleteSettings
-                : AthleteSettingsModel.DEFAULT_MODEL;
+                : AthleteSettings.DEFAULT_MODEL;
 
             athleteModel.datedAthleteSettings = [
-              new DatedAthleteSettingsModel(DatedAthleteSettingsModel.DEFAULT_SINCE, athleteSettings),
-              new DatedAthleteSettingsModel(null, athleteSettings)
+              new DatedAthleteSettings(DatedAthleteSettings.DEFAULT_SINCE, athleteSettings),
+              new DatedAthleteSettings(null, athleteSettings)
             ];
           } else if (athleteModel) {
             athleteModel.datedAthleteSettings = datedAthleteSettings;
@@ -545,11 +539,11 @@ class Installer {
 
           // Remove deprecated keys
           delete (athleteModel as any).athleteSettings;
-          delete (userSettingsModel as any).athleteModel;
-          delete (userSettingsModel as any).hasDatedAthleteSettings;
+          delete (userSettings as any).athleteModel;
+          delete (userSettings as any).hasDatedAthleteSettings;
 
           return Promise.all([
-            LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "userSettings", userSettingsModel), // Update user settings
+            LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "userSettings", userSettings), // Update user settings
             LegacyBrowserStorage.getInstance().set(BrowserStorageType.LOCAL, "athlete", athleteModel), // Save new athlete key on local storage
             LegacyBrowserStorage.getInstance().rm(BrowserStorageType.LOCAL, "datedAthleteSettings") // datedAthleteSettings are now stored in athlete storage
           ]);
@@ -557,9 +551,9 @@ class Installer {
         .then(() => {
           return LegacyBrowserStorage.getInstance().get(BrowserStorageType.LOCAL, "syncedActivities");
         })
-        .then((syncedActivities: SyncedActivityModel[]) => {
+        .then((syncedActivities: any[]) => {
           // Rename athleteModel to athleteSnapshot for each activity
-          _.forEach(syncedActivities, (activity: SyncedActivityModel) => {
+          _.forEach(syncedActivities, (activity: any) => {
             activity.athleteSnapshot = (activity as any).athleteModel;
             delete (activity as any).athleteModel;
           });
@@ -581,7 +575,7 @@ class Installer {
             .get(BrowserStorageType.LOCAL, "yearProgressPresets")
             .then((yearProgressPresets: object[]) => {
               yearProgressPresets = _.map(yearProgressPresets, preset => {
-                (preset as YearToDateProgressPresetModel).id = Identifier.generate();
+                (preset as any).id = Identifier.generate();
                 return preset;
               });
 
@@ -611,7 +605,7 @@ class Installer {
           if (athleteModel.datedAthleteSettings && athleteModel.datedAthleteSettings.length > 0) {
             athleteModel.datedAthleteSettings = _.sortBy(
               athleteModel.datedAthleteSettings,
-              (model: DatedAthleteSettingsModel) => {
+              (model: DatedAthleteSettings) => {
                 const sortOnDate: Date = _.isNull(model.since) ? new Date(0) : new Date(model.since);
                 return sortOnDate.getTime() * -1;
               }
@@ -639,13 +633,13 @@ class Installer {
       console.log("Migrate to 6.14.0");
 
       promise = LegacyBrowserStorage.getInstance()
-        .get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings")
-        .then((userSettingsModel: UserSettingsModel) => {
-          delete (userSettingsModel as any).displayReliveCCLink;
-          return LegacyBrowserStorage.getInstance().set<UserSettingsModel>(
+        .get<BaseUserSettings>(BrowserStorageType.LOCAL, "userSettings")
+        .then((userSettings: BaseUserSettings) => {
+          delete (userSettings as any).displayReliveCCLink;
+          return LegacyBrowserStorage.getInstance().set<BaseUserSettings>(
             BrowserStorageType.LOCAL,
             "userSettings",
-            userSettingsModel
+            userSettings
           );
         });
     } else {
@@ -717,16 +711,16 @@ class Installer {
       console.log("Migrate to 6.16.2");
 
       promise = LegacyBrowserStorage.getInstance()
-        .get<UserSettingsModel>(BrowserStorageType.LOCAL, "userSettings")
-        .then((userSettingsModel: ExtensionUserSettingsModel) => {
-          userSettingsModel.displaySegmentTimeComparisonToKOM = false;
-          userSettingsModel.displaySegmentTimeComparisonToPR = false;
-          userSettingsModel.displaySegmentTimeComparisonToCurrentYearPR = false;
-          userSettingsModel.displaySegmentTimeComparisonPosition = false;
-          return LegacyBrowserStorage.getInstance().set<UserSettingsModel>(
+        .get<BaseUserSettings>(BrowserStorageType.LOCAL, "userSettings")
+        .then((userSettings: ExtensionUserSettings) => {
+          userSettings.displaySegmentTimeComparisonToKOM = false;
+          userSettings.displaySegmentTimeComparisonToPR = false;
+          userSettings.displaySegmentTimeComparisonToCurrentYearPR = false;
+          userSettings.displaySegmentTimeComparisonPosition = false;
+          return LegacyBrowserStorage.getInstance().set<BaseUserSettings>(
             BrowserStorageType.LOCAL,
             "userSettings",
-            userSettingsModel
+            userSettings
           );
         });
     } else {
@@ -908,6 +902,52 @@ class Installer {
     return Promise.resolve();
   }
 
+  protected migrate_to_7_0_0_13(): Promise<void> {
+    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-13")) {
+      console.log("Migrate to 7.0.0-13");
+      return new Promise<void>(resolve => {
+        chrome.storage.local.get(null, result => {
+          if (result?.syncedActivities) {
+            // Copy old collection to new one
+            result.activities = result.syncedActivities;
+            result.activities.name = "activities";
+
+            if (result.activities?.binaryIndices?.start_time) {
+              result.activities.binaryIndices.startTime = result.activities.binaryIndices.start_time;
+              result.activities.binaryIndices.startTime.name = "startTime";
+              delete result.activities.binaryIndices.start_time;
+            }
+
+            // Test if old activities are available
+            if (result?.syncedActivities?.data?.length > 0) {
+              if (result.activities.data.length) {
+                // Migrate old activities to the new model
+                result.activities.data = result.activities.data.map(oldActivity => {
+                  return this.convertLegacyActivityToNewModel(oldActivity);
+                });
+              }
+            }
+
+            // Delete old collection
+            delete result.syncedActivities;
+
+            // Clear old DB and save with new DB
+            chrome.storage.local.clear(() => {
+              // Then update
+              chrome.storage.local.set(result, resolve);
+            });
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      console.log("Skip migrate to 7.0.0-13");
+    }
+
+    return Promise.resolve();
+  }
+
   protected handleUpdate(): Promise<void> {
     console.log("Updated from " + this.previousVersion + " to " + this.currentVersion);
 
@@ -969,7 +1009,263 @@ class Installer {
       .then(() => {
         return this.migrate_to_7_0_0_5();
       })
+      .then(() => {
+        return this.migrate_to_7_0_0_13();
+      })
       .catch(error => console.error(error));
+  }
+
+  /**
+   * Converts legacy activity model to new the one
+   */
+  private convertLegacyActivityToNewModel(legacyActivity: any): Activity {
+    const startTimestamp = Math.floor(new Date(legacyActivity?.start_time).getTime() / 1000);
+    const endTimestamp = startTimestamp + legacyActivity?.elapsed_time_raw;
+
+    const activity: Activity = {
+      id: legacyActivity?.id,
+      name: legacyActivity?.name || null,
+      type: legacyActivity?.type || null,
+      startTime: legacyActivity?.start_time,
+      endTime: new Date(endTimestamp * 1000).toISOString(),
+      startTimestamp: startTimestamp,
+      endTimestamp: endTimestamp,
+      hasPowerMeter: legacyActivity?.hasPowerMeter,
+      trainer: legacyActivity?.trainer,
+      commute: legacyActivity?.commute || false,
+      srcStats: {} as ActivityStats,
+      stats: {} as ActivityStats,
+      laps: null,
+      athleteSnapshot: legacyActivity?.athleteSnapshot || null,
+      connector: legacyActivity?.sourceConnectorType || null,
+      latLngCenter: legacyActivity?.latLngCenter || null,
+      hash: legacyActivity?.hash || null,
+      settingsLack: legacyActivity?.settingsLack || null,
+      creationTime: new Date().toISOString(),
+      lastEditTime: new Date().toISOString(),
+      device: null,
+      autoDetectedType: false,
+      manual: null,
+      notes: null,
+      extras: {}
+    };
+
+    // Handle root stats
+    activity.stats = {
+      distance: legacyActivity?.distance_raw,
+      elevationGain: legacyActivity?.elevation_gain_raw,
+      elapsedTime: legacyActivity?.elapsed_time_raw,
+      movingTime: legacyActivity?.moving_time_raw,
+      pauseTime:
+        legacyActivity?.elapsed_time_raw && legacyActivity?.moving_time_raw
+          ? legacyActivity?.elapsed_time_raw - legacyActivity?.moving_time_raw
+          : 0,
+      moveRatio: _.isNumber(legacyActivity?.extendedStats?.moveRatio)
+        ? _.round(legacyActivity?.extendedStats?.moveRatio, 2)
+        : 1,
+      calories: legacyActivity?.extendedStats?.calories,
+      caloriesPerHour: legacyActivity?.extendedStats?.caloriesPerHour
+    } as ActivityStats;
+
+    // Handle score
+    activity.stats.scores = {
+      stress: {
+        hrss: legacyActivity?.extendedStats?.heartRateData?.HRSS || null,
+        hrssPerHour: legacyActivity?.extendedStats?.heartRateData?.HRSSPerHour || null,
+        trimp: legacyActivity?.extendedStats?.heartRateData?.TRIMP || null,
+        trimpPerHour: legacyActivity?.extendedStats?.heartRateData?.TRIMPPerHour || null,
+        rss: legacyActivity?.extendedStats?.paceData?.runningStressScore || null,
+        rssPerHour: legacyActivity?.extendedStats?.paceData?.runningStressScorePerHour || null,
+        sss: legacyActivity?.extendedStats?.paceData?.swimStressScore || null,
+        sssPerHour: legacyActivity?.extendedStats?.paceData?.swimStressScorePerHour || null,
+        pss: legacyActivity?.extendedStats?.powerData?.powerStressScore || null,
+        pssPerHour: legacyActivity?.extendedStats?.powerData?.powerStressScorePerHour || null
+      },
+      runPerfIndex: legacyActivity?.extendedStats?.runningPerformanceIndex || null,
+      swolf: {
+        25: legacyActivity?.extendedStats?.swimSwolf || null,
+        50: null
+      }
+    };
+
+    // Handle speed
+    activity.stats.speed = {
+      avg: legacyActivity?.extendedStats?.speedData?.genuineAvgSpeed || null,
+      max: legacyActivity?.extendedStats?.speedData?.maxSpeed || null,
+      best20min: legacyActivity?.extendedStats?.speedData?.best20min || null,
+      lowQ: legacyActivity?.extendedStats?.speedData?.lowerQuartileSpeed || null,
+      median: legacyActivity?.extendedStats?.speedData?.medianSpeed || null,
+      upperQ: legacyActivity?.extendedStats?.speedData?.upperQuartileSpeed || null,
+      stdDev: legacyActivity?.extendedStats?.speedData?.standardDeviationSpeed || null,
+      zones: legacyActivity?.extendedStats?.speedData?.speedZones || null,
+      peaks: legacyActivity?.extendedStats?.speedData?.peaks
+    };
+
+    // Handle pace
+    activity.stats.pace = {
+      avg: legacyActivity?.extendedStats?.paceData?.avgPace || null,
+      gapAvg: legacyActivity?.extendedStats?.paceData?.genuineGradeAdjustedAvgPace || null,
+      max: legacyActivity?.extendedStats?.paceData?.maxPace || null,
+      best20min: legacyActivity?.extendedStats?.paceData?.best20min || null,
+      lowQ: legacyActivity?.extendedStats?.paceData?.lowerQuartilePace || null,
+      median: legacyActivity?.extendedStats?.paceData?.medianPace || null,
+      upperQ: legacyActivity?.extendedStats?.paceData?.upperQuartilePace || null,
+      stdDev: legacyActivity?.extendedStats?.paceData?.standardDeviationPace || null,
+      zones: legacyActivity?.extendedStats?.paceData?.paceZones || null
+    };
+
+    // Handle power
+    activity.stats.power = {
+      avg: legacyActivity?.extendedStats?.powerData?.avgWatts || null,
+      avgKg: legacyActivity?.extendedStats?.powerData?.avgWattsPerKg || null,
+      weighted: legacyActivity?.extendedStats?.powerData?.weightedPower || null,
+      weightedKg: legacyActivity?.extendedStats?.powerData?.weightedWattsPerKg || null,
+      max: legacyActivity?.extendedStats?.powerData?.maxPower || null,
+      work: null,
+      best20min: legacyActivity?.extendedStats?.powerData?.best20min || null,
+      variabilityIndex: legacyActivity?.extendedStats?.powerData?.variabilityIndex || null,
+      intensityFactor: legacyActivity?.extendedStats?.powerData?.punchFactor || null,
+      lowQ: legacyActivity?.extendedStats?.powerData?.lowerQuartileWatts || null,
+      median: legacyActivity?.extendedStats?.powerData?.medianWatts || null,
+      upperQ: legacyActivity?.extendedStats?.powerData?.upperQuartileWatts || null,
+      stdDev: null,
+      zones: legacyActivity?.extendedStats?.powerData?.powerZones || null,
+      peaks: legacyActivity?.extendedStats?.powerData?.peaks || null
+    };
+
+    // Handle heartRate
+    activity.stats.heartRate = {
+      avg: legacyActivity?.extendedStats?.heartRateData?.averageHeartRate || null,
+      max: legacyActivity?.extendedStats?.heartRateData?.maxHeartRate || null,
+      avgReserve: legacyActivity?.extendedStats?.heartRateData?.activityHeartRateReserve || null,
+      maxReserve: legacyActivity?.extendedStats?.heartRateData?.activityHeartRateReserveMax || null,
+      best20min: legacyActivity?.extendedStats?.heartRateData?.best20min || null,
+      best60min: legacyActivity?.extendedStats?.heartRateData?.best60min || null,
+      lowQ: legacyActivity?.extendedStats?.heartRateData?.lowerQuartileHeartRate || null,
+      median: legacyActivity?.extendedStats?.heartRateData?.medianHeartRate || null,
+      upperQ: legacyActivity?.extendedStats?.heartRateData?.upperQuartileHeartRate || null,
+      stdDev: null,
+      zones: legacyActivity?.extendedStats?.heartRateData?.heartRateZones || null,
+      peaks: legacyActivity?.extendedStats?.heartRateData?.peaks || null
+    };
+
+    // Handle cadence
+    activity.stats.cadence = {
+      avg: legacyActivity?.extendedStats?.cadenceData?.averageCadence || null,
+      max: legacyActivity?.extendedStats?.cadenceData?.maxCadence || null,
+      avgActive: legacyActivity?.extendedStats?.cadenceData?.averageActiveCadence || null,
+      activeRatio: _.round(legacyActivity?.extendedStats?.cadenceData?.cadenceActivePercentage, 2) / 100 || null,
+      activeTime: legacyActivity?.extendedStats?.cadenceData?.cadenceActiveTime || null,
+      cycles: legacyActivity?.extendedStats?.cadenceData?.totalOccurrences || null,
+      distPerCycle: legacyActivity?.extendedStats?.cadenceData?.averageDistancePerOccurrence || null,
+      lowQ: legacyActivity?.extendedStats?.cadenceData?.lowerQuartileCadence || null,
+      median: legacyActivity?.extendedStats?.cadenceData?.medianCadence || null,
+      upperQ: legacyActivity?.extendedStats?.cadenceData?.upperQuartileCadence || null,
+      slope: {
+        up: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.up,
+        flat: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.flat,
+        down: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.down,
+        total: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.total
+      },
+      stdDev: legacyActivity?.extendedStats?.cadenceData?.standardDeviationCadence || null,
+      zones: legacyActivity?.extendedStats?.cadenceData?.cadenceZones || null,
+      peaks: legacyActivity?.extendedStats?.cadenceData?.peaks || null
+    };
+
+    // Handle grade
+    activity.stats.grade = {
+      avg: legacyActivity?.extendedStats?.gradeData?.avgGrade || null,
+      max: legacyActivity?.extendedStats?.gradeData?.avgMaxGrade || null,
+      min: legacyActivity?.extendedStats?.gradeData?.avgMinGrade || null,
+      lowQ: legacyActivity?.extendedStats?.gradeData?.lowerQuartileGrade || null,
+      median: legacyActivity?.extendedStats?.gradeData?.medianGrade || null,
+      upperQ: legacyActivity?.extendedStats?.gradeData?.upperQuartileGrade || null,
+      stdDev: null,
+      slopeTime: {
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.up,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.flat,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.down,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.total
+      },
+      slopeSpeed: {
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.up,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.flat,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.down,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.total
+      },
+      slopeDistance: {
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.up,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.flat,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.down,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.total
+      },
+      slopeCadence: {
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.up,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.flat,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.down,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.total
+      },
+
+      slopeProfile: (legacyActivity?.extendedStats?.gradeData?.gradeProfile as any) || null,
+      zones: legacyActivity?.extendedStats?.gradeData?.gradeZones || null,
+      peaks: legacyActivity?.extendedStats?.gradeData?.peaks || null
+    };
+
+    // Handle elevation
+    activity.stats.elevation = {
+      avg: legacyActivity?.extendedStats?.elevationData?.avgElevation || null,
+      max: legacyActivity?.extendedStats?.elevationData?.maxElevation || null,
+      min: legacyActivity?.extendedStats?.elevationData?.minElevation || null,
+      ascent: legacyActivity?.extendedStats?.elevationData?.accumulatedElevationAscent || null,
+      descent: legacyActivity?.extendedStats?.elevationData?.accumulatedElevationDescent || null,
+      ascentSpeed: legacyActivity?.extendedStats?.elevationData?.ascentSpeed?.avg || null,
+      lowQ: legacyActivity?.extendedStats?.elevationData?.lowerQuartileElevation || null,
+      median: legacyActivity?.extendedStats?.elevationData?.medianElevation || null,
+      upperQ: legacyActivity?.extendedStats?.elevationData?.upperQuartileElevation || null,
+      stdDev: null,
+      elevationZones: legacyActivity?.extendedStats?.elevationData?.elevationZones || null
+    };
+
+    // Handle extras if exists
+    if (legacyActivity?.extras?.strava_activity_id) {
+      activity.extras = {
+        strava: {
+          activityId: legacyActivity?.extras?.strava_activity_id
+        }
+      };
+    }
+
+    if (legacyActivity?.extras?.fs_activity_location?.path) {
+      activity.extras = {
+        file: {
+          path: legacyActivity?.extras?.fs_activity_location?.path,
+          type: extension(legacyActivity?.extras?.fs_activity_location?.path) as ActivityFileType
+        }
+      };
+    }
+
+    // Handle LOKIJS fields if exists
+    if ((legacyActivity as any).$loki) {
+      (activity as any).$loki = (legacyActivity as any).$loki;
+    }
+
+    if ((legacyActivity as any).meta) {
+      (activity as any).meta = (legacyActivity as any).meta;
+    }
+
+    // Update hash
+    const activityHashPayload = {
+      id: activity.id,
+      type: activity.type,
+      startTime: activity.startTime,
+      endTime: activity.endTime,
+      hasPowerMeter: activity.hasPowerMeter,
+      trainer: activity.trainer,
+      distance: _.floor(activity.stats?.distance) || null
+    };
+    activity.hash = hash.sha256().update(JSON.stringify(activityHashPayload)).digest("hex").slice(0, 24);
+
+    return activity;
   }
 }
 

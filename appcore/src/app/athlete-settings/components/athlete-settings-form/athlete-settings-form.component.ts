@@ -2,10 +2,10 @@ import _ from "lodash";
 import { Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { FitnessService } from "../../../fitness-trend/shared/services/fitness.service";
-import { AthleteSettingsModel } from "@elevate/shared/models";
 import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.component";
-import { Constant } from "@elevate/shared/constants";
-import { MeasureSystem } from "@elevate/shared/enums";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Constant } from "@elevate/shared/constants/constant";
 
 @Component({
   selector: "app-athlete-settings-form",
@@ -29,12 +29,12 @@ export class AthleteSettingsFormComponent implements OnInit {
   public bottomElement: ElementRef;
 
   @Input()
-  public athleteSettingsModel: AthleteSettingsModel;
+  public athleteSettingsModel: AthleteSettings;
 
   @Output()
-  public athleteSettingsModelChange: EventEmitter<AthleteSettingsModel> = new EventEmitter<AthleteSettingsModel>();
+  public athleteSettingsModelChange: EventEmitter<AthleteSettings> = new EventEmitter<AthleteSettings>();
 
-  public compliantAthleteSettingsModel: AthleteSettingsModel;
+  public compliantAthleteSettingsModel: AthleteSettings;
 
   public swimFtp100m: string;
 

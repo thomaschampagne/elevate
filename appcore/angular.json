@@ -45,9 +45,16 @@
           },
           "configurations": {
             "extension": {
-              "aot": false,
-              "buildOptimizer": false,
+              "optimization": false,
+              "outputHashing": "none",
               "sourceMap": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": false,
+              "statsJson": false,
+              "progress": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "anyComponentStyle",
@@ -100,9 +107,16 @@
               ]
             },
             "desktop": {
-              "aot": false,
-              "buildOptimizer": false,
+              "optimization": false,
+              "outputHashing": "none",
               "sourceMap": true,
+              "namedChunks": false,
+              "aot": false,
+              "extractLicenses": false,
+              "statsJson": false,
+              "progress": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "anyComponentStyle",

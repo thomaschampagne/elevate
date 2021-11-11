@@ -1,7 +1,7 @@
 import { ProgressMode } from "../enums/progress-mode.enum";
 import { YearToDateProgressConfigModel } from "./year-to-date-progress-config.model";
 import { ProgressConfig } from "../interfaces/progress-config";
-import { ElevateSport } from "@elevate/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 export class RollingProgressConfigModel extends YearToDateProgressConfigModel {
   public readonly mode = ProgressMode.ROLLING; // Overrides mode

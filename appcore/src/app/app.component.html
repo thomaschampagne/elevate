@@ -10,14 +10,15 @@
           <mat-icon fontSet="material-icons-outlined">{{item.icon}}</mat-icon>
           <span class="mat-body-1">{{item.name}}</span>
         </mat-list-item>
-        <mat-list-item (click)="onOpenLink('https://www.strava.com/dashboard')"
+        <mat-list-item (click)="openResourceResolver.openLink('https://www.strava.com/dashboard')"
                        *ngIf="(buildTarget === BuildTarget.EXTENSION)">
           <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
           <span class="mat-body-1">Strava Dashboard</span>
         </mat-list-item>
       </mat-nav-list>
 
-      <div id="logo"></div>
+      <div id="logo" class="clickable" (click)="onOpenWebSite()"
+           matTooltip="Elevate v{{ versionsProvider.getPackageVersion() }}" matTooltipPosition="above"></div>
 
     </mat-sidenav>
 
@@ -52,7 +53,22 @@
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-container>
-  <div *ngIf="showRouteUrl" class="showRouteUrl primary-bg primary-color">
-    <strong>{{ currentRoute }}</strong>
+  <div *ngIf="showDebugRibbon" class="primary-note">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div><strong>{{ currentRoute }}</strong></div>
+      <div>
+        <button (click)="appService.syncService.clearActivities()" mat-button>
+          Wipe Activities
+        </button>
+        <span fxFlex="1"></span>
+        <button onclick="window.location.reload()" mat-button>
+          Reload App
+        </button>
+        <span fxFlex="1"></span>
+        <button onclick="window.api.restartApp()" mat-button>
+          Restart App
+        </button>
+      </div>
+    </div>
   </div>
 </div>

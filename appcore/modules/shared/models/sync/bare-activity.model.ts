@@ -1,17 +1,15 @@
-// tslint:disable:variable-name
-import { ElevateSport } from "../../enums";
+import { ElevateSport } from "../../enums/elevate-sport.enum";
 
-export class BareActivityModel {
+export class BareActivity {
   public id: number | string;
   public name: string;
   public type: ElevateSport;
-  public start_time: string;
-  public end_time: string;
-  public distance_raw: number;
-  public moving_time_raw: number;
-  public elapsed_time_raw: number;
+  public startTime: string;
+  public endTime: string;
+  public startTimestamp: number;
+  public endTimestamp: number;
   public hasPowerMeter: boolean;
   public trainer: boolean;
   public commute: boolean;
-  public elevation_gain_raw: number;
+  public manual: boolean;
 }

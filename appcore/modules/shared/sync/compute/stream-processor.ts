@@ -1,175 +1,344 @@
-import { AthleteSnapshotModel, Streams, SyncedActivityModel } from "../../models";
-import { KalmanFilter, meanWindowSmoothing, medianFilter, medianSelfFilter, percentile } from "../../tools";
 import _ from "lodash";
-import { ElevateSport } from "../../enums";
-import { WarningException } from "../../exceptions";
 import { RunningPowerEstimator } from "./running-power-estimator";
 import { CyclingPower } from "./cycling-power-estimator";
+import { ElevateSport } from "../../enums/elevate-sport.enum";
+import { LowPassFilter } from "../../tools/data-smoothing/low-pass-filter";
+import { meanWindowSmoothing } from "../../tools/data-smoothing/mean-window-smoothing";
+import { KalmanFilter } from "../../tools/data-smoothing/kalman";
+import { WarningException } from "../../exceptions/warning.exception";
+import { Activity } from "../../models/sync/activity.model";
+import { AthleteSnapshot } from "../../models/athlete/athlete-snapshot.model";
+import { InconsistentParametersException } from "../../exceptions/inconsistent-parameters.exception";
+import { Streams } from "../../models/activity-data/streams.model";
+import { medianFilter } from "../../tools/data-smoothing/median-filter";
+
+export enum ProcessStreamMode {
+  COMPUTE,
+  DISPLAY
+}
+
+export interface StreamProcessorParams {
+  type: ElevateSport;
+  hasPowerMeter: boolean;
+  isSwimPool: boolean;
+  athleteSnapshot: AthleteSnapshot;
+}
 
 export class StreamProcessor {
-  private static readonly DEFAULT_MEAN_FILTER_WINDOW = 5;
-  private static readonly ALTITUDE_MEAN_FILTER_WINDOW = 7;
-  private static readonly GRADE_MEAN_FILTER_WINDOW = 7;
-  private static readonly DEFAULT_MEDIAN_PERCENTAGE_WINDOW = 0.15;
-  private static readonly PACED_MEDIAN_PERCENTAGE_WINDOW = 1.75;
-  private static readonly EST_POWER_MEDIAN_PERCENTAGE_WINDOW = 1;
-  private static readonly LOW_MEAN_FILTER_WINDOW = 2;
-  private static readonly HUMAN_MAX_HR = 220;
-
-  public static handle(
-    activityParams: {
-      type: ElevateSport;
-      hasPowerMeter: boolean;
-      athleteSnapshot: AthleteSnapshotModel;
-    },
-    streams: Streams,
-    errorCallback: (err: Error) => void
-  ): Streams {
+  public static handle(processMode: ProcessStreamMode, params: StreamProcessorParams, streams: Streams): Streams {
     if (!streams) {
       return null;
     }
 
-    // Estimate run or ride power stream if no power available
-    // It's done on the fly because we can't store the power stream from this computation.
-    // Indeed it's "weight" dependent and weight can be changed on specific periods
-    if (
-      !activityParams.hasPowerMeter &&
-      (SyncedActivityModel.isRide(activityParams.type) || SyncedActivityModel.isRun(activityParams.type))
-    ) {
-      const estimatedPowerStream = this.estimatedPowerStream(activityParams, streams, errorCallback);
-
-      if (estimatedPowerStream) {
-        streams.watts = estimatedPowerStream;
-      }
+    if (processMode === ProcessStreamMode.COMPUTE) {
+      return this.streamsComputeHandler(streams, params);
+    } else if (processMode === ProcessStreamMode.DISPLAY) {
+      return this.streamsDisplayHandler(streams, params);
     }
 
-    return this.smoothStreams(streams, activityParams);
+    return null;
   }
 
-  private static smoothStreams(
-    streams: Streams,
-    activityParams: { type: ElevateSport; hasPowerMeter: boolean; athleteSnapshot: AthleteSnapshotModel }
-  ): Streams {
-    // Smooth altitude
+  private static streamsComputeHandler(streams: Streams, params: StreamProcessorParams): Streams {
+    return this.shapeStreams(streams, params);
+  }
+
+  private static streamsDisplayHandler(streams: Streams, params: StreamProcessorParams): Streams {
+    return this.shapeStreams(streams, params);
+  }
+
+  /**
+   * Note: currently both compute & display process mode use same computation
+   */
+  private static shapeStreams(streams: Streams, params: StreamProcessorParams): Streams {
+    streams = this.smoothAltitude(streams);
+    streams = this.computeShapeGrade(streams); // We re-compute grade and smooth it ourselves
+    streams = this.smoothVelocity(streams, params);
+    streams = this.shapePacedVelocities(streams, params);
+    streams = this.computeGradeAdjustedSpeed(streams, params); // We re-compute grade adjusted speed
+    streams = this.computeEstimatedPower(streams, params);
+    streams = this.shapePower(streams, params); // Both real and estimated power
+    streams = this.shapeHeartRate(streams);
+    streams = this.shapeCadence(streams);
+    return streams;
+  }
+
+  /**
+   * Remove some unusual spikes & smooth stream
+   */
+  private static smoothAltitude(streams: Streams): Streams {
+    const ALTITUDE_SPIKES_MEDIAN_FILTER_WINDOW = 3;
+
     if (streams.altitude?.length > 0) {
-      streams.altitude = medianSelfFilter(streams.altitude, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
-      streams.altitude = meanWindowSmoothing(streams.altitude, StreamProcessor.ALTITUDE_MEAN_FILTER_WINDOW);
+      streams.altitude = medianFilter(streams.altitude, ALTITUDE_SPIKES_MEDIAN_FILTER_WINDOW);
+      streams.altitude = LowPassFilter.smooth(streams.altitude);
     }
+    return streams;
+  }
 
-    // Smooth velocity
-    if (streams.velocity_smooth?.length > 0) {
-      if (SyncedActivityModel.isRun(activityParams.type)) {
-        // Remove unwanted running pace behavior by re-estimate running pace stream.
-        // We use here a reliable process noise (0.01) and measure precision error of 0.5kph (standard deviation)
-        streams.velocity_smooth = KalmanFilter.apply(streams.velocity_smooth, {
-          R: 0.01,
-          Q: 0.5 ** 2 /* provide as variance */
-        });
-
-        // Remove any pace spike
-        streams.velocity_smooth = medianSelfFilter(
-          streams.velocity_smooth,
-          StreamProcessor.PACED_MEDIAN_PERCENTAGE_WINDOW
-        );
-
-        // If activity is remove remove unwanted artifacts such as infinite pace when speed if zero
-        // For this we take 0.2% and 99.8% percentiles values on which we will clamp the stream
-        const lowHighPercentiles = this.lowHighPercentiles(streams.velocity_smooth, 0.2);
-        streams.velocity_smooth = this.clampStream(
-          streams.velocity_smooth,
-          lowHighPercentiles[0],
-          lowHighPercentiles[1]
-        );
-
-        // Finally smooth pace stream using mean filter
-        streams.velocity_smooth = meanWindowSmoothing(
-          streams.velocity_smooth,
-          StreamProcessor.DEFAULT_MEAN_FILTER_WINDOW
-        );
-      } else {
-        // Remove any speed spike
-        streams.velocity_smooth = medianSelfFilter(
-          streams.velocity_smooth,
-          StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW
-        );
-      }
+  /**
+   * Remove some unusual spikes
+   */
+  private static smoothVelocity(streams: Streams, params: StreamProcessorParams): Streams {
+    // We intend to remove velocity spikes for every activities not performed in a swim pool :)
+    if (streams.velocity_smooth?.length > 0 && !params.isSwimPool) {
+      streams.velocity_smooth = medianFilter(streams.velocity_smooth);
     }
+    return streams;
+  }
 
-    // Smooth Power
+  /**
+   * Clamp to maximum possible human power
+   */
+  private static shapePower(streams: Streams, params: StreamProcessorParams): Streams {
     if (streams.watts?.length > 0) {
-      // Remove power pikes
-      streams.watts = medianSelfFilter(streams.watts, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
+      const MAX_WATT_PER_KG = 30;
+      streams.watts = streams.watts.map(power =>
+        _.clamp(power, MAX_WATT_PER_KG * params.athleteSnapshot.athleteSettings.weight)
+      );
     }
+    return streams;
+  }
 
-    // Smooth Heart rate
+  /**
+   * Clamp to maximum possible human heart-rate, remove some unusual spikes & smooth stream
+   */
+  private static shapeHeartRate(streams: Streams): Streams {
     if (streams.heartrate?.length > 0) {
-      // Getting low value percentile to clamp heart rate stream
-      // between this low hr and maximum human possible HR.
-      const lowHighPercentiles = this.lowHighPercentiles(streams.heartrate, 1);
-      streams.heartrate = this.clampStream(streams.heartrate, lowHighPercentiles[0], this.HUMAN_MAX_HR);
-      streams.heartrate = medianSelfFilter(streams.heartrate, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
-      streams.heartrate = meanWindowSmoothing(streams.heartrate, StreamProcessor.LOW_MEAN_FILTER_WINDOW);
-    }
+      // Clamp as human heart rate
+      const MAX_HUMAN_HR = 225;
+      streams.heartrate = streams.heartrate.map(hr => _.clamp(hr, MAX_HUMAN_HR));
 
-    // Smooth cadence
+      // Remove spikes
+      streams.heartrate = medianFilter(streams.heartrate);
+
+      // Smooth HR signal
+      streams.heartrate = meanWindowSmoothing(streams.heartrate);
+    }
+    return streams;
+  }
+
+  /**
+   * Clamp to maximum possible human cadence, remove some unusual spikes & smooth stream
+   */
+  private static shapeCadence(streams: Streams): Streams {
     if (streams.cadence?.length > 0) {
-      // Remove cadence pikes
-      streams.cadence = medianSelfFilter(streams.cadence, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
-      streams.cadence = meanWindowSmoothing(streams.cadence, StreamProcessor.LOW_MEAN_FILTER_WINDOW);
+      // Clamp as human cadence
+      const MAX_HUMAN_CAD = 250;
+      streams.cadence = streams.cadence.map(cad => _.clamp(cad, MAX_HUMAN_CAD));
+
+      // Remove spikes
+      streams.cadence = medianFilter(streams.cadence);
+
+      // Smooth HR signal
+      streams.cadence = meanWindowSmoothing(streams.cadence);
     }
+    return streams;
+  }
 
-    // Smooth grade
-    if (streams.grade_smooth?.length > 0) {
-      // Remove speed pikes
-      streams.grade_smooth = medianFilter(streams.grade_smooth, StreamProcessor.DEFAULT_MEDIAN_PERCENTAGE_WINDOW);
+  /**
+   * Compute and shape grade stream
+   */
+  private static computeShapeGrade(streams: Streams): Streams {
+    const GRADE_CLAMP = 50;
+    const DISTANCE_AHEAD_MIN_METERS = 7;
+    const GRADE_KALMAN_SMOOTHING = {
+      R: 0.01, // Grade model is stable
+      Q: 0.6 // Measures grades errors expected
+    };
 
-      // Clamp
-      const lowHighPercentiles = this.lowHighPercentiles(streams.grade_smooth, 2);
-      streams.grade_smooth = this.clampStream(streams.grade_smooth, lowHighPercentiles[0], lowHighPercentiles[1]);
+    if (streams.distance?.length > 0 && streams.altitude?.length > 0) {
+      streams.grade_smooth = [];
 
-      // Last smoothing
-      streams.grade_smooth = meanWindowSmoothing(streams.grade_smooth, this.GRADE_MEAN_FILTER_WINDOW);
+      let indexNow = 0;
+      do {
+        // Remove first index of distances & altitudes stream at every loop
+        const aheadDistances = streams.distance.slice(indexNow);
+        const aheadAltitudes = streams.altitude.slice(indexNow);
+
+        // Take our current distance travelled & altitude
+        const distanceNow = aheadDistances[0];
+        const altitudeNow = aheadAltitudes[0];
+
+        // Find ahead index matching minimal distance travelled
+        let aheadIndex = aheadDistances.findIndex(dist => distanceNow + DISTANCE_AHEAD_MIN_METERS <= dist);
+
+        // Validate we find an index with distance ahead for sure, else use last index of ahead distances
+        aheadIndex = aheadIndex >= 0 ? aheadIndex : aheadDistances.length - 1;
+
+        // Compute deltas & grade
+        const aheadDeltaDistance = aheadDistances[aheadIndex] - distanceNow;
+        const aheadDeltaAltitude = aheadAltitudes[aheadIndex] - altitudeNow;
+
+        const aheadGrade =
+          aheadDeltaDistance > 0
+            ? _.clamp(_.round((aheadDeltaAltitude / aheadDeltaDistance) * 100, 2), -GRADE_CLAMP, GRADE_CLAMP)
+            : 0;
+
+        streams.grade_smooth.push(aheadGrade);
+
+        indexNow++;
+      } while (indexNow < streams.distance.length);
+
+      // Fix potentials grade errors and smooth out grade signal
+      streams.grade_smooth = KalmanFilter.apply(streams.grade_smooth, GRADE_KALMAN_SMOOTHING);
     }
 
     return streams;
   }
 
-  private static estimatedPowerStream(
-    activityParams: { type: ElevateSport; hasPowerMeter: boolean; athleteSnapshot: AthleteSnapshotModel },
-    streams: Streams,
-    errorCallback: (err: Error) => void
-  ): number[] {
-    let powerStream = null;
-
-    try {
-      if (SyncedActivityModel.isRide(activityParams.type)) {
-        powerStream = this.estimateCyclingPowerStream(
-          activityParams.type,
-          streams.velocity_smooth,
-          streams.grade_smooth,
-          activityParams.athleteSnapshot.athleteSettings.weight
-        );
-      }
-
-      if (SyncedActivityModel.isRun(activityParams.type)) {
-        powerStream = this.estimateRunningPowerStream(
-          activityParams.type,
-          streams.time,
-          streams.distance,
-          streams.altitude,
-          activityParams.athleteSnapshot.athleteSettings.weight
-        );
-      }
-    } catch (err) {
-      errorCallback(err);
-      powerStream = null;
+  /**
+   * Shape velocities when they are base paced (Run, Swim, ...)
+   */
+  private static shapePacedVelocities(streams: Streams, params: StreamProcessorParams): Streams {
+    if (!streams.velocity_smooth?.length) {
+      return streams;
     }
 
-    // Smooth power stream on th fly
-    if (powerStream && powerStream.length > 0) {
-      // Remove watts pikes
-      powerStream = medianSelfFilter(powerStream, StreamProcessor.EST_POWER_MEDIAN_PERCENTAGE_WINDOW);
-      powerStream = meanWindowSmoothing(powerStream, this.DEFAULT_MEAN_FILTER_WINDOW);
+    if (!Activity.isPaced(params.type)) {
+      return streams;
+    }
+
+    // Ensure first paced stream dont start with 0 (it's common...)
+    // Keeping it means infinity and bad looking results
+    if (!streams.velocity_smooth[0]) {
+      const firstKnownValue = streams.velocity_smooth.find(v => (v as number) > 0);
+      streams.velocity_smooth[0] = firstKnownValue ? firstKnownValue : streams.velocity_smooth[0];
+    }
+
+    if (Activity.isByFoot(params.type)) {
+      const RUN_LOWER_SPEED_THRESHOLD = 3 / 3.6; // 3kph = 0.83 m/s = 20:00/km
+      const DEFAULT_LOWER_SPEED_THRESHOLD = 2 / 3.6; // 2kph = 0.55 m/s = 30:00/km
+      const BY_FOOT_PACE_KALMAN_SMOOTHING = {
+        R: 0.01, // Grade model is stable
+        Q: 1 / 3.6 // 1 kph possible measurements errors
+      };
+
+      // Clamp low speed along activity type to avoid infinite paces
+      const minSpeedThreshold = Activity.isRun(params.type) ? RUN_LOWER_SPEED_THRESHOLD : DEFAULT_LOWER_SPEED_THRESHOLD;
+      streams.velocity_smooth = this.clampMinStream(streams.velocity_smooth, minSpeedThreshold);
+
+      // Fix potentials pace errors for foot activities and smooth out pace signal
+      streams.velocity_smooth = KalmanFilter.apply(streams.velocity_smooth, BY_FOOT_PACE_KALMAN_SMOOTHING);
+    }
+    return streams;
+  }
+
+  private static computeGradeAdjustedSpeed(streams: Streams, params: StreamProcessorParams): Streams {
+    if (Activity.isRun(params.type) && streams.velocity_smooth?.length > 0 && streams.grade_smooth?.length > 0) {
+      streams.grade_adjusted_speed = [];
+
+      for (const [index, mps] of streams.velocity_smooth.entries()) {
+        const grade = streams.grade_smooth[index];
+        const adjustedMps = mps * this.runningGradeAdjustedSpeedFactor(grade);
+        streams.grade_adjusted_speed.push(_.round(adjustedMps, 2));
+      }
+    }
+
+    return streams;
+  }
+
+  /**
+   * Estimate run or ride power stream if no power available
+   * It's done on the fly because we can't store the power stream from this computation.
+   * Indeed it's "weight" dependent and weight can be changed on specific periods
+   * If no GPS data available (activity not performed outside OR not virtually outside), then don't estimate watts.
+   * Indeed this kind of activities could provide wrong distances and/or elevations (=> wrong grades), and thus wrong watts estimation.
+   */
+  private static computeEstimatedPower(streams: Streams, params: StreamProcessorParams): Streams {
+    if (!params.hasPowerMeter && streams.latlng?.length > 0) {
+      const estimatedPowerStream = this.estimatedPowerStream(streams, params);
+      if (estimatedPowerStream) {
+        streams.watts = estimatedPowerStream;
+      }
+    }
+
+    // (Debug purpose) Generates estimated power stream even if real power data is available
+    if (
+      params.hasPowerMeter &&
+      streams.latlng?.length > 0 &&
+      typeof localStorage !== "undefined" &&
+      localStorage.getItem("DEBUG_EST_VS_REAL_WATTS") === "true"
+    ) {
+      const estimatedPowerStream = this.estimatedPowerStream(streams, params);
+      if (estimatedPowerStream) {
+        streams.watts_calc = estimatedPowerStream;
+      }
+    }
+
+    return streams;
+  }
+
+  /**
+   * Return grade adjusted speed factor (not pace) for a given grade value
+   * Get Real Strava Premium Grade Adjusted Pace on every strava activities using:
+   * https://gist.github.com/thomaschampagne/2781dce212d12cd048728e70ae791a30
+   * ---------------------------------------------------------------------------------
+   * 5th order curve fitted equation based on Strava GAP model described by below data
+   * [{ grade: -34, speedFactor: 1.7 }, { grade: -32, speedFactor: 1.6 }, { grade: -30, speedFactor: 1.5 },
+   * { grade: -28, speedFactor: 1.4 }, { grade: -26, speedFactor: 1.3 }, { grade: -24, speedFactor: 1.235 },
+   * { grade: -22, speedFactor: 1.15 }, { grade: -20, speedFactor: 1.09 }, { grade: -18, speedFactor: 1.02 },
+   * { grade: -16, speedFactor: 0.95 }, { grade: -14, speedFactor: 0.91 }, { grade: -12, speedFactor: 0.89 },
+   * { grade: -10, speedFactor: 0.88 }, { grade: -8, speedFactor: 0.88 }, { grade: -6, speedFactor: 0.89 },
+   * { grade: -4, speedFactor: 0.91 }, { grade: -2, speedFactor: 0.95 }, { grade: 0, speedFactor: 1 },
+   * { grade: 2, speedFactor: 1.05 }, { grade: 4, speedFactor: 1.14 }, { grade: 6, speedFactor: 1.24 },
+   * { grade: 8, speedFactor: 1.34 }, { grade: 10, speedFactor: 1.47 }, { grade: 12, speedFactor: 1.5 },
+   * { grade: 14, speedFactor: 1.76 }, { grade: 16, speedFactor: 1.94 }, { grade: 18, speedFactor: 2.11 },
+   * { grade: 20, speedFactor: 2.3 }, { grade: 22, speedFactor: 2.4 }, { grade: 24, speedFactor: 2.48 },
+   * { grade: 26, speedFactor: 2.81 }, { grade: 28, speedFactor: 3 }, { grade: 30, speedFactor: 3.16 },
+   * { grade: 32, speedFactor: 3.31 }, { grade: 34, speedFactor: 3.49 } ]
+   */
+  public static runningGradeAdjustedSpeedFactor(grade: number): number {
+    const kA = 1;
+    const kB = 0.029290920646623777;
+    const kC = 0.0018083953212790634;
+    const kD = 4.0662425671715924e-7;
+    const kE = -3.686186584867523e-7;
+    const kF = -2.6628107325930747e-9;
+    return (
+      kA +
+      kB * grade +
+      kC * Math.pow(grade, 2) +
+      kD * Math.pow(grade, 3) +
+      kE * Math.pow(grade, 4) +
+      kF * Math.pow(grade, 5)
+    );
+  }
+
+  private static runningGradeAdjustedSpeedFactorMinetti(grade: number): number {
+    const kA = 0.00108716;
+    const kB = 0.0464835;
+    const kC = 1.0167;
+    return kA * Math.pow(grade, 2) + kB * grade + kC;
+  }
+
+  public static estimatedPowerStream(streams: Streams, params: StreamProcessorParams): number[] {
+    let powerStream;
+
+    try {
+      if (Activity.isRide(params.type)) {
+        powerStream = this.estimateCyclingPowerStream(
+          params.type,
+          streams.velocity_smooth,
+          streams.grade_smooth,
+          streams.cadence,
+          params.athleteSnapshot.athleteSettings.weight
+        );
+      } else if (Activity.isRun(params.type)) {
+        powerStream = this.estimateRunningPowerStream(
+          params.type,
+          params.athleteSnapshot.athleteSettings.weight,
+          streams.grade_adjusted_speed
+        );
+      } else {
+        powerStream = null;
+      }
+    } catch (err) {
+      if (err instanceof WarningException || err instanceof InconsistentParametersException) {
+        powerStream = null;
+      } else {
+        throw err;
+      }
     }
 
     return powerStream;
@@ -179,8 +348,11 @@ export class StreamProcessor {
     type: ElevateSport,
     velocityStream: number[],
     gradeStream: number[],
+    cadenceStream: number[],
     athleteWeight: number
   ): number[] {
+    const ZERO_POWER_CADENCE_THRESHOLD = 30;
+
     if (_.isEmpty(velocityStream)) {
       throw new WarningException("Velocity stream cannot be empty to calculate power stream");
     }
@@ -189,7 +361,7 @@ export class StreamProcessor {
       throw new WarningException("Grade stream cannot be empty to calculate power stream");
     }
 
-    if (!SyncedActivityModel.isRide(type)) {
+    if (!Activity.isRide(type)) {
       throw new WarningException(
         `Cannot compute estimated cycling power data on activity type: ${type}. Must be done with a bike.`
       );
@@ -203,13 +375,21 @@ export class StreamProcessor {
       riderWeightKg: athleteWeight
     };
 
+    const hasCadenceData = cadenceStream?.length > 0;
+
     const estimatedPowerStream = [];
 
     for (let i = 0; i < velocityStream.length; i++) {
       const kph = velocityStream[i] * 3.6;
       powerEstimatorParams.gradePercentage = gradeStream[i];
-      const power = CyclingPower.Estimator.calc(kph, powerEstimatorParams);
-      estimatedPowerStream.push(power);
+      let estPower = CyclingPower.Estimator.calc(kph, powerEstimatorParams);
+
+      // If cadence stream is provided and rider is not pedaling, then estimated power is ZERO!
+      if (hasCadenceData && cadenceStream[i] < ZERO_POWER_CADENCE_THRESHOLD) {
+        estPower = 0;
+      }
+
+      estimatedPowerStream.push(estPower);
     }
 
     return estimatedPowerStream;
@@ -217,53 +397,24 @@ export class StreamProcessor {
 
   public static estimateRunningPowerStream(
     type: ElevateSport,
-    timeArray: number[],
-    distanceArray: number[],
-    altitudeArray: number[],
-    athleteWeight: number
+    athleteWeight: number,
+    gradeAdjustedSpeedArray: number[]
   ): number[] {
-    if (_.isEmpty(timeArray)) {
-      throw new WarningException("Time stream cannot be empty to calculate power stream");
-    }
-
-    if (_.isEmpty(distanceArray)) {
-      throw new WarningException("Distance stream cannot be empty to calculate power stream");
-    }
-
-    if (_.isEmpty(altitudeArray)) {
-      throw new WarningException("Distance stream cannot be empty to calculate power stream");
-    }
-
-    if (!SyncedActivityModel.isRun(type)) {
-      throw new WarningException(
-        `Cannot compute estimated cycling power data on activity type: ${type}. Must be done with a bike.`
-      );
+    if (_.isEmpty(gradeAdjustedSpeedArray)) {
+      throw new WarningException("Grade adj speed stream cannot be empty to calculate power stream");
     }
 
     if (!athleteWeight || athleteWeight < 0) {
       throw new WarningException(`Cannot compute estimated running power with a athlete weight of ${athleteWeight}`);
     }
 
-    return RunningPowerEstimator.createRunningPowerEstimationStream(
-      athleteWeight,
-      distanceArray,
-      timeArray,
-      altitudeArray
-    );
+    return RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, gradeAdjustedSpeedArray);
   }
 
-  /**
-   * Return by default very low and very high percentiles (1%)
-   */
-  private static lowHighPercentiles(stream: number[], percentage: number = 1): number[] {
-    const pRatio = percentage / 100;
-    const sortedArrayAsc = _.cloneDeep(stream).sort((a, b) => a - b);
-    return [percentile(sortedArrayAsc, pRatio), percentile(sortedArrayAsc, 1 - pRatio)];
-  }
-
-  private static clampStream(stream: number[], lowValue: number, highValue: number): number[] {
+  private static clampMinStream(stream: number[], minValue: number): number[] {
+    const highValue = _.max(stream);
     return stream.map(value => {
-      return _.clamp(value, lowValue, highValue);
+      return _.clamp(value, minValue, highValue);
     });
   }
 }

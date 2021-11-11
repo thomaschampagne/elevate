@@ -1,28 +1,28 @@
 import { StatsGroup } from "../../stat-group.model";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { StatsDef } from "../../stats-def.namespace";
 import { SummaryStatsGroup } from "../../summary-stat-group.model";
 import { RunningPowerSensor } from "../../../sensors/power.sensor";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 export class SwimmingSummaryStatsGroup extends SummaryStatsGroup {
   constructor(name: string) {
     super(name);
   }
 
-  public static fromActivity(activity: SyncedActivityModel): StatsGroup {
+  public static fromActivity(activity: Activity): StatsGroup {
     return SwimmingSummaryStatsGroup.getDefault(activity);
   }
 
-  public static getDefault(activity: SyncedActivityModel): StatsGroup {
+  public static getDefault(activity: Activity): StatsGroup {
     const powerSensor = RunningPowerSensor.getDefault(activity);
 
     const summaryStatsGroup = new SwimmingSummaryStatsGroup("Swimming");
 
+    summaryStatsGroup.addStatsPool([StatsDef.Distance.Swimming.distance]);
+
     summaryStatsGroup.addStatsPool([StatsDef.Generic.movingTime, StatsDef.Generic.elapsedTime]);
 
-    summaryStatsGroup.addStatsPool([StatsDef.Generic.accurateDistance]);
-
-    summaryStatsGroup.addStatsPool([StatsDef.Generic.Swimming.swolf, StatsDef.Generic.moveRatio]);
+    summaryStatsGroup.addStatsPool([StatsDef.Scores.Swimming.swolf25, StatsDef.Generic.moveRatio]);
 
     summaryStatsGroup.addStatsPool([StatsDef.Pace.Swimming.avg]);
 
@@ -41,14 +41,14 @@ export class SwimmingSummaryStatsGroup extends SummaryStatsGroup {
     ]);
 
     summaryStatsGroup.addStatsPool([
-      StatsDef.HeartRate.hrss,
-      StatsDef.Pace.Swimming.swimStressScore(activity.start_time),
+      StatsDef.Scores.Stress.hrss,
+      StatsDef.Scores.Stress.Swimming.swimStressScore(activity.startTime),
       StatsDef.Generic.calories
     ]);
 
     summaryStatsGroup.addStatsPool([
-      StatsDef.HeartRate.hrssPerHour,
-      StatsDef.Pace.Swimming.swimStressScorePerHour(activity.start_time),
+      StatsDef.Scores.Stress.hrssPerHour,
+      StatsDef.Scores.Stress.Swimming.swimStressScorePerHour(activity.startTime),
       StatsDef.Generic.caloriesPerHour
     ]);
 

@@ -1,5 +1,5 @@
 import { BaseSensor } from "./base.sensor";
-import { MeasureSystem } from "@elevate/shared/enums";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 export class VoidSensor extends BaseSensor {
   public static readonly NAME: string = "Void";

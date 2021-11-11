@@ -3,15 +3,12 @@ import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { AppRoutes } from "../shared/models/app-routes";
 import { Router } from "@angular/router";
-import { ConnectorType } from "@elevate/shared/sync";
 import moment from "moment";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { environment } from "../../environments/environment";
-import { ConnectorSyncDateTime } from "@elevate/shared/models";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
 
 @Component({
   selector: "app-connectors",
@@ -49,51 +46,6 @@ export class ConnectorsComponent implements OnInit {
         connectorSyncDateTime && connectorSyncDateTime.syncDateTime
           ? "Synced " + moment(connectorSyncDateTime.syncDateTime).fromNow() + "."
           : "Never synced.";
-    });
-  }
-
-  public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
-    return this.desktopSyncService.getSyncState().then((syncState: SyncState) => {
-      if (
-        syncState === SyncState.NOT_SYNCED &&
-        !sessionStorage.getItem(ConnectorsComponent.SESSION_FIRST_SYNC_MESSAGE_SEEN) &&
-        environment.production
-      ) {
-        const data: ConfirmDialogDataModel = {
-          title: "Important: check your athlete settings before",
-          content:
-            "No activities were synced before. First make sure you have properly configured your dated athlete settings with <strong>Functional Thresholds</strong> before (even if not accurate on first sync).<br /><br />" +
-            "<strong>A lack of athlete settings can result in empty stats/charts (e.g. flat fitness trend).</strong>",
-          confirmText: "Sync",
-          cancelText: "Configure athlete settings",
-          confirmTimeout: 5,
-          confirmTimeoutEnded: () => {
-            sessionStorage.setItem(ConnectorsComponent.SESSION_FIRST_SYNC_MESSAGE_SEEN, "true");
-          }
-        };
-
-        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-          minWidth: ConfirmDialogComponent.MIN_WIDTH,
-          maxWidth: "50%",
-          data: data,
-          disableClose: false
-        });
-
-        return dialogRef
-          .afterClosed()
-          .toPromise()
-          .then((confirm: boolean) => {
-            const checkAthleteSettings = !confirm;
-            if (checkAthleteSettings) {
-              this.router.navigate([AppRoutes.athleteSettings]);
-              return Promise.reject(ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE);
-            } else {
-              return Promise.resolve();
-            }
-          });
-      } else {
-        return Promise.resolve();
-      }
     });
   }
 

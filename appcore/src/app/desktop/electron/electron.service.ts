@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@angular/core";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { Platform } from "@elevate/shared/enums";
 import { OpenDialogSyncOptions } from "electron";
-import { BridgeApi } from "@elevate/shared/electron";
+import { BridgeApi } from "@elevate/shared/electron/bridge.api";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @Injectable()
 export class ElectronService {

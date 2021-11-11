@@ -2,14 +2,14 @@ import { Component, Inject, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
-import { Constant } from "@elevate/shared/constants";
 import { AppRoutes } from "../shared/models/app-routes";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import { repository } from "../../../../package.json";
-import { countdown } from "@elevate/shared/tools";
 import { HelpComponent } from "../help/help.component";
+import { AppPackage } from "../app-package";
+import { countdown } from "@elevate/shared/tools/countdown";
+import { Constant } from "@elevate/shared/constants/constant";
 
 @Component({
   selector: "app-report",
@@ -66,7 +66,7 @@ export class ReportComponent implements OnInit {
   }
 
   public getIssuesUrl(): string {
-    return `${repository.url}/issues`;
+    return `${AppPackage.getRepositoryUrl()}/issues`;
   }
 
   public onGoToGithubIssues(): void {

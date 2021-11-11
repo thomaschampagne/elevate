@@ -12,7 +12,6 @@ import { WindowService } from "./shared/services/window/window.service";
 import { DomSanitizer } from "@angular/platform-browser";
 import { OverlayContainer } from "@angular/cdk/overlay";
 import { Theme } from "./shared/enums/theme.enum";
-import { BuildTarget } from "@elevate/shared/enums";
 import { environment } from "../environments/environment";
 import { SYNC_MENU_COMPONENT, SyncMenuComponent } from "./sync-menu/sync-menu.component";
 import { SyncMenuDirective } from "./sync-menu/sync-menu.directive";
@@ -38,6 +37,9 @@ import { ComponentsFactoryService } from "./shared/services/components-factory.s
 import { AppService } from "./shared/services/app-service/app.service";
 import { UPDATE_BAR_COMPONENT, UpdateBarComponent } from "./update-bar/update-bar.component";
 import { UpdateBarDirective } from "./update-bar/update-bar.directive";
+import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "./shared/services/links-opener/open-resource-resolver";
+import { AppPackage } from "./app-package";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 
 @Component({
   selector: "app-root",
@@ -47,7 +49,7 @@ import { UpdateBarDirective } from "./update-bar/update-bar.directive";
 export class AppComponent implements OnInit, OnDestroy {
   private static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
   public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
-  private readonly CUSTOM_ICONS: string[] = ["strava", "twitter", "github"];
+  private readonly CUSTOM_ICONS: string[] = ["strava", "twitter", "github", "discord"];
   public readonly buildTarget: BuildTarget = environment.buildTarget;
   public BuildTarget = BuildTarget;
   public Theme = Theme;
@@ -77,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public sideNav: MatSidenav;
 
   public currentRoute: string;
-  public showRouteUrl: boolean;
+  public showDebugRibbon: boolean;
 
   constructor(
     @Inject(AppService) public readonly appService: AppService,
@@ -91,7 +93,8 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(MatIconRegistry) private readonly iconRegistry: MatIconRegistry,
     @Inject(DomSanitizer) private readonly sanitizer: DomSanitizer,
     @Inject(ComponentsFactoryService) private readonly componentsFactoryService: ComponentsFactoryService,
-    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
+    @Inject(VersionsProvider) public readonly versionsProvider: VersionsProvider,
+    @Inject(OPEN_RESOURCE_RESOLVER) public readonly openResourceResolver: OpenResourceResolver,
     @Inject(LoggerService) private readonly logger: LoggerService,
     @Inject(MENU_ITEMS_PROVIDER) private readonly menuItemsProvider: MenuItemsProvider,
     @Inject(TOP_BAR_COMPONENT) private readonly topBarComponentType: Type<TopBarComponent>,
@@ -103,7 +106,7 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(APP_MORE_MENU_COMPONENT) private readonly appMoreMenuComponentType: Type<AppMoreMenuComponent>
   ) {
     this.currentRoute = this.router.url;
-    this.showRouteUrl = environment.showRouteUrl;
+    this.showDebugRibbon = environment.showDebugRibbon;
     this.registerCustomIcons();
   }
 
@@ -238,7 +241,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.routerEventsSubscription.unsubscribe();
   }
 
-  public onOpenLink(url: string) {
-    window.open(url, "_blank");
+  public onOpenWebSite(): void {
+    this.openResourceResolver.openLink(AppPackage.getElevateWebSite());
   }
 }

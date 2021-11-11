@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BuildTarget } from "@elevate/shared/enums";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import MarkDownIt from "markdown-it";
-import { GhRelease } from "@elevate/shared/models";
-
+import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 // Github release markdown pattern sample to retrieve proper releases note by platforms:
 /*
 # Release notes

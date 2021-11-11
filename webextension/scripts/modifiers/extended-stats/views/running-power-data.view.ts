@@ -1,17 +1,15 @@
 import { AbstractDataView } from "./abstract-data.view";
 import _ from "lodash";
-import { PowerDataModel } from "@elevate/shared/models";
+import { PowerStats } from "@elevate/shared/models/sync/activity.model";
 
 export class RunningPowerDataView extends AbstractDataView {
-  protected powerData: PowerDataModel;
-
-  constructor(powerData: PowerDataModel, units: string) {
+  constructor(protected power: PowerStats, protected hasPowerMeter: boolean, units: string) {
     super(units);
     this.mainColor = [63, 64, 72];
     this.setGraphTitleFromUnits();
-    this.powerData = powerData;
-    this.setupDistributionGraph(this.powerData.powerZones);
-    this.setupDistributionTable(this.powerData.powerZones);
+    this.power = power;
+    this.setupDistributionGraph(this.power.zones);
+    this.setupDistributionTable(this.power.zones);
   }
 
   public render(): void {
@@ -37,24 +35,24 @@ export class RunningPowerDataView extends AbstractDataView {
   }
 
   protected insertDataIntoGrid(): void {
-    const isRealPower = this.powerData.hasPowerMeter;
+    const isRealPower = this.hasPowerMeter;
     const printEstimatedWordWhenRealPower = isRealPower ? "" : "Estimated ";
     const printEstimatedTildWhenRealPower = isRealPower ? "" : "<span style='font-size: 14px;'>~</span>";
 
     this.insertContentAtGridPosition(
       0,
       0,
-      printEstimatedTildWhenRealPower + this.printNumber(this.powerData.avgWatts, 0),
+      printEstimatedTildWhenRealPower + this.printNumber(this.power.avg, 0),
       printEstimatedWordWhenRealPower + "Average Power",
       "W",
       "displayAdvancedPowerData"
     );
 
-    if (_.isNumber(this.powerData.best20min) && !this.isSegmentEffortView) {
+    if (_.isNumber(this.power.best20min) && !this.isSegmentEffortView) {
       this.insertContentAtGridPosition(
         1,
         0,
-        printEstimatedTildWhenRealPower + this.printNumber(this.powerData.best20min, 0),
+        printEstimatedTildWhenRealPower + this.printNumber(this.power.best20min, 0),
         printEstimatedWordWhenRealPower +
           " Best 20min Power <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
         "W",
@@ -66,15 +64,15 @@ export class RunningPowerDataView extends AbstractDataView {
       this.insertContentAtGridPosition(
         0,
         1,
-        this.printNumber(this.powerData.weightedPower, 0),
-        printEstimatedWordWhenRealPower + "Weighted Power",
+        this.printNumber(this.power.weighted, 0),
+        printEstimatedWordWhenRealPower + "Normalized Power®",
         "W",
         "displayAdvancedPowerData"
       );
       this.insertContentAtGridPosition(
         1,
         1,
-        this.printNumber(this.powerData.variabilityIndex, 2),
+        this.printNumber(this.power.variabilityIndex, 2),
         printEstimatedWordWhenRealPower + "Variability Index",
         "",
         "displayAdvancedPowerData"
@@ -84,7 +82,7 @@ export class RunningPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       2,
-      printEstimatedTildWhenRealPower + this.powerData.lowerQuartileWatts,
+      printEstimatedTildWhenRealPower + this.printNumber(this.power.lowQ),
       printEstimatedWordWhenRealPower + "25% Quartile Watts",
       "W",
       "displayAdvancedPowerData"
@@ -92,7 +90,7 @@ export class RunningPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       2,
-      printEstimatedTildWhenRealPower + this.powerData.medianWatts,
+      printEstimatedTildWhenRealPower + this.printNumber(this.power.median),
       printEstimatedWordWhenRealPower + "50% Quartile Watts",
       "W",
       "displayAdvancedPowerData"
@@ -100,7 +98,7 @@ export class RunningPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       2,
-      printEstimatedTildWhenRealPower + this.powerData.upperQuartileWatts,
+      printEstimatedTildWhenRealPower + this.printNumber(this.power.upperQ),
       printEstimatedWordWhenRealPower + "75% Quartile Watts",
       "W",
       "displayAdvancedPowerData"

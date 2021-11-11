@@ -1,15 +1,16 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { PeakModel } from "@elevate/shared/models";
 import { LogChart } from "../../shared/models/plot-chart.model";
 import { Sensor } from "../../shared/models/sensors/sensor.model";
 import { BaseChartComponent } from "../../shared/base-chart.component";
 import { Datum, Layout } from "plotly.js";
-import { MeasureSystem } from "@elevate/shared/enums";
 import _ from "lodash";
 import moment from "moment";
 import { AppService } from "../../../../shared/services/app-service/app.service";
 import { PlotlyService } from "angular-plotly.js";
 import { PaceSensor } from "../../shared/models/sensors/move.sensor";
+import { GradeSensor } from "../../shared/models/sensors/grade.sensor";
+import { Peak } from "@elevate/shared/models/sync/activity.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 @Component({
   selector: "app-peak-chart",
@@ -64,6 +65,14 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
           hoverformat: "%M:%S"
         }
       }
+    ],
+    [
+      GradeSensor.NAME,
+      {
+        yaxis: {
+          hoverformat: ".1f"
+        }
+      }
     ]
   ]);
 
@@ -71,7 +80,7 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
   public sensor: Sensor;
 
   @Input()
-  public peaks: PeakModel[];
+  public peaks: Peak[];
 
   @Input()
   public measureSystem: MeasureSystem;

@@ -1,5 +1,4 @@
 import { TestBed } from "@angular/core/testing";
-
 import { ViewedDayService } from "./viewed-day.service";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";

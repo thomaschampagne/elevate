@@ -1,42 +1,40 @@
 import { Injectable } from "@angular/core";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { BaseDao } from "../base.dao";
 import { CollectionDef } from "../../data-store/collection-def";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Injectable()
-export class ActivityDao extends BaseDao<SyncedActivityModel> {
-  public static readonly COLLECTION_DEF = new CollectionDef("syncedActivities", {
+export class ActivityDao extends BaseDao<Activity> {
+  public static readonly COLLECTION_DEF = new CollectionDef("activities", {
     unique: ["id"],
-    indices: ["name", "start_time", "type"]
+    indices: ["name", "startTime", "type"]
   });
 
-  public getCollectionDef(): CollectionDef<SyncedActivityModel> {
+  public getCollectionDef(): CollectionDef<Activity> {
     return ActivityDao.COLLECTION_DEF;
   }
 
-  public getDefaultStorageValue(): SyncedActivityModel[] {
+  public getDefaultStorageValue(): Activity[] {
     return [];
   }
 
-  public findByDatedSession(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
+  public findByDatedSession(startTime: string, endTime: string): Promise<Activity[]> {
     const activityStartTime = new Date(startTime).toISOString();
-    const endDate = new Date(activityStartTime);
-    endDate.setSeconds(endDate.getSeconds() + activityDurationSeconds);
-    const activityEndTime = endDate.toISOString();
+    const activityEndTime = new Date(endTime).toISOString();
 
     return this.find({
-      start_time: {
+      startTime: {
         $lt: activityEndTime
       },
-      end_time: {
+      endTime: {
         $gt: activityStartTime
       }
     });
   }
 
-  public findSortStartDate(descending: boolean): Promise<SyncedActivityModel[]> {
-    const sort: { propName: keyof SyncedActivityModel; options: Partial<SimplesortOptions> } = {
-      propName: "start_time",
+  public findSortStartDate(descending: boolean): Promise<Activity[]> {
+    const sort: { propName: keyof Activity; options: Partial<SimplesortOptions> } = {
+      propName: "startTime",
       options: { desc: descending }
     };
     return this.find(null, sort);
@@ -48,7 +46,7 @@ export class ActivityDao extends BaseDao<SyncedActivityModel> {
     });
   }
 
-  public findActivitiesWithSettingsLacks(): Promise<SyncedActivityModel[]> {
+  public findActivitiesWithSettingsLacks(): Promise<Activity[]> {
     return this.find({ settingsLack: true });
   }
 }

@@ -8,32 +8,35 @@
       "electron"
     ],
     "paths": {
-      "@elevate/shared/constants": [
-        "./modules/shared/constants/"
+      "fs": [
+        "./modules/browser/null.ts"
       ],
-      "@elevate/shared/enums": [
-        "./modules/shared/enums/"
+      "@elevate/shared/constants/*": [
+        "./modules/shared/constants/*"
       ],
-      "@elevate/shared/data": [
-        "./modules/shared/data/"
+      "@elevate/shared/enums/*": [
+        "./modules/shared/enums/*"
       ],
-      "@elevate/shared/electron": [
-        "./modules/shared/electron/"
+      "@elevate/shared/data/*": [
+        "./modules/shared/data/*"
       ],
-      "@elevate/shared/sync": [
-        "./modules/shared/sync/"
+      "@elevate/shared/electron/*": [
+        "./modules/shared/electron/*"
       ],
-      "@elevate/shared/models": [
-        "./modules/shared/models/"
+      "@elevate/shared/sync/*": [
+        "./modules/shared/sync/*"
       ],
-      "@elevate/shared/resolvers": [
-        "./modules/shared/resolvers/"
+      "@elevate/shared/models/*": [
+        "./modules/shared/models/*"
       ],
-      "@elevate/shared/exceptions": [
-        "./modules/shared/exceptions/"
+      "@elevate/shared/resolvers/*": [
+        "./modules/shared/resolvers/*"
       ],
-      "@elevate/shared/tools": [
-        "./modules/shared/tools/"
+      "@elevate/shared/exceptions/*": [
+        "./modules/shared/exceptions/*"
+      ],
+      "@elevate/shared/tools/*": [
+        "./modules/shared/tools/*"
       ]
     }
   },

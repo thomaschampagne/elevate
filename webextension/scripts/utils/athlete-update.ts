@@ -2,8 +2,8 @@ import { ExtensionEnv } from "../../config/extension-env";
 import * as Q from "q";
 import _ from "lodash";
 import { AthleteUpdateModel } from "../models/athlete-update.model";
-import { SyncResultModel } from "@elevate/shared/models";
-import { DistributedEndpointsResolver } from "@elevate/shared/resolvers";
+import { SyncResultModel } from "@elevate/shared/models/sync/sync-result.model";
+import { DistributedEndpointsResolver } from "@elevate/shared/resolvers/distributed-endpoints.resolver";
 
 export class AthleteUpdate {
   /**

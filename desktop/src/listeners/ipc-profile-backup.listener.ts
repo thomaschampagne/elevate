@@ -1,7 +1,8 @@
 import { IpcListener } from "./ipc-listener.interface";
-import { Channel, IpcTunnelService } from "@elevate/shared/electron";
 import { inject, singleton } from "tsyringe";
 import { ProfileBackupService } from "../backups/profile-backup.service";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @singleton()
 export class IpcProfileBackupListener implements IpcListener {

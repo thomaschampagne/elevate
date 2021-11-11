@@ -5,7 +5,6 @@ import { ActivityService } from "../../activity/activity.service";
 import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
-import { SyncedActivityModel } from "@elevate/shared/models/sync/synced-activity.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import _ from "lodash";
 import moment from "moment";
@@ -17,10 +16,11 @@ import { DataStore } from "../../../data-store/data-store";
 import { ExtensionDataStore } from "../../../data-store/impl/extension-data-store.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { filter } from "rxjs/operators";
-import { CoreMessages } from "@elevate/shared/models";
 import { ChromiumService } from "../../../../extension/chromium.service";
 import { ExtensionUserSettingsService } from "../../user-settings/extension/extension-user-settings.service";
 import { ExtensionBackupModel } from "../../../models/extension-backup.model";
+import { CoreMessages } from "@elevate/shared/models/core-messages";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Injectable()
 export class ExtensionSyncService extends SyncService<SyncDateTime> {
@@ -110,15 +110,15 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   public getSyncState(): Promise<SyncState> {
     return Promise.all([this.getSyncDateTime(), this.activityService.count()]).then((result: any[]) => {
       const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
-      const syncedActivitiesCount: number = result[1] as number;
+      const activitiesCount: number = result[1] as number;
 
       const hasSyncDateTime: boolean = syncDateTime && _.isNumber(syncDateTime.syncDateTime);
-      const hasSyncedActivityModels: boolean = syncedActivitiesCount > 0;
+      const hasActivities: boolean = activitiesCount > 0;
 
       let syncState: SyncState;
-      if (!hasSyncDateTime && !hasSyncedActivityModels) {
+      if (!hasSyncDateTime && !hasActivities) {
         syncState = SyncState.NOT_SYNCED;
-      } else if (!hasSyncDateTime && hasSyncedActivityModels) {
+      } else if (!hasSyncDateTime && hasActivities) {
         syncState = SyncState.PARTIALLY_SYNCED;
       } else {
         syncState = SyncState.SYNCED;
@@ -154,17 +154,13 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       this.versionsProvider.getPackageVersion()
     ]).then((result: any[]) => {
       const syncDateTime: SyncDateTime = result[0] as SyncDateTime;
-      const syncedActivityModels: SyncedActivityModel[] = result[1] as SyncedActivityModel[];
+      const activities: Activity[] = result[1] as Activity[];
       const athleteModel: AthleteModel = result[2] as AthleteModel;
       const appVersion: string = result[3] as string;
 
-      if (!syncDateTime || !_.isNumber(syncDateTime.syncDateTime)) {
-        return Promise.reject("Cannot export. No last synchronization date found.");
-      }
-
       const backupModel: ExtensionBackupModel = {
         syncDateTime: DataStore.cleanDbObject<SyncDateTime>(syncDateTime),
-        syncedActivities: DataStore.cleanDbCollection<SyncedActivityModel>(syncedActivityModels),
+        activities: DataStore.cleanDbCollection<Activity>(activities),
         athleteModel: DataStore.cleanDbObject<AthleteModel>(athleteModel),
         pluginVersion: appVersion
       };
@@ -174,7 +170,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   }
 
   public restore(extensionBackupModel: ExtensionBackupModel): Promise<void> {
-    if (_.isEmpty(extensionBackupModel.syncedActivities)) {
+    if (_.isEmpty(extensionBackupModel.activities)) {
       return Promise.reject(
         "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync."
       );
@@ -192,7 +188,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
       );
     }
 
-    return this.clearSyncedActivities()
+    return this.clearActivities()
       .then(() => {
         return this.athleteService.clear();
       })
@@ -207,7 +203,7 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
 
         return Promise.all([
           this.updateSyncDateTime(extensionBackupModel.syncDateTime),
-          this.activityService.insertMany(extensionBackupModel.syncedActivities),
+          this.activityService.insertMany(extensionBackupModel.activities),
           promiseImportDatedAthleteSettings,
           this.userSettingsService.clearLocalStorageOnNextLoad()
         ]);

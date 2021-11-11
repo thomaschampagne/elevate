@@ -2,10 +2,11 @@ import _ from "lodash";
 import { Loader } from "../modules/loader";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { StartCoreDataModel } from "./models/start-core-data.model";
-import { CoreMessages, UserSettings } from "@elevate/shared/models";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 import { BrowserStorage } from "./browser-storage";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { CoreMessages } from "@elevate/shared/models/core-messages";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class Content {
   public static loader: Loader = new Loader();
@@ -52,28 +53,28 @@ export class Content {
     }
 
     BrowserStorage.getInstance()
-      .get<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", true)
-      .then((userSettingsResult: ExtensionUserSettingsModel) => {
-        let userSettingsModel: ExtensionUserSettingsModel;
+      .get<ExtensionUserSettings>(BrowserStorageType.LOCAL, "userSettings", true)
+      .then((userSettingsResult: ExtensionUserSettings) => {
+        let userSettings: ExtensionUserSettings;
 
-        const defaultUserSettingsData = ExtensionUserSettingsModel.DEFAULT_MODEL;
+        const defaultUserSettingsData = ExtensionUserSettings.DEFAULT_MODEL;
 
         if (userSettingsResult) {
-          userSettingsModel = userSettingsResult;
+          userSettings = userSettingsResult;
         } else {
-          userSettingsModel = defaultUserSettingsData;
+          userSettings = defaultUserSettingsData;
         }
 
         const defaultSettings = _.keys(defaultUserSettingsData);
-        const syncedSettings = _.keys(userSettingsModel);
+        const syncedSettings = _.keys(userSettings);
         if (_.difference(defaultSettings, syncedSettings).length !== 0) {
           // If settings shape has changed
-          _.defaults(userSettingsModel, defaultUserSettingsData);
+          _.defaults(userSettings, defaultUserSettingsData);
         }
 
         const startCoreData: StartCoreDataModel = {
           extensionId: chrome.runtime.id,
-          userSettings: userSettingsModel,
+          userSettings: userSettings,
           appResources: this.appResources
         };
 

@@ -1,8 +1,9 @@
 import { Inject, Injectable } from "@angular/core";
-import { ConnectorType, FileConnectorInfo } from "@elevate/shared/sync";
 import { CollectionDef } from "../../data-store/collection-def";
 import { ElectronService } from "../../../desktop/electron/electron.service";
 import { ConnectorSyncDateTimeDao } from "../../dao/sync/connector-sync-date-time.dao";
+import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 
 @Injectable()
 export class FileConnectorInfoService {

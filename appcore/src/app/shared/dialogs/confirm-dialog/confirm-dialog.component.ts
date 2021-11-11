@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { ConfirmDialogDataModel } from "./confirm-dialog-data.model";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { Observable } from "rxjs";
-import { countdown } from "@elevate/shared/tools";
+import { countdown } from "@elevate/shared/tools/countdown";
 
 @Component({
   selector: "app-confirm-dialog",

@@ -1,26 +1,26 @@
 import { StatsGroup } from "../../stat-group.model";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { RunningPowerSensor } from "../../../sensors/power.sensor";
 import { StatsDef } from "../../stats-def.namespace";
 import { SummaryStatsGroup } from "../../summary-stat-group.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 export class RunningSummaryStatsGroup extends SummaryStatsGroup {
   constructor(name: string) {
     super(name);
   }
 
-  public static fromActivity(activity: SyncedActivityModel): StatsGroup {
+  public static fromActivity(activity: Activity): StatsGroup {
     return RunningSummaryStatsGroup.getDefault(activity);
   }
 
-  public static getDefault(activity: SyncedActivityModel): StatsGroup {
+  public static getDefault(activity: Activity): StatsGroup {
     const powerSensor = RunningPowerSensor.getDefault(activity);
 
     const summaryStatsGroup = new RunningSummaryStatsGroup("Running");
 
-    summaryStatsGroup.addStatsPool([StatsDef.Generic.movingTime, StatsDef.Generic.elapsedTime]);
+    summaryStatsGroup.addStatsPool([StatsDef.Distance.Running.distance]);
 
-    summaryStatsGroup.addStatsPool([StatsDef.Generic.distance]);
+    summaryStatsGroup.addStatsPool([StatsDef.Generic.movingTime, StatsDef.Generic.elapsedTime]);
 
     summaryStatsGroup.addStatsPool([StatsDef.Elevation.ascentGain, StatsDef.Generic.moveRatio]);
 
@@ -41,14 +41,14 @@ export class RunningSummaryStatsGroup extends SummaryStatsGroup {
     ]);
 
     summaryStatsGroup.addStatsPool([
-      StatsDef.HeartRate.hrss,
-      StatsDef.Pace.Running.runningStressScore(activity.start_time),
+      StatsDef.Scores.Stress.hrss,
+      StatsDef.Scores.Stress.Running.runningStressScore(activity.startTime),
       StatsDef.Generic.calories
     ]);
 
     summaryStatsGroup.addStatsPool([
-      StatsDef.HeartRate.hrssPerHour,
-      StatsDef.Pace.Running.runningStressScorePerHour(activity.start_time),
+      StatsDef.Scores.Stress.hrssPerHour,
+      StatsDef.Scores.Stress.Running.runningStressScorePerHour(activity.startTime),
       StatsDef.Generic.caloriesPerHour
     ]);
 

@@ -4,17 +4,15 @@ import { TestBed } from "@angular/core/testing";
 import { FitnessService } from "./fitness.service";
 import { ActivityService } from "../../../shared/services/activity/activity.service";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
-import { AthleteSettingsModel, AthleteSnapshotModel, Gender, SyncedActivityModel } from "@elevate/shared/models";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { DayStressModel } from "../models/day-stress.model";
 import { AppError } from "../../../shared/models/app-error.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
-import { FakeSyncedActivityHelper } from "../helpers/fake-synced-activity.helper";
+import { FakeActivityHelper } from "../helpers/fake-activity.helper";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
 import { FitnessTrendModule } from "../../fitness-trend.module";
-import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../../shared/modules/target/desktop-target.module";
@@ -23,12 +21,17 @@ import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.toke
 import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { ErrorHandler } from "@angular/core";
 import { MockElevateErrorHandler } from "../../../errors-handler/mock-elevate-error-handler";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
 
 describe("FitnessService", () => {
   const todayDate = "2015-12-01 12:00";
   const momentDatePattern = "YYYY-MM-DD hh:mm";
 
-  let _ATHLETE_MODEL_SNAPSHOT_: AthleteSnapshotModel;
+  let _ATHLETE_MODEL_SNAPSHOT_: AthleteSnapshot;
   let fitnessTrendConfigModel: FitnessTrendConfigModel;
   let powerMeterEnable;
   let swimEnable;
@@ -49,10 +52,10 @@ describe("FitnessService", () => {
     });
 
     // Define default athlete model
-    _ATHLETE_MODEL_SNAPSHOT_ = new AthleteSnapshotModel(
+    _ATHLETE_MODEL_SNAPSHOT_ = new AthleteSnapshot(
       Gender.MEN,
       30,
-      new AthleteSettingsModel(
+      new AthleteSettings(
         190,
         60,
         {
@@ -111,9 +114,9 @@ describe("FitnessService", () => {
       powerMeterEnable = false;
       swimEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 01",
@@ -125,8 +128,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 02",
@@ -138,8 +141,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 03",
@@ -151,9 +154,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -185,7 +186,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -199,9 +199,9 @@ describe("FitnessService", () => {
 
       swimEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 01",
@@ -213,8 +213,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 02",
@@ -226,8 +226,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 03",
@@ -239,9 +239,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -271,7 +269,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -287,9 +284,9 @@ describe("FitnessService", () => {
       const expectedRunningScoredActivitiesLength = 5;
       const expectedSwimScoredActivitiesLength = 1;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -301,8 +298,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored + Est PSS Scored
@@ -314,8 +311,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -327,8 +324,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -341,8 +338,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -355,8 +352,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -369,8 +366,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -383,8 +380,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -397,8 +394,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           9,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor VirtualRun 1", // RSS Scored
@@ -411,9 +408,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -446,7 +441,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -462,9 +456,9 @@ describe("FitnessService", () => {
       const expectedSwimScoredActivitiesLength = 1;
       const skipActivityTypes = null;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -476,8 +470,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored
@@ -489,8 +483,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -502,8 +496,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored
@@ -516,8 +510,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored
@@ -530,8 +524,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -544,8 +538,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -558,8 +552,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -572,9 +566,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -607,7 +599,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -624,9 +615,9 @@ describe("FitnessService", () => {
       const skipActivityTypes = null;
       powerMeterEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -638,8 +629,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored
@@ -651,8 +642,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -664,8 +655,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -678,8 +669,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -692,8 +683,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -706,8 +697,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -720,8 +711,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -734,9 +725,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -769,7 +758,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -786,9 +774,9 @@ describe("FitnessService", () => {
       const skipActivityTypes = null;
       powerMeterEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -800,8 +788,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored
@@ -813,8 +801,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -826,8 +814,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -840,8 +828,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -854,8 +842,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -868,8 +856,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -882,8 +870,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -896,9 +884,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -931,7 +917,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -949,9 +934,9 @@ describe("FitnessService", () => {
       powerMeterEnable = false;
       swimEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -963,8 +948,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored + Est PSS Scored
@@ -976,8 +961,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -989,8 +974,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -1003,8 +988,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -1017,8 +1002,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -1031,8 +1016,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -1045,8 +1030,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -1059,9 +1044,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1094,7 +1077,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -1112,10 +1094,10 @@ describe("FitnessService", () => {
       powerMeterEnable = false;
       swimEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -1127,8 +1109,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -1141,8 +1123,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -1155,8 +1137,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -1169,9 +1151,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1204,7 +1184,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -1215,9 +1194,9 @@ describe("FitnessService", () => {
       powerMeterEnable = false;
       swimEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 01",
@@ -1229,8 +1208,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 02",
@@ -1242,8 +1221,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 03",
@@ -1255,7 +1234,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1284,9 +1263,9 @@ describe("FitnessService", () => {
       powerMeterEnable = false;
       swimEnable = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 01",
@@ -1298,8 +1277,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 02",
@@ -1311,8 +1290,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 03",
@@ -1324,7 +1303,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1356,9 +1335,9 @@ describe("FitnessService", () => {
       swimEnable = false;
       const expectedCount = 5;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -1370,8 +1349,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -1383,8 +1362,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -1397,8 +1376,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -1411,8 +1390,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -1425,7 +1404,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1459,9 +1438,9 @@ describe("FitnessService", () => {
 
       const expectedCount = 6;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -1473,8 +1452,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -1486,8 +1465,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -1500,8 +1479,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -1514,8 +1493,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -1528,8 +1507,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // Trimp Scored
@@ -1541,7 +1520,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1603,9 +1582,9 @@ describe("FitnessService", () => {
 
       const expectedCount = 6;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -1617,8 +1596,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride", // PSS Scored (estimated)
@@ -1630,8 +1609,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // RSS Scored
@@ -1644,8 +1623,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // RSS Scored
@@ -1658,8 +1637,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -1672,8 +1651,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // Trimp Scored
@@ -1685,7 +1664,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1746,9 +1725,9 @@ describe("FitnessService", () => {
 
       _ATHLETE_MODEL_SNAPSHOT_.athleteSettings.cyclingFtp = null;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 01",
@@ -1760,8 +1739,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 02",
@@ -1773,8 +1752,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperPoweredRide 03",
@@ -1786,9 +1765,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -1818,7 +1795,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -1834,10 +1810,10 @@ describe("FitnessService", () => {
       fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
       fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
 
       // Add activity: SuperPoweredRide not having cyclingFtp on his athleteSnapshot
-      const syncedActivityModel01 = FakeSyncedActivityHelper.create(
+      const activity01 = FakeActivityHelper.create(
         1,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "SuperPoweredRide 01",
@@ -1847,12 +1823,12 @@ describe("FitnessService", () => {
         250,
         true
       );
-      syncedActivityModel01.athleteSnapshot.athleteSettings.cyclingFtp = null;
-      syncedActivityModels.push(syncedActivityModel01);
+      activity01.athleteSnapshot.athleteSettings.cyclingFtp = null;
+      activities.push(activity01);
 
       // Add activity
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperPoweredRide 02",
@@ -1865,8 +1841,8 @@ describe("FitnessService", () => {
       );
 
       // Add activity
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperPoweredRide 03",
@@ -1879,8 +1855,8 @@ describe("FitnessService", () => {
       );
 
       // Add activity
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "Swimming 01", // SSS Scored
@@ -1894,7 +1870,7 @@ describe("FitnessService", () => {
       );
 
       // Add activity: Swimming 02 not having swimFtp on his athleteSnapshot
-      const syncedActivityModel05 = FakeSyncedActivityHelper.create(
+      const activity05 = FakeActivityHelper.create(
         5,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "Swimming 02", // SSS Scored
@@ -1905,12 +1881,12 @@ describe("FitnessService", () => {
         false,
         419
       );
-      syncedActivityModel05.athleteSnapshot.athleteSettings.swimFtp = null;
-      syncedActivityModels.push(syncedActivityModel05);
+      activity05.athleteSnapshot.athleteSettings.swimFtp = null;
+      activities.push(activity05);
 
       // Add activity:
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperHeartRateRun 01", // HRSS Scored
@@ -1923,8 +1899,8 @@ describe("FitnessService", () => {
       );
 
       // Add activity (w/ Est Stress Score):
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "No sensor Run 1", // Est RSS scored
@@ -1938,7 +1914,7 @@ describe("FitnessService", () => {
       ); // => RSS: 100 (priority)
 
       // Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteSnapshot
-      const syncedActivityModel08 = FakeSyncedActivityHelper.create(
+      const activity08 = FakeActivityHelper.create(
         8,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "No sensor Run 2", // Est RSS scored
@@ -1949,12 +1925,12 @@ describe("FitnessService", () => {
         false,
         300
       ); // => RSS: 100 (priority)
-      syncedActivityModel08.athleteSnapshot.athleteSettings.runningFtp = null;
-      syncedActivityModels.push(syncedActivityModel08);
+      activity08.athleteSnapshot.athleteSettings.runningFtp = null;
+      activities.push(activity08);
 
       // Add activity (w/ Est Stress Score)
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           9,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperPoweredRide Est 01", // Est PSS scored
@@ -1967,7 +1943,7 @@ describe("FitnessService", () => {
       );
 
       // Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteSnapshot
-      const syncedActivityModel010 = FakeSyncedActivityHelper.create(
+      const activity010 = FakeActivityHelper.create(
         10,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "SuperPoweredRide Est 02", // Est PSS scored
@@ -1977,12 +1953,10 @@ describe("FitnessService", () => {
         250,
         false
       );
-      syncedActivityModel010.athleteSnapshot.athleteSettings.cyclingFtp = null;
-      syncedActivityModels.push(syncedActivityModel010);
+      activity010.athleteSnapshot.athleteSettings.cyclingFtp = null;
+      activities.push(activity010);
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2014,7 +1988,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2030,10 +2003,10 @@ describe("FitnessService", () => {
       fitnessTrendConfigModel.allowEstimatedPowerStressScore = false;
       fitnessTrendConfigModel.allowEstimatedRunningStressScore = false;
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
 
       // Add activity: SuperPoweredRide not having cyclingFtp on his athleteSnapshot
-      const syncedActivityModel01 = FakeSyncedActivityHelper.create(
+      const activity01 = FakeActivityHelper.create(
         1,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "SuperPoweredRide 01",
@@ -2043,12 +2016,12 @@ describe("FitnessService", () => {
         250,
         true
       );
-      syncedActivityModel01.athleteSnapshot.athleteSettings.cyclingFtp = null;
-      syncedActivityModels.push(syncedActivityModel01);
+      activity01.athleteSnapshot.athleteSettings.cyclingFtp = null;
+      activities.push(activity01);
 
       // Add activity
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperPoweredRide 02",
@@ -2061,8 +2034,8 @@ describe("FitnessService", () => {
       );
 
       // Add activity
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperPoweredRide 03",
@@ -2075,8 +2048,8 @@ describe("FitnessService", () => {
       );
 
       // Add activity
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "Swimming 01", // SSS Scored
@@ -2090,7 +2063,7 @@ describe("FitnessService", () => {
       );
 
       // Add activity: Swimming 02 not having swimFtp on his athleteSnapshot
-      const syncedActivityModel05 = FakeSyncedActivityHelper.create(
+      const activity05 = FakeActivityHelper.create(
         5,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "Swimming 02", // SSS Scored
@@ -2101,12 +2074,12 @@ describe("FitnessService", () => {
         false,
         419
       );
-      syncedActivityModel05.athleteSnapshot.athleteSettings.swimFtp = null;
-      syncedActivityModels.push(syncedActivityModel05);
+      activity05.athleteSnapshot.athleteSettings.swimFtp = null;
+      activities.push(activity05);
 
       // Add activity:
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperHeartRateRun 01", // HRSS Scored
@@ -2119,8 +2092,8 @@ describe("FitnessService", () => {
       );
 
       // Add activity (w/ Est Stress Score):
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "No sensor Run 1", // Est RSS scored
@@ -2134,7 +2107,7 @@ describe("FitnessService", () => {
       ); // => RSS: 100 (priority)
 
       // Add activity (w/ Est Stress Score): No sensor Run 2 not having runningFtp on his athleteSnapshot
-      const syncedActivityModel08 = FakeSyncedActivityHelper.create(
+      const activity08 = FakeActivityHelper.create(
         8,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "No sensor Run 2", // Est RSS scored
@@ -2145,12 +2118,12 @@ describe("FitnessService", () => {
         false,
         300
       ); // => RSS: 100 (priority)
-      syncedActivityModel08.athleteSnapshot.athleteSettings.runningFtp = null;
-      syncedActivityModels.push(syncedActivityModel08);
+      activity08.athleteSnapshot.athleteSettings.runningFtp = null;
+      activities.push(activity08);
 
       // Add activity (w/ Est Stress Score)
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           9,
           _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
           "SuperPoweredRide Est 01",
@@ -2163,7 +2136,7 @@ describe("FitnessService", () => {
       );
 
       // Add activity (w/ Est Stress Score): SuperPoweredRide Est 02 not having runningFtp on his athleteSnapshot
-      const syncedActivityModel10 = FakeSyncedActivityHelper.create(
+      const activity10 = FakeActivityHelper.create(
         10,
         _.cloneDeep(_ATHLETE_MODEL_SNAPSHOT_),
         "SuperPoweredRide Est 02",
@@ -2173,12 +2146,10 @@ describe("FitnessService", () => {
         250,
         false
       );
-      syncedActivityModel10.athleteSnapshot.athleteSettings.cyclingFtp = null;
-      syncedActivityModels.push(syncedActivityModel10);
+      activity10.athleteSnapshot.athleteSettings.cyclingFtp = null;
+      activities.push(activity10);
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2210,7 +2181,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2228,9 +2198,9 @@ describe("FitnessService", () => {
 
       const skipActivitiesTypes: string[] = [ElevateSport.Run, "EBikeRide"];
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           151,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 01",
@@ -2242,8 +2212,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           235,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Super E-Bike Ride",
@@ -2255,8 +2225,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           666,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 02",
@@ -2268,8 +2238,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           999,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRun 01",
@@ -2281,9 +2251,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2314,7 +2282,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2330,9 +2297,9 @@ describe("FitnessService", () => {
 
       const skipActivitiesTypes: string[] = [ElevateSport.Ride, "Run"];
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           151,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 01",
@@ -2344,8 +2311,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           235,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Super E-Bike Ride",
@@ -2357,8 +2324,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           666,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 02",
@@ -2370,8 +2337,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           999,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRun 01",
@@ -2383,9 +2350,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2419,7 +2384,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2432,9 +2396,9 @@ describe("FitnessService", () => {
         .startOf("day")
         .toISOString();
       const expectedFitnessPreparedActivitiesLength = 4;
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 01",
@@ -2446,8 +2410,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 02",
@@ -2459,8 +2423,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 03",
@@ -2472,8 +2436,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 04",
@@ -2485,8 +2449,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 05",
@@ -2498,8 +2462,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Run 01",
@@ -2511,9 +2475,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2538,7 +2500,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2547,9 +2508,9 @@ describe("FitnessService", () => {
       // Given
       fitnessTrendConfigModel.ignoreActivityNamePatterns = ["#MTBDH", "@skipMe"];
       const expectedFitnessPreparedActivitiesLength = 3;
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 01",
@@ -2561,8 +2522,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 02 #MTBDH",
@@ -2574,8 +2535,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 03 #MTBDH",
@@ -2587,8 +2548,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 04",
@@ -2600,8 +2561,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 05 @skipMe",
@@ -2613,8 +2574,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Run 01",
@@ -2626,9 +2587,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2661,7 +2620,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2676,9 +2634,9 @@ describe("FitnessService", () => {
       fitnessTrendConfigModel.ignoreActivityNamePatterns = ["#MTBDH", "@skipMe"];
 
       const expectedFitnessPreparedActivitiesLength = 2;
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 01",
@@ -2690,8 +2648,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 02 #MTBDH",
@@ -2703,8 +2661,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 03 #MTBDH",
@@ -2716,8 +2674,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 04",
@@ -2729,8 +2687,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 05 @skipMe",
@@ -2742,8 +2700,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Run 01",
@@ -2755,9 +2713,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2786,7 +2742,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -2798,7 +2753,7 @@ describe("FitnessService", () => {
       powerMeterEnable = false;
       swimEnable = false;
 
-      const emptyModels: SyncedActivityModel[] = [];
+      const emptyModels: Activity[] = [];
       spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(emptyModels));
 
       // When
@@ -2825,10 +2780,10 @@ describe("FitnessService", () => {
 
     it("should reject when activities no AthleteModel linked", done => {
       // Given
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 01",
@@ -2840,7 +2795,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const activityModel = FakeSyncedActivityHelper.create(
+      const activityModel = FakeActivityHelper.create(
         2,
         _ATHLETE_MODEL_SNAPSHOT_,
         "Ride 02",
@@ -2851,9 +2806,9 @@ describe("FitnessService", () => {
         false
       );
       activityModel.athleteSnapshot = undefined;
-      syncedActivityModels.push(activityModel);
+      activities.push(activityModel);
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2883,9 +2838,9 @@ describe("FitnessService", () => {
     it("should reject all activities filtered", done => {
       // Given
       fitnessTrendConfigModel.ignoreActivityNamePatterns = [ElevateSport.Ride];
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 01",
@@ -2897,8 +2852,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 02 #MTBDH",
@@ -2910,8 +2865,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 03 #MTBDH",
@@ -2923,8 +2878,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Ride 04",
@@ -2936,7 +2891,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
@@ -2976,10 +2931,10 @@ describe("FitnessService", () => {
       const expectedLastRealDay = moment("2018-02-15", "YYYY-MM-DD").toDate().getTime();
       const expectedLastPreviewDay = moment("2018-03-01", "YYYY-MM-DD").toDate().getTime();
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           0,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride + HR", // PSS Scored + HRSS Scored
@@ -2991,8 +2946,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -3004,8 +2959,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored
@@ -3017,8 +2972,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride 2", // PSS Scored (estimated)
@@ -3030,8 +2985,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -3044,8 +2999,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 2", // HR Scored + Est RSS scored
@@ -3058,8 +3013,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // Est RSS scored
@@ -3072,8 +3027,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // Est RSS scored
@@ -3086,8 +3041,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           8,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Swimming", // SSS Scored
@@ -3101,8 +3056,8 @@ describe("FitnessService", () => {
       );
 
       // ... Grouped activities 2018-02-12; Final SS => 380
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           9,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 3", // HR Scored + Est RSS scored
@@ -3115,8 +3070,8 @@ describe("FitnessService", () => {
         )
       ); // => RSS: 100
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           10,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR + Est power Ride", // HR + PSS Scored (estimated)
@@ -3129,8 +3084,8 @@ describe("FitnessService", () => {
       ); // => Est PSS: 100
 
       // ... Grouped activities 2018-02-13; Final SS => 372
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           11,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 4", // HR Scored + Est RSS scored
@@ -3143,8 +3098,8 @@ describe("FitnessService", () => {
         )
       ); // => RSS: 100
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           12,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 3", // Est RSS scored
@@ -3158,8 +3113,8 @@ describe("FitnessService", () => {
       ); // => RSS: 300 (priority)
 
       // ... Grouped activities 2018-02-14;
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           13,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -3171,8 +3126,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           14,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR + Est power Ride", // HR + PSS Scored (estimated)
@@ -3184,8 +3139,8 @@ describe("FitnessService", () => {
         )
       ); // => Est PSS: 150
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           15,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 4", // HR Scored + Est RSS scored
@@ -3198,7 +3153,7 @@ describe("FitnessService", () => {
         )
       ); // => RSS: 300
 
-      const swimActivity = FakeSyncedActivityHelper.create(
+      const swimActivity = FakeActivityHelper.create(
         16,
         _ATHLETE_MODEL_SNAPSHOT_,
         "Swimming", // SSS Scored
@@ -3209,12 +3164,10 @@ describe("FitnessService", () => {
         false,
         419
       );
-      swimActivity.distance_raw = 3000; // SSS => 419 (priority)
-      syncedActivityModels.push(swimActivity);
+      swimActivity.stats.distance = 3000; // SSS => 419 (priority)
+      activities.push(swimActivity);
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(
@@ -3332,7 +3285,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -3340,10 +3292,10 @@ describe("FitnessService", () => {
     it("should generate athlete daily activities without hr or power based activities & CONFIG_HR_MODE=HRSS", done => {
       // Given
       const expectedDailyActivityLength = 61;
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
       getTodayMomentSpy.and.returnValue(moment("2018-02-15 12:00", momentDatePattern));
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 01",
@@ -3355,8 +3307,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 02",
@@ -3368,8 +3320,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "SuperHeartRateRide 03",
@@ -3381,7 +3333,7 @@ describe("FitnessService", () => {
         )
       );
 
-      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(syncedActivityModels));
+      spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       const promise: Promise<DayStressModel[]> = fitnessService.generateDailyStress(
         fitnessTrendConfigModel,
@@ -3433,12 +3385,12 @@ describe("FitnessService", () => {
       fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
       const expectedLength = 61;
       const skipActivitiesTypes = null;
-      const syncedActivityModels: SyncedActivityModel[] = [];
+      const activities: Activity[] = [];
       const expectedRideName = "HR Ride";
       const expectedRunName = "HR Run 2";
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           0,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride + HR", // PSS Scored + HRSS Scored
@@ -3450,8 +3402,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -3463,8 +3415,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Ride", // HR Scored
@@ -3476,8 +3428,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Ride 2", // PSS Scored (estimated)
@@ -3489,8 +3441,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           4,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run", // HR Scored + Est RSS scored
@@ -3503,8 +3455,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           5,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 2", // HR Scored + Est RSS scored
@@ -3517,8 +3469,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           6,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run", // Est RSS scored
@@ -3531,8 +3483,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           7,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 2", // Est RSS scored
@@ -3545,7 +3497,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const swimActivity1 = FakeSyncedActivityHelper.create(
+      const swimActivity1 = FakeActivityHelper.create(
         8,
         _ATHLETE_MODEL_SNAPSHOT_,
         "Swimming", // SSS Scored
@@ -3556,12 +3508,12 @@ describe("FitnessService", () => {
         false,
         419
       );
-      swimActivity1.distance_raw = 3000; // SSS => 419 (priority)
-      syncedActivityModels.push(swimActivity1);
+      swimActivity1.stats.distance = 3000; // SSS => 419 (priority)
+      activities.push(swimActivity1);
 
       // ... Grouped activities 2018-02-12; Final SS => 380
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           9,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 3", // HR Scored + Est RSS scored
@@ -3574,8 +3526,8 @@ describe("FitnessService", () => {
         )
       ); // => RSS: 100
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           10,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR + Est power Ride", // HR + PSS Scored (estimated)
@@ -3588,8 +3540,8 @@ describe("FitnessService", () => {
       ); // => Est PSS: 100
 
       // ... Grouped activities 2018-02-13; Final SS => 372
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           11,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 4", // HR Scored + Est RSS scored
@@ -3602,8 +3554,8 @@ describe("FitnessService", () => {
         )
       ); // => RSS: 100
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           12,
           _ATHLETE_MODEL_SNAPSHOT_,
           "No sensor Run 3", // Est RSS scored
@@ -3617,8 +3569,8 @@ describe("FitnessService", () => {
       ); // => RSS: 300 (priority)
 
       // ... Grouped activities 2018-02-14;
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           13,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Power Ride", // PSS Scored
@@ -3630,8 +3582,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           14,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR + Est power Ride", // HR + PSS Scored (estimated)
@@ -3643,8 +3595,8 @@ describe("FitnessService", () => {
         )
       ); // => Est PSS: 150
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           15,
           _ATHLETE_MODEL_SNAPSHOT_,
           "HR Run 4", // HR Scored + Est RSS scored
@@ -3657,7 +3609,7 @@ describe("FitnessService", () => {
         )
       ); // => RSS: 300
 
-      const swimActivity2 = FakeSyncedActivityHelper.create(
+      const swimActivity2 = FakeActivityHelper.create(
         16,
         _ATHLETE_MODEL_SNAPSHOT_,
         "Swimming", // SSS Scored
@@ -3668,12 +3620,10 @@ describe("FitnessService", () => {
         false,
         419
       );
-      swimActivity2.distance_raw = 3000; // SSS => 419 (priority)
-      syncedActivityModels.push(swimActivity2);
+      swimActivity2.stats.distance = 3000; // SSS => 419 (priority)
+      activities.push(swimActivity2);
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       const promise: Promise<DayFitnessTrendModel[]> = fitnessService.computeTrend(
@@ -3730,18 +3680,17 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
 
     it("should compute fitness trend with initial fitness and fatigue value", done => {
       // Given
-      const syncedActivityModels = [];
+      const activities = [];
 
       // Add some fakes EBikeRides
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           1,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Super Bike Ride 01",
@@ -3753,8 +3702,8 @@ describe("FitnessService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           _ATHLETE_MODEL_SNAPSHOT_,
           "Super Bike Ride 02",
@@ -3766,9 +3715,7 @@ describe("FitnessService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       // When
       fitnessTrendConfigModel.initializedFitnessTrendModel = {
@@ -3806,7 +3753,6 @@ describe("FitnessService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });

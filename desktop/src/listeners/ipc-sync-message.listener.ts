@@ -1,12 +1,15 @@
-import { Channel, IpcTunnelService } from "@elevate/shared/electron";
 import { AppService } from "../app-service";
 import { inject, singleton } from "tsyringe";
 import { ConnectorSyncService } from "../connectors/connector-sync.service";
-import { ConnectorInfo, ConnectorType } from "@elevate/shared/sync";
-import { AthleteModel, UserSettings } from "@elevate/shared/models";
 import { IpcListener } from "./ipc-listener.interface";
 import { Logger } from "../logger";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { ConnectorInfo } from "@elevate/shared/sync/connectors/connector-info.model";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @singleton()
 export class IpcSyncMessageListener implements IpcListener {
@@ -18,11 +21,11 @@ export class IpcSyncMessageListener implements IpcListener {
 
   public startListening(ipcTunnelService: IpcTunnelService): void {
     // Start sync
-    ipcTunnelService.on<Array<[ConnectorType, ConnectorInfo, AthleteModel, UserSettingsModel, number]>, string>(
+    ipcTunnelService.on<Array<[ConnectorType, ConnectorInfo, AthleteModel, BaseUserSettings, number]>, string>(
       Channel.startSync,
       payload => {
-        const [connectorType, connectorInfo, athleteModel, userSettingsModel, syncFromDateTime] = payload[0];
-        return this.handleStartSync(connectorType, connectorInfo, athleteModel, userSettingsModel, syncFromDateTime);
+        const [connectorType, connectorInfo, athleteModel, userSettings, syncFromDateTime] = payload[0];
+        return this.handleStartSync(connectorType, connectorInfo, athleteModel, userSettings, syncFromDateTime);
       }
     );
 
@@ -37,18 +40,12 @@ export class IpcSyncMessageListener implements IpcListener {
     connectorType: ConnectorType,
     connectorInfo: ConnectorInfo,
     athleteModel: AthleteModel,
-    userSettingsModel: UserSettingsModel,
+    userSettings: BaseUserSettings,
     syncFromDateTime: number
   ): Promise<string> {
     this.logger.debug("[Main] Received StartSync. Params:", connectorType);
 
-    return this.connectorSyncService.sync(
-      connectorType,
-      connectorInfo,
-      athleteModel,
-      userSettingsModel,
-      syncFromDateTime
-    );
+    return this.connectorSyncService.sync(connectorType, connectorInfo, athleteModel, userSettings, syncFromDateTime);
   }
 
   public handleStopSync(requestConnectorType: ConnectorType): Promise<string> {

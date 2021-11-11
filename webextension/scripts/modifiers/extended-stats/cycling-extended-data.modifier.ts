@@ -1,8 +1,6 @@
-import { ActivityInfoModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../../models/app-resources.model";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AbstractExtendedDataModifier } from "./abstract-extended-data.modifier";
-import { AscentSpeedDataView } from "./views/ascent-speed-data.view";
 import { CyclingCadenceDataView } from "./views/cycling-cadence-data.view";
 import { CyclingGradeDataView } from "./views/cycling-grade-data.view";
 import { CyclingPowerDataView } from "./views/cycling-power-data.view";
@@ -11,15 +9,17 @@ import { SpeedDataView } from "./views/speed-data.view";
 import _ from "lodash";
 import { CyclingPowerCurveView } from "./views/cycling-power-curve.view";
 import $ from "jquery";
-import { Time } from "@elevate/shared/tools";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import { Time } from "@elevate/shared/tools/time";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
   constructor(
     activityProcessor: ActivityProcessor,
     activityInfo: ActivityInfoModel,
     appResources: AppResourcesModel,
-    userSettings: ExtensionUserSettingsModel,
+    userSettings: ExtensionUserSettings,
     type: number
   ) {
     super(activityProcessor, activityInfo, appResources, userSettings, type);
@@ -32,26 +32,17 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
     let relevantSpeed = "-";
     let title = "Best 20min Speed";
     let units = "";
-    if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
-      if (this.analysisData.speedData.best20min) {
-        relevantSpeed = this.printNumber(
-          this.analysisData.speedData.best20min * this.speedUnitsData.speedUnitFactor,
-          1
-        );
+    if (this.stats.speed && this.userSettings.displayAdvancedSpeedData) {
+      if (this.stats.speed.best20min) {
+        relevantSpeed = this.printNumber(this.stats.speed.best20min * this.speedUnitsData.speedUnitFactor, 1);
         units = this.speedUnitsData.speedUnitPerHour;
       } else {
-        relevantSpeed = this.printNumber(
-          this.analysisData.speedData.upperQuartileSpeed * this.speedUnitsData.speedUnitFactor,
-          1
-        );
+        relevantSpeed = this.printNumber(this.stats.speed.upperQ * this.speedUnitsData.speedUnitFactor, 1);
         title = "75% Quartile Speed";
         units =
           this.speedUnitsData.speedUnitPerHour +
           ' <span class="summarySubGridTitle">(&sigma; :' +
-          this.printNumber(
-            this.analysisData.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor,
-            1
-          ) +
+          this.printNumber(this.stats.speed.stdDev * this.speedUnitsData.speedUnitFactor, 1) +
           " )</span>";
       }
     }
@@ -59,11 +50,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
     // ...
     let climbSpeed = "-";
-    if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-      climbSpeed = this.printNumber(
-        this.analysisData.gradeData.upFlatDownMoveData.up * this.speedUnitsData.speedUnitFactor,
-        1
-      );
+    if (this.stats.grade && this.userSettings.displayAdvancedGradeData) {
+      climbSpeed = this.printNumber(this.stats.grade.slopeSpeed.up * this.speedUnitsData.speedUnitFactor, 1);
     }
     this.insertContentAtGridPosition(
       1,
@@ -77,9 +65,9 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
     // Cadence
     let medianCadence = "-";
     let standardDeviationCadence = "-";
-    if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
-      medianCadence = this.analysisData.cadenceData.medianCadence.toString();
-      standardDeviationCadence = this.analysisData.cadenceData.standardDeviationCadence.toString();
+    if (this.stats.cadence && this.userSettings.displayCadenceData) {
+      medianCadence = this.stats.cadence.median.toString();
+      standardDeviationCadence = this.stats.cadence.stdDev.toString();
     }
     this.insertContentAtGridPosition(
       0,
@@ -93,59 +81,59 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
     );
 
     let cadenceTimeMoving = "-";
-    let cadencePercentageMoving = "-";
-    if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
-      cadenceTimeMoving = Time.secToMilitary(this.analysisData.cadenceData.cadenceActiveTime);
-      cadencePercentageMoving = this.printNumber(this.analysisData.cadenceData.cadenceActivePercentage);
+    let cadenceRatioMoving = "-";
+    if (this.stats.cadence && this.userSettings.displayCadenceData) {
+      cadenceTimeMoving = Time.secToMilitary(this.stats.cadence.activeTime);
+      cadenceRatioMoving = this.printNumber(this.stats.cadence.activeRatio);
     }
     this.insertContentAtGridPosition(
       1,
       4,
       cadenceTimeMoving,
       "Pedaling Time",
-      cadencePercentageMoving !== "-"
-        ? ' <span class="summarySubGridTitle">(' + cadencePercentageMoving + "% of activity)</span>"
+      cadenceRatioMoving !== "-"
+        ? ' <span class="summarySubGridTitle">(' + cadenceRatioMoving + " of activity)</span>"
         : "",
       "displayCadenceData"
     );
 
-    if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-      let weightedPower = this.printNumber(this.analysisData.powerData.weightedPower);
-      let labelWeightedPower = "Weighted Avg Power";
-      if (!this.analysisData.powerData.hasPowerMeter) {
+    if (this.stats.power && this.userSettings.displayAdvancedPowerData) {
+      let weightedPower = this.printNumber(this.stats.power.weighted);
+      let labelNormalizedPower = "Avg Normalized Power®";
+      if (!this.hasPowerMeter) {
         weightedPower = "<span style='font-size: 14px;'>~</span>" + weightedPower;
-        labelWeightedPower = "Estimated " + labelWeightedPower;
+        labelNormalizedPower = "Estimated " + labelNormalizedPower;
       }
       this.insertContentAtGridPosition(
         0,
         5,
         weightedPower,
-        labelWeightedPower,
+        labelNormalizedPower,
         ' w <span class="summarySubGridTitle" style="font-size: 11px;">(Dr. A. Coggan formula)</span>',
         "displayAdvancedPowerData"
       );
     }
 
-    if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-      let avgWattsPerKg = this.printNumber(this.analysisData.powerData.avgWattsPerKg, 2);
+    if (this.stats.power && this.userSettings.displayAdvancedPowerData) {
+      let avgWattsPerKg = this.printNumber(this.stats.power.avgKg, 2);
       let labelWKg = "Watts Per Kilograms";
-      if (!this.analysisData.powerData.hasPowerMeter) {
+      if (!this.hasPowerMeter) {
         avgWattsPerKg = "<span style='font-size: 14px;'>~</span>" + avgWattsPerKg;
         labelWKg = "Estimated " + labelWKg;
       }
       this.insertContentAtGridPosition(1, 5, avgWattsPerKg, labelWKg, " w/kg", "displayAdvancedPowerData");
     }
 
-    if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
+    if (this.stats.power && this.userSettings.displayAdvancedPowerData) {
       let label = "Best 20min Power";
       let best20min = "-";
       let best20minUnits = "";
 
-      if (_.isNumber(this.analysisData.powerData.best20min)) {
-        best20min = this.printNumber(this.analysisData.powerData.best20min);
+      if (_.isNumber(this.stats.power.best20min)) {
+        best20min = this.printNumber(this.stats.power.best20min);
         best20minUnits = "w";
 
-        if (!this.analysisData.powerData.hasPowerMeter) {
+        if (!this.hasPowerMeter) {
           best20min = "<span style='font-size: 14px;'>~</span>" + best20min;
           label = "Estimated " + label;
         }
@@ -154,21 +142,21 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
       this.insertContentAtGridPosition(0, 6, best20min, label, best20minUnits, "displayAdvancedPowerData");
     }
 
-    if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData && this.activityInfo.isOwner) {
+    if (this.stats.power && this.userSettings.displayAdvancedPowerData && this.activityInfo.isOwner) {
       let powerStressScore = "-";
       let labelPSS = "Power Stress Score";
 
-      if (!this.analysisData.moveRatio && !this.activityInfo.isTrainer) {
+      if (!this.stats.moveRatio && !this.activityInfo.isTrainer) {
         powerStressScore = "";
         labelPSS =
           'This activity seems to have been performed indoor.<br/> Make sure to flag it as "Indoor Cycling" otherwise<br/> Power Stress Score will not be calculated.';
-      } else if (_.isNumber(this.analysisData.powerData.powerStressScore)) {
+      } else if (_.isNumber(this.stats.scores?.stress?.pss)) {
         powerStressScore =
-          this.printNumber(this.analysisData.powerData.powerStressScore) +
+          this.printNumber(this.stats.scores?.stress?.pss) +
           ' <span class="summarySubGridTitle">(' +
-          this.printNumber(this.analysisData.powerData.powerStressScorePerHour, 1) +
+          this.printNumber(this.stats.scores?.stress?.pssPerHour, 1) +
           " / hour)</span>";
-        if (!this.analysisData.powerData.hasPowerMeter) {
+        if (!this.hasPowerMeter) {
           labelPSS = "Est. " + labelPSS;
         }
       } else {
@@ -209,27 +197,27 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
     super.setDataViewsNeeded();
 
     // Speed view
-    if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
+    if (this.stats.speed && this.userSettings.displayAdvancedSpeedData) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
       const units: string = measurementPreference === "meters" ? "kph" : "mph";
 
-      const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
-      speedDataView.setAppResources(this.appResources);
-      speedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-      speedDataView.setActivityType(this.activityType);
-      speedDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-      this.dataViews.push(speedDataView);
+      const speedView: SpeedDataView = new SpeedDataView(this.stats.speed, units);
+      speedView.setAppResources(this.appResources);
+      speedView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
+      speedView.setActivityType(this.activityType);
+      speedView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+      this.dataViews.push(speedView);
     }
 
-    if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-      const powerDataView: CyclingPowerDataView = new CyclingPowerDataView(this.analysisData.powerData, "w");
-      powerDataView.setAppResources(this.appResources);
-      powerDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-      powerDataView.setActivityType(this.activityType);
-      powerDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-      this.dataViews.push(powerDataView);
+    if (this.stats.power && this.userSettings.displayAdvancedPowerData) {
+      const powerView: CyclingPowerDataView = new CyclingPowerDataView(this.stats.power, this.stats.scores.stress, "w");
+      powerView.setAppResources(this.appResources);
+      powerView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
+      powerView.setActivityType(this.activityType);
+      powerView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+      this.dataViews.push(powerView);
 
-      const powerCurveView: CyclingPowerCurveView = new CyclingPowerCurveView(this.analysisData.powerData, "w");
+      const powerCurveView: CyclingPowerCurveView = new CyclingPowerCurveView(this.stats.power, "w");
       powerCurveView.setAppResources(this.appResources);
       powerCurveView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
       powerCurveView.setActivityType(this.activityType);
@@ -237,11 +225,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
       this.dataViews.push(powerCurveView);
     }
 
-    if (this.analysisData.cadenceData && this.userSettings.displayCadenceData) {
-      const cyclingCadenceDataView: CyclingCadenceDataView = new CyclingCadenceDataView(
-        this.analysisData.cadenceData,
-        "rpm"
-      );
+    if (this.stats.cadence && this.userSettings.displayCadenceData) {
+      const cyclingCadenceDataView: CyclingCadenceDataView = new CyclingCadenceDataView(this.stats.cadence, "rpm");
       cyclingCadenceDataView.setAppResources(this.appResources);
       cyclingCadenceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
       cyclingCadenceDataView.setActivityType(this.activityType);
@@ -249,8 +234,8 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
       this.dataViews.push(cyclingCadenceDataView);
     }
 
-    if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-      const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.analysisData.gradeData, "%");
+    if (this.stats.grade && this.userSettings.displayAdvancedGradeData) {
+      const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.stats.grade, "%");
       cyclingGradeDataView.setAppResources(this.appResources);
       cyclingGradeDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
       cyclingGradeDataView.setActivityType(this.activityType);
@@ -258,24 +243,13 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
       this.dataViews.push(cyclingGradeDataView);
     }
 
-    if (this.analysisData.elevationData && this.userSettings.displayAdvancedElevationData) {
-      const elevationDataView: ElevationDataView = new ElevationDataView(this.analysisData.elevationData, "m");
-      elevationDataView.setAppResources(this.appResources);
-      elevationDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-      elevationDataView.setActivityType(this.activityType);
-      elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-      this.dataViews.push(elevationDataView);
-
-      if (this.analysisData.elevationData.ascentSpeed && this.analysisData.elevationData.ascentSpeedZones) {
-        const ascentSpeedDataView: AscentSpeedDataView = new AscentSpeedDataView(
-          this.analysisData.elevationData,
-          "Vm/h"
-        );
-        ascentSpeedDataView.setAppResources(this.appResources);
-        ascentSpeedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-        ascentSpeedDataView.setActivityType(this.activityType);
-        this.dataViews.push(ascentSpeedDataView);
-      }
+    if (this.stats.elevation && this.userSettings.displayAdvancedElevationData) {
+      const elevationView: ElevationDataView = new ElevationDataView(this.stats.elevation, "m");
+      elevationView.setAppResources(this.appResources);
+      elevationView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
+      elevationView.setActivityType(this.activityType);
+      elevationView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+      this.dataViews.push(elevationView);
     }
   }
 }

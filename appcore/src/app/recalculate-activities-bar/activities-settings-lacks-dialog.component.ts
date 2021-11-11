@@ -1,28 +1,28 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { MatTableDataSource } from "@angular/material/table";
 import _ from "lodash";
-import { ElevateSport } from "@elevate/shared/enums";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 @Component({
   selector: "app-activities-settings-lacks-dialog",
   template: `
     <h2 mat-dialog-title>
-      Detected {{ syncedActivityModels.length }} activit{{ syncedActivityModels.length > 1 ? "ies" : "y" }} with missing
-      stress scores due to lack of functional thresholds
+      Detected {{ activities.length }} activit{{ activities.length > 1 ? "ies" : "y" }} with missing stress scores due
+      to lack of functional thresholds
     </h2>
     <div class="mat-h3">
       ➞ Please provide your functional thresholds in dated athlete settings to cover below activit{{
-        syncedActivityModels.length > 1 ? "ies" : "y"
+        activities.length > 1 ? "ies" : "y"
       }}
     </div>
     <mat-dialog-content class="mat-body-1">
       <table mat-table [dataSource]="dataSource">
         <!-- Date Column -->
         <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef width="100px">Date</th>
-          <td mat-cell *matCellDef="let activity">{{ activity.start_time | date }}</td>
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let activity">{{ activity.startTime | date }}</td>
         </ng-container>
 
         <!-- Type Column -->
@@ -77,14 +77,14 @@ export class ActivitiesSettingsLacksDialogComponent implements OnInit {
   public readonly displayedColumns: string[] = ["date", "type", "name", "lackof"];
   public readonly ElevateSport = ElevateSport;
 
-  public dataSource: MatTableDataSource<SyncedActivityModel>;
+  public dataSource: MatTableDataSource<Activity>;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public syncedActivityModels: SyncedActivityModel[]) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public activities: Activity[]) {}
 
   public ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<SyncedActivityModel>();
-    this.dataSource.data = _.sortBy(this.syncedActivityModels, (syncedActivityModel: SyncedActivityModel) => {
-      return syncedActivityModel.start_time;
+    this.dataSource = new MatTableDataSource<Activity>();
+    this.dataSource.data = _.sortBy(this.activities, (activity: Activity) => {
+      return activity.startTime;
     });
   }
 }

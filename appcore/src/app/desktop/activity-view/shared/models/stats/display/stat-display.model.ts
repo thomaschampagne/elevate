@@ -1,15 +1,17 @@
-import { MeasureSystem } from "@elevate/shared/enums";
 import { Stat } from "../stat.model";
 import { Sensor } from "../../sensors/sensor.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 export class StatDisplay {
   private static readonly MISSING_VALUE_DISPLAY: string = "-";
 
   public name: string;
+  public details: string;
   public unit: string | null;
   public value: number | string;
   public description: string;
   public color: string;
+  public forceDisplay: boolean;
 
   public static create(stat: Stat<any>, statValue: number | string, measureSystem: MeasureSystem): StatDisplay {
     let unit: string;
@@ -31,6 +33,7 @@ export class StatDisplay {
     let isValueMissing = false;
 
     if (Number.isFinite(statValue)) {
+      statValue = (statValue as number) * stat.factor;
       convertedValue = stat.baseSensor.fromStatsConvert(
         statValue,
         measureSystem,
@@ -43,12 +46,19 @@ export class StatDisplay {
       isValueMissing = true;
     }
 
+    let details = null;
+    if (stat.details) {
+      details = typeof stat.details === "function" ? stat.details(convertedValue) : stat.details;
+    }
+
     return {
       name: stat.name,
+      details: details,
       unit: unit,
       value: convertedValue,
       description: isValueMissing && stat.missingMessage ? `${stat.missingMessage}` : stat.description,
-      color: color
+      color: color,
+      forceDisplay: stat.forceDisplay
     };
   }
 }

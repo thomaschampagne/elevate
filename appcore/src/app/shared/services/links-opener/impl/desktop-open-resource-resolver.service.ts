@@ -5,7 +5,7 @@ import { ActivityService } from "../../activity/activity.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
 import { AppRoutes } from "../../../models/app-routes";
-import { ConnectorType } from "@elevate/shared/sync";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 
 @Injectable()
 export class DesktopOpenResourceResolver extends OpenResourceResolver {
@@ -39,12 +39,14 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
   public openSourceActivity(id: number | string, sourceType: ConnectorType): void {
     this.activityService.getById(id).then(activity => {
       if (activity) {
-        if (sourceType === ConnectorType.STRAVA && activity.extras?.strava_activity_id > 0) {
-          this.openStravaActivity(activity.extras.strava_activity_id);
-        } else if (sourceType === ConnectorType.FILE && activity.extras?.fs_activity_location?.path) {
-          const itemPath = activity.extras.fs_activity_location.path;
+        if (sourceType === ConnectorType.STRAVA && activity.extras?.strava.activityId > 0) {
+          this.openStravaActivity(activity.extras.strava.activityId);
+        } else if (sourceType === ConnectorType.FILE && activity.extras?.file?.path) {
+          const itemPath = activity.extras.file.path;
           try {
-            this.showItemInFolder(itemPath);
+            this.showItemInFolder(itemPath).catch(() =>
+              this.snackBar.open(`Unable to open "${itemPath}" file.`, "Close")
+            );
           } catch (err) {
             this.snackBar.open(`Activity file "${itemPath}" don't exists.`, "Close");
           }
@@ -57,7 +59,7 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
     });
   }
 
-  public showItemInFolder(itemPath: string): void {
-    this.electronService.showItemInFolder(itemPath);
+  public showItemInFolder(itemPath: string): Promise<void> {
+    return this.electronService.showItemInFolder(itemPath);
   }
 }

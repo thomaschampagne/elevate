@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog.component";
 import { YearProgressModule } from "../year-progress.module";
 import { CoreModule } from "../../core/core.module";
@@ -9,10 +8,10 @@ import { YearProgressTypeModel } from "../shared/models/year-progress-type.model
 import { YearProgressService } from "../shared/services/year-progress.service";
 import { YearToDateProgressPresetModel } from "../shared/models/year-to-date-progress-preset.model";
 import { ProgressType } from "../shared/enums/progress-type.enum";
-import { ElevateSport } from "@elevate/shared/enums";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 describe("ManageYearProgressPresetsDialogComponent", () => {
   const yearProgressPresetModels = [

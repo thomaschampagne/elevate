@@ -34,10 +34,3 @@ export const medianFilter = (array: number[], window: number = 3) => {
   }
   return f;
 };
-
-export const medianSelfFilter = (array: number[], windowPercentage: number = 1) => {
-  let window = Math.floor((array.length * windowPercentage) / 100);
-  // Ensure window is odd
-  window = window % 2 === 0 ? window + 1 : window;
-  return medianFilter(array, window);
-};

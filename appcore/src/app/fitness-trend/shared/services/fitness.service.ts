@@ -7,8 +7,8 @@ import { DayFitnessTrendModel } from "../models/day-fitness-trend.model";
 import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activity.model";
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../../../shared/models/app-error.model";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Injectable()
 export class FitnessService {
@@ -28,7 +28,7 @@ export class FitnessService {
   ): Promise<FitnessPreparedActivityModel[]> {
     return new Promise(
       (resolve: (result: FitnessPreparedActivityModel[]) => void, reject: (error: AppError) => void) => {
-        return this.activityService.fetch().then((activities: SyncedActivityModel[]) => {
+        return this.activityService.fetch().then((activities: Activity[]) => {
           // Check if provided activities are not empty
           if (_.isEmpty(activities) || activities.length === 0) {
             reject(new AppError(AppError.FT_NO_ACTIVITIES, "No activities available to generate the fitness trend"));
@@ -52,7 +52,7 @@ export class FitnessService {
 
           const fitnessPreparedActivities: FitnessPreparedActivityModel[] = [];
 
-          _.forEach(activities, (activity: SyncedActivityModel) => {
+          _.forEach(activities, (activity: Activity) => {
             if (!_.isEmpty(skipActivityTypes) && _.indexOf(skipActivityTypes, activity.type) !== -1) {
               return;
             }
@@ -70,44 +70,34 @@ export class FitnessService {
 
             // Check if activity is eligible to fitness computing
             const hasHeartRateData: boolean =
-              activity.extendedStats &&
-              !_.isEmpty(activity.extendedStats.heartRateData) &&
-              ((_.isNumber(activity.extendedStats.heartRateData.TRIMP) &&
+              (activity.stats?.scores?.stress?.trimp > 0 &&
                 fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ||
-                (_.isNumber(activity.extendedStats.heartRateData.HRSS) &&
-                  fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS));
+              (activity.stats?.scores?.stress?.hrss > 0 &&
+                fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS);
 
             const hasPowerData: boolean =
-              SyncedActivityModel.isRide(activity.type, true) &&
+              Activity.isRide(activity.type, true) &&
               powerMeterEnable &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
-              _.isNumber(activity.athleteSnapshot.athleteSettings.cyclingFtp) &&
-              activity.extendedStats &&
-              activity.extendedStats.powerData &&
-              (activity.extendedStats.powerData.hasPowerMeter ||
-                fitnessTrendConfigModel.allowEstimatedPowerStressScore) &&
-              _.isNumber(activity.extendedStats.powerData.powerStressScore);
+              activity.athleteSnapshot.athleteSettings.cyclingFtp > 0 &&
+              (activity.hasPowerMeter || fitnessTrendConfigModel.allowEstimatedPowerStressScore) &&
+              activity.stats?.scores?.stress?.pss > 0;
 
             const hasRunningData: boolean =
-              SyncedActivityModel.isRun(activity.type) &&
+              Activity.isRun(activity.type) &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
-              _.isNumber(activity.athleteSnapshot.athleteSettings.runningFtp) &&
-              activity.extendedStats &&
-              activity.extendedStats.paceData &&
-              _.isNumber(activity.extendedStats.paceData.runningStressScore) &&
+              activity.athleteSnapshot.athleteSettings.runningFtp > 0 &&
+              activity.stats?.scores?.stress?.rss > 0 &&
               fitnessTrendConfigModel.allowEstimatedRunningStressScore;
 
             const hasSwimmingData: boolean =
               swimEnable &&
-              SyncedActivityModel.isSwim(activity.type) &&
+              Activity.isSwim(activity.type) &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
-              _.isNumber(activity.athleteSnapshot.athleteSettings.swimFtp) &&
               activity.athleteSnapshot.athleteSettings.swimFtp > 0 &&
-              activity.extendedStats &&
-              activity.extendedStats.paceData &&
-              _.isNumber(activity.extendedStats.paceData.swimStressScore);
+              activity.stats?.scores?.stress?.sss > 0;
 
-            const momentStartTime: Moment = moment(activity.start_time);
+            const momentStartTime: Moment = moment(activity.startTime);
 
             const fitnessReadyActivity: FitnessPreparedActivityModel = {
               id: activity.id,
@@ -116,32 +106,29 @@ export class FitnessService {
               dayOfYear: momentStartTime.dayOfYear(),
               year: momentStartTime.year(),
               type: activity.type,
-              hasPowerMeter:
-                activity.extendedStats &&
-                activity.extendedStats.powerData &&
-                activity.extendedStats.powerData.hasPowerMeter,
+              hasPowerMeter: activity.hasPowerMeter,
               name: activity.name,
               athleteSnapshot: activity.athleteSnapshot
             };
 
             if (hasHeartRateData) {
               if (fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) {
-                fitnessReadyActivity.trainingImpulseScore = activity.extendedStats.heartRateData.TRIMP;
+                fitnessReadyActivity.trainingImpulseScore = activity.stats.scores.stress.trimp;
               } else if (fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS) {
-                fitnessReadyActivity.heartRateStressScore = activity.extendedStats.heartRateData.HRSS;
+                fitnessReadyActivity.heartRateStressScore = activity.stats.scores.stress.hrss;
               }
             }
 
             if (hasPowerData) {
-              fitnessReadyActivity.powerStressScore = activity.extendedStats.powerData.powerStressScore;
+              fitnessReadyActivity.powerStressScore = activity.stats.scores.stress.pss;
             }
 
             if (hasRunningData) {
-              fitnessReadyActivity.runningStressScore = activity.extendedStats.paceData.runningStressScore;
+              fitnessReadyActivity.runningStressScore = activity.stats.scores.stress.rss;
             }
 
             if (hasSwimmingData) {
-              fitnessReadyActivity.swimStressScore = activity.extendedStats.paceData.swimStressScore;
+              fitnessReadyActivity.swimStressScore = activity.stats.scores.stress.sss;
             }
 
             fitnessPreparedActivities.push(fitnessReadyActivity);
@@ -405,17 +392,17 @@ export class FitnessService {
   }
 
   public filterActivities(
-    activities: SyncedActivityModel[],
+    activities: Activity[],
     ignoreBeforeDate: string,
     ignoreActivityNamePatterns: string[]
-  ): SyncedActivityModel[] {
+  ): Activity[] {
     const hasIgnoreBeforeDate = !_.isEmpty(ignoreBeforeDate);
     const hasIgnoreActivityNamePatterns = ignoreActivityNamePatterns && ignoreActivityNamePatterns.length > 0;
 
     if (hasIgnoreBeforeDate || hasIgnoreActivityNamePatterns) {
-      activities = _.filter(activities, (activity: SyncedActivityModel) => {
+      activities = _.filter(activities, (activity: Activity) => {
         if (hasIgnoreBeforeDate) {
-          const isActivityAfterIgnoreDate = moment(activity.start_time).startOf("day").isSameOrAfter(ignoreBeforeDate);
+          const isActivityAfterIgnoreDate = moment(activity.startTime).startOf("day").isSameOrAfter(ignoreBeforeDate);
           if (!isActivityAfterIgnoreDate) {
             return false;
           }

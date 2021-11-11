@@ -1,13 +1,16 @@
 import _ from "lodash";
 import { ExtensionEnv } from "../../config/extension-env";
-import { ActivityInfoModel, ActivitySourceDataModel, Gender, Streams } from "@elevate/shared/models";
 import { BikeGearModel } from "../models/gear/bike-gear.model";
 import { GearType } from "../models/gear/gear-type.enum";
 import { ShoesGearModel } from "../models/gear/shoes-gear.model";
 import { GearModel } from "../models/gear/gear.model";
 import { Helper } from "../helper";
 import LZString from "lz-string";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
+import { ActivityEssentials } from "@elevate/shared/models/activity-data/activity-essentials.model";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 export class VacuumProcessor {
   public static cachePrefix = "elevate_stream_";
@@ -123,8 +126,8 @@ export class VacuumProcessor {
   public getActivityStream(
     activityInfo: ActivityInfoModel,
     callback: (
-      activityCommonStats: ActivitySourceDataModel,
-      streams: Streams, // TODO Improve with Promise of Structure
+      activityEssentials: ActivityEssentials,
+      streams: Streams,
       athleteWeight: number,
       athleteGender: Gender,
       hasPowerMeter: boolean
@@ -135,13 +138,7 @@ export class VacuumProcessor {
 
       if (cache) {
         cache = JSON.parse(LZString.decompressFromBase64(cache));
-        callback(
-          cache.activityCommonStats,
-          cache.stream,
-          cache.athleteWeight,
-          cache.athleteGender,
-          cache.hasPowerMeter
-        );
+        callback(cache.activityEssentials, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
         console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
         return;
       }
@@ -226,8 +223,8 @@ export class VacuumProcessor {
 
     if (missingStream) {
       streamsPromise = new Promise(resolve => {
-        $.ajax(streamUrl).done((streams: Streams) => {
-          resolve(streams);
+        $.ajax(streamUrl).done((streamsData: Streams) => {
+          resolve(streamsData);
         });
       });
     } else {
@@ -237,21 +234,25 @@ export class VacuumProcessor {
     // We have a complete stream for all sensors
     streamsPromise.then(
       (completeStream: Streams) => {
-        streams = new Streams(
-          localStreamData.time ? localStreamData.time : completeStream.time,
-          localStreamData.distance ? localStreamData.distance : completeStream.distance,
-          localStreamData.velocity_smooth ? localStreamData.velocity_smooth : completeStream.velocity_smooth,
-          localStreamData.altitude ? localStreamData.altitude : completeStream.altitude,
-          localStreamData.cadence ? localStreamData.cadence : completeStream.cadence,
-          localStreamData.heartrate ? localStreamData.heartrate : completeStream.heartrate,
-          localStreamData.watts ? localStreamData.watts : completeStream.watts,
-          localStreamData.watts_calc ? localStreamData.watts_calc : completeStream.watts_calc,
-          localStreamData.latlng ? localStreamData.latlng : completeStream.latlng,
-          localStreamData.grade_smooth ? localStreamData.grade_smooth : completeStream.grade_smooth,
-          localStreamData.grade_adjusted_speed
-            ? localStreamData.grade_adjusted_speed
-            : completeStream.grade_adjusted_speed
-        );
+        streams = new Streams();
+
+        streams.time = localStreamData.time ? localStreamData.time : completeStream.time;
+        streams.distance = localStreamData.distance ? localStreamData.distance : completeStream.distance;
+        streams.velocity_smooth = localStreamData.velocity_smooth
+          ? localStreamData.velocity_smooth
+          : completeStream.velocity_smooth;
+        streams.altitude = localStreamData.altitude ? localStreamData.altitude : completeStream.altitude;
+        streams.cadence = localStreamData.cadence ? localStreamData.cadence : completeStream.cadence;
+        streams.heartrate = localStreamData.heartrate ? localStreamData.heartrate : completeStream.heartrate;
+        streams.watts = localStreamData.watts ? localStreamData.watts : completeStream.watts;
+        streams.watts_calc = localStreamData.watts_calc ? localStreamData.watts_calc : completeStream.watts_calc;
+        streams.latlng = localStreamData.latlng ? localStreamData.latlng : completeStream.latlng;
+        streams.grade_smooth = localStreamData.grade_smooth
+          ? localStreamData.grade_smooth
+          : completeStream.grade_smooth;
+        streams.grade_adjusted_speed = localStreamData.grade_adjusted_speed
+          ? localStreamData.grade_adjusted_speed
+          : completeStream.grade_adjusted_speed;
 
         if (_.isEmpty(streams.watts)) {
           streams.watts = streams.watts_calc;
@@ -261,7 +262,7 @@ export class VacuumProcessor {
         // Save result to cache
         try {
           const cache = {
-            activityCommonStats: this.getActivityStatsMap(),
+            activityEssentials: this.getActivityEssentials(),
             stream: streams,
             athleteWeight: this.getAthleteWeight(),
             hasPowerMeter
@@ -277,7 +278,7 @@ export class VacuumProcessor {
         }
 
         callback(
-          this.getActivityStatsMap(),
+          this.getActivityEssentials(),
           streams,
           this.getAthleteWeight(),
           this.getActivityAthleteGender(),
@@ -287,7 +288,7 @@ export class VacuumProcessor {
       error => {
         console.error(error);
         callback(
-          this.getActivityStatsMap(),
+          this.getActivityEssentials(),
           new Streams(),
           this.getAthleteWeight(),
           this.getActivityAthleteGender(),
@@ -472,14 +473,14 @@ export class VacuumProcessor {
    */
 
   protected getAthleteWeight(): number {
-    const datedAthleteSettingsModel = this.athleteModelResolver.resolve(this.getActivityStartDate());
-    return datedAthleteSettingsModel.athleteSettings.weight;
+    const datedAthleteSettings = this.athleteModelResolver.resolve(this.getActivityStartDate());
+    return datedAthleteSettings.athleteSettings.weight;
   }
 
   /**
    * @returns Common activity stats given by Strava throught right panel
    */
-  protected getActivityStatsMap(): ActivitySourceDataModel {
+  protected getActivityEssentials(): ActivityEssentials {
     // Create activityData Map
     const movingTime = window.pageView.activity().get("moving_time");
     const elevGain = window.pageView.activity().get("elev_gain");

@@ -1,3 +1,21 @@
-<div style="padding: 40px; text-align: center;">
-  Coming during beta
-</div>
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container *ngFor="let columnDef of displayedColumnDefs" [matColumnDef]="columnDef">
+    <mat-header-cell *matHeaderCellDef>
+      {{ printColumn(columnDef) }}
+    </mat-header-cell>
+    <mat-cell *matCellDef="let lap">
+      <ng-container [ngSwitch]="columnDef">
+        <ng-container *ngSwitchCase="'indexes'">
+          <button mat-icon-button color="primary" (click)="onViewLapOnMap(lap.indexes)"
+                  matTooltip="View on Map">
+            <mat-icon fontSet="material-icons-outlined">visibility</mat-icon>
+          </button>
+        </ng-container>
+        <ng-container *ngSwitchDefault>{{ printValue(lap, columnDef) }}</ng-container>
+      </ng-container>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumnDefs"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumnDefs;"></mat-row>
+</mat-table>

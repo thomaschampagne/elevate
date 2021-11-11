@@ -1,16 +1,16 @@
 import _ from "lodash";
 import { AbstractModifier } from "./abstract.modifier";
-import { UserSettings } from "@elevate/shared/models";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class HideFeedModifier extends AbstractModifier {
   private static VIRTUAL_RIDE = "virtualride";
   private static RIDE = "ride";
   private static RUN = "run";
 
-  protected userSettings: ExtensionUserSettingsModel;
+  protected userSettings: ExtensionUserSettings;
 
-  constructor(userSettings: ExtensionUserSettingsModel) {
+  constructor(userSettings: ExtensionUserSettings) {
     super();
     this.userSettings = userSettings;
   }

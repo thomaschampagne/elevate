@@ -15,7 +15,7 @@ export class KalmanFilter {
   private readonly C: number;
   private readonly A: number;
 
-  public static apply(array: number[], kalmanParams: KalmanParams, u: number = 0) {
+  public static apply(array: number[], kalmanParams: KalmanParams, u: number = 0): number[] {
     const output = [];
     const kalmanFilter = new KalmanFilter({
       R: kalmanParams.R,
@@ -24,8 +24,8 @@ export class KalmanFilter {
       B: kalmanParams.B,
       C: kalmanParams.C
     });
-    array.forEach(alt => {
-      output.push(kalmanFilter.filter(alt, u));
+    array.forEach(value => {
+      output.push(Math.round(kalmanFilter.filter(value, u) * 1000) / 1000);
     });
     return output;
   }

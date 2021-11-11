@@ -4,12 +4,14 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import MarkDownIt from "markdown-it";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { environment } from "../../environments/environment";
-import { BuildTarget } from "@elevate/shared/enums";
 import _ from "lodash";
-import { Constant } from "@elevate/shared/constants";
+
 import { ActivatedRoute } from "@angular/router";
 import { OPEN_RESOURCE_RESOLVER } from "../shared/services/links-opener/open-resource-resolver";
 import { DesktopOpenResourceResolver } from "../shared/services/links-opener/impl/desktop-open-resource-resolver.service";
+import { AppPackage } from "../app-package";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
+import { Constant } from "@elevate/shared/constants/constant";
 
 interface FaqEntry {
   question: string | SafeHtml;
@@ -24,7 +26,7 @@ interface FaqEntry {
   styleUrls: ["./help.component.scss"]
 })
 export class HelpComponent implements OnInit {
-  public static readonly ONLINE_DOC_ROOT_PATH = "https://thomaschampagne.github.io/elevate-docs/";
+  public static readonly ONLINE_DOC_ROOT_PATH = `${AppPackage.getAuthorWebSite()}/elevate-docs/`;
   public static readonly RAW_MD_DOC_ROOT_PATH =
     "https://raw.githubusercontent.com/thomaschampagne/elevate-docs/master/docs/";
 

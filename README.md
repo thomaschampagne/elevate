@@ -230,7 +230,7 @@ npm run clean
 
 ### Desktop app
 
-TBD
+_TODO_
 
 ### Web extension
 
@@ -272,7 +272,7 @@ C = US
 ST = CA
 L = Los Angeles
 O = Elevate
-OU = Elevate Training App
+OU = Elevate Sports App
 CN = John Doo
 stateOrProvinceName = California
 emailAddress = your.email@domain.com
@@ -394,3 +394,10 @@ module.exports = {
     }
 };
 ```
+
+## Desktop: Debug the calculated watts against real power.
+
+> This works in development build only
+
+- Create a new local storage key named `DEBUG_EST_VS_REAL_WATTS` and set it to `true` 
+- Reload application and go to activities performed with a real power meter (cycling or running)

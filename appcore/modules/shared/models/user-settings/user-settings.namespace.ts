@@ -1,6 +1,9 @@
 import { UserZonesModel } from "./user-zones.model";
-import { BuildTarget, LeafletMapType, MeasureSystem, Temperature } from "../../enums";
 import _ from "lodash";
+import { Temperature } from "../../enums/temperature.enum";
+import { MeasureSystem } from "../../enums/measure-system.enum";
+import { BuildTarget } from "../../enums/build-target.enum";
+import { LeafletMapType } from "../../enums/leaflet-map-type.enum";
 
 export namespace UserSettings {
   export const DEFAULT_TEMPERATURE = Temperature.CELSIUS;
@@ -9,21 +12,21 @@ export namespace UserSettings {
   export const DEFAULT_MAP_TYPE = LeafletMapType.ATLAS;
 
   export type Props =
-    | keyof UserSettings.UserSettingsModel
-    | keyof UserSettings.DesktopUserSettingsModel
-    | keyof UserSettings.ExtensionUserSettingsModel;
+    | keyof UserSettings.BaseUserSettings
+    | keyof UserSettings.DesktopUserSettings
+    | keyof UserSettings.ExtensionUserSettings;
 
-  export const getDefaultsByBuildTarget = (buildTarget: BuildTarget): UserSettingsModel => {
+  export const getDefaultsByBuildTarget = (buildTarget: BuildTarget): BaseUserSettings => {
     if (buildTarget === BuildTarget.DESKTOP) {
-      return _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
+      return _.cloneDeep(DesktopUserSettings.DEFAULT_MODEL);
     } else if (buildTarget === BuildTarget.EXTENSION) {
-      return _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
+      return _.cloneDeep(ExtensionUserSettings.DEFAULT_MODEL);
     } else {
       throw new Error("Unknown environment target");
     }
   };
 
-  export abstract class UserSettingsModel {
+  export abstract class BaseUserSettings {
     public abstract readonly buildTarget: BuildTarget;
     public systemUnit: MeasureSystem;
     public temperatureUnit: Temperature;
@@ -32,8 +35,8 @@ export namespace UserSettings {
     public zones: UserZonesModel;
   }
 
-  export class DesktopUserSettingsModel extends UserSettingsModel {
-    public static readonly DEFAULT_MODEL: DesktopUserSettingsModel = {
+  export class DesktopUserSettings extends BaseUserSettings {
+    public static readonly DEFAULT_MODEL: DesktopUserSettings = {
       buildTarget: BuildTarget.DESKTOP,
       systemUnit: MeasureSystem.METRIC,
       temperatureUnit: UserSettings.DEFAULT_TEMPERATURE,
@@ -48,8 +51,8 @@ export namespace UserSettings {
     public defaultMapType: LeafletMapType = DEFAULT_MAP_TYPE;
   }
 
-  export class ExtensionUserSettingsModel extends UserSettingsModel {
-    public static readonly DEFAULT_MODEL: ExtensionUserSettingsModel = {
+  export class ExtensionUserSettings extends BaseUserSettings {
+    public static readonly DEFAULT_MODEL: ExtensionUserSettings = {
       buildTarget: BuildTarget.EXTENSION,
       localStorageMustBeCleared: false,
       systemUnit: MeasureSystem.METRIC,

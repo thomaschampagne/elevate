@@ -1,35 +1,37 @@
+// tslint:disable:forin
 import _ from "lodash";
-import { CadenceDataModel, UserSettings } from "@elevate/shared/models";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { CadenceStats } from "@elevate/shared/models/sync/activity.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class RunningCadenceDataView extends AbstractCadenceDataView {
-  protected userSettings: ExtensionUserSettingsModel;
+  protected userSettings: ExtensionUserSettings;
 
-  constructor(cadenceData: CadenceDataModel, units: string, userSettings: ExtensionUserSettingsModel) {
+  constructor(cadence: CadenceStats, units: string, userSettings: ExtensionUserSettings) {
     if (userSettings.enableBothLegsCadence) {
       // Create a deep clone in memory to avoid values doubled on each reload
-      const cadenceDataClone: CadenceDataModel = _.cloneDeep(cadenceData);
+      const cadenceClone: CadenceStats = _.cloneDeep(cadence);
 
       // Then multiply cadence per 2
-      cadenceDataClone.averageActiveCadence *= 2;
-      cadenceDataClone.lowerQuartileCadence *= 2;
-      cadenceDataClone.medianCadence *= 2;
-      cadenceDataClone.upperQuartileCadence *= 2;
+      cadenceClone.avgActive *= 2;
+      cadenceClone.lowQ *= 2;
+      cadenceClone.median *= 2;
+      cadenceClone.upperQ *= 2;
 
-      if (cadenceDataClone.upFlatDownCadencePaceData) {
-        cadenceDataClone.upFlatDownCadencePaceData.up *= 2;
-        cadenceDataClone.upFlatDownCadencePaceData.flat *= 2;
-        cadenceDataClone.upFlatDownCadencePaceData.down *= 2;
+      if (cadenceClone.slope) {
+        cadenceClone.slope.up *= 2;
+        cadenceClone.slope.flat *= 2;
+        cadenceClone.slope.down *= 2;
       }
 
-      for (const zone in cadenceDataClone.cadenceZones) {
-        cadenceDataClone.cadenceZones[zone].from *= 2;
-        cadenceDataClone.cadenceZones[zone].to *= 2;
+      for (const zone in cadenceClone.zones) {
+        cadenceClone.zones[zone].from *= 2;
+        cadenceClone.zones[zone].to *= 2;
       }
-      super(cadenceDataClone, units);
+      super(cadenceClone, units);
     } else {
-      super(cadenceData, units);
+      super(cadence, units);
     }
 
     this.userSettings = userSettings;
@@ -56,15 +58,13 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
   protected insertDataIntoGrid(): void {
     super.insertDataIntoGrid();
 
-    const hasHasPerCadenceOccurrence =
-      _.isNumber(this.cadenceData.averageDistancePerOccurrence) &&
-      !_.isNaN(this.cadenceData.averageDistancePerOccurrence);
+    const hasHasPerCadenceOccurrence = _.isNumber(this.cadence.distPerCycle) && !_.isNaN(this.cadence.distPerCycle);
 
     // Row 0
     this.insertContentAtGridPosition(
       0,
       0,
-      this.printNumber(this.cadenceData.averageActiveCadence, 1),
+      this.printNumber(this.cadence.avgActive, 1),
       "Active Avg Cadence",
       this.units,
       "displayCadenceData"
@@ -73,7 +73,7 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
       this.insertContentAtGridPosition(
         1,
         0,
-        this.printNumber(this.cadenceData.averageDistancePerOccurrence, 2),
+        this.printNumber(this.cadence.distPerCycle, 2),
         "Avg Stride length",
         "M",
         "displayCadenceData"
@@ -82,18 +82,18 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
     this.insertContentAtGridPosition(
       2,
       0,
-      this.printNumber(this.cadenceData.totalOccurrences, 0),
+      this.printNumber(this.cadence.cycles, 0),
       "Total steps",
       "",
       "displayCadenceData"
     );
 
     // Row 1
-    if (this.cadenceData.upFlatDownCadencePaceData) {
+    if (this.cadence.slope) {
       this.insertContentAtGridPosition(
         0,
         1,
-        this.printNumber(this.cadenceData.upFlatDownCadencePaceData.up, 0),
+        this.printNumber(this.cadence.slope.up, 0),
         "Climbing avg cadence",
         this.units,
         "displayCadenceData"
@@ -101,7 +101,7 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
       this.insertContentAtGridPosition(
         1,
         1,
-        this.printNumber(this.cadenceData.upFlatDownCadencePaceData.flat, 0),
+        this.printNumber(this.cadence.slope.flat, 0),
         "Flat avg cadence",
         this.units,
         "displayCadenceData"
@@ -109,7 +109,7 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
       this.insertContentAtGridPosition(
         2,
         1,
-        this.printNumber(this.cadenceData.upFlatDownCadencePaceData.down, 0),
+        this.printNumber(this.cadence.slope.down, 0),
         "Downhill avg cadence",
         this.units,
         "displayCadenceData"
@@ -117,37 +117,16 @@ export class RunningCadenceDataView extends AbstractCadenceDataView {
     }
 
     // Row 2
-    this.insertContentAtGridPosition(
-      0,
-      2,
-      this.cadenceData.lowerQuartileCadence,
-      "25% Cadence",
-      this.units,
-      "displayCadenceData"
-    );
-    this.insertContentAtGridPosition(
-      1,
-      2,
-      this.cadenceData.medianCadence,
-      "50% Cadence",
-      this.units,
-      "displayCadenceData"
-    );
-    this.insertContentAtGridPosition(
-      2,
-      2,
-      this.cadenceData.upperQuartileCadence,
-      "75% Cadence",
-      this.units,
-      "displayCadenceData"
-    );
+    this.insertContentAtGridPosition(0, 2, this.cadence.lowQ, "25% Cadence", this.units, "displayCadenceData");
+    this.insertContentAtGridPosition(1, 2, this.cadence.median, "50% Cadence", this.units, "displayCadenceData");
+    this.insertContentAtGridPosition(2, 2, this.cadence.upperQ, "75% Cadence", this.units, "displayCadenceData");
 
     // Row 3
-    if (_.isNumber(this.cadenceData.averageDistancePerOccurrence)) {
+    if (_.isNumber(this.cadence.distPerCycle)) {
       this.insertContentAtGridPosition(
         0,
         3,
-        this.printNumber(this.cadenceData.averageDistancePerOccurrence, 2),
+        this.printNumber(this.cadence.distPerCycle, 2),
         "Avg Stride Length",
         "M",
         "displayCadenceData"

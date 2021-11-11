@@ -33,19 +33,28 @@
     <div *ngIf="showConfigure && fileConnectorInfo" class="configureView" fxFill>
       <div>
         <mat-form-field fxFill>
-          <input [(ngModel)]="fileConnectorInfo.sourceDirectory" (click)="onUserDirectorySelection()" class="clickable" matInput
+          <input [(ngModel)]="fileConnectorInfo.sourceDirectory" (click)="onUserDirectorySelection()" class="clickable"
+                 matInput
                  placeholder="{{ (!fileConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
                  type="text" readonly>
-          <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary" matTooltip="Locate configured directory"
+          <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary"
+                  matTooltip="Open configured directory"
                   mat-icon-button
                   matSuffix>
-            <mat-icon fontSet="material-icons-outlined">gps_fixed</mat-icon>
+            <mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>
           </button>
           <button (click)="onUserDirectorySelection()" color="primary" mat-icon-button matTooltip="Browse directory"
                   matSuffix>
             <mat-icon fontSet="material-icons-outlined">folder_open</mat-icon>
           </button>
         </mat-form-field>
+        <div class="primary-note">
+          <strong>Hint:</strong> use the <strong>.fit</strong> format as much as possible to get the most of details of
+          your activities.
+        </div>
+        <div class="primary-note">
+          <strong>Hint:</strong> during <i>alpha</i> testing phase, please keep your activity files safe in configured folder. An alpha update may ask you to wipe/rescan your activities from there.
+        </div>
       </div>
 
       <div *ngIf="fileConnectorInfo.sourceDirectory">
@@ -54,25 +63,26 @@
             Scan subdirectories
           </mat-checkbox>
         </div>
-        <div fxLayout="row" fxLayoutAlign="start start">
+        <div>
           <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.extractArchiveFiles"
                         matTooltip="Activities found in 'zip, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
-            Extract activities from archives files *
+            Extract activity files from archives files (.zip, .tar, .gz, ...) *
           </mat-checkbox>
-          <div fxFlex="3"></div>
+        </div>
+        <div>
           <mat-checkbox (change)="saveChanges()"
                         [(ngModel)]="fileConnectorInfo.deleteArchivesAfterExtract"
                         [disabled]="!fileConnectorInfo.extractArchiveFiles"
                         matTooltip="Once activities have been extracted from a 'zip, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
-            Delete archives when activities have been extracted from them (recommended) *
+            Delete archives files (.zip, .tar, .gz, ...) once activity files have been extracted (recommended) *
           </mat-checkbox>
         </div>
         <div>
           <mat-checkbox (change)="saveChanges()"
                         [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown"
                         matTooltip="This case often occurs on GPX files. Note that this may introduce errors (e.g.: Inline skating gpx activity without sport type could be detected as 'Ride')">
-            <strong>Experimental:</strong> Try to set when possible the activity type to <i>Ride or Run</i>
-            if sport type is unknown <i>(adds a "#detected" in activities names)</i>
+            <strong>Experimental:</strong> Try to set the activity type to <i>Ride or Run</i>
+            if unknown sport <i>(adds "#detected" in name)</i>
           </mat-checkbox>
         </div>
         <div>

@@ -1,19 +1,23 @@
-import { ActivitySourceDataModel, AthleteSnapshotModel, Streams, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "./app-resources.model";
-import { ElevateSport } from "@elevate/shared/enums";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ActivityEssentials } from "@elevate/shared/models/activity-data/activity-essentials.model";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class ComputeActivityThreadMessageModel {
   public activityType: ElevateSport;
-  public supportsGap: boolean; // TODO Should be moved in ActivitySourceDataModel?!
-  public isTrainer: boolean; // TODO Should be moved in ActivitySourceDataModel?!
+  public supportsGap: boolean;
+  public isTrainer: boolean;
   public appResources: AppResourcesModel;
-  public userSettings: ExtensionUserSettingsModel;
-  public isOwner: boolean; // TODO Should be moved in ActivitySourceDataModel?!
-  public athleteSnapshot: AthleteSnapshotModel;
-  public hasPowerMeter: boolean; // TODO Should be moved in ActivitySourceDataModel?!
-  public activitySourceData: ActivitySourceDataModel;
+  public userSettings: ExtensionUserSettings;
+  public isOwner: boolean;
+  public athleteSnapshot: AthleteSnapshot;
+  public hasPowerMeter: boolean;
+  public activityEssentials: ActivityEssentials;
   public streams: Streams;
   public bounds: number[];
+  public returnPeaks: boolean;
   public returnZones: boolean;
 }

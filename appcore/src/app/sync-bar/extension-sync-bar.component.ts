@@ -25,7 +25,6 @@ import { ExtensionSyncService } from "../shared/services/sync/impl/extension-syn
     `
       .ribbon {
         padding: 10px 20px;
-        border-bottom: 1px solid #bfbfbf;
       }
     `
   ]

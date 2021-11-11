@@ -1,19 +1,19 @@
 import { StatsGroup } from "../../stat-group.model";
 import { StatsDef } from "../../stats-def.namespace";
 import { SummaryStatsGroup } from "../../summary-stat-group.model";
-import { SyncedActivityModel } from "@elevate/shared/models";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 export class DefaultSummaryStatsGroup extends SummaryStatsGroup {
   constructor(name: string) {
     super(name);
   }
 
-  public static getDefault(activity: SyncedActivityModel): StatsGroup {
+  public static getDefault(activity: Activity): StatsGroup {
     const summaryStatsGroup = new DefaultSummaryStatsGroup("Default");
 
-    summaryStatsGroup.addStatsPool([StatsDef.Generic.movingTime, StatsDef.Generic.elapsedTime]);
+    summaryStatsGroup.addStatsPool([StatsDef.Distance.distance]);
 
-    summaryStatsGroup.addStatsPool([StatsDef.Generic.distance]);
+    summaryStatsGroup.addStatsPool([StatsDef.Generic.movingTime, StatsDef.Generic.elapsedTime]);
 
     summaryStatsGroup.addStatsPool([StatsDef.Elevation.ascentGain, StatsDef.Generic.moveRatio]);
 
@@ -25,9 +25,9 @@ export class DefaultSummaryStatsGroup extends SummaryStatsGroup {
 
     summaryStatsGroup.addStatsPool([StatsDef.HeartRate.threshold, StatsDef.Speed.threshold]);
 
-    summaryStatsGroup.addStatsPool([StatsDef.HeartRate.hrss, StatsDef.Generic.calories]);
+    summaryStatsGroup.addStatsPool([StatsDef.Scores.Stress.hrss, StatsDef.Generic.calories]);
 
-    summaryStatsGroup.addStatsPool([StatsDef.HeartRate.hrssPerHour, StatsDef.Generic.caloriesPerHour]);
+    summaryStatsGroup.addStatsPool([StatsDef.Scores.Stress.hrssPerHour, StatsDef.Generic.caloriesPerHour]);
 
     return summaryStatsGroup.mutateAsStatsGroup(activity);
   }

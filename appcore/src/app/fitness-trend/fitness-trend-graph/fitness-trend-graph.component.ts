@@ -27,11 +27,11 @@ import { WindowService } from "../../shared/services/window/window.service";
 import { ViewedDayService } from "../shared/services/viewed-day.service";
 import { FitnessTrendActivitiesLinksDialogComponent } from "../fitness-trend-activities-links-dialog/fitness-trend-activities-links-dialog.component";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { ElevateException } from "@elevate/shared/exceptions";
 import {
   OPEN_RESOURCE_RESOLVER,
   OpenResourceResolver
 } from "../../shared/services/links-opener/open-resource-resolver";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 
 @Component({
   selector: "app-fitness-trend-graph",

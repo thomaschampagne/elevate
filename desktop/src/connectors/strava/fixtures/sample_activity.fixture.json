@@ -1,0 +1,4082 @@
+{
+  "resource_state": 3,
+  "athlete": {
+    "id": 18540317,
+    "resource_state": 1
+  },
+  "name": "My activity",
+  "distance": 50235.6,
+  "moving_time": 6474,
+  "elapsed_time": 6594,
+  "total_elevation_gain": 355.9,
+  "type": "Ride",
+  "workout_type": null,
+  "id": 3122164560,
+  "external_id": "2749884297.tcx",
+  "upload_id": 3335049907,
+  "start_date": "2019-09-29T13:58:25Z",
+  "start_date_local": "2019-09-29T15:58:25Z",
+  "timezone": "(GMT+01:00) Europe/Paris",
+  "utc_offset": 7200.0,
+  "start_latlng": [
+    45.199618,
+    5.770097
+  ],
+  "end_latlng": [
+    45.207302,
+    5.765285
+  ],
+  "location_city": null,
+  "location_state": null,
+  "location_country": "France",
+  "start_latitude": 45.199618,
+  "start_longitude": 5.770097,
+  "achievement_count": 8,
+  "kudos_count": 0,
+  "comment_count": 0,
+  "athlete_count": 3,
+  "photo_count": 0,
+  "map": {
+    "id": "a3122164560",
+    "polyline": "q`{rGa~eb@XRVZP`@`@hALPNAf@kAtAqCE]MMc@c@wC{B]a@g@{@c@oA[eAs@oDSiBKeEJgBFg@`@sBLc@Zq@z@}AdAoAhCaBf@UzEkAfDq@xFeBzA_@`AO`BMrAEhA?bACbAYn@]ZWfAyAp@gAt@eBnBiFz@cC`@oAf@aCd@cDpBsPX{AVcCT_DAwBI_C?{GGeEAeDRsETwDTmBd@{BtAqDd@wAh@sBpBqFN{@ZsCp@mCFm@HiCAUIaAUkBCm@SmBw@gCs@uAMMgAq@gBs@]Kq@CkCBKIOe@QwA_@Yk@Jc@KKIeDcB}FmDkBqAsCaBgA{@[WYg@iEcLgAmCc@oA@o@Mq@GO}CcHsAoC}AiCqA_BuAuAwAmAmA}@mAs@{Ao@uAc@_Bs@_Ak@y@o@kAuAQEmAXIAS_@m@iBu@iBoDiGU[{BgCaFkFeHaIuAuAoAw@gBmB}C}CiC_CYUmBkBe@a@CIQgA?[^gBx@kARIn@Db@STu@I_A_@u@Kk@?YHiCf@aLJ{CRqNHaCPoBTsAh@gC|Isa@p@oCNw@FOj@_@NWAs@g@u@s@{CuO{[qDwHeCsFkCqF{CyFeA_Cw@_BWW}BcBy@g@q@k@_@i@Y}@Oo@[i@cLgMqHaIgFyFeCgCqAaB{@{@mT{Ui@c@qC_Am@m@a@o@m@_Cm@eAaFoFuA_BwEyEeCuCgCkCeCsCuAyAi@e@aDgDe@u@iC}Fa@c@gBmAa@k@qOiVk@w@uAyBiD}EiCeEc@k@[W]QwBw@q@[gBaA}AmAiAsAiBqCiAeAc@c@mA_Ag@g@q@a@e@Se@_@aAcAy@o@aDqBq@k@g@[iAm@q@e@u@s@uIoJ]]u@[]]i@u@e@{@kAwAaL_MuEmFkBoBy@aA_MyMwAaBe@e@wBkCe@c@k@u@oEwE}CkDaAqAaGqG{@cAoIaJ_@w@iA}@aHyHw@_AW_@qAuAgAcAiS{TcFwFaJ{JkBwBmSsRsNwMeAeAIMQu@YUo@O]UaEyDu@i@}C}CcIuH{@{@[_@q@a@uIgIcAcAm\\{ZiFeFyEoE{B}BaCgB}@w@kEmE}ZqYgCeCwJ}Ie@]SWk@c@cHaHgGwFsBsB]Yg@[{@w@GAs@|AcDzFc@~@mB~CoP~YwCvFoFvJsD`HcD~FsAxByEtIwBtDeP|Y{JhQa@z@c@l@GJERL\\fFrG|BdDbIxM~GpLn@`At@~@xArA~ExChCxAvFtCdAr@XZn@r@v@jA|@xBnDpJhA~BdT|ZnAtBlAbBjAxA~@bB`@~@jAdBVp@lAdFh@rA`C~FdG`NjAtCj@z@x@xAtKrOxLpPbApA|FxEdBxAbAbAl@x@XRZJn@j@`CdBfAz@tDnDzA`BrA~At@bAxAvBbD`FjBjCdApAp@~@h@bAJNdAt@p@r@pC`EzErGtAvBXf@tB`ChAbAx@h@p@l@v@nAjBlD|@nB`D|FNt@R`@h@`@Xd@vGpLtI|OnAdBbD~Dn@`AjE`Fr@~@Tf@FTRRXFp@r@hAr@tD|ChK|HHDb@J~@HtAh@hChCr@~@vBdBjDhCj@h@~AjBh@~@\\z@Tx@^bAbA`C^p@dA|A`@f@|CxChAhBT`@BP@t@@HVNN@VLb@`@fI`MnNzPv@dA|ClF`B~CfDdG`@z@~E|I~A|CnBhFx@jC`@~BdAnElB`Jb@hCHvA?f@Rp@Zh@n@bBfBjIr@lCZx@d@t@j@r@fA|@`TtNzDfCf@f@r@lAzAzC|B|DdCtExBnEvEtKt@vA|@vB`@b@VEzDsEzA_Cz@oAx@yAj@w@`BeBjE_Ft@s@\\S\\Q`AY^E`@C`AD~@Rz@`@t@j@bAnAT\\r@xAhArC~JfWlAxCp@xAlC|Er@~@jApA~@r@n@ZjA\\t@HZ@X@v@EZGv@Sr@[rEyCv@[\\I\\Cz@F\\JZNr@j@j@x@d@~@lCvGhAzBvAlBjAt@x@XlBZHB^ZXJb@S\\{ATa@`@g@bBqBxBcC^_@d@QVW^i@LInAYb@Ed@AjH^vBBRApBa@xAy@hDkCzQ{Mh@a@~@{@bA}AJEd@Hh@QjA{@bAeAXm@Z}@Fq@?QAa@G][u@c@a@cAi@CG?I~@n@zBnBjAfBpExEfB`BtA~A`BtBrBxBjCzC~@~@~AdAvDlDjDpFfArBt@nBx@zCTjA?RIz@g@~AcCpGkBvFe@n@eG|FKPQbACjG@fHE~E?xOg@rGMvC?`FN~Db@tHXxChC`On@lCn@zAbA|AnAnArAr@h@LrAHJXWZs@\\w@f@_@PiAb@}@?WEYLAXb@Z^b@`@bALvAMtAe@bAo@f@}@VIFIZnBvPRZj@@f@VP^DP?v@OdF@b@D^Ll@?LIx@r@`H\\jBp@hCz@dBf@f@d@Pv@HFNDh@SpCBh@BNJLZBn@OJ?d@J|CnAdAj@Tl@f@|B?LMx@_@bA]lAStAQzAGjBA~A_@|FO`F?zADxAPhBb@xBj@nBj@fBh@jAFHLj@WLgBV_BXc@ByBf@gBZQHa@^Sj@CP@x@BRXlAHx@Tx@@PQHy@H[He@@a@AYNKV[PwBj@e@VCHAd@Ul@U^UPs@ZGXH`ANbAl@pB_@|@B^CVWh@ONmC|Ac@NOQmAcDIUAQ?OQe@",
+    "resource_state": 3,
+    "summary_polyline": "q`{rGa~eb@p@n@`A|BNA|B}ESk@{D_DeA}A_AuCgAyGKeERoCn@wCvAoCdAoApDwBbK}BtIeCdKg@rBw@tCyDbGcPlAeHjCoSl@cHU_[h@kKz@iFvGoRj@oEx@{DHiCKwAm@gGw@gCs@uAuA_AeC_A}D?[o@QwA_@YoA?qDmB}NaJcBsAoIiT@o@UaAqFsLoDiF{FaF_J{DyB{AkAuAiBPwBsFeEeHyUkWoAw@}PoPUmB^gBx@kAfBWTu@I_A_@u@KeA|@gURqNZqF~Mwn@bAgAAs@g@u@s@{CmYgm@eLkUaGoE_@i@i@mB[i@_{@e_Ai@c@qC_Am@m@a@o@m@_Cm@eAee@gg@oDsHkD}Ck^kj@kI_E}AmAsDeFmBiBmE}CaDsCeIgFgByAuIoJqBwA{CiEcrAuxA_@w@iA}@gy@{}@ac@ka@oAsAQu@gB{@yGeGwOmOq@a@g{@{x@_E_D{eAwbA}FcF{FxK}S~^{Pp[qp@vkAM^L\\dJxLbRj[dB`CxArA~ExC`KnF~AnAfB~BlFjNhA~BtVr^xC|DlDhGnCjJrMvZzNhTxLpPbApAbJrHpB|BnHlFpGpGhCbDjOzTbCxB|MtR~DdEjBvAbKjRb@vAbAfAlRn]nNhQpA|BhV~QbEdA|DhEbHnFjCtC`FlLfBdC|CxC~AjCFpAbB`AfI`MfP`ShWje@hDtJtEpTb@hCH~B~A~DzCxMr@|A`CbCd[dTlOlYjIdR`@b@VEzDsE|FaJbJyJ|CeAbDTpBlAxAlB|Rhf@lC|E~BpCnBnAjA\\bDFfCw@jGuDz@MxARnAz@j@x@rDvIhAzBvAlBjAt@fDt@bAj@b@S\\{Av@iA|EuFdAq@dAkAxCa@bLb@dCc@~YaThB}AbA}AzAMjA{@|AsBZ}@FcAI_A[u@gBkACQzD~CjAfBxHzHvLjNvIrHrFdJnBjGTjAInAwGhRkHlH]tAGlh@u@jL?`Fr@tNXxCxDnSrBxDnAnArAr@|BVJXcC`BiBt@oBFAXbA~@`@bALvAMtAe@bAmB~@Sb@nBvPRZrAXVp@O|GTpBIfAr@`HnAtFbBlCdBj@Dh@SpCFx@f@Pn@Op@JbFzB|@jDMfA}@pCe@pDIjE_@|FO|HVbEb@xBvCxIeNfCs@h@W|@@x@~@fFoD\\aAx@wBj@e@VEn@k@lAiAl@GXH`A|@tD_@|@?v@g@x@qDlB}AuD]}A"
+  },
+  "trainer": false,
+  "commute": false,
+  "manual": false,
+  "private": true,
+  "visibility": "only_me",
+  "flagged": false,
+  "gear_id": null,
+  "from_accepted_tag": false,
+  "upload_id_str": "3335049907",
+  "average_speed": 7.76,
+  "max_speed": 18.6,
+  "average_cadence": 75.6,
+  "average_watts": 147.3,
+  "kilojoules": 953.6,
+  "device_watts": false,
+  "has_heartrate": true,
+  "average_heartrate": 164.8,
+  "max_heartrate": 186.0,
+  "heartrate_opt_out": false,
+  "display_hide_heartrate_option": true,
+  "elev_high": 350.6,
+  "elev_low": 209.4,
+  "pr_count": 3,
+  "total_photo_count": 0,
+  "has_kudoed": false,
+  "description": "Clear, 27°C, Feels like 27°C, Humidity 31%, Wind 3m/s from SSW - by Klimat.app",
+  "calories": 1063.3,
+  "perceived_exertion": null,
+  "prefer_perceived_exertion": null,
+  "segment_efforts": [
+    {
+      "id": 2817697759509711894,
+      "resource_state": 2,
+      "name": "Berges Isere: Ile d'amour - Gieres pump track",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 293,
+      "moving_time": 293,
+      "start_date": "2019-09-29T13:59:07Z",
+      "start_date_local": "2019-09-29T15:59:07Z",
+      "distance": 2279.7,
+      "start_index": 19,
+      "end_index": 94,
+      "average_cadence": 64.8,
+      "device_watts": false,
+      "average_watts": 146.1,
+      "average_heartrate": 144.8,
+      "max_heartrate": 156.0,
+      "segment": {
+        "id": 28026721,
+        "resource_state": 2,
+        "name": "Berges Isere: Ile d'amour - Gieres pump track",
+        "activity_type": "Ride",
+        "distance": 2279.7,
+        "average_grade": -0.0,
+        "maximum_grade": 1.6,
+        "elevation_high": 220.2,
+        "elevation_low": 216.8,
+        "start_latlng": [
+          45.198441,
+          5.770088
+        ],
+        "end_latlng": [
+          45.189275,
+          5.787765
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.198441,
+        "start_longitude": 5.770088,
+        "end_latitude": 45.189275,
+        "end_longitude": 5.787765,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 2,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 2
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 2822600662829459902,
+      "resource_state": 2,
+      "name": "Pont ile d'amour - Gières barrière",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 375,
+      "moving_time": 375,
+      "start_date": "2019-09-29T13:59:38Z",
+      "start_date_local": "2019-09-29T15:59:38Z",
+      "distance": 3171.9,
+      "start_index": 29,
+      "end_index": 122,
+      "average_cadence": 71.8,
+      "device_watts": false,
+      "average_watts": 162.8,
+      "average_heartrate": 150.4,
+      "max_heartrate": 164.0,
+      "segment": {
+        "id": 28221062,
+        "resource_state": 2,
+        "name": "Pont ile d'amour - Gières barrière",
+        "activity_type": "Ride",
+        "distance": 3171.9,
+        "average_grade": 0.1,
+        "maximum_grade": 2.7,
+        "elevation_high": 228.4,
+        "elevation_low": 224.4,
+        "start_latlng": [
+          45.199027,
+          5.771048
+        ],
+        "end_latlng": [
+          45.187328,
+          5.80008
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.199027,
+        "start_longitude": 5.771048,
+        "end_latitude": 45.187328,
+        "end_longitude": 5.80008,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 2,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 2
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 77484769301,
+      "resource_state": 2,
+      "name": "Cyclist Lane Isère - \"Taillées\" Dir Chambery - part 03",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 177,
+      "moving_time": 177,
+      "start_date": "2019-09-29T13:59:49Z",
+      "start_date_local": "2019-09-29T15:59:49Z",
+      "distance": 1533.2,
+      "start_index": 33,
+      "end_index": 79,
+      "average_cadence": 77.0,
+      "device_watts": false,
+      "average_watts": 185.8,
+      "average_heartrate": 145.5,
+      "max_heartrate": 156.0,
+      "segment": {
+        "id": 5310102,
+        "resource_state": 2,
+        "name": "Cyclist Lane Isère - \"Taillées\" Dir Chambery - part 03",
+        "activity_type": "Ride",
+        "distance": 1533.2,
+        "average_grade": 0.0,
+        "maximum_grade": 10.6,
+        "elevation_high": 219.8,
+        "elevation_low": 207.4,
+        "start_latlng": [
+          45.199642,
+          5.771626
+        ],
+        "end_latlng": [
+          45.19115,
+          5.78152
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.199642,
+        "start_longitude": 5.771626,
+        "end_latitude": 45.19115,
+        "end_longitude": 5.78152,
+        "climb_category": 0,
+        "city": "Meylan",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2797971549075511496,
+      "resource_state": 2,
+      "name": "Playing to the crowd (Sprint au Stade)",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 36,
+      "moving_time": 36,
+      "start_date": "2019-09-29T14:01:29Z",
+      "start_date_local": "2019-09-29T16:01:29Z",
+      "distance": 300.7,
+      "start_index": 58,
+      "end_index": 67,
+      "average_cadence": 76.6,
+      "device_watts": false,
+      "average_watts": 221.6,
+      "average_heartrate": 152.4,
+      "max_heartrate": 156.0,
+      "segment": {
+        "id": 27354754,
+        "resource_state": 2,
+        "name": "Playing to the crowd (Sprint au Stade)",
+        "activity_type": "Ride",
+        "distance": 300.7,
+        "average_grade": 0.1,
+        "maximum_grade": 1.4,
+        "elevation_high": 224.2,
+        "elevation_low": 223.0,
+        "start_latlng": [
+          45.196676,
+          5.778829
+        ],
+        "end_latlng": [
+          45.194033,
+          5.77969
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.196676,
+        "start_longitude": 5.778829,
+        "end_latitude": 45.194033,
+        "end_longitude": 5.77969,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 2,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 2
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 77484769342,
+      "resource_state": 2,
+      "name": "Cyclist Lane Isère - \"Taillées\" Dir Chambery - part 04",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 211,
+      "moving_time": 211,
+      "start_date": "2019-09-29T14:03:06Z",
+      "start_date_local": "2019-09-29T16:03:06Z",
+      "distance": 1798.0,
+      "start_index": 85,
+      "end_index": 134,
+      "average_cadence": 81.6,
+      "device_watts": false,
+      "average_watts": 161.6,
+      "average_heartrate": 156.6,
+      "max_heartrate": 164.0,
+      "segment": {
+        "id": 5310446,
+        "resource_state": 2,
+        "name": "Cyclist Lane Isère - \"Taillées\" Dir Chambery - part 04",
+        "activity_type": "Ride",
+        "distance": 1798.0,
+        "average_grade": -0.0,
+        "maximum_grade": 5.9,
+        "elevation_high": 217.6,
+        "elevation_low": 212.3,
+        "start_latlng": [
+          45.190513,
+          5.782872
+        ],
+        "end_latlng": [
+          45.186738,
+          5.804489
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.190513,
+        "start_longitude": 5.782872,
+        "end_latitude": 45.186738,
+        "end_longitude": 5.804489,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 2,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 2
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 2834151716070449940,
+      "resource_state": 2,
+      "name": "les 2 tronçons cyclable sprint",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 101,
+      "moving_time": 101,
+      "start_date": "2019-09-29T14:07:35Z",
+      "start_date_local": "2019-09-29T16:07:35Z",
+      "distance": 837.4,
+      "start_index": 152,
+      "end_index": 173,
+      "average_cadence": 62.1,
+      "device_watts": false,
+      "average_watts": 146.4,
+      "average_heartrate": 150.9,
+      "max_heartrate": 154.0,
+      "segment": {
+        "id": 28628983,
+        "resource_state": 2,
+        "name": "les 2 tronçons cyclable sprint",
+        "activity_type": "Ride",
+        "distance": 837.4,
+        "average_grade": 0.0,
+        "maximum_grade": 1.2,
+        "elevation_high": 217.4,
+        "elevation_low": 216.9,
+        "start_latlng": [
+          45.190023,
+          5.807542
+        ],
+        "end_latlng": [
+          45.195735,
+          5.813564
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.190023,
+        "start_longitude": 5.807542,
+        "end_latitude": 45.195735,
+        "end_longitude": 5.813564,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769369,
+      "resource_state": 2,
+      "name": "Canal de la Chantourne (vers Chambéry)",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 210,
+      "moving_time": 210,
+      "start_date": "2019-09-29T14:07:38Z",
+      "start_date_local": "2019-09-29T16:07:38Z",
+      "distance": 1730.3,
+      "start_index": 153,
+      "end_index": 196,
+      "average_cadence": 78.9,
+      "device_watts": false,
+      "average_watts": 150.4,
+      "average_heartrate": 149.6,
+      "max_heartrate": 154.0,
+      "segment": {
+        "id": 8186511,
+        "resource_state": 2,
+        "name": "Canal de la Chantourne (vers Chambéry)",
+        "activity_type": "Ride",
+        "distance": 1730.3,
+        "average_grade": 0.1,
+        "maximum_grade": 4.7,
+        "elevation_high": 218.0,
+        "elevation_low": 214.4,
+        "start_latlng": [
+          45.190269,
+          5.807195
+        ],
+        "end_latlng": [
+          45.202141,
+          5.819863
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.190269,
+        "start_longitude": 5.807195,
+        "end_latitude": 45.202141,
+        "end_longitude": 5.819863,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "Rhone-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769437,
+      "resource_state": 2,
+      "name": "Piste Cyclable Muriannt - Domene",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 374,
+      "moving_time": 374,
+      "start_date": "2019-09-29T14:07:44Z",
+      "start_date_local": "2019-09-29T16:07:44Z",
+      "distance": 2957.0,
+      "start_index": 155,
+      "end_index": 236,
+      "average_cadence": 76.8,
+      "device_watts": false,
+      "average_watts": 137.8,
+      "average_heartrate": 149.3,
+      "max_heartrate": 154.0,
+      "segment": {
+        "id": 21039594,
+        "resource_state": 2,
+        "name": "Piste Cyclable Muriannt - Domene",
+        "activity_type": "Ride",
+        "distance": 2957.0,
+        "average_grade": 0.2,
+        "maximum_grade": 8.8,
+        "elevation_high": 222.1,
+        "elevation_low": 213.9,
+        "start_latlng": [
+          45.190461,
+          5.807765
+        ],
+        "end_latlng": [
+          45.210767,
+          5.829896
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.190461,
+        "start_longitude": 5.807765,
+        "end_latitude": 45.210767,
+        "end_longitude": 5.829896,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": null,
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2797977742188583112,
+      "resource_state": 2,
+      "name": "Dutch Dyke Sprint",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 61,
+      "moving_time": 61,
+      "start_date": "2019-09-29T14:07:51Z",
+      "start_date_local": "2019-09-29T16:07:51Z",
+      "distance": 479.9,
+      "start_index": 156,
+      "end_index": 168,
+      "average_cadence": 67.6,
+      "device_watts": false,
+      "average_watts": 143.5,
+      "average_heartrate": 151.3,
+      "max_heartrate": 154.0,
+      "segment": {
+        "id": 27354850,
+        "resource_state": 2,
+        "name": "Dutch Dyke Sprint",
+        "activity_type": "Ride",
+        "distance": 479.9,
+        "average_grade": 0.1,
+        "maximum_grade": 1.4,
+        "elevation_high": 224.4,
+        "elevation_low": 223.0,
+        "start_latlng": [
+          45.19124,
+          5.808243
+        ],
+        "end_latlng": [
+          45.194746,
+          5.811485
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.19124,
+        "start_longitude": 5.808243,
+        "end_latitude": 45.194746,
+        "end_longitude": 5.811485,
+        "climb_category": 0,
+        "city": "Gières",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769400,
+      "resource_state": 2,
+      "name": "// Digue Domène",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 97,
+      "moving_time": 97,
+      "start_date": "2019-09-29T14:11:30Z",
+      "start_date_local": "2019-09-29T16:11:30Z",
+      "distance": 803.8,
+      "start_index": 205,
+      "end_index": 225,
+      "average_cadence": 80.5,
+      "device_watts": false,
+      "average_watts": 172.6,
+      "average_heartrate": 149.4,
+      "max_heartrate": 153.0,
+      "segment": {
+        "id": 22128906,
+        "resource_state": 2,
+        "name": "// Digue Domène",
+        "activity_type": "Ride",
+        "distance": 803.8,
+        "average_grade": -0.1,
+        "maximum_grade": 0.4,
+        "elevation_high": 318.0,
+        "elevation_low": 316.0,
+        "start_latlng": [
+          45.20266,
+          5.820615
+        ],
+        "end_latlng": [
+          45.208068,
+          5.827275
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.20266,
+        "start_longitude": 5.820615,
+        "end_latitude": 45.208068,
+        "end_longitude": 5.827275,
+        "climb_category": 0,
+        "city": "Domène",
+        "state": null,
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769465,
+      "resource_state": 2,
+      "name": "Rond point Intermarché - Payant",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 131,
+      "moving_time": 131,
+      "start_date": "2019-09-29T14:14:50Z",
+      "start_date_local": "2019-09-29T16:14:50Z",
+      "distance": 1206.9,
+      "start_index": 257,
+      "end_index": 295,
+      "average_cadence": 73.0,
+      "device_watts": false,
+      "average_watts": 176.9,
+      "average_heartrate": 156.1,
+      "max_heartrate": 167.0,
+      "segment": {
+        "id": 16278977,
+        "resource_state": 2,
+        "name": "Rond point Intermarché - Payant",
+        "activity_type": "Ride",
+        "distance": 1206.9,
+        "average_grade": 0.5,
+        "maximum_grade": 8.7,
+        "elevation_high": 222.4,
+        "elevation_low": 215.4,
+        "start_latlng": [
+          45.210349,
+          5.833074
+        ],
+        "end_latlng": [
+          45.207433,
+          5.847696
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.210349,
+        "start_longitude": 5.833074,
+        "end_latitude": 45.207433,
+        "end_longitude": 5.847696,
+        "climb_category": 0,
+        "city": "Domène",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2747951956805912544,
+      "resource_state": 2,
+      "name": "Le Versoud - Villard Bonnot",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 462,
+      "moving_time": 444,
+      "start_date": "2019-09-29T14:17:26Z",
+      "start_date_local": "2019-09-29T16:17:26Z",
+      "distance": 3803.9,
+      "start_index": 305,
+      "end_index": 426,
+      "average_cadence": 69.8,
+      "device_watts": false,
+      "average_watts": 165.6,
+      "average_heartrate": 161.6,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 25953718,
+        "resource_state": 2,
+        "name": "Le Versoud - Villard Bonnot",
+        "activity_type": "Ride",
+        "distance": 3803.9,
+        "average_grade": 0.3,
+        "maximum_grade": 3.9,
+        "elevation_high": 251.6,
+        "elevation_low": 240.8,
+        "start_latlng": [
+          45.207631,
+          5.84972
+        ],
+        "end_latlng": [
+          45.233189,
+          5.881194
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.207631,
+        "start_longitude": 5.84972,
+        "end_latitude": 45.233189,
+        "end_longitude": 5.881194,
+        "climb_category": 0,
+        "city": "Domène",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769487,
+      "resource_state": 2,
+      "name": "Sprint Payant - Casino",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 95,
+      "moving_time": 95,
+      "start_date": "2019-09-29T14:17:32Z",
+      "start_date_local": "2019-09-29T16:17:32Z",
+      "distance": 786.7,
+      "start_index": 306,
+      "end_index": 325,
+      "average_cadence": 75.3,
+      "device_watts": false,
+      "average_watts": 140.2,
+      "average_heartrate": 155.6,
+      "max_heartrate": 157.0,
+      "segment": {
+        "id": 10197605,
+        "resource_state": 2,
+        "name": "Sprint Payant - Casino",
+        "activity_type": "Ride",
+        "distance": 786.7,
+        "average_grade": 0.2,
+        "maximum_grade": 4.3,
+        "elevation_high": 230.2,
+        "elevation_low": 226.4,
+        "start_latlng": [
+          45.207855,
+          5.850053
+        ],
+        "end_latlng": [
+          45.212254,
+          5.857724
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.207855,
+        "start_longitude": 5.850053,
+        "end_latitude": 45.212254,
+        "end_longitude": 5.857724,
+        "climb_category": 0,
+        "city": "Domène",
+        "state": null,
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769522,
+      "resource_state": 2,
+      "name": "Le Versourd - La Bascule",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 63,
+      "moving_time": 63,
+      "start_date": "2019-09-29T14:19:27Z",
+      "start_date_local": "2019-09-29T16:19:27Z",
+      "distance": 419.6,
+      "start_index": 329,
+      "end_index": 353,
+      "average_cadence": 68.5,
+      "device_watts": false,
+      "average_watts": 170.7,
+      "average_heartrate": 161.7,
+      "max_heartrate": 169.0,
+      "segment": {
+        "id": 11256177,
+        "resource_state": 2,
+        "name": "Le Versourd - La Bascule",
+        "activity_type": "Ride",
+        "distance": 419.6,
+        "average_grade": 1.4,
+        "maximum_grade": 5.4,
+        "elevation_high": 28.4,
+        "elevation_low": 21.2,
+        "start_latlng": [
+          45.21344,
+          5.859668
+        ],
+        "end_latlng": [
+          45.21622,
+          5.8631
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.21344,
+        "start_longitude": 5.859668,
+        "end_latitude": 45.21622,
+        "end_longitude": 5.8631,
+        "climb_category": 0,
+        "city": "Le Versoud",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2831584711472598898,
+      "resource_state": 2,
+      "name": "Pruney/Froges",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 854,
+      "moving_time": 854,
+      "start_date": "2019-09-29T14:23:42Z",
+      "start_date_local": "2019-09-29T16:23:42Z",
+      "distance": 6530.2,
+      "start_index": 402,
+      "end_index": 637,
+      "average_cadence": 68.5,
+      "device_watts": false,
+      "average_watts": 154.2,
+      "average_heartrate": 164.5,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 28541304,
+        "resource_state": 2,
+        "name": "Pruney/Froges",
+        "activity_type": "Ride",
+        "distance": 6530.2,
+        "average_grade": 0.2,
+        "maximum_grade": 12.5,
+        "elevation_high": 258.8,
+        "elevation_low": 226.6,
+        "start_latlng": [
+          45.227245,
+          5.874947
+        ],
+        "end_latlng": [
+          45.273826,
+          5.925011
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.227245,
+        "start_longitude": 5.874947,
+        "end_latitude": 45.273826,
+        "end_longitude": 5.925011,
+        "climb_category": 0,
+        "city": "Le Versoud",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769771,
+      "resource_state": 2,
+      "name": "D523 Villard Bonnot / Tencin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 1168,
+      "moving_time": 1168,
+      "start_date": "2019-09-29T14:25:29Z",
+      "start_date_local": "2019-09-29T16:25:29Z",
+      "distance": 9589.04,
+      "start_index": 430,
+      "end_index": 743,
+      "average_cadence": 74.0,
+      "device_watts": false,
+      "average_watts": 158.8,
+      "average_heartrate": 164.8,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 2434746,
+        "resource_state": 2,
+        "name": "D523 Villard Bonnot / Tencin",
+        "activity_type": "Ride",
+        "distance": 9589.04,
+        "average_grade": 0.0,
+        "maximum_grade": 7.0,
+        "elevation_high": 258.7,
+        "elevation_low": 226.9,
+        "start_latlng": [
+          45.234007481485605,
+          5.882565658539534
+        ],
+        "end_latlng": [
+          45.30371390283108,
+          5.953480079770088
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.234007481485605,
+        "start_longitude": 5.882565658539534,
+        "end_latitude": 45.30371390283108,
+        "end_longitude": 5.953480079770088,
+        "climb_category": 0,
+        "city": "Villard Bonnot",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769566,
+      "resource_state": 2,
+      "name": "Côte de Miribel",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 192,
+      "moving_time": 192,
+      "start_date": "2019-09-29T14:26:56Z",
+      "start_date_local": "2019-09-29T16:26:56Z",
+      "distance": 961.1,
+      "start_index": 453,
+      "end_index": 496,
+      "average_cadence": 72.8,
+      "device_watts": false,
+      "average_watts": 146.9,
+      "average_heartrate": 168.0,
+      "max_heartrate": 176.0,
+      "segment": {
+        "id": 5208703,
+        "resource_state": 2,
+        "name": "Côte de Miribel",
+        "activity_type": "Ride",
+        "distance": 961.1,
+        "average_grade": 2.9,
+        "maximum_grade": 7.2,
+        "elevation_high": 258.7,
+        "elevation_low": 229.4,
+        "start_latlng": [
+          45.23938,
+          5.889589
+        ],
+        "end_latlng": [
+          45.246629,
+          5.8959
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.23938,
+        "start_longitude": 5.889589,
+        "end_latitude": 45.246629,
+        "end_longitude": 5.8959,
+        "climb_category": 0,
+        "city": "Villard Bonnot",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769597,
+      "resource_state": 2,
+      "name": "Ligne Droite Stade Rene Boeuf",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 84,
+      "moving_time": 84,
+      "start_date": "2019-09-29T14:30:51Z",
+      "start_date_local": "2019-09-29T16:30:51Z",
+      "distance": 852.5,
+      "start_index": 514,
+      "end_index": 539,
+      "average_cadence": 82.0,
+      "device_watts": false,
+      "average_watts": 116.3,
+      "average_heartrate": 146.0,
+      "max_heartrate": 150.0,
+      "segment": {
+        "id": 16126295,
+        "resource_state": 2,
+        "name": "Ligne Droite Stade Rene Boeuf",
+        "activity_type": "Ride",
+        "distance": 852.5,
+        "average_grade": -1.9,
+        "maximum_grade": 0.9,
+        "elevation_high": 247.0,
+        "elevation_low": 230.7,
+        "start_latlng": [
+          45.249742,
+          5.898857
+        ],
+        "end_latlng": [
+          45.25577,
+          5.905548
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.249742,
+        "start_longitude": 5.898857,
+        "end_latitude": 45.25577,
+        "end_longitude": 5.905548,
+        "climb_category": 0,
+        "city": null,
+        "state": null,
+        "country": null,
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769626,
+      "resource_state": 2,
+      "name": "Brigoud Place D523 Climb",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 88,
+      "moving_time": 88,
+      "start_date": "2019-09-29T14:32:13Z",
+      "start_date_local": "2019-09-29T16:32:13Z",
+      "distance": 494.3,
+      "start_index": 538,
+      "end_index": 564,
+      "average_cadence": 59.2,
+      "device_watts": false,
+      "average_watts": 137.9,
+      "average_heartrate": 162.3,
+      "max_heartrate": 170.0,
+      "segment": {
+        "id": 11057110,
+        "resource_state": 2,
+        "name": "Brigoud Place D523 Climb",
+        "activity_type": "Ride",
+        "distance": 494.3,
+        "average_grade": 2.7,
+        "maximum_grade": 3.9,
+        "elevation_high": 243.5,
+        "elevation_low": 230.4,
+        "start_latlng": [
+          45.255428,
+          5.905179
+        ],
+        "end_latlng": [
+          45.258968,
+          5.908995
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.255428,
+        "start_longitude": 5.905179,
+        "end_latitude": 45.258968,
+        "end_longitude": 5.908995,
+        "climb_category": 0,
+        "city": "Villard-Bonnot",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769684,
+      "resource_state": 2,
+      "name": "Froges D523 Climb",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 100,
+      "moving_time": 100,
+      "start_date": "2019-09-29T14:36:27Z",
+      "start_date_local": "2019-09-29T16:36:27Z",
+      "distance": 665.8,
+      "start_index": 612,
+      "end_index": 639,
+      "average_cadence": 62.8,
+      "device_watts": false,
+      "average_watts": 141.2,
+      "average_heartrate": 169.2,
+      "max_heartrate": 177.0,
+      "segment": {
+        "id": 11057119,
+        "resource_state": 2,
+        "name": "Froges D523 Climb",
+        "activity_type": "Ride",
+        "distance": 665.8,
+        "average_grade": 2.1,
+        "maximum_grade": 4.4,
+        "elevation_high": 243.2,
+        "elevation_low": 229.5,
+        "start_latlng": [
+          45.26952,
+          5.92038
+        ],
+        "end_latlng": [
+          45.274311,
+          5.925487
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.26952,
+        "start_longitude": 5.92038,
+        "end_latitude": 45.274311,
+        "end_longitude": 5.925487,
+        "climb_category": 0,
+        "city": "Froges",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2700377545146912246,
+      "resource_state": 2,
+      "name": "sprint de Froges reverse",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 42,
+      "moving_time": 42,
+      "start_date": "2019-09-29T14:38:07Z",
+      "start_date_local": "2019-09-29T16:38:07Z",
+      "distance": 407.1,
+      "start_index": 639,
+      "end_index": 651,
+      "average_cadence": 60.7,
+      "device_watts": false,
+      "average_watts": 20.0,
+      "average_heartrate": 165.0,
+      "max_heartrate": 173.0,
+      "segment": {
+        "id": 24197901,
+        "resource_state": 2,
+        "name": "sprint de Froges reverse",
+        "activity_type": "Ride",
+        "distance": 407.1,
+        "average_grade": -3.0,
+        "maximum_grade": 0.0,
+        "elevation_high": 236.2,
+        "elevation_low": 223.6,
+        "start_latlng": [
+          45.274408,
+          5.925641
+        ],
+        "end_latlng": [
+          45.277574,
+          5.928635
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.274408,
+        "start_longitude": 5.925641,
+        "end_latitude": 45.277574,
+        "end_longitude": 5.928635,
+        "climb_category": 0,
+        "city": "Froges",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769706,
+      "resource_state": 2,
+      "name": "descente de champs",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 65,
+      "moving_time": 65,
+      "start_date": "2019-09-29T14:38:13Z",
+      "start_date_local": "2019-09-29T16:38:13Z",
+      "distance": 685.4,
+      "start_index": 640,
+      "end_index": 657,
+      "average_cadence": 81.0,
+      "device_watts": false,
+      "average_watts": 140.2,
+      "average_heartrate": 162.7,
+      "max_heartrate": 172.0,
+      "segment": {
+        "id": 16008539,
+        "resource_state": 2,
+        "name": "descente de champs",
+        "activity_type": "Ride",
+        "distance": 685.4,
+        "average_grade": -2.0,
+        "maximum_grade": 2.9,
+        "elevation_high": 244.0,
+        "elevation_low": 228.0,
+        "start_latlng": [
+          45.274758,
+          5.92587
+        ],
+        "end_latlng": [
+          45.279846,
+          5.930791
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.274758,
+        "start_longitude": 5.92587,
+        "end_latitude": 45.279846,
+        "end_longitude": 5.930791,
+        "climb_category": 0,
+        "city": "Le Champ-prés-Froges",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769802,
+      "resource_state": 2,
+      "name": "ChampPreFroges-Tencin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 400,
+      "moving_time": 400,
+      "start_date": "2019-09-29T14:39:31Z",
+      "start_date_local": "2019-09-29T16:39:31Z",
+      "distance": 3579.1,
+      "start_index": 665,
+      "end_index": 766,
+      "average_cadence": 75.1,
+      "device_watts": false,
+      "average_watts": 207.9,
+      "average_heartrate": 169.1,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 7530248,
+        "resource_state": 2,
+        "name": "ChampPreFroges-Tencin",
+        "activity_type": "Ride",
+        "distance": 3579.1,
+        "average_grade": 0.6,
+        "maximum_grade": 7.1,
+        "elevation_high": 251.3,
+        "elevation_low": 229.9,
+        "start_latlng": [
+          45.28065,
+          5.931612
+        ],
+        "end_latlng": [
+          45.307364,
+          5.957008
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.28065,
+        "start_longitude": 5.931612,
+        "end_latitude": 45.307364,
+        "end_longitude": 5.957008,
+        "climb_category": 0,
+        "city": "Le Champ Près Froges",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2797915669108140286,
+      "resource_state": 2,
+      "name": "sprimpt tencin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 127,
+      "moving_time": 127,
+      "start_date": "2019-09-29T14:40:42Z",
+      "start_date_local": "2019-09-29T16:40:42Z",
+      "distance": 1098.9,
+      "start_index": 683,
+      "end_index": 714,
+      "average_cadence": 68.1,
+      "device_watts": false,
+      "average_watts": 177.2,
+      "average_heartrate": 172.2,
+      "max_heartrate": 178.0,
+      "segment": {
+        "id": 27352954,
+        "resource_state": 2,
+        "name": "sprimpt tencin",
+        "activity_type": "Ride",
+        "distance": 1098.9,
+        "average_grade": 0.4,
+        "maximum_grade": 2.7,
+        "elevation_high": 237.4,
+        "elevation_low": 232.3,
+        "start_latlng": [
+          45.286411,
+          5.937037
+        ],
+        "end_latlng": [
+          45.294594,
+          5.944871
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.286411,
+        "start_longitude": 5.937037,
+        "end_latitude": 45.294594,
+        "end_longitude": 5.944871,
+        "climb_category": 0,
+        "city": "Le Champ-prés-Froges",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769865,
+      "resource_state": 2,
+      "name": "La Pierre - Tencin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 250,
+      "moving_time": 212,
+      "start_date": "2019-09-29T14:43:04Z",
+      "start_date_local": "2019-09-29T16:43:04Z",
+      "distance": 1749.3,
+      "start_index": 717,
+      "end_index": 779,
+      "average_cadence": 79.3,
+      "device_watts": false,
+      "average_watts": 196.9,
+      "average_heartrate": 166.8,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 11256219,
+        "resource_state": 2,
+        "name": "La Pierre - Tencin",
+        "activity_type": "Ride",
+        "distance": 1749.3,
+        "average_grade": 0.9,
+        "maximum_grade": 24.4,
+        "elevation_high": 46.6,
+        "elevation_low": 28.8,
+        "start_latlng": [
+          45.295413,
+          5.94558
+        ],
+        "end_latlng": [
+          45.308429,
+          5.958005
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.295413,
+        "start_longitude": 5.94558,
+        "end_latitude": 45.308429,
+        "end_longitude": 5.958005,
+        "climb_category": 0,
+        "city": "La Pierre",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2842490707648660220,
+      "resource_state": 2,
+      "name": "Descente La Pierre",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 81,
+      "moving_time": 81,
+      "start_date": "2019-09-29T14:43:11Z",
+      "start_date_local": "2019-09-29T16:43:11Z",
+      "distance": 847.4,
+      "start_index": 718,
+      "end_index": 736,
+      "average_cadence": 81.4,
+      "device_watts": false,
+      "average_watts": 220.6,
+      "average_heartrate": 161.3,
+      "max_heartrate": 166.0,
+      "segment": {
+        "id": 28902363,
+        "resource_state": 2,
+        "name": "Descente La Pierre",
+        "activity_type": "Ride",
+        "distance": 847.4,
+        "average_grade": -0.6,
+        "maximum_grade": 0.1,
+        "elevation_high": 249.4,
+        "elevation_low": 244.4,
+        "start_latlng": [
+          45.295844,
+          5.945998
+        ],
+        "end_latlng": [
+          45.30214,
+          5.952027
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.295844,
+        "start_longitude": 5.945998,
+        "end_latitude": 45.30214,
+        "end_longitude": 5.952027,
+        "climb_category": 0,
+        "city": "La Pierre",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769824,
+      "resource_state": 2,
+      "name": "Tencin D523 Climb",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 130,
+      "moving_time": 92,
+      "start_date": "2019-09-29T14:45:04Z",
+      "start_date_local": "2019-09-29T16:45:04Z",
+      "distance": 537.9,
+      "start_index": 746,
+      "end_index": 779,
+      "average_cadence": 80.1,
+      "device_watts": false,
+      "average_watts": 180.5,
+      "average_heartrate": 173.9,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 11563173,
+        "resource_state": 2,
+        "name": "Tencin D523 Climb",
+        "activity_type": "Ride",
+        "distance": 537.9,
+        "average_grade": 3.1,
+        "maximum_grade": 6.6,
+        "elevation_high": 252.9,
+        "elevation_low": 236.2,
+        "start_latlng": [
+          45.30405,
+          5.953815
+        ],
+        "end_latlng": [
+          45.308064,
+          5.957675
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.30405,
+        "start_longitude": 5.953815,
+        "end_latitude": 45.308064,
+        "end_longitude": 5.957675,
+        "climb_category": 0,
+        "city": "Tencin",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769898,
+      "resource_state": 2,
+      "name": "Tencin-LaTerrasse",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 274,
+      "moving_time": 274,
+      "start_date": "2019-09-29T14:47:25Z",
+      "start_date_local": "2019-09-29T16:47:25Z",
+      "distance": 2441.0,
+      "start_index": 783,
+      "end_index": 856,
+      "average_cadence": 73.3,
+      "device_watts": false,
+      "average_watts": 194.1,
+      "average_heartrate": 171.5,
+      "max_heartrate": 179.0,
+      "segment": {
+        "id": 7530255,
+        "resource_state": 2,
+        "name": "Tencin-LaTerrasse",
+        "activity_type": "Ride",
+        "distance": 2441.0,
+        "average_grade": -0.0,
+        "maximum_grade": 7.5,
+        "elevation_high": 250.5,
+        "elevation_low": 234.9,
+        "start_latlng": [
+          45.308403,
+          5.956926
+        ],
+        "end_latlng": [
+          45.323202,
+          5.933915
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.308403,
+        "start_longitude": 5.956926,
+        "end_latitude": 45.323202,
+        "end_longitude": 5.933915,
+        "climb_category": 0,
+        "city": "Tencin",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769943,
+      "resource_state": 2,
+      "name": "La Terrasse-Lumbin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 360,
+      "moving_time": 360,
+      "start_date": "2019-09-29T14:52:57Z",
+      "start_date_local": "2019-09-29T16:52:57Z",
+      "distance": 2976.7,
+      "start_index": 869,
+      "end_index": 962,
+      "average_cadence": 75.3,
+      "device_watts": false,
+      "average_watts": 157.1,
+      "average_heartrate": 171.8,
+      "max_heartrate": 179.0,
+      "segment": {
+        "id": 7533324,
+        "resource_state": 2,
+        "name": "La Terrasse-Lumbin",
+        "activity_type": "Ride",
+        "distance": 2976.7,
+        "average_grade": -0.4,
+        "maximum_grade": 6.3,
+        "elevation_high": 262.4,
+        "elevation_low": 236.5,
+        "start_latlng": [
+          45.323014,
+          5.93271
+        ],
+        "end_latlng": [
+          45.304045,
+          5.906701
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.323014,
+        "start_longitude": 5.93271,
+        "end_latitude": 45.304045,
+        "end_longitude": 5.906701,
+        "climb_category": 0,
+        "city": "La Terrasse",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484769919,
+      "resource_state": 2,
+      "name": "Bosse de la Terrasse jusqu'au panneau",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 105,
+      "moving_time": 105,
+      "start_date": "2019-09-29T14:53:35Z",
+      "start_date_local": "2019-09-29T16:53:35Z",
+      "distance": 641.6,
+      "start_index": 879,
+      "end_index": 904,
+      "average_cadence": 66.4,
+      "device_watts": false,
+      "average_watts": 199.3,
+      "average_heartrate": 171.7,
+      "max_heartrate": 178.0,
+      "segment": {
+        "id": 18547865,
+        "resource_state": 2,
+        "name": "Bosse de la Terrasse jusqu'au panneau",
+        "activity_type": "Ride",
+        "distance": 641.6,
+        "average_grade": 2.6,
+        "maximum_grade": 8.7,
+        "elevation_high": 302.6,
+        "elevation_low": 285.4,
+        "start_latlng": [
+          45.320823,
+          5.929819
+        ],
+        "end_latlng": [
+          45.31641,
+          5.924566
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.320823,
+        "start_longitude": 5.929819,
+        "end_latitude": 45.31641,
+        "end_longitude": 5.924566,
+        "climb_category": 0,
+        "city": "La Terrasse",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770015,
+      "resource_state": 2,
+      "name": "Bosse de Montfort jusqu'au panneau",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 102,
+      "moving_time": 102,
+      "start_date": "2019-09-29T14:59:11Z",
+      "start_date_local": "2019-09-29T16:59:11Z",
+      "distance": 611.7,
+      "start_index": 966,
+      "end_index": 987,
+      "average_cadence": 77.7,
+      "device_watts": false,
+      "average_watts": 144.8,
+      "average_heartrate": 177.3,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 18547817,
+        "resource_state": 2,
+        "name": "Bosse de Montfort jusqu'au panneau",
+        "activity_type": "Ride",
+        "distance": 611.7,
+        "average_grade": 2.2,
+        "maximum_grade": 5.5,
+        "elevation_high": 293.8,
+        "elevation_low": 280.2,
+        "start_latlng": [
+          45.303245,
+          5.905307
+        ],
+        "end_latlng": [
+          45.299102,
+          5.899879
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.303245,
+        "start_longitude": 5.905307,
+        "end_latitude": 45.299102,
+        "end_longitude": 5.899879,
+        "climb_category": 0,
+        "city": "Lumbin",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770094,
+      "resource_state": 2,
+      "name": "Le mont fort",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 185,
+      "moving_time": 185,
+      "start_date": "2019-09-29T14:59:17Z",
+      "start_date_local": "2019-09-29T16:59:17Z",
+      "distance": 1262.0,
+      "start_index": 967,
+      "end_index": 1014,
+      "average_cadence": 73.5,
+      "device_watts": false,
+      "average_watts": 152.6,
+      "average_heartrate": 171.9,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 7130146,
+        "resource_state": 2,
+        "name": "Le mont fort",
+        "activity_type": "Ride",
+        "distance": 1262.0,
+        "average_grade": 1.2,
+        "maximum_grade": 6.4,
+        "elevation_high": 253.5,
+        "elevation_low": 237.8,
+        "start_latlng": [
+          45.302892,
+          5.904841
+        ],
+        "end_latlng": [
+          45.294013,
+          5.895205
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.302892,
+        "start_longitude": 5.904841,
+        "end_latitude": 45.294013,
+        "end_longitude": 5.895205,
+        "climb_category": 0,
+        "city": "Crolles",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770134,
+      "resource_state": 2,
+      "name": "Lumbin-Crolles",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 350,
+      "moving_time": 350,
+      "start_date": "2019-09-29T14:59:17Z",
+      "start_date_local": "2019-09-29T16:59:17Z",
+      "distance": 2482.4,
+      "start_index": 967,
+      "end_index": 1069,
+      "average_cadence": 74.1,
+      "device_watts": false,
+      "average_watts": 145.3,
+      "average_heartrate": 170.9,
+      "max_heartrate": 182.0,
+      "segment": {
+        "id": 7533332,
+        "resource_state": 2,
+        "name": "Lumbin-Crolles",
+        "activity_type": "Ride",
+        "distance": 2482.4,
+        "average_grade": 0.6,
+        "maximum_grade": 6.8,
+        "elevation_high": 255.5,
+        "elevation_low": 238.3,
+        "start_latlng": [
+          45.30287,
+          5.904744
+        ],
+        "end_latlng": [
+          45.285571,
+          5.884974
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.30287,
+        "start_longitude": 5.904744,
+        "end_latitude": 45.285571,
+        "end_longitude": 5.884974,
+        "climb_category": 0,
+        "city": "Crolles",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770313,
+      "resource_state": 2,
+      "name": "Barratière->Crolles Hill",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 803,
+      "moving_time": 803,
+      "start_date": "2019-09-29T15:03:23Z",
+      "start_date_local": "2019-09-29T17:03:23Z",
+      "distance": 4401.6,
+      "start_index": 1029,
+      "end_index": 1242,
+      "average_cadence": 77.5,
+      "device_watts": false,
+      "average_watts": 152.8,
+      "average_heartrate": 175.7,
+      "max_heartrate": 184.0,
+      "segment": {
+        "id": 11330398,
+        "resource_state": 2,
+        "name": "Barratière->Crolles Hill",
+        "activity_type": "Ride",
+        "distance": 4401.6,
+        "average_grade": 2.3,
+        "maximum_grade": 9.7,
+        "elevation_high": 341.3,
+        "elevation_low": 238.3,
+        "start_latlng": [
+          45.290485,
+          5.89087
+        ],
+        "end_latlng": [
+          45.260555,
+          5.85477
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.290485,
+        "start_longitude": 5.89087,
+        "end_latitude": 45.260555,
+        "end_longitude": 5.85477,
+        "climb_category": 0,
+        "city": "Crolles",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770159,
+      "resource_state": 2,
+      "name": "Faux Plat entrée de Crolles",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 95,
+      "moving_time": 95,
+      "start_date": "2019-09-29T15:03:44Z",
+      "start_date_local": "2019-09-29T17:03:44Z",
+      "distance": 636.8,
+      "start_index": 1037,
+      "end_index": 1073,
+      "average_cadence": 77.7,
+      "device_watts": false,
+      "average_watts": 187.1,
+      "average_heartrate": 171.4,
+      "max_heartrate": 176.0,
+      "segment": {
+        "id": 12474037,
+        "resource_state": 2,
+        "name": "Faux Plat entrée de Crolles",
+        "activity_type": "Ride",
+        "distance": 636.8,
+        "average_grade": 2.1,
+        "maximum_grade": 5.8,
+        "elevation_high": 255.3,
+        "elevation_low": 240.9,
+        "start_latlng": [
+          45.289323,
+          5.889508
+        ],
+        "end_latlng": [
+          45.284993,
+          5.884263
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.289323,
+        "start_longitude": 5.889508,
+        "end_latitude": 45.284993,
+        "end_longitude": 5.884263,
+        "climb_category": 0,
+        "city": "Crolles",
+        "state": "Auvergne Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770205,
+      "resource_state": 2,
+      "name": "crolles-Bernin Go man !!!",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 422,
+      "moving_time": 422,
+      "start_date": "2019-09-29T15:04:27Z",
+      "start_date_local": "2019-09-29T17:04:27Z",
+      "distance": 2620.9,
+      "start_index": 1048,
+      "end_index": 1166,
+      "average_cadence": 77.9,
+      "device_watts": false,
+      "average_watts": 151.2,
+      "average_heartrate": 176.0,
+      "max_heartrate": 180.0,
+      "segment": {
+        "id": 4557341,
+        "resource_state": 2,
+        "name": "crolles-Bernin Go man !!!",
+        "activity_type": "Ride",
+        "distance": 2620.9,
+        "average_grade": 3.8,
+        "maximum_grade": 9.9,
+        "elevation_high": -12.0,
+        "elevation_low": -111.2,
+        "start_latlng": [
+          45.287146,
+          5.886728
+        ],
+        "end_latlng": [
+          45.268964,
+          5.865999
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.287146,
+        "start_longitude": 5.886728,
+        "end_latitude": 45.268964,
+        "end_longitude": 5.865999,
+        "climb_category": 1,
+        "city": "Crolles",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770252,
+      "resource_state": 2,
+      "name": "Bosse de Bernin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 226,
+      "moving_time": 226,
+      "start_date": "2019-09-29T15:09:49Z",
+      "start_date_local": "2019-09-29T17:09:49Z",
+      "distance": 923.9,
+      "start_index": 1138,
+      "end_index": 1196,
+      "average_cadence": 78.5,
+      "device_watts": false,
+      "average_watts": 172.4,
+      "average_heartrate": 177.8,
+      "max_heartrate": 184.0,
+      "segment": {
+        "id": 15842481,
+        "resource_state": 2,
+        "name": "Bosse de Bernin",
+        "activity_type": "Ride",
+        "distance": 923.9,
+        "average_grade": 4.2,
+        "maximum_grade": 8.4,
+        "elevation_high": 324.4,
+        "elevation_low": 284.8,
+        "start_latlng": [
+          45.272477,
+          5.869277
+        ],
+        "end_latlng": [
+          45.266145,
+          5.861898
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.272477,
+        "start_longitude": 5.869277,
+        "end_latitude": 45.266145,
+        "end_longitude": 5.861898,
+        "climb_category": 0,
+        "city": "Bernin",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770458,
+      "resource_state": 2,
+      "name": "Bosse Bernin=>St Nazaire",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 458,
+      "moving_time": 458,
+      "start_date": "2019-09-29T15:09:49Z",
+      "start_date_local": "2019-09-29T17:09:49Z",
+      "distance": 1958.7,
+      "start_index": 1138,
+      "end_index": 1252,
+      "average_cadence": 77.1,
+      "device_watts": false,
+      "average_watts": 152.9,
+      "average_heartrate": 176.5,
+      "max_heartrate": 184.0,
+      "segment": {
+        "id": 12215258,
+        "resource_state": 2,
+        "name": "Bosse Bernin=>St Nazaire",
+        "activity_type": "Ride",
+        "distance": 1958.7,
+        "average_grade": 3.6,
+        "maximum_grade": 10.6,
+        "elevation_high": 344.9,
+        "elevation_low": 273.6,
+        "start_latlng": [
+          45.27255,
+          5.869337
+        ],
+        "end_latlng": [
+          45.259477,
+          5.853043
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.27255,
+        "start_longitude": 5.869337,
+        "end_latitude": 45.259477,
+        "end_longitude": 5.853043,
+        "climb_category": 0,
+        "city": "Bernin",
+        "state": "Auvergne Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770350,
+      "resource_state": 2,
+      "name": "Chemin de Rivasson - Partie montante depuis rond-point de Bernin",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 210,
+      "moving_time": 210,
+      "start_date": "2019-09-29T15:13:50Z",
+      "start_date_local": "2019-09-29T17:13:50Z",
+      "distance": 920.1,
+      "start_index": 1202,
+      "end_index": 1250,
+      "average_cadence": 75.7,
+      "device_watts": false,
+      "average_watts": 135.1,
+      "average_heartrate": 175.3,
+      "max_heartrate": 179.0,
+      "segment": {
+        "id": 17334798,
+        "resource_state": 2,
+        "name": "Chemin de Rivasson - Partie montante depuis rond-point de Bernin",
+        "activity_type": "Ride",
+        "distance": 920.1,
+        "average_grade": 2.7,
+        "maximum_grade": 5.9,
+        "elevation_high": 344.8,
+        "elevation_low": 317.0,
+        "start_latlng": [
+          45.265872,
+          5.861373
+        ],
+        "end_latlng": [
+          45.259733,
+          5.853467
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.265872,
+        "start_longitude": 5.861373,
+        "end_latitude": 45.259733,
+        "end_longitude": 5.853467,
+        "climb_category": 0,
+        "city": "Bernin",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2692528940404179033,
+      "resource_state": 2,
+      "name": "D1090 into Saint Nazaire",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 201,
+      "moving_time": 201,
+      "start_date": "2019-09-29T15:15:24Z",
+      "start_date_local": "2019-09-29T17:15:24Z",
+      "distance": 1111.7,
+      "start_index": 1224,
+      "end_index": 1267,
+      "average_cadence": 75.0,
+      "device_watts": false,
+      "average_watts": 123.5,
+      "average_heartrate": 171.5,
+      "max_heartrate": 177.0,
+      "segment": {
+        "id": 23819470,
+        "resource_state": 2,
+        "name": "D1090 into Saint Nazaire",
+        "activity_type": "Ride",
+        "distance": 1111.7,
+        "average_grade": 1.5,
+        "maximum_grade": 4.1,
+        "elevation_high": 348.3,
+        "elevation_low": 330.0,
+        "start_latlng": [
+          45.263231,
+          5.858086
+        ],
+        "end_latlng": [
+          45.256459,
+          5.847809
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.263231,
+        "start_longitude": 5.858086,
+        "end_latitude": 45.256459,
+        "end_longitude": 5.847809,
+        "climb_category": 0,
+        "city": "Bernin",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770755,
+      "resource_state": 2,
+      "name": "D1090 St Nazaire",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 72,
+      "moving_time": 72,
+      "start_date": "2019-09-29T15:18:56Z",
+      "start_date_local": "2019-09-29T17:18:56Z",
+      "distance": 583.7,
+      "start_index": 1270,
+      "end_index": 1285,
+      "average_cadence": 76.3,
+      "device_watts": false,
+      "average_watts": 116.4,
+      "average_heartrate": 167.9,
+      "max_heartrate": 170.0,
+      "segment": {
+        "id": 10131631,
+        "resource_state": 2,
+        "name": "D1090 St Nazaire",
+        "activity_type": "Ride",
+        "distance": 583.7,
+        "average_grade": -0.1,
+        "maximum_grade": 3.7,
+        "elevation_high": 348.4,
+        "elevation_low": 344.9,
+        "start_latlng": [
+          45.25628,
+          5.84667
+        ],
+        "end_latlng": [
+          45.254204,
+          5.840108
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.25628,
+        "start_longitude": 5.84667,
+        "end_latitude": 45.254204,
+        "end_longitude": 5.840108,
+        "climb_category": 0,
+        "city": "Saint-Nazaire-les-Eymes",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770819,
+      "resource_state": 2,
+      "name": "Voie en S descent",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 196,
+      "moving_time": 196,
+      "start_date": "2019-09-29T15:23:22Z",
+      "start_date_local": "2019-09-29T17:23:22Z",
+      "distance": 2734.7,
+      "start_index": 1346,
+      "end_index": 1448,
+      "average_cadence": 90.2,
+      "device_watts": false,
+      "average_watts": 222.2,
+      "average_heartrate": 177.8,
+      "max_heartrate": 186.0,
+      "segment": {
+        "id": 6221533,
+        "resource_state": 2,
+        "name": "Voie en S descent",
+        "activity_type": "Ride",
+        "distance": 2734.7,
+        "average_grade": -3.7,
+        "maximum_grade": 1.3,
+        "elevation_high": 322.2,
+        "elevation_low": 218.0,
+        "start_latlng": [
+          45.24397,
+          5.827547
+        ],
+        "end_latlng": [
+          45.225063,
+          5.820118
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.24397,
+        "start_longitude": 5.827547,
+        "end_latitude": 45.225063,
+        "end_longitude": 5.820118,
+        "climb_category": 0,
+        "city": "Saint Ismier",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2742349899261378428,
+      "resource_state": 2,
+      "name": "KM Gendarmerie",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 87,
+      "moving_time": 87,
+      "start_date": "2019-09-29T15:23:51Z",
+      "start_date_local": "2019-09-29T17:23:51Z",
+      "distance": 1187.7,
+      "start_index": 1368,
+      "end_index": 1406,
+      "average_cadence": 93.5,
+      "device_watts": false,
+      "average_watts": 289.7,
+      "average_heartrate": 176.5,
+      "max_heartrate": 185.0,
+      "segment": {
+        "id": 25769110,
+        "resource_state": 2,
+        "name": "KM Gendarmerie",
+        "activity_type": "Ride",
+        "distance": 1187.7,
+        "average_grade": -2.9,
+        "maximum_grade": 0.7,
+        "elevation_high": 290.2,
+        "elevation_low": 255.0,
+        "start_latlng": [
+          45.24121,
+          5.830919
+        ],
+        "end_latlng": [
+          45.233623,
+          5.824579
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.24121,
+        "start_longitude": 5.830919,
+        "end_latitude": 45.233623,
+        "end_longitude": 5.824579,
+        "climb_category": 0,
+        "city": "Saint-Ismier",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 2742350234495967680,
+      "resource_state": 2,
+      "name": "Sprint voie en S",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 59,
+      "moving_time": 59,
+      "start_date": "2019-09-29T15:24:19Z",
+      "start_date_local": "2019-09-29T17:24:19Z",
+      "distance": 690.0,
+      "start_index": 1389,
+      "end_index": 1406,
+      "average_cadence": 86.7,
+      "device_watts": false,
+      "average_watts": 248.8,
+      "average_heartrate": 180.7,
+      "max_heartrate": 185.0,
+      "segment": {
+        "id": 25769147,
+        "resource_state": 2,
+        "name": "Sprint voie en S",
+        "activity_type": "Ride",
+        "distance": 690.0,
+        "average_grade": -0.1,
+        "maximum_grade": 0.7,
+        "elevation_high": 256.4,
+        "elevation_low": 255.0,
+        "start_latlng": [
+          45.237285,
+          5.831666
+        ],
+        "end_latlng": [
+          45.233623,
+          5.824579
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.237285,
+        "start_longitude": 5.831666,
+        "end_latitude": 45.233623,
+        "end_longitude": 5.824579,
+        "climb_category": 0,
+        "city": "Saint-Ismier",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770778,
+      "resource_state": 2,
+      "name": "Fin voie en S descente",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 58,
+      "moving_time": 58,
+      "start_date": "2019-09-29T15:25:34Z",
+      "start_date_local": "2019-09-29T17:25:34Z",
+      "distance": 874.3,
+      "start_index": 1416,
+      "end_index": 1446,
+      "average_cadence": 91.8,
+      "device_watts": false,
+      "average_watts": 253.0,
+      "average_heartrate": 183.2,
+      "max_heartrate": 186.0,
+      "segment": {
+        "id": 7478833,
+        "resource_state": 2,
+        "name": "Fin voie en S descente",
+        "activity_type": "Ride",
+        "distance": 874.3,
+        "average_grade": -3.2,
+        "maximum_grade": 4.2,
+        "elevation_high": 247.1,
+        "elevation_low": 217.6,
+        "start_latlng": [
+          45.231953,
+          5.823058
+        ],
+        "end_latlng": [
+          45.22555,
+          5.820352
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.231953,
+        "start_longitude": 5.823058,
+        "end_latitude": 45.22555,
+        "end_longitude": 5.820352,
+        "climb_category": 0,
+        "city": "Montbonnot Saint Martin",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770847,
+      "resource_state": 2,
+      "name": "Route Domene Short - Dir domene",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 84,
+      "moving_time": 84,
+      "start_date": "2019-09-29T15:27:58Z",
+      "start_date_local": "2019-09-29T17:27:58Z",
+      "distance": 863.6,
+      "start_index": 1479,
+      "end_index": 1499,
+      "average_cadence": 81.6,
+      "device_watts": false,
+      "average_watts": 244.5,
+      "average_heartrate": 170.4,
+      "max_heartrate": 173.0,
+      "segment": {
+        "id": 9719665,
+        "resource_state": 2,
+        "name": "Route Domene Short - Dir domene",
+        "activity_type": "Ride",
+        "distance": 863.6,
+        "average_grade": -0.5,
+        "maximum_grade": 1.5,
+        "elevation_high": 222.4,
+        "elevation_low": 216.8,
+        "start_latlng": [
+          45.22124,
+          5.822732
+        ],
+        "end_latlng": [
+          45.21411,
+          5.826065
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.22124,
+        "start_longitude": 5.822732,
+        "end_latitude": 45.21411,
+        "end_longitude": 5.826065,
+        "climb_category": 0,
+        "city": "Montbonnot-Saint-Martin",
+        "state": "Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770994,
+      "resource_state": 2,
+      "name": "Cyclist Lane Isere-dir Grenoble-Part 4",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 362,
+      "moving_time": 362,
+      "start_date": "2019-09-29T15:30:50Z",
+      "start_date_local": "2019-09-29T17:30:50Z",
+      "distance": 3295.7,
+      "start_index": 1528,
+      "end_index": 1616,
+      "average_cadence": 81.4,
+      "device_watts": false,
+      "average_watts": 160.0,
+      "average_heartrate": 176.8,
+      "max_heartrate": 186.0,
+      "segment": {
+        "id": 7835723,
+        "resource_state": 2,
+        "name": "Cyclist Lane Isere-dir Grenoble-Part 4",
+        "activity_type": "Ride",
+        "distance": 3295.7,
+        "average_grade": -0.3,
+        "maximum_grade": 14.8,
+        "elevation_high": 276.5,
+        "elevation_low": 263.4,
+        "start_latlng": [
+          45.211318,
+          5.828817
+        ],
+        "end_latlng": [
+          45.204002,
+          5.795626
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.211318,
+        "start_longitude": 5.828817,
+        "end_latitude": 45.204002,
+        "end_longitude": 5.795626,
+        "climb_category": 0,
+        "city": "Domène",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484770873,
+      "resource_state": 2,
+      "name": "Sprint du virage",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 55,
+      "moving_time": 55,
+      "start_date": "2019-09-29T15:33:02Z",
+      "start_date_local": "2019-09-29T17:33:02Z",
+      "distance": 512.5,
+      "start_index": 1557,
+      "end_index": 1572,
+      "average_cadence": 81.3,
+      "device_watts": false,
+      "average_watts": 164.9,
+      "average_heartrate": 176.1,
+      "max_heartrate": 180.0,
+      "segment": {
+        "id": 20750685,
+        "resource_state": 2,
+        "name": "Sprint du virage",
+        "activity_type": "Ride",
+        "distance": 512.5,
+        "average_grade": -0.2,
+        "maximum_grade": 0.3,
+        "elevation_high": 219.3,
+        "elevation_low": 218.5,
+        "start_latlng": [
+          45.203729,
+          5.819124
+        ],
+        "end_latlng": [
+          45.206698,
+          5.814277
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.203729,
+        "start_longitude": 5.819124,
+        "end_latitude": 45.206698,
+        "end_longitude": 5.814277,
+        "climb_category": 0,
+        "city": "Domène",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 1,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 1
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 77484771033,
+      "resource_state": 2,
+      "name": "Sprint Descendant Pont autoroute Chemin agriculteur",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 62,
+      "moving_time": 62,
+      "start_date": "2019-09-29T15:38:51Z",
+      "start_date_local": "2019-09-29T17:38:51Z",
+      "distance": 436.6,
+      "start_index": 1656,
+      "end_index": 1676,
+      "average_cadence": 69.0,
+      "device_watts": false,
+      "average_watts": 113.2,
+      "average_heartrate": 162.3,
+      "max_heartrate": 165.0,
+      "segment": {
+        "id": 5405147,
+        "resource_state": 2,
+        "name": "Sprint Descendant Pont autoroute Chemin agriculteur",
+        "activity_type": "Ride",
+        "distance": 436.6,
+        "average_grade": 0.5,
+        "maximum_grade": 5.7,
+        "elevation_high": 216.2,
+        "elevation_low": 212.5,
+        "start_latlng": [
+          45.204754,
+          5.78875
+        ],
+        "end_latlng": [
+          45.203776,
+          5.783486
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.204754,
+        "start_longitude": 5.78875,
+        "end_latitude": 45.203776,
+        "end_longitude": 5.783486,
+        "climb_category": 0,
+        "city": "Meylan",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": null,
+      "achievements": [],
+      "hidden": false
+    },
+    {
+      "id": 77484771090,
+      "resource_state": 2,
+      "name": "sprint long île d'amour",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 44,
+      "moving_time": 44,
+      "start_date": "2019-09-29T15:42:54Z",
+      "start_date_local": "2019-09-29T17:42:54Z",
+      "distance": 229.3,
+      "start_index": 1728,
+      "end_index": 1741,
+      "average_cadence": 51.2,
+      "device_watts": false,
+      "average_watts": 31.8,
+      "average_heartrate": 156.6,
+      "max_heartrate": 164.0,
+      "segment": {
+        "id": 5969477,
+        "resource_state": 2,
+        "name": "sprint long île d'amour",
+        "activity_type": "Ride",
+        "distance": 229.3,
+        "average_grade": 3.1,
+        "maximum_grade": 4.8,
+        "elevation_high": 227.0,
+        "elevation_low": 219.8,
+        "start_latlng": [
+          45.200548,
+          5.770938
+        ],
+        "end_latlng": [
+          45.202572,
+          5.770444
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.200548,
+        "start_longitude": 5.770938,
+        "end_latitude": 45.202572,
+        "end_longitude": 5.770444,
+        "climb_category": 0,
+        "city": "Meylan",
+        "state": "RA",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 1,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 1
+        }
+      ],
+      "hidden": false
+    },
+    {
+      "id": 77484771109,
+      "resource_state": 2,
+      "name": "Piste cyclable secrete",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 85,
+      "moving_time": 85,
+      "start_date": "2019-09-29T15:44:21Z",
+      "start_date_local": "2019-09-29T17:44:21Z",
+      "distance": 430.7,
+      "start_index": 1759,
+      "end_index": 1787,
+      "average_cadence": 68.7,
+      "device_watts": false,
+      "average_watts": 86.0,
+      "average_heartrate": 143.5,
+      "max_heartrate": 145.0,
+      "segment": {
+        "id": 21068062,
+        "resource_state": 2,
+        "name": "Piste cyclable secrete",
+        "activity_type": "Ride",
+        "distance": 430.7,
+        "average_grade": 0.8,
+        "maximum_grade": 3.1,
+        "elevation_high": 217.7,
+        "elevation_low": 212.8,
+        "start_latlng": [
+          45.203252,
+          5.768144
+        ],
+        "end_latlng": [
+          45.205509,
+          5.76539
+        ],
+        "elevation_profile": null,
+        "start_latitude": 45.203252,
+        "start_longitude": 5.768144,
+        "end_latitude": 45.205509,
+        "end_longitude": 5.76539,
+        "climb_category": 0,
+        "city": "Meylan",
+        "state": "Auvergne-Rhône-Alpes",
+        "country": "France",
+        "private": false,
+        "hazardous": false,
+        "starred": false
+      },
+      "pr_rank": 2,
+      "achievements": [
+        {
+          "type_id": 3,
+          "type": "pr",
+          "rank": 2
+        }
+      ],
+      "hidden": false
+    }
+  ],
+  "splits_metric": [
+    {
+      "distance": 1054.1,
+      "elapsed_time": 157,
+      "elevation_difference": -2.2,
+      "moving_time": 157,
+      "split": 1,
+      "average_speed": 6.71,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 133.45222929936307,
+      "pace_zone": 0
+    },
+    {
+      "distance": 981.4,
+      "elapsed_time": 111,
+      "elevation_difference": -2.0,
+      "moving_time": 111,
+      "split": 2,
+      "average_speed": 8.84,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 151.04504504504504,
+      "pace_zone": 0
+    },
+    {
+      "distance": 969.2,
+      "elapsed_time": 118,
+      "elevation_difference": 0.9,
+      "moving_time": 118,
+      "split": 3,
+      "average_speed": 8.21,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 154.3728813559322,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1051.0,
+      "elapsed_time": 118,
+      "elevation_difference": 2.9,
+      "moving_time": 118,
+      "split": 4,
+      "average_speed": 8.91,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 158.60169491525423,
+      "pace_zone": 0
+    },
+    {
+      "distance": 970.6,
+      "elapsed_time": 115,
+      "elevation_difference": 0.0,
+      "moving_time": 115,
+      "split": 5,
+      "average_speed": 8.44,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 152.90434782608696,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1002.2,
+      "elapsed_time": 121,
+      "elevation_difference": 1.7,
+      "moving_time": 121,
+      "split": 6,
+      "average_speed": 8.28,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 148.4793388429752,
+      "pace_zone": 0
+    },
+    {
+      "distance": 977.1,
+      "elapsed_time": 132,
+      "elevation_difference": 3.1,
+      "moving_time": 132,
+      "split": 7,
+      "average_speed": 7.4,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 148.92424242424244,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1013.7,
+      "elapsed_time": 132,
+      "elevation_difference": -4.7,
+      "moving_time": 132,
+      "split": 8,
+      "average_speed": 7.68,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 148.22727272727272,
+      "pace_zone": 0
+    },
+    {
+      "distance": 982.7,
+      "elapsed_time": 112,
+      "elevation_difference": 3.3,
+      "moving_time": 112,
+      "split": 9,
+      "average_speed": 8.77,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 157.70535714285714,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1050.2,
+      "elapsed_time": 126,
+      "elevation_difference": 3.4,
+      "moving_time": 126,
+      "split": 10,
+      "average_speed": 8.33,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 154.5873015873016,
+      "pace_zone": 0
+    },
+    {
+      "distance": 998.3,
+      "elapsed_time": 156,
+      "elevation_difference": -1.1,
+      "moving_time": 138,
+      "split": 11,
+      "average_speed": 7.23,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 158.8913043478261,
+      "pace_zone": 0
+    },
+    {
+      "distance": 982.9,
+      "elapsed_time": 101,
+      "elevation_difference": -1.4,
+      "moving_time": 101,
+      "split": 12,
+      "average_speed": 9.73,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 163.73267326732673,
+      "pace_zone": 0
+    },
+    {
+      "distance": 988.5,
+      "elapsed_time": 102,
+      "elevation_difference": 9.9,
+      "moving_time": 102,
+      "split": 13,
+      "average_speed": 9.69,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 170.19607843137254,
+      "pace_zone": 0
+    },
+    {
+      "distance": 989.1,
+      "elapsed_time": 110,
+      "elevation_difference": 0.2,
+      "moving_time": 110,
+      "split": 14,
+      "average_speed": 8.99,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 180.55454545454546,
+      "pace_zone": 0
+    },
+    {
+      "distance": 992.0,
+      "elapsed_time": 198,
+      "elevation_difference": 25.0,
+      "moving_time": 198,
+      "split": 15,
+      "average_speed": 5.01,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 167.68686868686868,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1014.5,
+      "elapsed_time": 99,
+      "elevation_difference": -25.2,
+      "moving_time": 99,
+      "split": 16,
+      "average_speed": 10.25,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 147.86868686868686,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1000.3,
+      "elapsed_time": 153,
+      "elevation_difference": 1.0,
+      "moving_time": 153,
+      "split": 17,
+      "average_speed": 6.54,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 157.71241830065358,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1005.4,
+      "elapsed_time": 106,
+      "elevation_difference": -0.7,
+      "moving_time": 106,
+      "split": 18,
+      "average_speed": 9.48,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 158.28301886792454,
+      "pace_zone": 0
+    },
+    {
+      "distance": 983.9,
+      "elapsed_time": 133,
+      "elevation_difference": 6.5,
+      "moving_time": 133,
+      "split": 19,
+      "average_speed": 7.4,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 168.81203007518798,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1017.2,
+      "elapsed_time": 96,
+      "elevation_difference": -7.2,
+      "moving_time": 96,
+      "split": 20,
+      "average_speed": 10.6,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 163.75,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1012.6,
+      "elapsed_time": 101,
+      "elevation_difference": 3.1,
+      "moving_time": 101,
+      "split": 21,
+      "average_speed": 10.03,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 175.5049504950495,
+      "pace_zone": 0
+    },
+    {
+      "distance": 970.5,
+      "elapsed_time": 113,
+      "elevation_difference": -1.2,
+      "moving_time": 113,
+      "split": 22,
+      "average_speed": 8.59,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 167.65486725663717,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1011.7,
+      "elapsed_time": 118,
+      "elevation_difference": 14.4,
+      "moving_time": 118,
+      "split": 23,
+      "average_speed": 8.57,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 161.55084745762713,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1012.7,
+      "elapsed_time": 165,
+      "elevation_difference": -8.1,
+      "moving_time": 127,
+      "split": 24,
+      "average_speed": 7.97,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 171.944,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1011.3,
+      "elapsed_time": 116,
+      "elevation_difference": 3.5,
+      "moving_time": 116,
+      "split": 25,
+      "average_speed": 8.72,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 172.16379310344828,
+      "pace_zone": 0
+    },
+    {
+      "distance": 977.1,
+      "elapsed_time": 171,
+      "elevation_difference": 8.3,
+      "moving_time": 142,
+      "split": 26,
+      "average_speed": 6.88,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 171.49295774647888,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1000.7,
+      "elapsed_time": 143,
+      "elevation_difference": 12.0,
+      "moving_time": 143,
+      "split": 27,
+      "average_speed": 7.0,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 169.67132867132867,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1004.4,
+      "elapsed_time": 119,
+      "elevation_difference": -12.0,
+      "moving_time": 119,
+      "split": 28,
+      "average_speed": 8.44,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 171.35294117647058,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1037.1,
+      "elapsed_time": 99,
+      "elevation_difference": -6.4,
+      "moving_time": 99,
+      "split": 29,
+      "average_speed": 10.48,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 176.63636363636363,
+      "pace_zone": 0
+    },
+    {
+      "distance": 940.5,
+      "elapsed_time": 138,
+      "elevation_difference": 2.8,
+      "moving_time": 138,
+      "split": 30,
+      "average_speed": 6.82,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 175.3985507246377,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1031.4,
+      "elapsed_time": 130,
+      "elevation_difference": -4.3,
+      "moving_time": 130,
+      "split": 31,
+      "average_speed": 7.93,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 167.42307692307693,
+      "pace_zone": 0
+    },
+    {
+      "distance": 977.2,
+      "elapsed_time": 150,
+      "elevation_difference": 19.0,
+      "moving_time": 150,
+      "split": 32,
+      "average_speed": 6.51,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 171.95333333333335,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1008.8,
+      "elapsed_time": 131,
+      "elevation_difference": 4.4,
+      "moving_time": 131,
+      "split": 33,
+      "average_speed": 7.7,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 176.8091603053435,
+      "pace_zone": 0
+    },
+    {
+      "distance": 985.1,
+      "elapsed_time": 173,
+      "elevation_difference": 23.3,
+      "moving_time": 173,
+      "split": 34,
+      "average_speed": 5.69,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 175.84393063583815,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1021.7,
+      "elapsed_time": 264,
+      "elevation_difference": 41.6,
+      "moving_time": 264,
+      "split": 35,
+      "average_speed": 3.87,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 178.45075757575756,
+      "pace_zone": 0
+    },
+    {
+      "distance": 976.3,
+      "elapsed_time": 178,
+      "elevation_difference": 18.4,
+      "moving_time": 178,
+      "split": 36,
+      "average_speed": 5.48,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 172.02247191011236,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1028.5,
+      "elapsed_time": 124,
+      "elevation_difference": -13.3,
+      "moving_time": 124,
+      "split": 37,
+      "average_speed": 8.29,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 165.94354838709677,
+      "pace_zone": 0
+    },
+    {
+      "distance": 979.6,
+      "elapsed_time": 115,
+      "elevation_difference": -8.6,
+      "moving_time": 115,
+      "split": 38,
+      "average_speed": 8.52,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 162.24347826086955,
+      "pace_zone": 0
+    },
+    {
+      "distance": 992.7,
+      "elapsed_time": 97,
+      "elevation_difference": -48.3,
+      "moving_time": 97,
+      "split": 39,
+      "average_speed": 10.23,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 169.90721649484536,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1025.3,
+      "elapsed_time": 79,
+      "elevation_difference": -22.0,
+      "moving_time": 79,
+      "split": 40,
+      "average_speed": 12.98,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 179.126582278481,
+      "pace_zone": 0
+    },
+    {
+      "distance": 972.3,
+      "elapsed_time": 67,
+      "elevation_difference": -36.9,
+      "moving_time": 67,
+      "split": 41,
+      "average_speed": 14.51,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 183.55223880597015,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1019.8,
+      "elapsed_time": 127,
+      "elevation_difference": 1.0,
+      "moving_time": 127,
+      "split": 42,
+      "average_speed": 8.03,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 172.0551181102362,
+      "pace_zone": 0
+    },
+    {
+      "distance": 984.7,
+      "elapsed_time": 120,
+      "elevation_difference": -0.3,
+      "moving_time": 120,
+      "split": 43,
+      "average_speed": 8.21,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 165.74166666666667,
+      "pace_zone": 0
+    },
+    {
+      "distance": 998.5,
+      "elapsed_time": 117,
+      "elevation_difference": 0.4,
+      "moving_time": 117,
+      "split": 44,
+      "average_speed": 8.53,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 170.13675213675214,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1007.3,
+      "elapsed_time": 108,
+      "elevation_difference": -1.9,
+      "moving_time": 108,
+      "split": 45,
+      "average_speed": 9.33,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 177.50925925925927,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1041.3,
+      "elapsed_time": 113,
+      "elevation_difference": 3.4,
+      "moving_time": 113,
+      "split": 46,
+      "average_speed": 9.22,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 181.141592920354,
+      "pace_zone": 0
+    },
+    {
+      "distance": 975.6,
+      "elapsed_time": 128,
+      "elevation_difference": -5.0,
+      "moving_time": 128,
+      "split": 47,
+      "average_speed": 7.62,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 170.7421875,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1003.6,
+      "elapsed_time": 136,
+      "elevation_difference": -2.4,
+      "moving_time": 136,
+      "split": 48,
+      "average_speed": 7.38,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 162.7941176470588,
+      "pace_zone": 0
+    },
+    {
+      "distance": 987.8,
+      "elapsed_time": 147,
+      "elevation_difference": 2.6,
+      "moving_time": 147,
+      "split": 49,
+      "average_speed": 6.72,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 157.3877551020408,
+      "pace_zone": 0
+    },
+    {
+      "distance": 991.3,
+      "elapsed_time": 229,
+      "elevation_difference": 3.2,
+      "moving_time": 194,
+      "split": 50,
+      "average_speed": 5.11,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 147.93298969072166,
+      "pace_zone": 0
+    },
+    {
+      "distance": 232.8,
+      "elapsed_time": 82,
+      "elevation_difference": 1.2,
+      "moving_time": 82,
+      "split": 51,
+      "average_speed": 2.84,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 138.3780487804878,
+      "pace_zone": 0
+    }
+  ],
+  "splits_standard": [
+    {
+      "distance": 1625.1,
+      "elapsed_time": 220,
+      "elevation_difference": 2.4,
+      "moving_time": 220,
+      "split": 1,
+      "average_speed": 7.39,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 137.7409090909091,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1596.6,
+      "elapsed_time": 189,
+      "elevation_difference": -5.4,
+      "moving_time": 189,
+      "split": 2,
+      "average_speed": 8.45,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 155.36507936507937,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1617.3,
+      "elapsed_time": 184,
+      "elevation_difference": 2.5,
+      "moving_time": 184,
+      "split": 3,
+      "average_speed": 8.79,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 155.75,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1619.8,
+      "elapsed_time": 215,
+      "elevation_difference": 3.5,
+      "moving_time": 215,
+      "split": 4,
+      "average_speed": 7.53,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 148.52093023255813,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1621.2,
+      "elapsed_time": 202,
+      "elevation_difference": -2.6,
+      "moving_time": 202,
+      "split": 5,
+      "average_speed": 8.03,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 148.72277227722773,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1590.3,
+      "elapsed_time": 184,
+      "elevation_difference": 3.8,
+      "moving_time": 184,
+      "split": 6,
+      "average_speed": 8.64,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 156.4891304347826,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1612.9,
+      "elapsed_time": 227,
+      "elevation_difference": 0.1,
+      "moving_time": 209,
+      "split": 7,
+      "average_speed": 7.72,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 157.82775119617224,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1616.0,
+      "elapsed_time": 166,
+      "elevation_difference": 8.7,
+      "moving_time": 166,
+      "split": 8,
+      "average_speed": 9.73,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 167.25903614457832,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1588.0,
+      "elapsed_time": 199,
+      "elevation_difference": 13.6,
+      "moving_time": 199,
+      "split": 9,
+      "average_speed": 7.98,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 176.66331658291458,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1622.5,
+      "elapsed_time": 231,
+      "elevation_difference": -12.8,
+      "moving_time": 231,
+      "split": 10,
+      "average_speed": 7.02,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 157.6147186147186,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1595.3,
+      "elapsed_time": 214,
+      "elevation_difference": -1.5,
+      "moving_time": 214,
+      "split": 11,
+      "average_speed": 7.45,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 157.42990654205607,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1660.3,
+      "elapsed_time": 202,
+      "elevation_difference": 0.2,
+      "moving_time": 202,
+      "split": 12,
+      "average_speed": 8.22,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 166.6881188118812,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1598.7,
+      "elapsed_time": 156,
+      "elevation_difference": 3.9,
+      "moving_time": 156,
+      "split": 13,
+      "average_speed": 10.25,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 171.32692307692307,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1600.8,
+      "elapsed_time": 178,
+      "elevation_difference": 2.6,
+      "moving_time": 178,
+      "split": 14,
+      "average_speed": 8.99,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 165.5,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1620.6,
+      "elapsed_time": 238,
+      "elevation_difference": 1.7,
+      "moving_time": 200,
+      "split": 15,
+      "average_speed": 8.1,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 169.18686868686868,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1579.3,
+      "elapsed_time": 192,
+      "elevation_difference": 9.2,
+      "moving_time": 192,
+      "split": 16,
+      "average_speed": 8.23,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 172.52604166666666,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1606.6,
+      "elapsed_time": 282,
+      "elevation_difference": 14.1,
+      "moving_time": 253,
+      "split": 17,
+      "average_speed": 6.35,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 169.75494071146244,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1609.5,
+      "elapsed_time": 153,
+      "elevation_difference": -14.5,
+      "moving_time": 153,
+      "split": 18,
+      "average_speed": 10.52,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 174.81699346405227,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1611.0,
+      "elapsed_time": 230,
+      "elevation_difference": 10.5,
+      "moving_time": 230,
+      "split": 19,
+      "average_speed": 7.0,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 172.43478260869566,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1659.1,
+      "elapsed_time": 233,
+      "elevation_difference": 2.4,
+      "moving_time": 233,
+      "split": 20,
+      "average_speed": 7.12,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 171.59656652360516,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1550.7,
+      "elapsed_time": 222,
+      "elevation_difference": 22.2,
+      "moving_time": 222,
+      "split": 21,
+      "average_speed": 6.99,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 176.94594594594594,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1613.5,
+      "elapsed_time": 389,
+      "elevation_difference": 62.4,
+      "moving_time": 389,
+      "split": 22,
+      "average_speed": 4.15,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 176.91773778920307,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1616.8,
+      "elapsed_time": 223,
+      "elevation_difference": -8.1,
+      "moving_time": 223,
+      "split": 23,
+      "average_speed": 7.25,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 168.1390134529148,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1596.6,
+      "elapsed_time": 191,
+      "elevation_difference": -35.4,
+      "moving_time": 191,
+      "split": 24,
+      "average_speed": 8.36,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 165.74869109947645,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1621.6,
+      "elapsed_time": 115,
+      "elevation_difference": -56.5,
+      "moving_time": 115,
+      "split": 25,
+      "average_speed": 14.1,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 177.55652173913043,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1650.9,
+      "elapsed_time": 168,
+      "elevation_difference": -22.5,
+      "moving_time": 168,
+      "split": 26,
+      "average_speed": 9.83,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 175.44642857142858,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1560.2,
+      "elapsed_time": 186,
+      "elevation_difference": 0.7,
+      "moving_time": 186,
+      "split": 27,
+      "average_speed": 8.39,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 165.94623655913978,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1629.2,
+      "elapsed_time": 178,
+      "elevation_difference": -3.2,
+      "moving_time": 178,
+      "split": 28,
+      "average_speed": 9.15,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 176.82022471910113,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1584.4,
+      "elapsed_time": 189,
+      "elevation_difference": 0.9,
+      "moving_time": 189,
+      "split": 29,
+      "average_speed": 8.38,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 177.72486772486772,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1627.4,
+      "elapsed_time": 219,
+      "elevation_difference": -1.4,
+      "moving_time": 219,
+      "split": 30,
+      "average_speed": 7.43,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 163.1689497716895,
+      "pace_zone": 0
+    },
+    {
+      "distance": 1590.0,
+      "elapsed_time": 314,
+      "elevation_difference": 1.0,
+      "moving_time": 279,
+      "split": 31,
+      "average_speed": 5.7,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 151.37992831541217,
+      "pace_zone": 0
+    },
+    {
+      "distance": 352.3,
+      "elapsed_time": 105,
+      "elevation_difference": 2.8,
+      "moving_time": 105,
+      "split": 32,
+      "average_speed": 3.36,
+      "average_grade_adjusted_speed": null,
+      "average_heartrate": 139.04761904761904,
+      "pace_zone": 0
+    }
+  ],
+  "laps": [
+    {
+      "id": 10407040120,
+      "resource_state": 2,
+      "name": "Lap 1",
+      "activity": {
+        "id": 3122164560,
+        "resource_state": 1
+      },
+      "athlete": {
+        "id": 18540317,
+        "resource_state": 1
+      },
+      "elapsed_time": 6594,
+      "moving_time": 6474,
+      "start_date": "2019-09-29T13:58:25Z",
+      "start_date_local": "2019-09-29T15:58:25Z",
+      "distance": 50244.5,
+      "start_index": 0,
+      "end_index": 1817,
+      "total_elevation_gain": 399.3,
+      "average_speed": 7.76,
+      "max_speed": 18.6,
+      "average_cadence": 75.6,
+      "device_watts": false,
+      "average_watts": 147.3,
+      "average_heartrate": 164.8,
+      "max_heartrate": 186.0,
+      "lap_index": 1,
+      "split": 1
+    }
+  ],
+  "photos": {
+    "primary": null,
+    "count": 0
+  },
+  "embed_token": "b3bd6892b5c47f3e1dd4134ba1ea521de57bac99",
+  "available_zones": []
+}

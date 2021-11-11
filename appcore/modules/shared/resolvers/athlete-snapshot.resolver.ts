@@ -1,7 +1,9 @@
-import { AthleteModel, AthleteSettingsModel, AthleteSnapshotModel } from "../models/athlete";
-import { DatedAthleteSettingsModel } from "../models/athlete/athlete-settings";
 import _ from "lodash";
-import { age } from "../tools";
+import { DatedAthleteSettings } from "../models/athlete/athlete-settings/dated-athlete-settings.model";
+import { AthleteSettings } from "../models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteSnapshot } from "../models/athlete/athlete-snapshot.model";
+import { AthleteModel } from "../models/athlete/athlete.model";
+import { age } from "@elevate/shared/tools/age";
 
 /**
  * Shared by core and app to resolve AthleteModel for a given activity date
@@ -14,7 +16,7 @@ export class AthleteSnapshotResolver {
 
     this.athleteModel.datedAthleteSettings = _.sortBy(
       this.athleteModel.datedAthleteSettings,
-      (model: DatedAthleteSettingsModel) => {
+      (model: DatedAthleteSettings) => {
         const sortOnDate: Date = _.isNull(model.since) ? new Date(0) : new Date(model.since);
         return sortOnDate.getTime() * -1;
       }
@@ -49,51 +51,47 @@ export class AthleteSnapshotResolver {
    * Resolve the proper AthleteModel and activity date
    * @param onDate Date format YYYY-MM-DD or Date object
    */
-  public resolve(onDate: string | Date): AthleteSnapshotModel {
+  public resolve(onDate: string | Date): AthleteSnapshot {
     const onDateString: string = AthleteSnapshotResolver.getShortDateString(onDate);
 
-    let datedAthleteSettingsModel: DatedAthleteSettingsModel;
+    let datedAthleteSettings: DatedAthleteSettings;
 
     if (_.isNull(onDateString)) {
       // No compliant date given
 
       const foreverDatedAthleteSettings = _.last(this.athleteModel.datedAthleteSettings);
-      datedAthleteSettingsModel = foreverDatedAthleteSettings
+      datedAthleteSettings = foreverDatedAthleteSettings
         ? foreverDatedAthleteSettings
-        : DatedAthleteSettingsModel.DEFAULT_MODEL;
+        : DatedAthleteSettings.DEFAULT_MODEL;
 
-      datedAthleteSettingsModel = DatedAthleteSettingsModel.asInstance(datedAthleteSettingsModel);
+      datedAthleteSettings = DatedAthleteSettings.asInstance(datedAthleteSettings);
     } else {
       // Find the AthleteSnapshotModel for the given date
-      datedAthleteSettingsModel = this.resolveDatedAthleteSettingsAtDate(onDateString);
+      datedAthleteSettings = this.resolveDatedAthleteSettingsAtDate(onDateString);
     }
 
     const athleteAge = this.athleteModel.birthDate ? age(this.athleteModel.birthDate, onDate) : null;
 
-    return datedAthleteSettingsModel
-      ? new AthleteSnapshotModel(
-          this.athleteModel.gender,
-          athleteAge,
-          datedAthleteSettingsModel.toAthleteSettingsModel()
-        )
-      : new AthleteSnapshotModel(this.athleteModel.gender, athleteAge, AthleteSettingsModel.DEFAULT_MODEL);
+    return datedAthleteSettings
+      ? new AthleteSnapshot(this.athleteModel.gender, athleteAge, datedAthleteSettings.toAthleteSettingsModel())
+      : new AthleteSnapshot(this.athleteModel.gender, athleteAge, AthleteSettings.DEFAULT_MODEL);
   }
 
-  public getCurrent(): AthleteSnapshotModel {
+  public getCurrent(): AthleteSnapshot {
     return this.resolve(new Date());
   }
 
-  public resolveDatedAthleteSettingsAtDate(onDate: string): DatedAthleteSettingsModel {
+  public resolveDatedAthleteSettingsAtDate(onDate: string): DatedAthleteSettings {
     const onDateTime: number = new Date(onDate).getTime();
 
-    const datedAthleteSettingsModel: DatedAthleteSettingsModel = _.find(
+    const datedAthleteSettings: DatedAthleteSettings = _.find(
       this.athleteModel.datedAthleteSettings,
-      (datedAthleteSettings: DatedAthleteSettingsModel) => {
+      (datedAthleteSettings: DatedAthleteSettings) => {
         const fromDate = datedAthleteSettings.since ? new Date(datedAthleteSettings.since) : new Date(0);
         return onDateTime >= fromDate.getTime();
       }
     );
 
-    return datedAthleteSettingsModel ? DatedAthleteSettingsModel.asInstance(datedAthleteSettingsModel) : null;
+    return datedAthleteSettings ? DatedAthleteSettings.asInstance(datedAthleteSettings) : null;
   }
 }

@@ -1,11 +1,11 @@
-import { ElevateException } from "../exceptions";
+import { ElevateException } from "../exceptions/elevate.exception";
 
 export class Versioning {
   /**
    * Convert x.x.x(.x) chrome version to semver x.x.x(-x)
    */
   public static chromeToSemverVersion(chromeVersion): string {
-    if (!chromeVersion.match(/^([0-9])+.([0-9])+[.]([0-9])+([.][0-9+])?$/g)) {
+    if (!chromeVersion.match(/^([0-9])+.([0-9])+.([0-9])+([.][0-9]+)?$/g)) {
       throw new ElevateException(`Wrong chrome version pattern for version: ${chromeVersion}`);
     }
 

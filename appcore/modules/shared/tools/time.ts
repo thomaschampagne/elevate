@@ -3,6 +3,7 @@ export class Time {
    * Converts seconds to military time (HH:MM:SS)
    */
   public static secToMilitary(secondsParam: number, trimZeros: boolean = false): string {
+    secondsParam = Math.round(secondsParam);
     const hours = Math.floor(secondsParam / 3600);
     const minutes = Math.floor(secondsParam / 60) % 60;
     const seconds = Math.round(secondsParam % 60);

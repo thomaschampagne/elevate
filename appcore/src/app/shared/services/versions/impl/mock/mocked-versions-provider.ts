@@ -2,8 +2,8 @@ import { VersionsProvider } from "../../versions-provider";
 import { Inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { MatDialog } from "@angular/material/dialog";
-import { Platform } from "@elevate/shared/enums";
-import { GhRelease } from "@elevate/shared/models";
+import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @Injectable()
 export class MockedVersionsProvider extends VersionsProvider {

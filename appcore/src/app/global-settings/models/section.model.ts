@@ -1,5 +1,5 @@
 import { OptionModel } from "./option.model";
-import { BuildTarget } from "@elevate/shared/enums";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 
 export class SectionModel {
   public title: string;

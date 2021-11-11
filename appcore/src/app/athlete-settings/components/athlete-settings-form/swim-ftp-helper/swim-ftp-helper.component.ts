@@ -52,8 +52,7 @@ export class SwimFtpHelperComponent implements OnInit {
           value: null
         },
         {
-          hint:
-            "After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)",
+          hint: "After a rest (same session), swim as fast as possible on 400 meters. Enter time performed in seconds (ex: 590 seconds)",
           value: null
         }
       ],

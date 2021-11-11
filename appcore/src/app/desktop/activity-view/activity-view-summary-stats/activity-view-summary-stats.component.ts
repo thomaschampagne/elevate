@@ -1,11 +1,11 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { MeasureSystem } from "@elevate/shared/enums";
 import { ActivityStatsService } from "../shared/activity-stats.service";
 import { StatDisplay } from "../shared/models/stats/display/stat-display.model";
 import { MediaObserver } from "@angular/flex-layout";
 import { ActivityViewMapComponent } from "../activity-view-map/activity-view-map.component";
 import { SummaryStatsGroup } from "../shared/models/stats/summary-stat-group.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Component({
   selector: "app-activity-view-summary-stats",
@@ -20,7 +20,7 @@ export class ActivityViewSummaryStatsComponent implements OnInit {
   public rowHeight: number;
 
   @Input()
-  public activity: SyncedActivityModel;
+  public activity: Activity;
 
   @Input()
   public measureSystem: MeasureSystem;

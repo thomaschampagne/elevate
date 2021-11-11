@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { FitnessTrendGraphComponent } from "./fitness-trend-graph.component";
 import { FitnessService } from "../shared/services/fitness.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
-import { TEST_SYNCED_ACTIVITIES } from "../../../shared-fixtures/activities-2015.fixture";
+import ACTIVITIES_FIXTURES from "../../../shared-fixtures/activities-2015.fixture.json";
 import moment, { Moment } from "moment";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
@@ -13,14 +12,14 @@ import { PeriodModel } from "../shared/models/period.model";
 import { FitnessTrendModule } from "../fitness-trend.module";
 import { HeartRateImpulseMode } from "../shared/enums/heart-rate-impulse-mode.enum";
 import { UserSettingsService } from "../../shared/services/user-settings/user-settings.service";
-import { UserSettings } from "@elevate/shared/models";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { WindowService } from "../../shared/services/window/window.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
 import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../../desktop/ipc/ipc-renderer-tunnel-service.mock";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("FitnessTrendGraphComponent", () => {
   let userSettingsService: UserSettingsService;
@@ -53,9 +52,9 @@ describe("FitnessTrendGraphComponent", () => {
     windowService = TestBed.inject(WindowService);
 
     // Mocking
-    spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(TEST_SYNCED_ACTIVITIES)));
+    spyOn(activityService, "fetch").and.returnValue(Promise.resolve(_.cloneDeep(ACTIVITIES_FIXTURES)));
     spyOn(userSettingsService, "fetch").and.returnValue(
-      Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+      Promise.resolve(_.cloneDeep(DesktopUserSettings.DEFAULT_MODEL))
     );
 
     todayMoment = moment("2015-12-01 12:00", "YYYY-MM-DD hh:mm");

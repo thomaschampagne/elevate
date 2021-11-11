@@ -1,8 +1,11 @@
 import { Injectable } from "@angular/core";
 import { SectionModel } from "../models/section.model";
-import { BuildTarget, LeafletMapType, MeasureSystem, Temperature } from "@elevate/shared/enums";
 import { ListItemModel } from "../models/list-item.model";
 import _ from "lodash";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Temperature } from "@elevate/shared/enums/temperature.enum";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
+import { LeafletMapType } from "@elevate/shared/enums/leaflet-map-type.enum";
 
 @Injectable()
 export class GlobalSettingsService {

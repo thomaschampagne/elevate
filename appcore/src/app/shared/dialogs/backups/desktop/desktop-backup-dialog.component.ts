@@ -4,8 +4,8 @@ import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SyncService } from "../../../services/sync/sync.service";
 import { DesktopSyncService } from "../../../services/sync/impl/desktop-sync.service";
-import { BackupEvent } from "@elevate/shared/models";
-import { ElevateException } from "@elevate/shared/exceptions";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { BackupEvent } from "@elevate/shared/models/backup/backup-event.int";
 
 @Component({
   selector: "app-import-backup-dialog",

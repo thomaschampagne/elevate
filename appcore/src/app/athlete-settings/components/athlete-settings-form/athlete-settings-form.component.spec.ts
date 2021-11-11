@@ -3,16 +3,17 @@ import { AthleteSettingsFormComponent } from "./athlete-settings-form.component"
 import _ from "lodash";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../../shared/shared.module";
-import { AthleteSettingsModel, UserSettings } from "@elevate/shared/models";
 import { AthleteSettingsModule } from "../../athlete-settings.module";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 import { DataStore } from "../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../../shared/modules/target/desktop-target.module";
-import { MeasureSystem } from "@elevate/shared/enums";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("AthleteSettingsFormComponent", () => {
   let component: AthleteSettingsFormComponent;
@@ -30,7 +31,7 @@ describe("AthleteSettingsFormComponent", () => {
 
     userSettingsService = TestBed.inject(UserSettingsService);
     spyOn(userSettingsService, "fetch").and.returnValue(
-      Promise.resolve(_.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL))
+      Promise.resolve(_.cloneDeep(DesktopUserSettings.DEFAULT_MODEL))
     );
 
     done();
@@ -39,7 +40,7 @@ describe("AthleteSettingsFormComponent", () => {
   beforeEach(done => {
     fixture = TestBed.createComponent(AthleteSettingsFormComponent);
     component = fixture.componentInstance;
-    component.athleteSettingsModel = _.cloneDeep(AthleteSettingsModel.DEFAULT_MODEL);
+    component.athleteSettingsModel = _.cloneDeep(AthleteSettings.DEFAULT_MODEL);
     fixture.detectChanges();
 
     done();

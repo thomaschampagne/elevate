@@ -3,25 +3,26 @@ import { AppResourcesModel } from "../../scripts/models/app-resources.model";
 import { editActivityFromArray, removeActivityFromArray } from "../tools/specs-tools";
 import { StravaActivityModel } from "../../scripts/models/sync/strava-activity.model";
 import { ActivitiesSynchronize } from "../../scripts/processors/activities-synchronize";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import { ActivitiesChangesModel, AthleteModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
-import { ElevateSport } from "@elevate/shared/enums";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
+import { ActivitiesChangesModel } from "@elevate/shared/models/sync/activities-changes.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 describe("ActivitiesSynchronize", () => {
-  let userSettingsMock: ExtensionUserSettingsModel;
+  let userSettingsMock: ExtensionUserSettings;
   let athleteModelResolver: AthleteSnapshotResolver;
 
   beforeEach(done => {
-    userSettingsMock = _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
+    userSettingsMock = _.cloneDeep(ExtensionUserSettings.DEFAULT_MODEL);
     athleteModelResolver = new AthleteSnapshotResolver(AthleteModel.DEFAULT_MODEL);
     done();
   });
 
   it("should remove activity from array properly ", done => {
-    let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(
-      require("../fixtures/sync/rawPage0120161213.json").models
-    );
+    let rawPageOfActivities: Array<Activity> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
     const sourceCount = rawPageOfActivities.length;
 
     rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
@@ -33,15 +34,13 @@ describe("ActivitiesSynchronize", () => {
   });
 
   it("should edit activity from array properly ", done => {
-    let rawPageOfActivities: Array<SyncedActivityModel> = _.cloneDeep(
-      require("../fixtures/sync/rawPage0120161213.json").models
-    );
+    let rawPageOfActivities: Array<Activity> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
     const sourceCount = rawPageOfActivities.length;
 
     rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
     expect(rawPageOfActivities).not.toBeNull();
-    const foundBack: SyncedActivityModel = _.find(rawPageOfActivities, { id: 722210052 });
+    const foundBack: Activity = _.find(rawPageOfActivities, { id: 722210052 });
     expect(foundBack).toBeDefined();
     expect(foundBack.name).toEqual("New_Name");
     expect(foundBack.type).toEqual("Ride");
@@ -50,16 +49,14 @@ describe("ActivitiesSynchronize", () => {
   });
 
   it("should detect activities added, modified and deleted ", done => {
-    let syncedActivities: Array<SyncedActivityModel> = _.cloneDeep(
-      require("../fixtures/sync/syncedActivities20161213.json").syncedActivities
-    );
+    let activities: Array<Activity> = _.cloneDeep(require("../fixtures/sync/activities20161213.json").activities);
     let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(
       require("../fixtures/sync/rawPage0120161213.json").models
     );
 
     // Simulate Added in strava: consist to remove since synced activities...
-    syncedActivities = removeActivityFromArray(723224273, syncedActivities); // Remove Ride "Bon rythme ! 33 KPH !!"
-    syncedActivities = removeActivityFromArray(707356065, syncedActivities); // Remove Ride "Je suis un gros lent !"
+    activities = removeActivityFromArray(723224273, activities); // Remove Ride "Bon rythme ! 33 KPH !!"
+    activities = removeActivityFromArray(707356065, activities); // Remove Ride "Je suis un gros lent !"
 
     // Simulate Modify: consist to edit data in strava
     rawPageOfActivities = editActivityFromArray(799672885, rawPageOfActivities, "Run comeback", "Run"); // Edit "Running back... Hard !"
@@ -68,7 +65,7 @@ describe("ActivitiesSynchronize", () => {
     // Now find+test changes
     const changes: ActivitiesChangesModel = ActivitiesSynchronize.findAddedAndEditedActivities(
       rawPageOfActivities,
-      syncedActivities
+      activities
     );
 
     expect(changes).not.toBeNull();

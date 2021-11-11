@@ -1,4 +1,4 @@
-import { AthleteSnapshotModel } from "@elevate/shared/models";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 
 export class FitnessPreparedActivityModel {
   public id: number | string;
@@ -9,7 +9,7 @@ export class FitnessPreparedActivityModel {
   public type: string;
   public name: string;
   public hasPowerMeter: boolean;
-  public athleteSnapshot: AthleteSnapshotModel;
+  public athleteSnapshot: AthleteSnapshot;
   public heartRateStressScore?: number;
   public trainingImpulseScore?: number;
   public powerStressScore?: number;

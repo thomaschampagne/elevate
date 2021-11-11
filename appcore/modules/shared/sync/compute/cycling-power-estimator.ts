@@ -7,6 +7,8 @@ export namespace CyclingPower {
     public static readonly DEFAULT_PARAMS: Params = {
       riderWeightKg: 75,
       bikeWeightKg: 8,
+      gearWeightKg: 2,
+      waterWeightKg: 1,
       frontalAreaSquareMeters: 0.509,
       cdDragFactor: 0.63,
       driveTrainLoss: 2,
@@ -44,15 +46,12 @@ export namespace CyclingPower {
 
     private static estimateForces(velocity, params) {
       // Calculate FGravity
-      const FGravity =
-        9.8067 * (params.riderWeightKg + params.bikeWeightKg) * Math.sin(Math.atan(params.gradePercentage / 100.0));
+      const totalWeight = params.riderWeightKg + params.bikeWeightKg + params.gearWeightKg + params.waterWeightKg;
+      const FGravity = 9.8067 * totalWeight * Math.sin(Math.atan(params.gradePercentage / 100.0));
 
       // Calculate FRolling
       let FRolling =
-        9.8067 *
-        (params.riderWeightKg + params.bikeWeightKg) *
-        Math.cos(Math.atan(params.gradePercentage / 100.0)) *
-        params.crrRollingResistanceFactor;
+        9.8067 * totalWeight * Math.cos(Math.atan(params.gradePercentage / 100.0)) * params.crrRollingResistanceFactor;
       if (velocity < 0) {
         FRolling *= -1.0;
       }
@@ -84,6 +83,8 @@ export namespace CyclingPower {
     public rhoAirDensity: number; // kg/m3
     public riderWeightKg: number; // Kg
     public bikeWeightKg: number; // Kg
+    public gearWeightKg: number; // Kg
+    public waterWeightKg: number; // Kg
     public cdDragFactor: number;
     public gradePercentage: number; // %
     public crrRollingResistanceFactor: number;

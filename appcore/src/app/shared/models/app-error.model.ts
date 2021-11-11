@@ -1,5 +1,9 @@
 import _ from "lodash";
 
+/**
+ * AppError is deprecated it must use exception structures
+ * @deprecated
+ */
 export class AppError {
   // List of errors that must to be registered in below method
   public static readonly SYNC_NOT_SYNCED: string = "SYNC_1";

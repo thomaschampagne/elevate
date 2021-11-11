@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from "@angular/core";
+import { Component, Inject, Input, OnDestroy, OnInit } from "@angular/core";
 import L, {
   Control,
   Icon,
@@ -19,13 +19,14 @@ import _ from "lodash";
 
 // Map fullscreen support and declaration
 import "../../../../../node_modules/leaflet-fullscreen/dist/Leaflet.fullscreen.js";
-import { dirname } from "@elevate/shared/tools";
 import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 import { DesktopUserSettingsService } from "../../../shared/services/user-settings/desktop/desktop-user-settings.service";
 import { LoggerService } from "../../../shared/services/logging/logger.service";
-import { UserSettings } from "@elevate/shared/models";
-import { LeafletMapType } from "@elevate/shared/enums";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { Subscription } from "rxjs";
+import { LeafletMapType } from "@elevate/shared/enums/leaflet-map-type.enum";
+import { dirname } from "@elevate/shared/tools/dirname";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 declare module "leaflet" {
   namespace Control {
@@ -33,14 +34,14 @@ declare module "leaflet" {
   }
 }
 
-const THUNDERFOREST_KEYS: string[] = JSON.parse(
+const THUNDER_FOREST_KEYS: string[] = JSON.parse(
   atob(
     "WyI3YzM1MmM4ZmYxMjQ0ZGQ4YjczMmUzNDllMGIwZmU4ZCIsImRlZjRkZGFlMTNlNDRiZDc5ODgyY2NjMjRjZjQ4NmQ5IiwiZGI1YWUxZjU3NzhhNDQ4Y2E2NjI1NTQ1ODFmMjgzYzUiLCI4ZGI1YmYzOGUzZDg0MWI2YTU3YTcyMDFmNzhjZmJlYyIsImU2MDQyMmU2MzZmMzQ5ODhhNzkwMTU0MDI3MjQ3NTdiIiwiYWM3Mjc0NDQwMjJjNDYxMzlkYjlkZTU0ZmU4MGJlZTgiLCIxZjEwMzgxM2NjZjA0ZDcyYTExMGM3MGRlYjhlYjZlMSIsIjcyYjc3ZjdmYmU4MTQ4YTlhMDFiODQ2ZjZlODU0MDg5IiwiOTRjYmY1ODYzOTY1NGUzODk2YjliNDVkYTVhOTJmOTgiLCJhMGEwNDdmZWRmMDI0ZmE0OTI1ZGZjMTRkYzhmYmQ1MyIsIjA0NDhjODliMTNhYzQzN2ViNzIxNTNlMGI4ODc5YTU5IiwiN2ZlYjJkY2U2NGQ3NDQyNzhiNjM4NDI4NDYzYzQ1MmYiLCI2NThkNWNkOTUwMzE0NmY4OTE4N2M2MjY0YzZlODNiNiIsIjhmYzE1YTExZWRmOTRhZTA5ZWZjMDNkNDAxYTdkZTRiIiwiZWQ4YThjOTg0NDI5NDk1ODg1MDE0ODllN2Y4MzY4MzEiLCI4YzExMGQ1ZmEwYTc0Y2NmYjIxOWExM2Y5NjU0MWZiMCIsImY1NzBkNzMxZmRkMzQwMDRhNjQ1ODdkODdhMDJjODFkIiwiNjE3MGFhZDEwZGZkNDJhMzhkNGQ4YzcwOWE1MzZmMzgiLCIyMDVmNzU4MDM3ZTI0ZjU0OGI0YzMxMDQzMzA4NzlkYyIsImVjMjQ4ODkwYTZlZDQzYjg4NDFlYTI0MzgxOWY4ZDBkIiwiMmExMTBlZGM4M2U5NDNlZmIxZTgzNjQwNjAzNTFjOTUiLCIxMjVhYTZjY2M3NGY0MzJlYTgxNzE2OTI1YWEzNzRjYSIsIjgxNmY4OTdhNDU2YjQ1OTVhMDliZjhlMWQ0MmNmYTBiIiwiYjQ3YTNjZjg5NWI5NGFlZGFkNDFlNWNmYjUyMjJiODciLCJmNDQzMzQ1NjBiZGI0NzcxYTA0MTYwOWNjNzVhODk4MyIsImVkMDNlNTk2M2ZmZjQ1Nzc5YzcyOGRiZmJkNTlhMTU2IiwiYTEwOWI4MWE5NzliNDFiZTg5NzE2N2YyOWU3ZjM1N2IiLCI4ZWM5ZmYxYTFhNjY0OWFmYTM0NTc1MDIwZWUxOTMwMCIsImFlM2M1NjQ1ZjFmMzQ0MGJiMTk5OWY3N2I1NjE2NGFkIl0="
   )
 );
 
 const getThunderForestApiKey = (): string => {
-  return THUNDERFOREST_KEYS[_.random(0, THUNDERFOREST_KEYS.length - 1)];
+  return THUNDER_FOREST_KEYS[_.random(0, THUNDER_FOREST_KEYS.length - 1)];
 };
 
 const TILES_DEF_MAP: Map<LeafletMapType, TileLayer> = new Map<LeafletMapType, TileLayer>([
@@ -100,7 +101,7 @@ const TILES_DEF_MAP: Map<LeafletMapType, TileLayer> = new Map<LeafletMapType, Ti
   templateUrl: "./activity-view-map.component.html",
   styleUrls: ["./activity-view-map.component.scss"]
 })
-export class ActivityViewMapComponent implements OnInit {
+export class ActivityViewMapComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(UserSettingsService) private readonly userSettingsService: DesktopUserSettingsService,
     @Inject(ActivityViewService) private readonly activityViewService: ActivityViewService,
@@ -136,6 +137,8 @@ export class ActivityViewMapComponent implements OnInit {
   public static readonly MAP_WIDTH_PERCENT = 100;
   public static readonly MAP_HEIGHT_PX = 375;
 
+  private selectedGraphBoundsSubscription: Subscription;
+
   @Input()
   public latLng: LatLngTuple[];
 
@@ -163,6 +166,10 @@ export class ActivityViewMapComponent implements OnInit {
     this.handleSelectedGraphBounds();
   }
 
+  public ngOnDestroy(): void {
+    this.selectedGraphBoundsSubscription.unsubscribe();
+  }
+
   public onMapReady(map: LeafLetMap): void {
     this.logger.debug("Map is ready");
 
@@ -170,7 +177,7 @@ export class ActivityViewMapComponent implements OnInit {
     this.map = map;
 
     // Find and apply default layer preference
-    this.userSettingsService.fetch().then((userSettings: DesktopUserSettingsModel) => {
+    this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
       const defaultTileLayerPreferences = TILES_DEF_MAP.get(userSettings.defaultMapType);
       this.map.addLayer(defaultTileLayerPreferences);
     });
@@ -217,7 +224,7 @@ export class ActivityViewMapComponent implements OnInit {
   }
 
   private handleSelectedGraphBounds(): void {
-    this.activityViewService.selectedGraphBounds$.subscribe(selectedBounds => {
+    this.selectedGraphBoundsSubscription = this.activityViewService.selectedGraphBounds$.subscribe(selectedBounds => {
       if (!this.map) {
         return;
       }
@@ -240,7 +247,7 @@ export class ActivityViewMapComponent implements OnInit {
         // Zoom in selected path
         const bounds = this.selectedBoundedPath.getBounds();
         if (bounds && bounds.isValid()) {
-          this.map.fitBounds(bounds, { maxZoom: 16 });
+          this.map.fitBounds(bounds, { maxZoom: 17 });
         }
       } else {
         // Selected bounds might have been reset, remove existing selected bounded path if necessary

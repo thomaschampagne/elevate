@@ -5,32 +5,11 @@ import { AthleteService } from "../../athlete/athlete.service";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { LoggerService } from "../../logging/logger.service";
 import { Subject, Subscription } from "rxjs";
-import {
-  ActivitySyncEvent,
-  CompleteSyncEvent,
-  ConnectorInfo,
-  ConnectorType,
-  ErrorSyncEvent,
-  FileConnectorInfo,
-  StravaConnectorInfo,
-  SyncEvent,
-  SyncEventType
-} from "@elevate/shared/sync";
 import { IpcSyncMessagesListener } from "../../../../desktop/ipc/ipc-sync-messages-listener.service";
 import { StravaConnectorInfoService } from "../../strava-connector-info/strava-connector-info.service";
-import {
-  AthleteModel,
-  BackupEvent,
-  DeflatedActivityStreams,
-  RestoreEvent,
-  SyncedActivityModel,
-  UserSettings
-} from "@elevate/shared/models";
 import { ActivityService } from "../../activity/activity.service";
-import { SyncException, WarningException } from "@elevate/shared/exceptions";
 import _ from "lodash";
 import { SyncState } from "../sync-state.enum";
-import { ConnectorSyncDateTime } from "@elevate/shared/models/sync";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { StreamsService } from "../../streams/streams.service";
 import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
@@ -43,7 +22,25 @@ import { DesktopMigrationService } from "../../../../desktop/migration/desktop-m
 import { ActivityRecalculateNotification, DesktopActivityService } from "../../activity/impl/desktop-activity.service";
 import { IpcSyncMessageSender } from "../../../../desktop/ipc/ipc-sync-messages-sender.service";
 import { DesktopBackupService } from "../../../../desktop/backup/desktop-backup.service";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
+import { BackupEvent } from "@elevate/shared/models/backup/backup-event.int";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { ConnectorInfo } from "@elevate/shared/sync/connectors/connector-info.model";
+import { WarningException } from "@elevate/shared/exceptions/warning.exception";
+import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
+import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { SyncException } from "@elevate/shared/exceptions/sync.exception";
+import { RestoreEvent } from "@elevate/shared/models/backup/restore-event.int";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
+import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @Injectable()
 export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> implements OnDestroy {
@@ -57,7 +54,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   >([
     [
       ConnectorType.STRAVA,
-      () => this.activityService.findMostRecent().then(activity => Promise.resolve(activity.start_timestamp * 1000))
+      () => this.activityService.findMostRecent().then(activity => Promise.resolve(activity.startTimestamp * 1000))
     ],
     [
       ConnectorType.FILE,
@@ -159,7 +156,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     return Promise.all(promisedDataToSync)
       .then(result => {
         const athleteModel: AthleteModel = result[0] as AthleteModel;
-        const userSettingsModel: UserSettingsModel = result[1] as UserSettingsModel;
+        const userSettings: BaseUserSettings = result[1] as BaseUserSettings;
         const connectorSyncFromDateTime: number = result[2] as number;
 
         // Get timestamp on which we have to sync
@@ -169,7 +166,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           connectorType: ConnectorType;
           connectorInfo: ConnectorInfo;
           athleteModel: AthleteModel;
-          userSettingsModel: UserSettingsModel;
+          userSettings: BaseUserSettings;
           syncFromDateTime: number;
         }>;
 
@@ -181,7 +178,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             connectorType: this.currentConnectorType,
             connectorInfo: stravaConnectorInfo,
             athleteModel: athleteModel,
-            userSettingsModel: userSettingsModel,
+            userSettings: userSettings,
             syncFromDateTime: syncFromDateTime
           });
         } else if (this.currentConnectorType === ConnectorType.FILE) {
@@ -196,7 +193,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                   connectorType: this.currentConnectorType,
                   connectorInfo: fileConnectorInfo,
                   athleteModel: athleteModel,
-                  userSettingsModel: userSettingsModel,
+                  userSettings: userSettings,
                   syncFromDateTime: syncFromDateTime
                 });
               } else {
@@ -220,7 +217,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             startSyncParams.connectorType,
             startSyncParams.connectorInfo,
             startSyncParams.athleteModel,
-            startSyncParams.userSettingsModel,
+            startSyncParams.userSettings,
             startSyncParams.syncFromDateTime
           )
           .then(
@@ -370,13 +367,13 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     this.logger.debug(
       `Trying to upsert activity ${activitySyncEvent.isNew ? "new" : "existing"} "${
         activitySyncEvent.activity.name
-      }" started on "${activitySyncEvent.activity.start_time}".`
+      }" started on "${activitySyncEvent.activity.startTime}".`
     );
 
     this.activityService
       .put(activitySyncEvent.activity)
-      .then((syncedActivityModel: SyncedActivityModel) => {
-        this.logger.debug(`Activity "${syncedActivityModel.name}" saved`);
+      .then((activity: Activity) => {
+        this.logger.debug(`Activity "${activity.name}" saved`);
 
         const promiseHandlePutStreams: Promise<void | DeflatedActivityStreams> = activitySyncEvent.deflatedStreams
           ? this.streamsService.put(
@@ -397,7 +394,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
             ConnectorType.STRAVA,
             activitySyncEvent.activity,
-            upsertError.stack
+            upsertError
           )
         );
 
@@ -470,15 +467,15 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   public getSyncState(): Promise<SyncState> {
     return Promise.all([this.getConnectorSyncDateTimeDesc(), this.activityService.count()]).then((result: any[]) => {
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
-      const syncedActivitiesCount: number = result[1] as number;
+      const activitiesCount: number = result[1] as number;
 
       const hasASyncDateTime: boolean = connectorSyncDateTimes.length > 0;
-      const hasSyncedActivityModels: boolean = syncedActivitiesCount > 0;
+      const hasActivities: boolean = activitiesCount > 0;
 
       let syncState: SyncState;
-      if (!hasASyncDateTime && !hasSyncedActivityModels) {
+      if (!hasASyncDateTime && !hasActivities) {
         syncState = SyncState.NOT_SYNCED;
-      } else if (!hasASyncDateTime && hasSyncedActivityModels) {
+      } else if (!hasASyncDateTime && hasActivities) {
         syncState = SyncState.PARTIALLY_SYNCED;
       } else {
         syncState = SyncState.SYNCED;

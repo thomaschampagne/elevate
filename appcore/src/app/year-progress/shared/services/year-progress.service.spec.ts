@@ -1,27 +1,26 @@
 import { TestBed } from "@angular/core/testing";
-
-import { YearProgressService } from "./year-progress.service";
-import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
-import { YearProgressModel } from "../models/year-progress.model";
-import _ from "lodash";
-import { ProgressModel } from "../models/progress.model";
-import moment, { Moment } from "moment";
-import { ProgressAtDayModel } from "../models/progress-at-date.model";
-import { ProgressType } from "../enums/progress-type.enum";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { YearToDateProgressPresetModel } from "../models/year-to-date-progress-preset.model";
-import { YearProgressModule } from "../../year-progress.module";
 import { AppError } from "../../../shared/models/app-error.model";
-import { TargetProgressModel } from "../models/target-progress.model";
-import { DataStore } from "../../../shared/data-store/data-store";
-import { ProgressMode } from "../enums/progress-mode.enum";
+import { YearProgressService } from "./year-progress.service";
 import { RollingProgressConfigModel } from "../models/rolling-progress-config.model";
-import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
-import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
-import { ElevateSport } from "@elevate/shared/enums";
-import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
-import { LoggerService } from "../../../shared/services/logging/logger.service";
 import { ConsoleLoggerService } from "../../../shared/services/logging/console-logger.service";
+import { TargetProgressModel } from "../models/target-progress.model";
+import { ProgressAtDayModel } from "../models/progress-at-date.model";
+import { YearToDateProgressPresetModel } from "../models/year-to-date-progress-preset.model";
+import { YearProgressModel } from "../models/year-progress.model";
+import { YearToDateProgressConfigModel } from "../models/year-to-date-progress-config.model";
+import { ProgressModel } from "../models/progress.model";
+import { RollingProgressPresetModel } from "../models/rolling-progress-preset.model";
+import { ProgressType } from "../enums/progress-type.enum";
+import { YearProgressModule } from "../../year-progress.module";
+import { DataStore } from "../../../shared/data-store/data-store";
+import { LoggerService } from "../../../shared/services/logging/logger.service";
+import { TestingDataStore } from "../../../shared/data-store/testing-datastore.service";
+import { YearProgressActivitiesFixture } from "./year-progress-activities.fixture";
+import { ProgressMode } from "../enums/progress-mode.enum";
+import moment, { Moment } from "moment";
+import _ from "lodash";
+import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import Spy = jasmine.Spy;
 
 describe("YearProgressService", () => {
@@ -36,7 +35,7 @@ describe("YearProgressService", () => {
   const isMetric = true;
 
   let service: YearProgressService;
-  let TEST_SYNCED_MODELS: SyncedActivityModel[];
+  let TEST_SYNCED_MODELS: Activity[];
   let getTodayMomentSpy: Spy;
 
   beforeEach(done => {
@@ -156,15 +155,17 @@ describe("YearProgressService", () => {
       const expectedLength = 4;
       const progressConfig = new YearToDateProgressConfigModel([ElevateSport.Walk], true, true);
 
-      const fakeWalkActivity = new SyncedActivityModel();
+      const fakeWalkActivity = new Activity();
       fakeWalkActivity.id = 99;
       fakeWalkActivity.name = "Walking";
       fakeWalkActivity.type = ElevateSport.Walk;
-      fakeWalkActivity.start_time = moment("2016-06-06", "YYYY-MM-DD").toISOString();
-      fakeWalkActivity.distance_raw = 3000;
-      fakeWalkActivity.moving_time_raw = 3600;
-      fakeWalkActivity.elapsed_time_raw = 3600;
-      fakeWalkActivity.elevation_gain_raw = 0;
+      fakeWalkActivity.startTime = moment("2016-06-06", "YYYY-MM-DD").toISOString();
+      fakeWalkActivity.stats = {
+        distance: 3000,
+        movingTime: 3600,
+        elapsedTime: 3600,
+        elevationGain: 0
+      } as ActivityStats;
 
       TEST_SYNCED_MODELS.push(fakeWalkActivity);
 
@@ -391,7 +392,7 @@ describe("YearProgressService", () => {
 
     it("should not compute progression with empty activities", done => {
       // Given
-      const syncedActivityModels = [];
+      const activities = [];
 
       const progressConfig = new YearToDateProgressConfigModel(
         [ElevateSport.Ride, ElevateSport.VirtualRide, ElevateSport.Run],
@@ -399,10 +400,10 @@ describe("YearProgressService", () => {
         true
       );
 
-      const progressionMethodCall = () => service.progressions(progressConfig, isMetric, syncedActivityModels);
+      const progressionMethodCall = () => service.progressions(progressConfig, isMetric, activities);
 
       // When, Then
-      expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_SYNCED_ACTIVITY_MODELS);
+      expect(progressionMethodCall).toThrowError(YearProgressService.ERROR_NO_ACTIVITY_MODELS);
 
       done();
     });
@@ -496,7 +497,7 @@ describe("YearProgressService", () => {
   });
 
   describe("compute rolling progression", () => {
-    let syncedActivityModels: Partial<SyncedActivityModel>[] = [];
+    let activities: Partial<Activity>[] = [];
 
     const createActivity = (
       date: string,
@@ -504,18 +505,23 @@ describe("YearProgressService", () => {
       distanceRaw: number,
       movingTimeRaw: number,
       elevationGainRaw: number
-    ) => {
-      return {
-        distance_raw: distanceRaw,
-        moving_time_raw: movingTimeRaw,
-        elevation_gain_raw: elevationGainRaw,
-        start_time: stravaStartTime(date),
-        type: type
-      };
+    ): Activity => {
+      const activity = new Activity();
+
+      activity.type = type;
+      activity.startTime = stravaStartTime(date);
+      activity.stats = {
+        distance: distanceRaw,
+        movingTime: movingTimeRaw,
+        elapsedTime: movingTimeRaw,
+        elevationGain: elevationGainRaw
+      } as ActivityStats;
+
+      return activity;
     };
 
     beforeEach(done => {
-      syncedActivityModels = [];
+      activities = [];
       done();
     });
 
@@ -531,13 +537,13 @@ describe("YearProgressService", () => {
       getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
       /* History definition */
-      syncedActivityModels.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100));
       /* (Rest) 2019-02-08 */
       /* (Rest) 2019-02-09 */
       /* (Rest) 2019-02-10 */
@@ -552,7 +558,7 @@ describe("YearProgressService", () => {
       const yearProgressions: YearProgressModel[] = service.progressions(
         progressConfig,
         isMetric,
-        syncedActivityModels as SyncedActivityModel[]
+        activities as Activity[]
       );
 
       // Then
@@ -604,22 +610,22 @@ describe("YearProgressService", () => {
 
       /* History definition */
       /* 2018 ending */
-      syncedActivityModels.push(createActivity("2018-12-25", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2018-12-26", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2018-12-27", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2018-12-28", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2018-12-29", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2018-12-30", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2018-12-31", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-25", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-26", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-27", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-28", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-29", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-30", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2018-12-31", ElevateSport.Ride, 10000, 3600, 100));
 
       /* 2019 beginning */
-      syncedActivityModels.push(createActivity("2019-01-01", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-01-02", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-01-03", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-01-04", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-01-05", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-01-06", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-01-07", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-01", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-02", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-03", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-04", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-05", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-06", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-01-07", ElevateSport.Ride, 10000, 3600, 100));
       /* (Rest) 2019-01-08 */
       /* (Rest) 2019-01-09 */
       /* (Rest) 2019-01-10 */
@@ -634,7 +640,7 @@ describe("YearProgressService", () => {
       const yearProgressions: YearProgressModel[] = service.progressions(
         progressConfig,
         isMetric,
-        syncedActivityModels as SyncedActivityModel[]
+        activities as Activity[]
       );
 
       // Then
@@ -706,14 +712,14 @@ describe("YearProgressService", () => {
       getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
       /* History definition */
-      syncedActivityModels.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100)); // Double Ride on "2019-02-07"
-      syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100)); // Double Ride on "2019-02-07"
+      activities.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100)); // Double Ride on "2019-02-07"
+      activities.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100)); // Double Ride on "2019-02-07"
       /* (Rest) 2019-02-08 */
       /* (Rest) 2019-02-09 */
       /* (Rest) 2019-02-10 */
@@ -728,7 +734,7 @@ describe("YearProgressService", () => {
       const yearProgressions: YearProgressModel[] = service.progressions(
         progressConfig,
         isMetric,
-        syncedActivityModels as SyncedActivityModel[]
+        activities as Activity[]
       );
 
       // Then
@@ -834,16 +840,16 @@ describe("YearProgressService", () => {
       getTodayMomentSpy.and.returnValue(moment(todayTime, "YYYY-MM-DD hh:mm"));
 
       /* History definition */
-      syncedActivityModels.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-01", ElevateSport.Ride, 10000, 3600, 100));
 
-      syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100)); // 1st activity on 2019-02-02 => 10km
-      syncedActivityModels.push(createActivity("2019-02-02", ElevateSport.Ride, 15000, 3600, 100)); // 2nd activity on 2019-02-02 => 15km
+      activities.push(createActivity("2019-02-02", ElevateSport.Ride, 10000, 3600, 100)); // 1st activity on 2019-02-02 => 10km
+      activities.push(createActivity("2019-02-02", ElevateSport.Ride, 15000, 3600, 100)); // 2nd activity on 2019-02-02 => 15km
 
-      syncedActivityModels.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
-      syncedActivityModels.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-03", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-04", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-05", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-06", ElevateSport.Ride, 10000, 3600, 100));
+      activities.push(createActivity("2019-02-07", ElevateSport.Ride, 10000, 3600, 100));
       /* (Rest) 2019-02-08 */
       /* (Rest) 2019-02-09 */
       /* (Rest) 2019-02-10 */
@@ -858,7 +864,7 @@ describe("YearProgressService", () => {
       const yearProgressions: YearProgressModel[] = service.progressions(
         progressConfig,
         isMetric,
-        syncedActivityModels as SyncedActivityModel[]
+        activities as Activity[]
       );
 
       // Then
@@ -1274,7 +1280,6 @@ describe("YearProgressService", () => {
       promise.then(
         () => {
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();
@@ -1318,7 +1323,6 @@ describe("YearProgressService", () => {
       promise.then(
         () => {
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();
@@ -1371,7 +1375,6 @@ describe("YearProgressService", () => {
       promise.then(
         () => {
           throw new Error("Whoops! I should not be here!");
-          done();
         },
         (error: AppError) => {
           expect(error).not.toBeNull();

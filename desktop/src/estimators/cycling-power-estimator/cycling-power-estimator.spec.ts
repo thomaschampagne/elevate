@@ -1,4 +1,4 @@
-import { CyclingPower } from "@elevate/shared/sync";
+import { CyclingPower } from "@elevate/shared/sync/compute/cycling-power-estimator";
 
 describe("CyclingPowerEstimator", () => {
   it("should calculate cycling power of a rider climbing a 6% hill", done => {
@@ -8,7 +8,7 @@ describe("CyclingPowerEstimator", () => {
       riderWeightKg: 75,
       gradePercentage: 6
     };
-    const expectedPower = 153.99;
+    const expectedPower = 159.4;
 
     // When
     const power = CyclingPower.Estimator.calc(speedKph, params);
@@ -25,7 +25,7 @@ describe("CyclingPowerEstimator", () => {
       riderWeightKg: 75,
       gradePercentage: -2
     };
-    const expectedPower = 63.23;
+    const expectedPower = 58.85;
 
     // When
     const power = CyclingPower.Estimator.calc(speedKph, params);

@@ -1,9 +1,13 @@
 import { inject, singleton } from "tsyringe";
 import { IpcMainTunnelService } from "../ipc-main-tunnel.service";
-import { Streams, SyncedActivityModel } from "@elevate/shared/models";
-import { SyncEvent, SyncEventType } from "@elevate/shared/sync";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { Logger } from "../logger";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @singleton()
 export class IpcSyncMessageSender {
@@ -12,17 +16,14 @@ export class IpcSyncMessageSender {
     @inject(Logger) private readonly logger: Logger
   ) {}
 
-  public findSyncedActivityModels(
-    activityStartDate: string,
-    activityDurationSeconds: number
-  ): Promise<SyncedActivityModel[]> {
-    const ipcMessage = new IpcMessage(Channel.findActivity, activityStartDate, activityDurationSeconds);
-    return this.ipcTunnelService.send<IpcMessage, SyncedActivityModel[]>(ipcMessage);
+  public findLocalActivities(activityStartDate: string, activityEndDate: string): Promise<Activity[]> {
+    const ipcMessage = new IpcMessage(Channel.findActivity, activityStartDate, activityEndDate);
+    return this.ipcTunnelService.send<IpcMessage, Activity[]>(ipcMessage);
   }
 
-  public findStreams(activityId: number | string): Promise<Streams> {
+  public findDeflatedActivityStreams(activityId: number | string): Promise<DeflatedActivityStreams> {
     const ipcMessage = new IpcMessage(Channel.findStreams, activityId);
-    return this.ipcTunnelService.send<IpcMessage, Streams>(ipcMessage);
+    return this.ipcTunnelService.send<IpcMessage, DeflatedActivityStreams>(ipcMessage);
   }
 
   public forwardSyncEvent(syncEvent: SyncEvent): void {

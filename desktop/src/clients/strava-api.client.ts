@@ -1,14 +1,18 @@
-import { ConnectorType, ErrorSyncEvent, StravaAccount, StravaConnectorInfo } from "@elevate/shared/sync";
 import _ from "lodash";
-import { fibonacci, sleep } from "@elevate/shared/tools";
-import { IHttpClientResponse } from "typed-rest-client/Interfaces";
-import { HttpCodes } from "typed-rest-client/HttpClient";
-import http, { IncomingHttpHeaders } from "http";
-import { Gender } from "@elevate/shared/models";
+import { IncomingHttpHeaders } from "http";
 import { inject, singleton } from "tsyringe";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
-import { HttpClient } from "./http.client";
 import { Logger } from "../logger";
+import { sleep } from "@elevate/shared/tools/sleep";
+import { fibonacci } from "@elevate/shared/tools/fibonacci";
+import { HttpClient } from "./http.client";
+import { AxiosError, AxiosResponse } from "axios";
+import { StatusCodes } from "../enum/status-codes.enum";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
 
 export interface RateLimit {
   usage: number;
@@ -31,9 +35,7 @@ export class StravaApiClient {
     this.nextCallWaitTime = 0;
   }
 
-  public static parseRateLimits(
-    headers: IncomingHttpHeaders
-  ): {
+  public static parseRateLimits(headers: IncomingHttpHeaders): {
     instant: RateLimit;
     daily: RateLimit;
   } {
@@ -79,105 +81,109 @@ export class StravaApiClient {
     return this.stravaTokensUpdater(stravaConnectorInfo, onStravaConnectorInfoUpdate)
       .then(() => {
         // Wait during next call wait time
-        return sleep(this.nextCallWaitTime).then(() => {
-          return this.httpClient.getRetryTimeout(url, {
-            Authorization: `Bearer ${stravaConnectorInfo.accessToken}`,
-            "Content-Type": "application/json"
+        return this.sleep(this.nextCallWaitTime).then(() => {
+          return this.httpClient.get(url, {
+            headers: {
+              Authorization: `Bearer ${stravaConnectorInfo.accessToken}`,
+              "Content-Type": "application/json"
+            }
           });
         });
       })
-      .then((response: IHttpClientResponse) => {
+      .then((response: AxiosResponse) => {
         // Update time to wait for the next call to avoid the rate limit threshold
-        const rateLimits = StravaApiClient.parseRateLimits(response.message.headers);
+        const rateLimits = StravaApiClient.parseRateLimits(response.headers);
         this.updateNextCallWaitTime(rateLimits.instant, StravaApiClient.QUARTER_HOUR_TIME_INTERVAL);
         this.logger.debug(
           `Waiting ${this.nextCallWaitTime} for next strava api call. Current Rate limits:`,
           JSON.stringify(rateLimits)
         );
 
-        return response.message.statusCode === HttpCodes.OK ? response.readBody() : Promise.reject(response.message);
+        return Promise.resolve(response.data);
       })
-      .then((body: string) => {
-        return Promise.resolve(JSON.parse(body));
-      })
-      .catch((error: http.IncomingMessage) => {
-        this.logger.error(
-          "strava api http.IncomingMessage",
-          "statusCode: " + error.statusCode,
-          "message: " + error.statusMessage
-        );
+      .catch((error: AxiosError) => {
+        if (error.response?.status) {
+          this.logger.error(
+            `Strava api Error. Status: ${error.response.status}, Message: ${error.response.statusText}`
+          );
 
-        switch (error.statusCode) {
-          case HttpCodes.Unauthorized:
-            return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());
+          switch (error.response.status) {
+            case StatusCodes.UNAUTHORIZED:
+              return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());
 
-          case HttpCodes.Forbidden:
-            return Promise.reject(ErrorSyncEvent.STRAVA_API_FORBIDDEN.create());
+            case StatusCodes.FORBIDDEN:
+              return Promise.reject(ErrorSyncEvent.STRAVA_API_FORBIDDEN.create());
 
-          case HttpCodes.TooManyRequests:
-            const parseRateLimits = StravaApiClient.parseRateLimits(error.headers);
-            const isInstantQuotaReached = parseRateLimits.instant.usage > parseRateLimits.instant.limit;
-            const isDailyQuotaReached = parseRateLimits.daily.usage > parseRateLimits.daily.limit;
+            case StatusCodes.TOO_MANY_REQUESTS:
+              const parseRateLimits = StravaApiClient.parseRateLimits(error.response.headers);
+              const isInstantQuotaReached = parseRateLimits.instant.usage > parseRateLimits.instant.limit;
+              const isDailyQuotaReached = parseRateLimits.daily.usage > parseRateLimits.daily.limit;
 
-            const maxTriesQuotaReached = quotaReachedTries >= StravaApiClient.QUOTA_REACHED_RETRY_COUNT + 1;
-            if (maxTriesQuotaReached) {
-              if (isInstantQuotaReached) {
-                return Promise.reject(
-                  ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(
-                    parseRateLimits.instant.usage,
-                    parseRateLimits.instant.limit
-                  )
-                );
+              const maxTriesQuotaReached = quotaReachedTries >= StravaApiClient.QUOTA_REACHED_RETRY_COUNT + 1;
+              if (maxTriesQuotaReached) {
+                if (isInstantQuotaReached) {
+                  return Promise.reject(
+                    ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.create(
+                      parseRateLimits.instant.usage,
+                      parseRateLimits.instant.limit
+                    )
+                  );
+                }
+                if (isDailyQuotaReached) {
+                  return Promise.reject(
+                    ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(
+                      parseRateLimits.daily.usage,
+                      parseRateLimits.daily.limit
+                    )
+                  );
+                }
+
+                const errDesc = `Strava ${
+                  isInstantQuotaReached ? "instant quota reached" : isDailyQuotaReached ? "daily quota reached" : ""
+                }, retry sync later.`;
+                return ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.STRAVA, errDesc);
               }
-              if (isDailyQuotaReached) {
-                return Promise.reject(
-                  ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.create(
-                    parseRateLimits.daily.usage,
-                    parseRateLimits.daily.limit
-                  )
+
+              // Retry call later
+              const retryMillis = this.retryInMillis(quotaReachedTries);
+
+              // Notify
+              onQuotaReachedRetry(retryMillis);
+
+              const logMessage = `${
+                isInstantQuotaReached ? "Instant quota reached" : isDailyQuotaReached ? "Daily quota reached" : ""
+              }. Waiting ${retryMillis} before continue.`;
+              this.logger.info(logMessage, JSON.stringify(parseRateLimits));
+
+              return sleep(retryMillis).then(() => {
+                quotaReachedTries++;
+                return this.get(
+                  stravaConnectorInfo,
+                  url,
+                  onStravaConnectorInfoUpdate,
+                  onQuotaReachedRetry,
+                  quotaReachedTries
                 );
-              }
+              });
+            case StatusCodes.NOT_FOUND:
+              return Promise.reject(ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(url));
 
-              const errDesc = `Strava ${
-                isInstantQuotaReached ? "instant quota reached" : isDailyQuotaReached ? "daily quota reached" : ""
-              }, retry sync later.`;
-              return ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.STRAVA, errDesc);
-            }
+            case StatusCodes.REQUEST_TIMEOUT:
+              return Promise.reject(ErrorSyncEvent.STRAVA_API_TIMEOUT.create(url));
 
-            // Retry call later
-            const retryMillis = this.retryInMillis(quotaReachedTries);
-
-            // Notify
-            onQuotaReachedRetry(retryMillis);
-
-            const logMessage = `${
-              isInstantQuotaReached ? "Instant quota reached" : isDailyQuotaReached ? "Daily quota reached" : ""
-            }. Waiting ${retryMillis} before continue.`;
-            this.logger.info(logMessage, JSON.stringify(parseRateLimits));
-
-            return sleep(retryMillis).then(() => {
-              quotaReachedTries++;
-              return this.get(
-                stravaConnectorInfo,
-                url,
-                onStravaConnectorInfoUpdate,
-                onQuotaReachedRetry,
-                quotaReachedTries
+            default:
+              return Promise.reject(
+                ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(
+                  ConnectorType.STRAVA,
+                  `UNHANDLED HTTP GET ERROR on '${url}'. Error code: ${error.response.status}; Error message: ${error.response.statusText}`
+                )
               );
-            });
-          case HttpCodes.NotFound:
-            return Promise.reject(ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.create(url));
-
-          case HttpCodes.RequestTimeout:
-            return Promise.reject(ErrorSyncEvent.STRAVA_API_TIMEOUT.create(url));
-
-          default:
-            return Promise.reject(
-              ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(
-                ConnectorType.STRAVA,
-                `UNHANDLED HTTP GET ERROR on '${url}'. Error code: ${error.statusCode}; Error message: ${error.statusMessage}`
-              )
-            );
+          }
+        } else {
+          this.logger.error("Strava api connection error", error);
+          return Promise.reject(
+            ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.STRAVA, `Unable to connect to strava servers`)
+          );
         }
       });
   }
@@ -196,9 +202,14 @@ export class StravaApiClient {
     stravaConnectorInfo: StravaConnectorInfo,
     onStravaConnectorInfoUpdate: (stravaConnectorInfo: StravaConnectorInfo) => void
   ): Promise<void> {
-    let authPromise: Promise<{ accessToken: string; refreshToken: string; expiresAt: number }> = null;
-
     const isAccessTokenValid = stravaConnectorInfo.accessToken && stravaConnectorInfo.expiresAt > this.getCurrentTime();
+
+    if (isAccessTokenValid) {
+      this.logger.debug("Access token is still valid, we keep current access token, no authorize and no refresh token");
+      return Promise.resolve();
+    }
+
+    let authPromise: Promise<{ accessToken: string; refreshToken: string; expiresAt: number }> = null;
 
     if (!stravaConnectorInfo.accessToken || !stravaConnectorInfo.refreshToken) {
       authPromise = this.stravaAuthenticator.authorize(stravaConnectorInfo.clientId, stravaConnectorInfo.clientSecret);
@@ -210,9 +221,6 @@ export class StravaApiClient {
         stravaConnectorInfo.refreshToken
       );
       this.logger.info("Access token is expired, Refreshing token");
-    } else if (isAccessTokenValid) {
-      this.logger.debug("Access token is still valid, we keep current access token, no authorize and no refresh token");
-      return Promise.resolve();
     } else {
       return Promise.reject(
         "Case not supported in StravaConnector::stravaTokensUpdater(). stravaConnectorInfo: " +
@@ -262,5 +270,9 @@ export class StravaApiClient {
 
   public getCurrentTime(): number {
     return new Date().getTime();
+  }
+
+  public sleep(milliseconds: number): Promise<void> {
+    return sleep(milliseconds);
   }
 }

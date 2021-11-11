@@ -1,14 +1,15 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { AnalysisDataModel, PeakModel, Streams, SyncedActivityModel } from "@elevate/shared/models";
 import _ from "lodash";
 import { Sensor } from "../shared/models/sensors/sensor.model";
-import { MeasureSystem } from "@elevate/shared/enums";
 import { PeakChartComponent } from "./peak-chart/peak-chart.component";
 import { ActivitySensorsService } from "../shared/activity-sensors.service";
+import { Activity, ActivityStats, Peaks } from "@elevate/shared/models/sync/activity.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 interface PeaksResult {
   sensor: Sensor;
-  peaks: PeakModel[];
+  peaks: Peaks[];
 }
 
 @Component({
@@ -28,10 +29,10 @@ export class ActivityViewPeaksComponent implements OnInit {
   public peaksResults: PeaksResult[];
 
   @Input()
-  public activity: SyncedActivityModel;
+  public activity: Activity;
 
   @Input()
-  public analysisData: AnalysisDataModel;
+  public stats: ActivityStats;
 
   @Input()
   public measureSystem: MeasureSystem;
@@ -50,7 +51,7 @@ export class ActivityViewPeaksComponent implements OnInit {
     // Looping on each sensor definitions to get peaks if available
     sensors.forEach(sensor => {
       if (sensor.peaksPath) {
-        const peaks: PeakModel[] = _.get(this.analysisData, sensor.peaksPath);
+        const peaks: Peaks[] = _.get(this.stats, sensor.peaksPath);
         if (peaks) {
           this.peaksResults.push({ sensor: sensor, peaks: peaks });
         }

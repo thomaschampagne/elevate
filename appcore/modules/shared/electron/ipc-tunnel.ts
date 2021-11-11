@@ -1,8 +1,8 @@
 import { BrowserWindow, IpcMain, IpcMainEvent, IpcMainInvokeEvent, IpcRendererEvent, WebContents } from "electron";
 import { BridgeApi } from "./bridge.api";
-import { ElevateException } from "../exceptions";
 import { Channel } from "./channels.enum";
 import { IpcMessage } from "./ipc-message";
+import { ElevateException } from "../exceptions/elevate.exception";
 
 enum IpcType {
   MAIN,

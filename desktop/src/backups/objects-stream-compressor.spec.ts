@@ -2,7 +2,7 @@ import { container } from "tsyringe";
 import { ObjectsStreamCompressor } from "./objects-stream-compressor";
 import path from "path";
 import fs from "fs";
-import { sleep } from "@elevate/shared/tools";
+import { sleep } from "@elevate/shared/tools/sleep";
 
 describe("ObjectsStreamCompressor", () => {
   const expectedTargetArchivePath = path.join(__dirname, "archive.elv");

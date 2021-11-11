@@ -1,15 +1,14 @@
 import { TestBed } from "@angular/core/testing";
-
 import { ExtensionUserSettingsService } from "./extension-user-settings.service";
 import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import { DataStore } from "../../../data-store/data-store";
 import { TestingDataStore } from "../../../data-store/testing-datastore.service";
 import _ from "lodash";
-import { UserSettings } from "@elevate/shared/models";
 import { TargetModule } from "../../../modules/target/extension-target.module";
 import { UserSettingsService } from "../user-settings.service";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 describe("ExtensionUserSettingsService", () => {
   let extensionUserSettingsService: ExtensionUserSettingsService;
@@ -27,7 +26,7 @@ describe("ExtensionUserSettingsService", () => {
 
   it("should mark local storage to be clear", done => {
     // Given
-    const expectedSettings = _.cloneDeep(ExtensionUserSettingsModel.DEFAULT_MODEL);
+    const expectedSettings = _.cloneDeep(ExtensionUserSettings.DEFAULT_MODEL);
     expectedSettings.localStorageMustBeCleared = true;
 
     const updatePropertyDaoSpy = spyOn(extensionUserSettingsService.userSettingsDao, "update").and.returnValue(

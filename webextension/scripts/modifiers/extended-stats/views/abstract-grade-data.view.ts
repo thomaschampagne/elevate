@@ -1,18 +1,18 @@
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { GradeDataModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { GradeStats } from "@elevate/shared/models/sync/activity.model";
+import { Time } from "@elevate/shared/tools/time";
 
 export abstract class AbstractGradeDataView extends AbstractDataView {
-  protected gradeData: GradeDataModel;
+  protected grade: GradeStats;
 
-  protected constructor(gradeData: GradeDataModel, units: string) {
+  protected constructor(grade: GradeStats, units: string) {
     super(units);
     this.mainColor = [3, 167, 97];
     this.setGraphTitleFromUnits();
-    this.gradeData = gradeData;
-    this.setupDistributionGraph(this.gradeData.gradeZones);
-    this.setupDistributionTable(this.gradeData.gradeZones);
+    this.grade = grade;
+    this.setupDistributionGraph(this.grade.zones);
+    this.setupDistributionTable(this.grade.zones);
     this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
   }
 
@@ -39,44 +39,16 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
   }
 
   protected insertDataIntoGrid(): void {
-    this.insertContentAtGridPosition(
-      0,
-      0,
-      this.gradeData.gradeProfile,
-      "Grade Profile",
-      "",
-      "displayAdvancedGradeData"
-    );
+    this.insertContentAtGridPosition(0, 0, this.grade.slopeProfile, "Grade Profile", "", "displayAdvancedGradeData");
 
-    this.insertContentAtGridPosition(
-      0,
-      1,
-      this.gradeData.lowerQuartileGrade,
-      "25% Quartile Grade",
-      "%",
-      "displayAdvancedGradeData"
-    );
-    this.insertContentAtGridPosition(
-      1,
-      1,
-      this.gradeData.medianGrade,
-      "50% Quartile Grade",
-      "%",
-      "displayAdvancedGradeData"
-    );
-    this.insertContentAtGridPosition(
-      2,
-      1,
-      this.gradeData.upperQuartileGrade,
-      "75% Quartile Grade",
-      "%",
-      "displayAdvancedGradeData"
-    );
+    this.insertContentAtGridPosition(0, 1, this.grade.lowQ, "25% Quartile Grade", "%", "displayAdvancedGradeData");
+    this.insertContentAtGridPosition(1, 1, this.grade.median, "50% Quartile Grade", "%", "displayAdvancedGradeData");
+    this.insertContentAtGridPosition(2, 1, this.grade.upperQ, "75% Quartile Grade", "%", "displayAdvancedGradeData");
 
     this.insertContentAtGridPosition(
       0,
       2,
-      this.printNumber((this.gradeData.upFlatDownInSeconds.up / this.gradeData.upFlatDownInSeconds.total) * 100, 1),
+      this.printNumber((this.grade.slopeTime.up / this.grade.slopeTime.total) * 100, 1),
       "% climbing",
       "%",
       "displayAdvancedGradeData"
@@ -84,7 +56,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       2,
-      this.printNumber((this.gradeData.upFlatDownInSeconds.flat / this.gradeData.upFlatDownInSeconds.total) * 100, 1),
+      this.printNumber((this.grade.slopeTime.flat / this.grade.slopeTime.total) * 100, 1),
       "% flat",
       "%",
       "displayAdvancedGradeData"
@@ -92,7 +64,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       2,
-      this.printNumber((this.gradeData.upFlatDownInSeconds.down / this.gradeData.upFlatDownInSeconds.total) * 100, 1),
+      this.printNumber((this.grade.slopeTime.down / this.grade.slopeTime.total) * 100, 1),
       "% downhill ",
       "%",
       "displayAdvancedGradeData"
@@ -101,7 +73,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       3,
-      Time.secToMilitary(this.gradeData.upFlatDownInSeconds.up),
+      Time.secToMilitary(this.grade.slopeTime.up),
       "Climbing time",
       "",
       "displayAdvancedGradeData"
@@ -109,7 +81,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       3,
-      Time.secToMilitary(this.gradeData.upFlatDownInSeconds.flat),
+      Time.secToMilitary(this.grade.slopeTime.flat),
       "Flat time",
       "",
       "displayAdvancedGradeData"
@@ -117,17 +89,15 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       3,
-      Time.secToMilitary(this.gradeData.upFlatDownInSeconds.down),
+      Time.secToMilitary(this.grade.slopeTime.down),
       "Downhill time",
       "",
       "displayAdvancedGradeData"
     );
 
-    const distanceUp: number = (this.gradeData.upFlatDownDistanceData.up / 1000) * this.speedUnitsData.speedUnitFactor;
-    const distanceFlat: number =
-      (this.gradeData.upFlatDownDistanceData.flat / 1000) * this.speedUnitsData.speedUnitFactor;
-    const distanceDown: number =
-      (this.gradeData.upFlatDownDistanceData.down / 1000) * this.speedUnitsData.speedUnitFactor;
+    const distanceUp: number = (this.grade.slopeDistance.up / 1000) * this.speedUnitsData.speedUnitFactor;
+    const distanceFlat: number = (this.grade.slopeDistance.flat / 1000) * this.speedUnitsData.speedUnitFactor;
+    const distanceDown: number = (this.grade.slopeDistance.down / 1000) * this.speedUnitsData.speedUnitFactor;
 
     this.insertContentAtGridPosition(
       0,
@@ -157,7 +127,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       6,
-      this.printNumber(this.gradeData.avgGrade, 1),
+      this.printNumber(this.grade.avg, 1),
       "Avg grade",
       "%",
       "displayAdvancedGradeData"
@@ -165,7 +135,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       6,
-      this.printNumber(this.gradeData.avgMaxGrade, 1),
+      this.printNumber(this.grade.max, 1),
       "Max uphill grade",
       "%",
       "displayAdvancedGradeData"
@@ -173,7 +143,7 @@ export abstract class AbstractGradeDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       6,
-      this.printNumber(this.gradeData.avgMinGrade, 1),
+      this.printNumber(this.grade.min, 1),
       "Max downhill grade",
       "%",
       "displayAdvancedGradeData"

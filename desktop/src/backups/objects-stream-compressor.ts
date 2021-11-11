@@ -5,9 +5,9 @@ import miniZlib from "minizlib";
 import stream from "stream";
 import { Subject } from "rxjs";
 import { inject, singleton } from "tsyringe";
-import { ElevateException } from "@elevate/shared/exceptions";
 import pDefer, { DeferredPromise } from "p-defer";
 import { Logger } from "../logger";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 
 @singleton()
 export class ObjectsStreamCompressor {

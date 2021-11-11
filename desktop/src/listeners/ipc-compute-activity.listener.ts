@@ -1,36 +1,52 @@
 import { IpcListener } from "./ipc-listener.interface";
-import { AthleteSnapshotModel, Streams, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
-import { Channel, IpcTunnelService } from "@elevate/shared/electron";
 import { inject, singleton } from "tsyringe";
-import { ConnectorSyncService } from "../connectors/connector-sync.service";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { ActivityComputeWorkerParams } from "../workers/activity-compute.worker";
+import { WorkerService } from "../worker-service";
+import { WorkerType } from "../enum/worker-type.enum";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @singleton()
 export class IpcComputeActivityListener implements IpcListener {
-  constructor(@inject(ConnectorSyncService) private readonly connectorSyncService: ConnectorSyncService) {}
+  constructor(@inject(WorkerService) protected readonly workerService: WorkerService) {}
 
   public startListening(ipcTunnelService: IpcTunnelService): void {
     // Compute activity
-    ipcTunnelService.on<
-      Array<[SyncedActivityModel, AthleteSnapshotModel, Streams, DesktopUserSettingsModel]>,
-      SyncedActivityModel
-    >(Channel.computeActivity, payload => {
-      const [syncedActivityModel, athleteSnapshotModel, streams, desktopUserSettingsModel] = payload[0];
-      return this.handleComputeActivity(syncedActivityModel, athleteSnapshotModel, streams, desktopUserSettingsModel);
-    });
+    ipcTunnelService.on<Array<[Activity, AthleteSnapshot, Streams, DesktopUserSettings]>, Activity>(
+      Channel.computeActivity,
+      payload => {
+        const [activity, athleteSnapshot, streams, desktopUserSettings] = payload[0];
+        return this.handleComputeActivity(activity, athleteSnapshot, streams, desktopUserSettings);
+      }
+    );
   }
 
   public handleComputeActivity(
-    syncedActivityModel: SyncedActivityModel,
-    athleteSnapshotModel: AthleteSnapshotModel,
+    activity: Activity,
+    athleteSnapshot: AthleteSnapshot,
     streams: Streams,
-    userSettingsModel: DesktopUserSettingsModel
-  ): Promise<SyncedActivityModel> {
-    return this.connectorSyncService.computeActivity(
-      syncedActivityModel,
-      userSettingsModel,
-      athleteSnapshotModel,
-      streams
-    );
+    userSettings: DesktopUserSettings
+  ): Promise<Activity> {
+    const workerParams: ActivityComputeWorkerParams = {
+      activity: activity,
+      athleteSnapshot: athleteSnapshot,
+      userSettings: userSettings,
+      streams: streams,
+      deflateStreams: false,
+      returnPeaks: true,
+      returnZones: false,
+      bounds: null,
+      isOwner: true,
+      activityEssentials: null
+    };
+
+    return this.workerService
+      .exec<ActivityComputeWorkerParams, { computedActivity: Activity }>(WorkerType.ACTIVITY_COMPUTE, workerParams)
+      .then(result => Promise.resolve(result.computedActivity));
   }
 }

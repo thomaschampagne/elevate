@@ -1,8 +1,33 @@
-import { ElevateSport } from "@elevate/shared/enums";
-import { AnalysisDataModel, AthleteSettingsModel, Gender, Streams } from "@elevate/shared/models";
-import { ActivityComputer, CaloriesEstimator } from "@elevate/shared/sync";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { CaloriesEstimator } from "@elevate/shared/sync/compute/calories-estimator";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 describe("CaloriesEstimator", () => {
+  describe("With cycling Power", () => {
+    it("should calculate calories of cycling activity performed by a MEN with cycling power meter (1)", done => {
+      // Given
+      const sportType: ElevateSport = ElevateSport.Ride;
+      const movingTime = 3600;
+      const weight = 80;
+      const age = 34;
+      const gender = Gender.MEN;
+      const avgWatts = 150;
+      const avgBpm = 150;
+      const expectedCalories = 540;
+
+      // When
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgWatts, avgBpm);
+
+      // Then
+      expect(calories).toEqual(expectedCalories);
+      done();
+    });
+  });
+
   describe("With HRM", () => {
     it("should calculate calories of cycling activity performed by a MEN with HRM (1)", done => {
       // Given
@@ -12,10 +37,11 @@ describe("CaloriesEstimator", () => {
       const age = 34;
       const gender = Gender.MEN;
       const avgBpm = 150;
+      const avgWatts = null;
       const expectedCalories = 893.4;
 
       // When
-      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgWatts, avgBpm);
 
       // Then
       expect(calories).toEqual(expectedCalories);
@@ -30,10 +56,11 @@ describe("CaloriesEstimator", () => {
       const age = 27;
       const gender = Gender.MEN;
       const avgBpm = 178;
+      const avgWatts = null;
       const expectedCalories = 3336.7;
 
       // When
-      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgWatts, avgBpm);
 
       // Then
       expect(calories).toEqual(expectedCalories);
@@ -48,10 +75,11 @@ describe("CaloriesEstimator", () => {
       const age = 42;
       const gender = Gender.WOMEN;
       const avgBpm = 169;
+      const avgWatts = null;
       const expectedCalories = 1472.4;
 
       // When
-      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgWatts, avgBpm);
 
       // Then
       expect(calories).toEqual(expectedCalories);
@@ -66,10 +94,11 @@ describe("CaloriesEstimator", () => {
       const age = 31;
       const gender = Gender.WOMEN;
       const avgBpm = 90;
+      const avgWatts = null;
       const expectedCalories = 228.7;
 
       // When
-      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgBpm);
+      const calories = CaloriesEstimator.calc(sportType, movingTime, weight, age, gender, avgWatts, avgBpm);
 
       // Then
       expect(calories).toEqual(expectedCalories);
@@ -77,13 +106,13 @@ describe("CaloriesEstimator", () => {
     });
   });
 
-  describe("Without HRM", () => {
+  describe("Without HRM and cycling power", () => {
     it("should calculate calories of cycling activity", done => {
       // Given
       const sportType: ElevateSport = ElevateSport.Ride;
       const movingTime = 3600;
       const weight = 75;
-      const expectedCalories = 748.1;
+      const expectedCalories = 669.4;
 
       // When
       const calories = CaloriesEstimator.calc(sportType, movingTime, weight);
@@ -145,13 +174,13 @@ describe("Detect lack of FTPs settings", () => {
   let movingTime = 100;
   let elapsedTime = 100;
 
-  let analysisDataModel: AnalysisDataModel;
-  let athleteSettingsModel: AthleteSettingsModel;
+  let activityStats: ActivityStats;
+  let athleteSettingsModel: AthleteSettings;
   let streams: Streams;
 
   beforeEach(done => {
-    analysisDataModel = new AnalysisDataModel();
-    athleteSettingsModel = AthleteSettingsModel.DEFAULT_MODEL;
+    activityStats = new ActivityStats();
+    athleteSettingsModel = AthleteSettings.DEFAULT_MODEL;
     streams = new Streams();
     done();
   });
@@ -170,7 +199,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             cyclingType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -193,7 +222,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             cyclingType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -216,7 +245,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             cyclingType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -239,7 +268,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             cyclingType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -264,7 +293,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             runningType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -287,7 +316,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             runningType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -310,7 +339,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             runningType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -333,7 +362,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             runningType,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -357,7 +386,7 @@ describe("Detect lack of FTPs settings", () => {
           movingTime,
           elapsedTime,
           type,
-          analysisDataModel,
+          activityStats,
           athleteSettingsModel,
           streams
         );
@@ -382,7 +411,7 @@ describe("Detect lack of FTPs settings", () => {
           movingTime,
           elapsedTime,
           type,
-          analysisDataModel,
+          activityStats,
           athleteSettingsModel,
           streams
         );
@@ -402,7 +431,7 @@ describe("Detect lack of FTPs settings", () => {
             movingTime,
             elapsedTime,
             type,
-            analysisDataModel,
+            activityStats,
             athleteSettingsModel,
             streams
           );
@@ -429,12 +458,14 @@ describe("Detect lack of FTPs settings", () => {
         athleteSettingsModel.cyclingFtp = null;
         athleteSettingsModel.runningFtp = null;
         athleteSettingsModel.swimFtp = null;
-        analysisDataModel = {
-          heartRateData: {
-            HRSS: 100,
-            TRIMP: 100
+        activityStats = {
+          scores: {
+            stress: {
+              hrss: 100,
+              trimp: 100
+            }
           }
-        } as AnalysisDataModel;
+        } as ActivityStats;
 
         // When
         const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -442,7 +473,7 @@ describe("Detect lack of FTPs settings", () => {
           movingTime,
           elapsedTime,
           type,
-          analysisDataModel,
+          activityStats,
           athleteSettingsModel,
           streams
         );

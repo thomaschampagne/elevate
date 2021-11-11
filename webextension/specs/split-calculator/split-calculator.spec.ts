@@ -1,6 +1,6 @@
 import { powerTimeData } from "./power_data_1480020375";
 import _ from "lodash";
-import { SplitCalculator } from "@elevate/shared/sync";
+import { SplitCalculator } from "@elevate/shared/sync/compute/split-calculator";
 
 describe("SplitCalculator", () => {
   let _POWER_TIME_DATA_: { time: number[]; watts: number[] };

@@ -27,7 +27,7 @@ import { SideNavService } from "../../shared/services/side-nav/side-nav.service"
 import { WindowService } from "../../shared/services/window/window.service";
 import { Subscription } from "rxjs";
 import { LoggerService } from "../../shared/services/logging/logger.service";
-import { ElevateException } from "@elevate/shared/exceptions";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 
 @Component({
   selector: "app-year-progress-graph",

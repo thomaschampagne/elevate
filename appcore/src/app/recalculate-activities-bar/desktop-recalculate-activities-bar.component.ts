@@ -10,8 +10,8 @@ import {
 } from "../shared/services/activity/impl/desktop-activity.service";
 import moment from "moment";
 import { RecalculateActivitiesBarComponent } from "./recalculate-activities-bar.component";
-import { UserSettings } from "@elevate/shared/models";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
   selector: "app-desktop-recalculate-activities-bar",
@@ -83,12 +83,12 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
         </div>
       </div>
     </div>
+    <mat-progress-bar *ngIf="isRecalculating" mode="indeterminate"></mat-progress-bar>
   `,
   styles: [
     `
       .ribbon {
         padding: 10px 20px;
-        border-bottom: 1px solid #bfbfbf;
       }
 
       button {
@@ -99,6 +99,7 @@ import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
 })
 export class DesktopRecalculateActivitiesBarComponent extends RecalculateActivitiesBarComponent implements OnInit {
   public hideRecalculation: boolean;
+  public isRecalculating: boolean;
 
   public statusText: string;
   public processed: number;
@@ -113,6 +114,7 @@ export class DesktopRecalculateActivitiesBarComponent extends RecalculateActivit
   ) {
     super(router, activityService, userSettingsService, dialog);
     this.hideRecalculation = true;
+    this.isRecalculating = false;
   }
 
   public ngOnInit(): void {
@@ -122,13 +124,13 @@ export class DesktopRecalculateActivitiesBarComponent extends RecalculateActivit
       (notification: ActivityRecalculateNotification) => {
         this.showRecalculation();
 
-        this.statusText =
-          moment(notification.syncedActivityModel.start_time).format("ll") +
-          ": " +
-          notification.syncedActivityModel.name;
+        this.statusText = moment(notification.activity.startTime).format("ll") + ": " + notification.activity.name;
 
         if (notification.ended) {
           this.statusText = "Recalculation done.";
+          this.isRecalculating = false;
+        } else {
+          this.isRecalculating = true;
         }
 
         this.processed = notification.currentlyProcessed;
@@ -143,10 +145,10 @@ export class DesktopRecalculateActivitiesBarComponent extends RecalculateActivit
 
   public onFixActivities(): void {
     super.onFixActivities();
-    this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
+    this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
       const desktopActivityService = this.activityService as DesktopActivityService;
       desktopActivityService.nonConsistentActivitiesWithAthleteSettings().then((activitiesIds: number[]) => {
-        desktopActivityService.recalculateFromIds(activitiesIds, userSettingsModel);
+        desktopActivityService.recalculateFromIds(activitiesIds, userSettings);
       });
     });
   }

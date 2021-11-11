@@ -1,35 +1,30 @@
-import { TestBed } from "@angular/core/testing";
-import { CoreModule } from "../../../../core/core.module";
 import { SharedModule } from "../../../shared.module";
 import { DesktopSyncService } from "./desktop-sync.service";
-import {
-  ActivitySyncEvent,
-  CompleteSyncEvent,
-  ConnectorType,
-  ErrorSyncEvent,
-  FileConnectorInfo,
-  GenericSyncEvent,
-  StartedSyncEvent,
-  StoppedSyncEvent,
-  StravaConnectorInfo,
-  StravaCredentialsUpdateSyncEvent,
-  SyncEvent
-} from "@elevate/shared/sync";
-import {
-  AthleteModel,
-  ConnectorSyncDateTime,
-  DeflatedActivityStreams,
-  SyncedActivityModel
-} from "@elevate/shared/models";
-import { Subject } from "rxjs";
-import { SyncException } from "@elevate/shared/exceptions";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../../shared-fixtures/activities-2015.fixture";
+import { TestBed } from "@angular/core/testing";
 import { SyncState } from "../sync-state.enum";
-import { DataStore } from "../../../data-store/data-store";
-import { TestingDataStore } from "../../../data-store/testing-datastore.service";
-import { TargetModule } from "../../../modules/target/desktop-target.module";
-import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { DataStore } from "../../../data-store/data-store";
+import { Subject } from "rxjs";
+import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
+import { TestingDataStore } from "../../../data-store/testing-datastore.service";
+import { CoreModule } from "../../../../core/core.module";
+import { TargetModule } from "../../../modules/target/desktop-target.module";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { StoppedSyncEvent } from "@elevate/shared/sync/events/stopped-sync.event";
+import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
+import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { StravaCredentialsUpdateSyncEvent } from "@elevate/shared/sync/events/strava-credentials-update-sync.event";
+import { SyncException } from "@elevate/shared/exceptions/sync.exception";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
+import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
+import { GenericSyncEvent } from "@elevate/shared/sync/events/generic-sync.event";
+import { StartedSyncEvent } from "@elevate/shared/sync/events/started-sync.event";
 
 describe("DesktopSyncService", () => {
   let desktopSyncService: DesktopSyncService;
@@ -110,8 +105,8 @@ describe("DesktopSyncService", () => {
       it("should start a recent strava sync (from last activity start time)", done => {
         // Given
         const connectorType = ConnectorType.STRAVA;
-        const mostRecentActivity = new SyncedActivityModel();
-        mostRecentActivity.start_timestamp = 22222;
+        const mostRecentActivity = new Activity();
+        mostRecentActivity.startTimestamp = 22222;
 
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
           Promise.resolve(AthleteModel.DEFAULT_MODEL)
@@ -147,13 +142,13 @@ describe("DesktopSyncService", () => {
               connectorTypeParam,
               connectorInfoParam,
               athleteModelParam,
-              userSettingsModelParam,
+              userSettingsParam,
               syncFromDateTimeParam
             ] = startSyncSpy.calls.mostRecent().args;
 
             expect(connectorTypeParam).toEqual(connectorType);
             expect(syncFromDateTimeParam).toBeDefined();
-            expect(syncFromDateTimeParam).toEqual(mostRecentActivity.start_timestamp * 1000);
+            expect(syncFromDateTimeParam).toEqual(mostRecentActivity.startTimestamp * 1000);
 
             done();
           },
@@ -298,10 +293,10 @@ describe("DesktopSyncService", () => {
       // Given
       const syncEvent$ = new Subject<SyncEvent>();
       const isNew = true;
-      const activity = new SyncedActivityModel();
+      const activity = new Activity();
       activity.id = "7dsa12ads8d";
       activity.name = "No pain no gain";
-      activity.start_time = new Date().toISOString();
+      activity.startTime = new Date().toISOString();
       const deflatedStream = "fakeCompressedData";
       const expectedDeflatedActivityStreams = new DeflatedActivityStreams(activity.id, deflatedStream);
       const activitySyncEvent = new ActivitySyncEvent(ConnectorType.FILE, null, activity, isNew, deflatedStream);
@@ -334,9 +329,9 @@ describe("DesktopSyncService", () => {
       // Given
       const syncEvent$ = new Subject<SyncEvent>();
       const isNew = true;
-      const activity = new SyncedActivityModel();
+      const activity = new Activity();
       activity.name = "No pain no gain";
-      activity.start_time = new Date().toISOString();
+      activity.startTime = new Date().toISOString();
       const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
         ConnectorType.STRAVA,
         activity
@@ -361,7 +356,7 @@ describe("DesktopSyncService", () => {
           expect(syncEvent.type).toEqual(expectedErrorSyncEvent.type);
           expect(syncEvent.code).toEqual(expectedErrorSyncEvent.code);
           expect(syncEvent.activity.name).toEqual(expectedErrorSyncEvent.activity.name);
-          expect(syncEvent.activity.start_time).toEqual(expectedErrorSyncEvent.activity.start_time);
+          expect(syncEvent.activity.startTime).toEqual(expectedErrorSyncEvent.activity.startTime);
           expect(stopSpy).toHaveBeenCalledTimes(1);
 
           setTimeout(() => {
@@ -380,9 +375,9 @@ describe("DesktopSyncService", () => {
       // Given
       const syncEvent$ = new Subject<SyncEvent>();
       const isNew = true;
-      const activity = new SyncedActivityModel();
+      const activity = new Activity();
       activity.name = "No pain no gain";
-      activity.start_time = new Date().toISOString();
+      activity.startTime = new Date().toISOString();
       const expectedErrorSyncEvent = ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
         ConnectorType.STRAVA,
         activity
@@ -408,7 +403,7 @@ describe("DesktopSyncService", () => {
           expect(syncEvent.type).toEqual(expectedErrorSyncEvent.type);
           expect(syncEvent.code).toEqual(expectedErrorSyncEvent.code);
           expect(syncEvent.activity.name).toEqual(expectedErrorSyncEvent.activity.name);
-          expect(syncEvent.activity.start_time).toEqual(expectedErrorSyncEvent.activity.start_time);
+          expect(syncEvent.activity.startTime).toEqual(expectedErrorSyncEvent.activity.startTime);
           expect(stopSpy).toHaveBeenCalledTimes(1);
 
           setTimeout(() => {
@@ -586,9 +581,9 @@ describe("DesktopSyncService", () => {
       const syncEvent$ = new Subject<SyncEvent>();
       desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
       const isNew = true;
-      const activity = new SyncedActivityModel();
+      const activity = new Activity();
       activity.name = "No pain no gain";
-      activity.start_time = new Date().toISOString();
+      activity.startTime = new Date().toISOString();
       const activitySyncEvent = new ActivitySyncEvent(desktopSyncService.currentConnectorType, null, activity, isNew);
       const activityServicePutSpy = spyOn(desktopSyncService.activityService, "put").and.returnValue(
         Promise.resolve(activity)
@@ -907,7 +902,7 @@ describe("DesktopSyncService", () => {
       // Given
       const syncEvent$ = new Subject<SyncEvent>();
       desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
-      const activity = { name: "fakeActivity" } as SyncedActivityModel;
+      const activity = { name: "fakeActivity" } as Activity;
       const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
         desktopSyncService.currentConnectorType,
         activity
@@ -1000,6 +995,7 @@ describe("DesktopSyncService", () => {
         desktopSyncService.currentConnectorType,
         "fakeActivity",
         new Date(),
+        new Date(),
         []
       );
       const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
@@ -1090,7 +1086,7 @@ describe("DesktopSyncService", () => {
       const syncEvent$ = new Subject<SyncEvent>();
       desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
       const errorSyncEvent = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
-      delete errorSyncEvent.code; // Fake remove code to simulate this case
+      delete (errorSyncEvent as any).code; // Fake remove code to simulate this case
       const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
       const throwSyncErrorSpy = spyOn(desktopSyncService, "throwSyncError").and.stub();
       const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
@@ -1110,7 +1106,7 @@ describe("DesktopSyncService", () => {
       const syncEvent$ = new Subject<SyncEvent>();
       desktopSyncService.currentConnectorType = ConnectorType.STRAVA;
       const errorSyncEvent = ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create();
-      errorSyncEvent.code = "FAKE_CODE"; // Fake code to simulate this case
+      (errorSyncEvent as any).code = "FAKE_CODE"; // Fake code to simulate this case
       const syncEventNextSpy = spyOn(syncEvent$, "next").and.callThrough();
       const throwSyncErrorSpy = spyOn(desktopSyncService, "throwSyncError").and.stub();
       const stopSpy = spyOn(desktopSyncService, "stop").and.returnValue(Promise.resolve());
@@ -1193,9 +1189,7 @@ describe("DesktopSyncService", () => {
         Promise.resolve(connectorSyncDateTimes)
       );
 
-      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(
-        Promise.resolve(TEST_SYNCED_ACTIVITIES.length)
-      );
+      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(Promise.resolve(1));
 
       // When
       const promise = desktopSyncService.getSyncState();
@@ -1225,9 +1219,7 @@ describe("DesktopSyncService", () => {
         Promise.resolve(connectorSyncDateTimes)
       );
 
-      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(
-        Promise.resolve(TEST_SYNCED_ACTIVITIES.length)
-      );
+      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(Promise.resolve(1));
 
       // When
       const promise = desktopSyncService.getSyncState();
@@ -1314,9 +1306,7 @@ describe("DesktopSyncService", () => {
         Promise.resolve(connectorSyncDateTimes)
       );
 
-      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(
-        Promise.resolve(TEST_SYNCED_ACTIVITIES.length)
-      );
+      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(Promise.resolve(1));
 
       // When
       const promise = desktopSyncService.getSyncState();

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
 import { ElectronService } from "../electron/electron.service";
-import { Channel } from "@elevate/shared/electron";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @Injectable()
 export class IpcStorageService {

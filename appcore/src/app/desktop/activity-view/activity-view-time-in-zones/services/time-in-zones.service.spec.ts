@@ -1,15 +1,12 @@
 import { TestBed } from "@angular/core/testing";
-
 import { TimeInZonesService } from "./time-in-zones.service";
 import { SharedModule } from "../../../../shared/shared.module";
 import { CoreModule } from "../../../../core/core.module";
 import { TargetModule } from "../../../../shared/modules/target/desktop-target.module";
 import { DataStore } from "../../../../shared/data-store/data-store";
 import { TestingDataStore } from "../../../../shared/data-store/testing-datastore.service";
-import { Streams, UserSettings } from "@elevate/shared/models";
 import _ from "lodash";
 import { UserSettingsService } from "../../../../shared/services/user-settings/user-settings.service";
-import { ZoneType } from "@elevate/shared/enums";
 import { SensorTimeInZones } from "../models/sensor-time-in-zones.model";
 import { Sensor } from "../../shared/models/sensors/sensor.model";
 import { HeartRateSensor } from "../../shared/models/sensors/heart-rate.sensor";
@@ -18,7 +15,10 @@ import { CyclingCadenceSensor, RunningCadenceSensor } from "../../shared/models/
 import { CyclingPowerSensor, RunningPowerSensor } from "../../shared/models/sensors/power.sensor";
 import { IPC_TUNNEL_SERVICE } from "../../../ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../../../ipc/ipc-renderer-tunnel-service.mock";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("TimeInZonesService", () => {
   let timeInZonesService: TimeInZonesService;
@@ -40,7 +40,7 @@ describe("TimeInZonesService", () => {
 
   it("should compute time-in-zones on Ride activity", done => {
     // Given
-    const expectedSettings = _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
+    const expectedSettings = _.cloneDeep(DesktopUserSettings.DEFAULT_MODEL);
     spyOn(userSettingsService.userSettingsDao, "findOne").and.returnValue(Promise.resolve(expectedSettings));
 
     expectedSettings.zones.heartRate = [130, 150, 170, 190];
@@ -87,8 +87,10 @@ describe("TimeInZonesService", () => {
           _.find(sensorTimeInZonesResults, result => result.sensor.zoneType === ZoneType.POWER)
         ).not.toBeUndefined();
 
-        const hrZones = _.find(sensorTimeInZonesResults, result => result.sensor.zoneType === ZoneType.HEART_RATE)
-          .zones;
+        const hrZones = _.find(
+          sensorTimeInZonesResults,
+          result => result.sensor.zoneType === ZoneType.HEART_RATE
+        ).zones;
 
         // Zone 130 - 150
         expect(hrZones[0].s).toEqual(5); //
@@ -112,7 +114,7 @@ describe("TimeInZonesService", () => {
 
   it("should compute time-in-zones on VirtualRun activity", done => {
     // Given
-    const expectedSettings = _.cloneDeep(DesktopUserSettingsModel.DEFAULT_MODEL);
+    const expectedSettings = _.cloneDeep(DesktopUserSettings.DEFAULT_MODEL);
     spyOn(userSettingsService.userSettingsDao, "findOne").and.returnValue(Promise.resolve(expectedSettings));
 
     const streams = new Streams();

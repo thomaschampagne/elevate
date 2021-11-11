@@ -1,8 +1,8 @@
 import { StatsGroup } from "../stat-group.model";
 import { Stat } from "../stat.model";
-import { PowerDataModel, SyncedActivityModel } from "@elevate/shared/models";
 import { CyclingPowerSensor, RunningPowerSensor } from "../../sensors/power.sensor";
 import { StatsDef } from "../stats-def.namespace";
+import { Activity, PowerStats, StressScores } from "@elevate/shared/models/sync/activity.model";
 
 export abstract class PowerStatsGroup extends StatsGroup {
   protected constructor(name: string, stats: Stat<any>[], color: string) {
@@ -11,11 +11,11 @@ export abstract class PowerStatsGroup extends StatsGroup {
 }
 
 export class CyclingPowerStatsGroup extends PowerStatsGroup {
-  public static getDefault(activity: SyncedActivityModel): CyclingPowerStatsGroup {
+  public static getDefault(activity: Activity): CyclingPowerStatsGroup {
     return new CyclingPowerStatsGroup(activity);
   }
 
-  private static getStats(activity: SyncedActivityModel): Stat<PowerDataModel>[] {
+  private static getStats(activity: Activity): Stat<PowerStats & StressScores>[] {
     const cyclingPowerSensor = CyclingPowerSensor.getDefault(activity);
 
     return [
@@ -24,30 +24,30 @@ export class CyclingPowerStatsGroup extends PowerStatsGroup {
       StatsDef.Power.avgWeighted(cyclingPowerSensor),
       StatsDef.Power.avgWeightedPerKg(cyclingPowerSensor),
       StatsDef.Power.max(cyclingPowerSensor),
+      StatsDef.Power.work(cyclingPowerSensor),
       StatsDef.Power.threshold(cyclingPowerSensor),
-      StatsDef.Power.Cycling.pss(cyclingPowerSensor, activity.start_time),
-      StatsDef.Power.Cycling.pssPerHour(cyclingPowerSensor, activity.start_time),
-      StatsDef.Power.threshold80Percent(cyclingPowerSensor, activity.moving_time_raw),
+      StatsDef.Scores.Stress.Cycling.pss(cyclingPowerSensor, activity.startTime),
+      StatsDef.Scores.Stress.Cycling.pssPerHour(cyclingPowerSensor, activity.startTime),
       StatsDef.Power.variabilityIndex(cyclingPowerSensor),
-      StatsDef.Power.Cycling.intensity(cyclingPowerSensor, activity.start_time),
+      StatsDef.Power.Cycling.intensity(cyclingPowerSensor, activity.startTime),
       StatsDef.Power.q25(cyclingPowerSensor),
       StatsDef.Power.q50(cyclingPowerSensor),
       StatsDef.Power.q75(cyclingPowerSensor)
     ];
   }
 
-  constructor(activity: SyncedActivityModel) {
+  constructor(activity: Activity) {
     const cyclingPowerSensor = CyclingPowerSensor.getDefault(activity);
     super(cyclingPowerSensor.name, CyclingPowerStatsGroup.getStats(activity), cyclingPowerSensor.color);
   }
 }
 
 export class RunningPowerStatsGroup extends PowerStatsGroup {
-  public static getDefault(activity: SyncedActivityModel): RunningPowerStatsGroup {
+  public static getDefault(activity: Activity): RunningPowerStatsGroup {
     return new RunningPowerStatsGroup(activity);
   }
 
-  private static getStats(activity: SyncedActivityModel): Stat<PowerDataModel>[] {
+  private static getStats(activity: Activity): Stat<PowerStats & StressScores>[] {
     const runningPowerSensor = RunningPowerSensor.getDefault(activity);
 
     return [
@@ -56,8 +56,8 @@ export class RunningPowerStatsGroup extends PowerStatsGroup {
       StatsDef.Power.avgWeighted(runningPowerSensor),
       StatsDef.Power.avgWeightedPerKg(runningPowerSensor),
       StatsDef.Power.max(runningPowerSensor),
+      StatsDef.Power.work(runningPowerSensor),
       StatsDef.Power.threshold(runningPowerSensor),
-      StatsDef.Power.threshold80Percent(runningPowerSensor, activity.moving_time_raw),
       StatsDef.Power.variabilityIndex(runningPowerSensor),
       StatsDef.Power.q25(runningPowerSensor),
       StatsDef.Power.q50(runningPowerSensor),
@@ -65,7 +65,7 @@ export class RunningPowerStatsGroup extends PowerStatsGroup {
     ];
   }
 
-  constructor(activity: SyncedActivityModel) {
+  constructor(activity: Activity) {
     const runningPowerSensor = RunningPowerSensor.getDefault(activity);
     super(runningPowerSensor.name, RunningPowerStatsGroup.getStats(activity), runningPowerSensor.color);
   }

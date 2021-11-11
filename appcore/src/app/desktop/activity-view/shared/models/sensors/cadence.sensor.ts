@@ -1,7 +1,9 @@
 import { Sensor } from "./sensor.model";
-import { AnalysisDataModel, PeaksData, Streams } from "@elevate/shared/models";
-import { MeasureSystem, ZoneType } from "@elevate/shared/enums";
 import _ from "lodash";
+import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { ActivityStats, Peaks } from "@elevate/shared/models/sync/activity.model";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 export abstract class CadenceSensor extends Sensor {
   public static readonly NAME: string = "Cadence";
@@ -12,7 +14,7 @@ export abstract class CadenceSensor extends Sensor {
   public color = "#ff61dd";
   public streamKey: keyof Streams = "cadence";
 
-  public peaksPath: [keyof AnalysisDataModel, keyof PeaksData] = ["cadenceData", "peaks"];
+  public peaksPath: [keyof ActivityStats, keyof Peaks] = ["cadence", "peaks"];
 }
 
 export class CyclingCadenceSensor extends CadenceSensor {

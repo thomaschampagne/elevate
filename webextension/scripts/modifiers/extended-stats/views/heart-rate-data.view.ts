@@ -1,19 +1,28 @@
+// tslint:disable:forin
 import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { AthleteSnapshotModel, HeartRateDataModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { HeartRateStats, StressScores } from "@elevate/shared/models/sync/activity.model";
+import { Time } from "@elevate/shared/tools/time";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 
 export class HeartRateDataView extends AbstractDataView {
   public static instance: HeartRateDataView = null;
 
-  protected heartRateData: HeartRateDataModel;
-  protected athleteSnapshot: AthleteSnapshotModel;
+  protected heartRateStats: HeartRateStats;
+  protected stressScores: StressScores;
+  protected athleteSnapshot: AthleteSnapshot;
 
-  constructor(heartRateData: HeartRateDataModel, units: string, athleteSnapshot: AthleteSnapshotModel) {
+  constructor(
+    heartRateStats: HeartRateStats,
+    stressScores: StressScores,
+    units: string,
+    athleteSnapshot: AthleteSnapshot
+  ) {
     super(units);
     this.mainColor = [228, 76, 92];
-    this.heartRateData = heartRateData;
+    this.heartRateStats = heartRateStats;
+    this.stressScores = stressScores;
     this.athleteSnapshot = athleteSnapshot;
     this.setGraphTitleFromUnits();
     this.setupDistributionGraph();
@@ -69,17 +78,17 @@ export class HeartRateDataView extends AbstractDataView {
     htmlTable += "</tr>";
 
     let zoneId = 1;
-    for (const zone in this.heartRateData.heartRateZones) {
+    for (const zone in this.heartRateStats.zones) {
       let fromHRR =
         Helper.heartRateReserveFromHeartrate(
-          this.heartRateData.heartRateZones[zone].from,
+          this.heartRateStats.zones[zone].from,
           this.athleteSnapshot.athleteSettings.maxHr,
           this.athleteSnapshot.athleteSettings.restHr
         ) * 100;
       fromHRR = Math.round(fromHRR);
       let toHRR =
         Helper.heartRateReserveFromHeartrate(
-          this.heartRateData.heartRateZones[zone].to,
+          this.heartRateStats.zones[zone].to,
           this.athleteSnapshot.athleteSettings.maxHr,
           this.athleteSnapshot.athleteSettings.restHr
         ) * 100;
@@ -87,15 +96,10 @@ export class HeartRateDataView extends AbstractDataView {
 
       htmlTable += "<tr>"; // Zone
       htmlTable += "<td>Z" + zoneId + "</td>"; // Zone
-      htmlTable +=
-        "<td>" +
-        this.heartRateData.heartRateZones[zone].from +
-        " - " +
-        this.heartRateData.heartRateZones[zone].to +
-        "</th>"; // BPM
+      htmlTable += "<td>" + this.heartRateStats.zones[zone].from + " - " + this.heartRateStats.zones[zone].to + "</th>"; // BPM
       htmlTable += "<td>" + fromHRR + "% - " + toHRR + "%</td>"; // %HRR
-      htmlTable += "<td>" + Time.secToMilitary(this.heartRateData.heartRateZones[zone].s) + "</td>"; // Time%
-      htmlTable += "<td>" + this.heartRateData.heartRateZones[zone].percent.toFixed(0) + "%</td>"; // % in zone
+      htmlTable += "<td>" + Time.secToMilitary(this.heartRateStats.zones[zone].s) + "</td>"; // Time%
+      htmlTable += "<td>" + this.heartRateStats.zones[zone].percent.toFixed(0) + "%</td>"; // % in zone
       htmlTable += "</tr>";
       zoneId++;
     }
@@ -110,21 +114,21 @@ export class HeartRateDataView extends AbstractDataView {
     const labelsData: string[] = [];
     let zone: any;
 
-    for (zone in this.heartRateData.heartRateZones) {
+    for (zone in this.heartRateStats.zones) {
       const label: string =
         "Z" +
         (parseInt(zone, 10) + 1) +
         " " +
-        this.heartRateData.heartRateZones[zone].from +
+        this.heartRateStats.zones[zone].from +
         "-" +
-        this.heartRateData.heartRateZones[zone].to +
+        this.heartRateStats.zones[zone].to +
         " bpm";
       labelsData.push(label);
     }
 
     const hrDistributionInMinutesArray: number[] = [];
-    for (zone in this.heartRateData.heartRateZones) {
-      hrDistributionInMinutesArray.push(Number((this.heartRateData.heartRateZones[zone].s / 60).toFixed(2)));
+    for (zone in this.heartRateStats.zones) {
+      hrDistributionInMinutesArray.push(Number((this.heartRateStats.zones[zone].s / 60).toFixed(2)));
     }
 
     this.graphData = {
@@ -163,7 +167,7 @@ export class HeartRateDataView extends AbstractDataView {
     tooltip.body[0].lines[0] =
       Math.round(
         Helper.heartRateReserveFromHeartrate(
-          parseInt(hr[0]),
+          parseInt(hr[0], 10),
           HeartRateDataView.instance.athleteSnapshot.athleteSettings.maxHr,
           HeartRateDataView.instance.athleteSnapshot.athleteSettings.restHr
         ) * 100
@@ -171,7 +175,7 @@ export class HeartRateDataView extends AbstractDataView {
       " - " +
       Math.round(
         Helper.heartRateReserveFromHeartrate(
-          parseInt(hr[1]),
+          parseInt(hr[1], 10),
           HeartRateDataView.instance.athleteSnapshot.athleteSettings.maxHr,
           HeartRateDataView.instance.athleteSnapshot.athleteSettings.restHr
         ) * 100
@@ -185,7 +189,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       0,
-      this.printNumber(this.heartRateData.HRSS, 0),
+      this.printNumber(this.stressScores?.hrss, 0),
       "<strong>H</strong>eart <strong>R</strong>ate <strong>S</strong>tress <strong>S</strong>core",
       "",
       "displayAdvancedHrData"
@@ -193,7 +197,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       0,
-      this.printNumber(this.heartRateData.HRSSPerHour, 1),
+      this.printNumber(this.stressScores?.hrssPerHour, 1),
       "<strong>HRSS</strong> / Hour",
       "",
       "displayAdvancedHrData"
@@ -201,7 +205,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       0,
-      this.printNumber(this.heartRateData.activityHeartRateReserve, 0),
+      this.printNumber(this.heartRateStats.avgReserve, 0),
       "Heart Rate Reserve Avg",
       "%",
       "displayAdvancedHrData"
@@ -211,7 +215,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       1,
-      this.printNumber(this.heartRateData.TRIMP, 0),
+      this.printNumber(this.stressScores?.trimp, 0),
       "TRaining IMPulse",
       "",
       "displayAdvancedHrData"
@@ -219,7 +223,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       1,
-      this.printNumber(this.heartRateData.TRIMPPerHour, 1),
+      this.printNumber(this.stressScores?.trimpPerHour, 1),
       "TRaining IMPulse / Hour",
       "",
       "displayAdvancedHrData"
@@ -228,7 +232,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       2,
-      this.printNumber(this.heartRateData.best20min, 0),
+      this.printNumber(this.heartRateStats.best20min, 0),
       "Best 20min Heart Rate",
       "bpm",
       "displayAdvancedHrData"
@@ -236,7 +240,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       2,
-      this.printNumber(this.heartRateData.best60min, 0),
+      this.printNumber(this.heartRateStats.best60min, 0),
       "Best 60min Heart Rate <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
       "bpm",
       "displayAdvancedHrData"
@@ -246,7 +250,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       3,
-      this.heartRateData.lowerQuartileHeartRate,
+      this.heartRateStats.lowQ,
       "25% Quartile HeartRate",
       "bpm",
       "displayAdvancedHrData"
@@ -254,7 +258,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       3,
-      this.heartRateData.medianHeartRate,
+      this.heartRateStats.median,
       "50% Quartile HeartRate",
       "bpm",
       "displayAdvancedHrData"
@@ -262,7 +266,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       3,
-      this.heartRateData.upperQuartileHeartRate,
+      this.heartRateStats.upperQ,
       "75% Quartile HeartRate",
       "bpm",
       "displayAdvancedHrData"

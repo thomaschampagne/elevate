@@ -1,7 +1,7 @@
 import { DayFitnessTrendModel } from "./day-fitness-trend.model";
 import { DayStressModel } from "./day-stress.model";
 import { TrainingZone } from "../enums/training-zone.enum";
-import { ElevateSport } from "@elevate/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 describe("DayFitnessTrendModel", () => {
   it("should provide overload training zone (1)", done => {

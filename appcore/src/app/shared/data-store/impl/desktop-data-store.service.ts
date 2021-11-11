@@ -5,7 +5,7 @@ import { Inject, Injectable } from "@angular/core";
 import { AppUsageDetails } from "../../models/app-usage-details.model";
 import { AppUsage } from "../../models/app-usage.model";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
-import { IpcTunnelService } from "@elevate/shared/electron";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
 
 @Injectable()
 export class DesktopDataStore<T extends {}> extends DataStore<T> {

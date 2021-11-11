@@ -1,5 +1,4 @@
 import { TestBed } from "@angular/core/testing";
-
 import { PropertiesDao } from "./properties.dao";
 import { DataStore } from "../../data-store/data-store";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";

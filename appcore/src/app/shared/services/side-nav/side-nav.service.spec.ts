@@ -1,5 +1,4 @@
 import { inject, TestBed } from "@angular/core/testing";
-
 import { SideNavService } from "./side-nav.service";
 import { SideNavStatus } from "./side-nav-status.enum";
 

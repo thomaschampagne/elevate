@@ -1,6 +1,6 @@
 import _ from "lodash";
-import { SpeedUnitDataModel } from "@elevate/shared/models";
-import { Constant } from "@elevate/shared/constants";
+import { SpeedUnitDataModel } from "@elevate/shared/models/activity-data/speed-unit-data.model";
+import { Constant } from "@elevate/shared/constants/constant";
 
 export class Helper {
   public static getSpeedUnitData(measurementPreference: string): SpeedUnitDataModel {

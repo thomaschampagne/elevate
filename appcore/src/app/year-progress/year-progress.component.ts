@@ -9,7 +9,6 @@ import { YearProgressStyleModel } from "./year-progress-graph/models/year-progre
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
-import { SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
@@ -30,17 +29,15 @@ import { MediaObserver } from "@angular/flex-layout";
 import { AddYearToDateProgressPresetDialogData } from "./shared/models/add-year-to-date-progress-preset-dialog-data";
 import { AddRollingProgressPresetDialogData } from "./shared/models/add-rolling-progress-preset-dialog-data";
 import { RollingProgressPresetModel } from "./shared/models/rolling-progress-preset.model";
-import { YearProgressWelcomeDialogComponent } from "./year-progress-welcome-dialog/year-progress-welcome-dialog.component";
 import { LoggerService } from "../shared/services/logging/logger.service";
-import { ElevateSport, MeasureSystem } from "@elevate/shared/enums";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
 import { ActivityCountByType } from "../shared/models/activity/activity-count-by-type.model";
-import UserSettingsModel = UserSettings.UserSettingsModel;
-
-/* Legacy tasks */
-// TODO Style of target line!
-// TODO Remove message old feature (code and warning).
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @Component({
   selector: "app-year-progress",
@@ -49,12 +46,15 @@ import UserSettingsModel = UserSettings.UserSettingsModel;
 })
 export class YearProgressComponent implements OnInit, OnDestroy {
   public static readonly PALETTE: string[] = [
-    "#9f8aff",
-    "#ea7015",
-    "#00b423",
+    "#7867c7",
+    "#fe5d26",
+    "#0ece34",
+    "#cc4498",
+    "#989898",
     "#006dff",
     "#e1ab19",
-    "#ee135e",
+    "#1e1e1e",
+    "#da233f",
     "#00ffe2"
   ];
   public static readonly ROLLING_PERIODS: string[] = ["Days", "Weeks", "Months", "Years"];
@@ -170,7 +170,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   public targetValue: number;
   public yearProgressions: YearProgressModel[]; // Progress for each year
   public targetProgressModels: TargetProgressModel[]; // Progress of target on current year
-  public syncedActivityModels: SyncedActivityModel[]; // Stored synced activities
+  public activities: Activity[]; // Stored synced activities
   public yearProgressStyleModel: YearProgressStyleModel;
   public momentWatched: Moment;
   public hasActivityModels: boolean;
@@ -244,12 +244,12 @@ export class YearProgressComponent implements OnInit, OnDestroy {
       })
       .then(
         (results: any[]) => {
-          this.syncedActivityModels = _.last(results) as SyncedActivityModel[];
-          this.hasActivityModels = !_.isEmpty(this.syncedActivityModels);
+          this.activities = _.last(results) as Activity[];
+          this.hasActivityModels = !_.isEmpty(this.activities);
 
           if (this.hasActivityModels) {
-            const userSettingsModel = _.first(results) as UserSettingsModel;
-            this.isMetric = userSettingsModel.systemUnit === MeasureSystem.METRIC;
+            const userSettings = _.first(results) as BaseUserSettings;
+            this.isMetric = userSettings.systemUnit === MeasureSystem.METRIC;
             this.setup();
           }
 
@@ -260,8 +260,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
           this.yearProgressService.momentWatchedChanges$.subscribe((momentWatched: Moment) => {
             this.momentWatched = momentWatched;
           });
-
-          this.showYearProgressWelcomeDialog();
         },
         (appError: AppError) => {
           this.logger.error(appError.toString());
@@ -305,7 +303,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
       : _.find(this.progressTypes, { type: ProgressType.DISTANCE });
 
     // List years
-    this.availableYears = this.yearProgressService.availableYears(this.syncedActivityModels);
+    this.availableYears = this.yearProgressService.availableYears(this.activities);
 
     // Seek for selected years saved by the user
     const existingSelectedYears = this.progressStorage.selectedYears.get();
@@ -353,11 +351,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   }
 
   public computeYearProgressions(): void {
-    this.yearProgressions = this.yearProgressService.progressions(
-      this.progressConfig,
-      this.isMetric,
-      this.syncedActivityModels
-    );
+    this.yearProgressions = this.yearProgressService.progressions(this.progressConfig, this.isMetric, this.activities);
   }
 
   public targetProgression(): void {
@@ -683,23 +677,6 @@ export class YearProgressComponent implements OnInit, OnDestroy {
     }
 
     return null;
-  }
-
-  public showYearProgressWelcomeDialog(): void {
-    const show: boolean = _.isEmpty(
-      localStorage.getItem(YearProgressWelcomeDialogComponent.LS_HIDE_YEAR_PROGRESS_WELCOME_DIALOG)
-    );
-
-    if (show) {
-      _.delay(
-        () =>
-          this.dialog.open(YearProgressWelcomeDialogComponent, {
-            minWidth: YearProgressWelcomeDialogComponent.MIN_WIDTH,
-            maxWidth: YearProgressWelcomeDialogComponent.MAX_WIDTH
-          }),
-        1000
-      );
-    }
   }
 
   public startCase(sport: string): string {

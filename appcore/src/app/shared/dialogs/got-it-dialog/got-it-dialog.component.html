@@ -1,6 +1,7 @@
 <h2 *ngIf="dialogData.title" mat-dialog-title>{{dialogData.title}}</h2>
 <mat-dialog-content [innerHtml]="html" class="mat-body-1"></mat-dialog-content>
 <mat-dialog-actions>
-  <button color="primary" mat-dialog-close mat-stroked-button>Got It</button>
+  <button color="primary" mat-dialog-close
+          mat-stroked-button>{{dialogData.gotItText ? dialogData.gotItText : "Got It"}}</button>
 </mat-dialog-actions>
 

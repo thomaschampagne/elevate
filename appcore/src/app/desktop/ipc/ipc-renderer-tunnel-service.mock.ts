@@ -1,4 +1,6 @@
-import { Channel, IpcChannelSub, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import { IpcChannelSub, IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
 
 export class IpcRendererTunnelServiceMock implements IpcTunnelService {
   public on<T, R>(channel: Channel, request: (param: T) => R | Promise<R> | void | Error): IpcChannelSub {

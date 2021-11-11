@@ -1,6 +1,7 @@
 import _ from "lodash";
-import { ElevateSport } from "@elevate/shared/enums";
-import { Gender } from "../../models";
+import { ElevateSport } from "../../enums/elevate-sport.enum";
+import { Constant } from "../../constants/constant";
+import { Gender } from "../../models/athlete/gender.enum";
 
 /**
  * Based on
@@ -14,11 +15,11 @@ export class CaloriesEstimator {
    * Note: "MET" stands for "Metabolic Equivalent of a Task"
    */
   private static readonly MET_SPORT_MAP: Map<ElevateSport, number> = new Map<ElevateSport, number>([
-    [ElevateSport.Ride, 9.5],
-    [ElevateSport.VirtualRide, 9.5],
+    [ElevateSport.Ride, 8.5],
+    [ElevateSport.VirtualRide, 8.5],
     [ElevateSport.Run, 9.8],
     [ElevateSport.VirtualRun, 9.8],
-    [ElevateSport.Swim, 8],
+    [ElevateSport.Swim, 8.5],
     [ElevateSport.Rowing, 7],
     [ElevateSport.Hike, 6],
     [ElevateSport.Football, 7],
@@ -37,10 +38,16 @@ export class CaloriesEstimator {
     weight: number,
     age: number = null,
     gender: Gender = null,
+    avgWatts: number = null,
     avgBpm: number = null
   ): number {
     if (!(movingTime > 0) || !(weight > 0)) {
       return null;
+    }
+
+    // If power available, calculate from it (the most reliable)
+    if (avgWatts > 0) {
+      return this.calcFromAvgPower(movingTime, avgWatts);
     }
 
     // Can be calculated from heart-rate data?
@@ -48,8 +55,14 @@ export class CaloriesEstimator {
       return this.calcFromHr(movingTime, weight, age, gender, avgBpm);
     }
 
+    // Default calculation
     const metValue = CaloriesEstimator.MET_SPORT_MAP.get(sportType) || CaloriesEstimator.MET_DEFAULT;
     return _.round((movingTime * metValue * 3.5 * weight) / (200 * 60), 1);
+  }
+
+  private static calcFromAvgPower(movingTime: number, avgWatts: number = null): number {
+    const calories = (movingTime / Constant.SEC_HOUR_FACTOR) * avgWatts * 3.6;
+    return _.round(calories, 1);
   }
 
   private static calcFromHr(

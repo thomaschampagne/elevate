@@ -7,8 +7,8 @@ import { ZoneChangeWhisperModel } from "../shared/zone-change-whisper.model";
 import { ZoneChangeTypeModel } from "./zone-change-type.model";
 import { ZoneDefinitionModel } from "../../shared/models/zone-definition.model";
 import { Subscription } from "rxjs";
-import { ZoneModel } from "@elevate/shared/models";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
 
 @Component({
   selector: "app-zone",

@@ -1,9 +1,3 @@
 export class GotItDialogDataModel {
-  public title: string;
-  public content: string;
-
-  constructor(title: string, content: string) {
-    this.title = title;
-    this.content = content;
-  }
+  constructor(public title: string, public content: string, public gotItText: string = null) {}
 }

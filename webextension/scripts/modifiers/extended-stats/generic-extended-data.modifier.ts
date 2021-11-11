@@ -5,15 +5,16 @@ import { ElevationDataView } from "./views/elevation-data.view";
 import { PaceDataView } from "./views/pace-data.view";
 import { ActivityProcessor } from "../../processors/activity-processor";
 import { AppResourcesModel } from "../../models/app-resources.model";
-import { ActivityInfoModel, UserSettings } from "@elevate/shared/models";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
   constructor(
     activityProcessor: ActivityProcessor,
     activityInfo: ActivityInfoModel,
     appResources: AppResourcesModel,
-    userSettings: ExtensionUserSettingsModel,
+    userSettings: ExtensionUserSettings,
     type: number
   ) {
     super(activityProcessor, activityInfo, appResources, userSettings, type);
@@ -28,10 +29,10 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
     super.setDataViewsNeeded();
 
     // Speed view
-    if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
+    if (this.stats.speed && this.userSettings.displayAdvancedSpeedData) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
       const units: string = measurementPreference === "meters" ? "kph" : "mph";
-      const speedDataView: SpeedDataView = new SpeedDataView(this.analysisData.speedData, units);
+      const speedDataView: SpeedDataView = new SpeedDataView(this.stats.speed, units);
       speedDataView.setAppResources(this.appResources);
       speedDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
       speedDataView.setActivityType(this.activityType);
@@ -39,19 +40,19 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
       this.dataViews.push(speedDataView);
     }
 
-    if (this.analysisData.paceData && this.userSettings.displayAdvancedSpeedData) {
+    if (this.stats.pace && this.userSettings.displayAdvancedSpeedData) {
       const measurementPreference: string = window.currentAthlete.get("measurement_preference");
       const units: string = measurementPreference === "meters" ? "/km" : "/mi";
 
-      const paceDataView: PaceDataView = new PaceDataView(this.analysisData.paceData, units);
-      paceDataView.setAppResources(this.appResources);
-      paceDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-      paceDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-      this.dataViews.push(paceDataView);
+      const paceView: PaceDataView = new PaceDataView(this.stats.pace, this.stats.scores.stress, units);
+      paceView.setAppResources(this.appResources);
+      paceView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
+      paceView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+      this.dataViews.push(paceView);
     }
 
-    if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
-      const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.analysisData.gradeData, "%");
+    if (this.stats.grade && this.userSettings.displayAdvancedGradeData) {
+      const cyclingGradeDataView: CyclingGradeDataView = new CyclingGradeDataView(this.stats.grade, "%");
       cyclingGradeDataView.setAppResources(this.appResources);
       cyclingGradeDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
       cyclingGradeDataView.setActivityType(this.activityType);
@@ -59,13 +60,13 @@ export class GenericExtendedDataModifier extends AbstractExtendedDataModifier {
       this.dataViews.push(cyclingGradeDataView);
     }
 
-    if (this.analysisData.elevationData && this.userSettings.displayAdvancedElevationData) {
-      const elevationDataView: ElevationDataView = new ElevationDataView(this.analysisData.elevationData, "m");
-      elevationDataView.setAppResources(this.appResources);
-      elevationDataView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
-      elevationDataView.setActivityType(this.activityType);
-      elevationDataView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
-      this.dataViews.push(elevationDataView);
+    if (this.stats.elevation && this.userSettings.displayAdvancedElevationData) {
+      const elevationView: ElevationDataView = new ElevationDataView(this.stats.elevation, "m");
+      elevationView.setAppResources(this.appResources);
+      elevationView.setIsAuthorOfViewedActivity(this.activityInfo.isOwner);
+      elevationView.setActivityType(this.activityType);
+      elevationView.setIsSegmentEffortView(this.type === AbstractExtendedDataModifier.TYPE_SEGMENT);
+      this.dataViews.push(elevationView);
     }
   }
 

@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent, OpenDialogSyncOptions } from "electron";
-import { BridgeApi, Channel } from "@elevate/shared/electron";
+import { BridgeApi } from "@elevate/shared/electron/bridge.api";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 const api: BridgeApi = {
   // App actions

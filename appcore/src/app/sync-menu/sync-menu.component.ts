@@ -5,11 +5,11 @@ import { SyncService } from "../shared/services/sync/sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
 import { SyncMenuAction } from "./sync-menu-action.model";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 
 export const SYNC_MENU_COMPONENT = new InjectionToken<SyncMenuComponent>("SYNC_MENU_COMPONENT");
 
@@ -67,7 +67,7 @@ export abstract class SyncMenuComponent implements OnInit, OnDestroy {
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        this.syncService.clearSyncedActivities().then(
+        this.syncService.clearActivities().then(
           () => {
             location.reload();
           },

@@ -1,11 +1,11 @@
-import { repository, version } from "../../../../../../package.json";
 import { HttpClient } from "@angular/common/http";
-import { Platform } from "@elevate/shared/enums";
 import { Inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { NewInstalledVersionNoticeDialogComponent } from "./new-installed-version-notice-dialog.component";
-import { WarningException } from "@elevate/shared/exceptions";
-import { GhRelease } from "@elevate/shared/models";
+import { AppPackage } from "../../../app-package";
+import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { WarningException } from "@elevate/shared/exceptions/warning.exception";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 export abstract class VersionsProvider {
   protected constructor(
@@ -32,11 +32,14 @@ export abstract class VersionsProvider {
   abstract getBuildMetadata(): Promise<{ commit: string; date: string }>;
 
   public getPackageVersion(): string {
-    return version;
+    return AppPackage.getVersion();
   }
 
   public getGithubReleaseByTag(tag: string): Promise<GhRelease> {
-    const githubReleaseByTagApiUrl = VersionsProvider.getGithubReleaseByTagApiEndpoint(this.getRepositoryUrl(), tag);
+    const githubReleaseByTagApiUrl = VersionsProvider.getGithubReleaseByTagApiEndpoint(
+      AppPackage.getRepositoryUrl(),
+      tag
+    );
     return this.httpClient.get<GhRelease>(githubReleaseByTagApiUrl).toPromise();
   }
 
@@ -57,11 +60,7 @@ export abstract class VersionsProvider {
       });
   }
 
-  public getRepositoryUrl(): string {
-    return repository.url;
-  }
-
   public getLatestReleaseUrl(): string {
-    return `${this.getRepositoryUrl()}/releases/latest`;
+    return `${AppPackage.getRepositoryUrl()}/releases/latest`;
   }
 }

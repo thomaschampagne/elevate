@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { ElevateSport, MeasureSystem } from "@elevate/shared/enums";
 import _ from "lodash";
 import { CyclingSummaryStatsGroup } from "./models/stats/groups/summary/cycling-summary-stats-group";
 import { StatsGroup } from "./models/stats/stat-group.model";
@@ -19,7 +17,7 @@ import { RunningSummaryStatsGroup } from "./models/stats/groups/summary/running-
 import { RunningPaceStatsGroup, SwimmingPaceStatsGroup } from "./models/stats/groups/pace-stats-group";
 import { SwimmingSummaryStatsGroup } from "./models/stats/groups/summary/swimming-summary-stats-group";
 import {
-  EssentialStatsGroup,
+  DefaultEssentialStatsGroup,
   RunningEssentialStatsGroup,
   SwimmingEssentialStatsGroup
 } from "./models/stats/groups/essential-stats-group";
@@ -29,15 +27,16 @@ import {
   GradeStatsGroup,
   RunningGradeStatsGroup
 } from "./models/stats/groups/grade-stats-group";
+import { CyclingDynamicsStatsGroup, RunningDynamicsStatsGroup } from "./models/stats/groups/dynamics-stats-group";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Injectable()
 export class ActivityStatsService {
   constructor() {}
 
-  private static readonly SPORT_STATS_GROUP_MAP = new Map<
-    ElevateSport,
-    (activity: SyncedActivityModel) => StatsGroup[]
-  >([
+  private static readonly SPORT_STATS_GROUP_MAP = new Map<ElevateSport, (activity: Activity) => StatsGroup[]>([
     [ElevateSport.Ride, ActivityStatsService.cyclingStatsGroupsFromActivity],
     [ElevateSport.VirtualRide, ActivityStatsService.cyclingStatsGroupsFromActivity],
     [ElevateSport.Run, ActivityStatsService.runningStatsGroupsFromActivity],
@@ -46,10 +45,7 @@ export class ActivityStatsService {
     [ElevateSport.Swim, ActivityStatsService.swimmingStatsGroupsFromActivity]
   ]);
 
-  private static readonly SPORT_SUMMARY_GROUP_MAP = new Map<
-    ElevateSport,
-    (activity: SyncedActivityModel) => StatsGroup
-  >([
+  private static readonly SPORT_SUMMARY_GROUP_MAP = new Map<ElevateSport, (activity: Activity) => StatsGroup>([
     [ElevateSport.Ride, CyclingSummaryStatsGroup.fromActivity],
     [ElevateSport.VirtualRide, CyclingSummaryStatsGroup.fromActivity],
     [ElevateSport.Run, RunningSummaryStatsGroup.fromActivity],
@@ -58,9 +54,10 @@ export class ActivityStatsService {
     [ElevateSport.Swim, SwimmingSummaryStatsGroup.fromActivity]
   ]);
 
-  private static cyclingStatsGroupsFromActivity(activity: SyncedActivityModel): StatsGroup[] {
+  private static cyclingStatsGroupsFromActivity(activity: Activity): StatsGroup[] {
     return [
-      EssentialStatsGroup.DEFAULT,
+      DefaultEssentialStatsGroup.DEFAULT,
+      CyclingDynamicsStatsGroup.DEFAULT,
       SpeedStatsGroup.DEFAULT,
       HearRateStatsGroup.DEFAULT,
       CyclingPowerStatsGroup.getDefault(activity),
@@ -70,9 +67,10 @@ export class ActivityStatsService {
     ];
   }
 
-  private static runningStatsGroupsFromActivity(activity: SyncedActivityModel): StatsGroup[] {
+  private static runningStatsGroupsFromActivity(activity: Activity): StatsGroup[] {
     return [
       RunningEssentialStatsGroup.DEFAULT,
+      RunningDynamicsStatsGroup.DEFAULT,
       RunningPaceStatsGroup.getDefault(activity),
       HearRateStatsGroup.DEFAULT,
       RunningPowerStatsGroup.getDefault(activity),
@@ -82,7 +80,7 @@ export class ActivityStatsService {
     ];
   }
 
-  private static swimmingStatsGroupsFromActivity(activity: SyncedActivityModel): StatsGroup[] {
+  private static swimmingStatsGroupsFromActivity(activity: Activity): StatsGroup[] {
     return [
       SwimmingEssentialStatsGroup.DEFAULT,
       SwimmingPaceStatsGroup.getDefault(activity),
@@ -93,7 +91,7 @@ export class ActivityStatsService {
 
   private defaultStatsGroups(): StatsGroup[] {
     return [
-      EssentialStatsGroup.DEFAULT,
+      DefaultEssentialStatsGroup.DEFAULT,
       SpeedStatsGroup.DEFAULT,
       HearRateStatsGroup.DEFAULT,
       ElevationStatsGroup.DEFAULT,
@@ -101,7 +99,7 @@ export class ActivityStatsService {
     ];
   }
 
-  private findSummaryStatsGroupsFromActivity(activity: SyncedActivityModel): StatsGroup {
+  private findSummaryStatsGroupsFromActivity(activity: Activity): StatsGroup {
     // Get function which return stat group per sport type
     const summaryStatsGroupFunc = ActivityStatsService.SPORT_SUMMARY_GROUP_MAP.get(activity.type);
 
@@ -109,7 +107,7 @@ export class ActivityStatsService {
     return summaryStatsGroupFunc ? summaryStatsGroupFunc(activity) : DefaultSummaryStatsGroup.getDefault(activity);
   }
 
-  private findStatsGroupsFromActivity(activity: SyncedActivityModel): StatsGroup[] {
+  private findStatsGroupsFromActivity(activity: Activity): StatsGroup[] {
     // Get function which return summary stat group per sport type
     const statsGroupFunc = ActivityStatsService.SPORT_STATS_GROUP_MAP.get(activity.type);
     // Return found or default group
@@ -117,10 +115,9 @@ export class ActivityStatsService {
   }
 
   private generateStatsDisplaysOfStatsGroup(
-    activity: SyncedActivityModel,
+    activity: Activity,
     measureSystem: MeasureSystem,
-    statsGroup: StatsGroup,
-    allowEmptyStatDisplay: boolean = true
+    statsGroup: StatsGroup
   ): StatDisplay[] {
     let emptyStatsGroup = true; // We consider values of stats in group to be missing
     const statDisplays: StatDisplay[] = [];
@@ -131,14 +128,14 @@ export class ActivityStatsService {
       if (statExists) {
         emptyStatsGroup = false;
       }
-      if (statExists || allowEmptyStatDisplay) {
+      if (statExists || stat.forceDisplay) {
         statDisplays.push(StatDisplay.create(stat, statValue, measureSystem));
       }
     }
     return emptyStatsGroup ? [] : statDisplays;
   }
 
-  public getStatsGroupsDisplays(activity: SyncedActivityModel, measureSystem: MeasureSystem): StatGroupsDisplay[] {
+  public getStatsGroupsDisplays(activity: Activity, measureSystem: MeasureSystem): StatGroupsDisplay[] {
     const activityStatsGroups = this.findStatsGroupsFromActivity(activity);
 
     const statGroupsDisplays: StatGroupsDisplay[] = [];
@@ -157,8 +154,8 @@ export class ActivityStatsService {
     return statGroupsDisplays;
   }
 
-  public getSummaryStats(activity: SyncedActivityModel, measureSystem: MeasureSystem): StatDisplay[] {
+  public getSummaryStats(activity: Activity, measureSystem: MeasureSystem): StatDisplay[] {
     const summaryStatsGroup = this.findSummaryStatsGroupsFromActivity(activity);
-    return this.generateStatsDisplaysOfStatsGroup(activity, measureSystem, summaryStatsGroup, false);
+    return this.generateStatsDisplaysOfStatsGroup(activity, measureSystem, summaryStatsGroup);
   }
 }

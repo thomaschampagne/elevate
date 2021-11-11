@@ -1,10 +1,12 @@
 import { Inject, Injectable } from "@angular/core";
 import { UserSettingsService } from "../../../../shared/services/user-settings/user-settings.service";
-import { Streams, UserZonesModel, ZoneModel } from "@elevate/shared/models";
 import _ from "lodash";
 import { SensorTimeInZones } from "../models/sensor-time-in-zones.model";
 import { Sensor } from "../../shared/models/sensors/sensor.model";
-import { MeasureSystem } from "@elevate/shared/enums";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
 
 @Injectable()
 export class TimeInZonesService {
@@ -30,7 +32,7 @@ export class TimeInZonesService {
       }
 
       // Loop over time
-      for (const [index, current] of streams.time.entries()) {
+      for (const [index, current] of streams.time?.entries() || []) {
         if (index === 0) {
           continue;
         }

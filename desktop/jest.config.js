@@ -1,4 +1,5 @@
 module.exports = {
+  testRunner: "jest-jasmine2",
   transform: {
     ".(ts|tsx)": "ts-jest"
   },

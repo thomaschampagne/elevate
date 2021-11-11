@@ -1,21 +1,22 @@
 import _ from "lodash";
 import $ from "jquery";
-import { SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { Helper } from "../helper";
 import LatLonSpherical from "geodesy/latlon-spherical";
 import { AbstractModifier } from "./abstract.modifier";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { SpeedUnitDataModel } from "@elevate/shared/models/activity-data/speed-unit-data.model";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class WindyTyModifier extends AbstractModifier {
   protected activityId: number;
 
   protected appResources: AppResourcesModel;
-  protected userSettings: ExtensionUserSettingsModel;
+  protected userSettings: ExtensionUserSettings;
   protected baryCenterPosition: LatLonSpherical;
   protected speedUnitData: SpeedUnitDataModel;
 
-  constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel) {
+  constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettings) {
     super();
     this.activityId = activityId;
     this.appResources = appResources;

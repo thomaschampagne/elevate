@@ -1,16 +1,14 @@
 import { AbstractDataView } from "./abstract-data.view";
-import { CadenceDataModel } from "@elevate/shared/models";
+import { CadenceStats } from "@elevate/shared/models/sync/activity.model";
 
 export abstract class AbstractCadenceDataView extends AbstractDataView {
-  protected cadenceData: CadenceDataModel;
-
-  protected constructor(cadenceData: CadenceDataModel, units: string) {
+  protected constructor(protected cadence: CadenceStats, units: string) {
     super(units);
-    this.cadenceData = cadenceData;
+    this.cadence = cadence;
     this.mainColor = [195, 69, 185];
     this.setGraphTitleFromUnits();
-    this.setupDistributionGraph(this.cadenceData.cadenceZones);
-    this.setupDistributionTable(this.cadenceData.cadenceZones);
+    this.setupDistributionGraph(this.cadence.zones);
+    this.setupDistributionTable(this.cadence.zones);
   }
 
   public render(): void {

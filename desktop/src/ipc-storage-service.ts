@@ -2,7 +2,7 @@ import { app } from "electron";
 import fs from "fs";
 import { singleton } from "tsyringe";
 import _ from "lodash";
-import { ElevateException } from "@elevate/shared/exceptions";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 
 @singleton()
 export class IpcStorageService {
@@ -36,6 +36,10 @@ export class IpcStorageService {
     } else {
       throw new Error(`Unable to remove ipc storage key '${key}'`);
     }
+  }
+
+  public clear(): void {
+    this.saveStorage({});
   }
 
   private readStorage(): object {

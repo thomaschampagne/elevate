@@ -1,28 +1,27 @@
 import _ from "lodash";
 import { Helper } from "../../../helper";
-
-import { ActivityInfoModel, AnalysisDataModel, SpeedUnitDataModel, UserSettings } from "@elevate/shared/models";
 import { AbstractDataView } from "./abstract-data.view";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { SpeedUnitDataModel } from "@elevate/shared/models/activity-data/speed-unit-data.model";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class FeaturedDataView extends AbstractDataView {
-  protected analysisData: AnalysisDataModel;
-  protected activityInfo: ActivityInfoModel;
-  protected userSettings: ExtensionUserSettingsModel;
-
   constructor(
-    analysisData: AnalysisDataModel,
-    userSettings: ExtensionUserSettingsModel,
-    activityInfo: ActivityInfoModel
+    protected stats: ActivityStats,
+    protected activityInfo: ActivityInfoModel,
+    protected userSettings: ExtensionUserSettings,
+    protected hasPowerMeter: boolean
   ) {
     super(null);
     this.hasGraph = false;
-    this.analysisData = analysisData;
+    this.stats = stats;
     this.userSettings = userSettings;
     this.activityInfo = activityInfo;
 
-    if (!this.analysisData || !this.userSettings) {
-      console.error("analysisData and userSettingsData are required");
+    if (!this.stats || !this.userSettings) {
+      console.error("stats and userSettingsData are required");
     }
 
     if (this.isSegmentEffortView && !_.isEmpty(this.activityInfo.segmentEffort)) {
@@ -32,11 +31,11 @@ export class FeaturedDataView extends AbstractDataView {
 
   public render(): void {
     if (
-      (this.analysisData.moveRatio && this.userSettings.displayActivityRatio) ||
-      (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) ||
-      (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) ||
-      (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) ||
-      (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData)
+      (this.stats.moveRatio && this.userSettings.displayActivityRatio) ||
+      (this.stats.speed && this.userSettings.displayAdvancedSpeedData) ||
+      (this.stats.heartRate && this.userSettings.displayAdvancedHrData) ||
+      (this.stats.power && this.userSettings.displayAdvancedPowerData) ||
+      (this.stats.grade && this.userSettings.displayAdvancedGradeData)
     ) {
       // Add a title
       this.makeGrid(7, 1); // (col, row)
@@ -52,37 +51,33 @@ export class FeaturedDataView extends AbstractDataView {
       window.currentAthlete.get("measurement_preference")
     );
 
-    if (
-      this.analysisData.moveRatio &&
-      this.userSettings.displayActivityRatio &&
-      _.isEmpty(this.activityInfo.segmentEffort)
-    ) {
+    if (this.stats.moveRatio && this.userSettings.displayActivityRatio && _.isEmpty(this.activityInfo.segmentEffort)) {
       this.insertContentAtGridPosition(
         0,
         0,
-        this.printNumber(this.analysisData.moveRatio, 2),
+        this.printNumber(this.stats.moveRatio, 2),
         "Move Ratio",
         "",
         "displayActivityRatio"
       ); // Move ratio
     }
 
-    if (this.analysisData.speedData && this.userSettings.displayAdvancedSpeedData) {
+    if (this.stats.speed && this.userSettings.displayAdvancedSpeedData) {
       this.insertContentAtGridPosition(
         1,
         0,
-        this.printNumber(this.analysisData.speedData.upperQuartileSpeed * speedUnitsData.speedUnitFactor, 1),
+        this.printNumber(this.stats.speed.upperQ * speedUnitsData.speedUnitFactor, 1),
         "75% Quartile Speed",
         speedUnitsData.speedUnitPerHour,
         "displayAdvancedSpeedData"
       ); // Q3 Speed
     }
 
-    if (this.analysisData.heartRateData && this.userSettings.displayAdvancedHrData) {
+    if (this.stats.heartRate && this.stats.scores?.stress?.hrss && this.userSettings.displayAdvancedHrData) {
       this.insertContentAtGridPosition(
         2,
         0,
-        this.printNumber(this.analysisData.heartRateData.HRSS, 0),
+        this.printNumber(this.stats.scores.stress.hrss, 0),
         "HRSS",
         "",
         "displayAdvancedHrData"
@@ -90,38 +85,38 @@ export class FeaturedDataView extends AbstractDataView {
       this.insertContentAtGridPosition(
         3,
         0,
-        this.printNumber(this.analysisData.heartRateData.HRSSPerHour, 1),
+        this.printNumber(this.stats.scores.stress.hrssPerHour, 1),
         "HRSS / Hour",
         "",
         "displayAdvancedHrData"
       );
     }
 
-    if (this.analysisData.powerData && this.userSettings.displayAdvancedPowerData) {
-      if (_.isNumber(this.analysisData.powerData.best20min) && !this.isSegmentEffortView) {
+    if (this.stats.power && this.userSettings.displayAdvancedPowerData) {
+      if (_.isNumber(this.stats.power.best20min) && !this.isSegmentEffortView) {
         let label = "Best 20min Power";
-        if (!this.analysisData.powerData.hasPowerMeter) {
+        if (!this.hasPowerMeter) {
           label = "Estimated " + label;
         }
         this.insertContentAtGridPosition(
           4,
           0,
-          this.printNumber(this.analysisData.powerData.best20min, 0),
+          this.printNumber(this.stats.power.best20min, 0),
           label,
           "w",
           "displayAdvancedPowerData"
         ); // Avg watt /kg
       }
 
-      if (_.isNumber(this.analysisData.powerData.weightedWattsPerKg)) {
-        let label = "Weighted Watts/kg";
-        if (!this.analysisData.powerData.hasPowerMeter) {
+      if (_.isNumber(this.stats.power.weightedKg)) {
+        let label = "Normalized Power®/kg";
+        if (!this.activityInfo) {
           label = "Estimated " + label;
         }
         this.insertContentAtGridPosition(
           5,
           0,
-          this.printNumber(this.analysisData.powerData.weightedWattsPerKg, 2),
+          this.printNumber(this.stats.power.weightedKg, 2),
           label,
           "w/kg",
           "displayAdvancedPowerData"
@@ -129,12 +124,12 @@ export class FeaturedDataView extends AbstractDataView {
       }
     }
 
-    if (this.analysisData.gradeData && this.userSettings.displayAdvancedGradeData) {
+    if (this.stats.grade && this.userSettings.displayAdvancedGradeData) {
       this.insertContentAtGridPosition(
         6,
         0,
-        this.analysisData.gradeData.gradeProfile,
-        "Grade Profile",
+        this.stats.grade.slopeProfile,
+        "Slope Profile",
         "",
         "displayAdvancedGradeData"
       );

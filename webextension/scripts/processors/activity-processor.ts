@@ -1,17 +1,15 @@
-import {
-  ActivityInfoModel,
-  ActivitySourceDataModel,
-  AnalysisDataModel,
-  AthleteSnapshotModel,
-  Gender,
-  Streams,
-  UserSettings
-} from "@elevate/shared/models";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { ComputeActivityThreadMessageModel } from "../models/compute-activity-thread-message.model";
 import { VacuumProcessor } from "./vacuum-processor";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { ActivityEssentials } from "@elevate/shared/models/activity-data/activity-essentials.model";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 const ComputeAnalysisWorker = require("worker-loader?inline!./workers/compute-analysis.worker");
 
@@ -22,13 +20,13 @@ export class ActivityProcessor {
   protected zones: any;
   protected activityInfo: ActivityInfoModel;
   protected computeAnalysisThread: Worker;
-  protected userSettings: ExtensionUserSettingsModel;
+  protected userSettings: ExtensionUserSettings;
 
   constructor(
     vacuumProcessor: VacuumProcessor,
     athleteModelResolver: AthleteSnapshotResolver,
     appResources: AppResourcesModel,
-    userSettings: ExtensionUserSettingsModel,
+    userSettings: ExtensionUserSettings,
     activityInfo: ActivityInfoModel
   ) {
     this.vacuumProcessor = vacuumProcessor;
@@ -42,7 +40,7 @@ export class ActivityProcessor {
   public getAnalysisData(
     activityInfo: ActivityInfoModel,
     bounds: number[],
-    callback: (athleteSnapshot: AthleteSnapshotModel, analysisData: AnalysisDataModel) => void
+    callback: (athleteSnapshot: AthleteSnapshot, stats: ActivityStats, hasPowerMeter: boolean) => void
   ): void {
     if (!this.activityInfo.type) {
       console.error("No activity type set for ActivityProcessor");
@@ -53,7 +51,7 @@ export class ActivityProcessor {
       this.vacuumProcessor.getActivityStream(
         this.activityInfo,
         (
-          activitySourceData: ActivitySourceDataModel,
+          activityEssentials: ActivityEssentials,
           streams: Streams,
           athleteWeight: number,
           athleteGender: Gender,
@@ -62,12 +60,12 @@ export class ActivityProcessor {
           // Get stream on page
 
           const onDate = this.activityInfo.startTime ? this.activityInfo.startTime : new Date();
-          const athleteSnapshot: AthleteSnapshotModel = this.athleteModelResolver.resolve(onDate);
+          const athleteSnapshot: AthleteSnapshot = this.athleteModelResolver.resolve(onDate);
 
           // Use as many properties of the author if user 'isOwner'
           if (!this.activityInfo.isOwner) {
             athleteSnapshot.athleteSettings.weight = athleteWeight;
-            athleteSnapshot.gender = athleteGender;
+            (athleteSnapshot as any).gender = athleteGender;
           }
 
           console.log("Compute with AthleteSnapshotModel", JSON.stringify(athleteSnapshot));
@@ -76,11 +74,11 @@ export class ActivityProcessor {
           this.computeAnalysisThroughDedicatedThread(
             hasPowerMeter,
             athleteSnapshot,
-            activitySourceData,
+            activityEssentials,
             streams,
             bounds,
-            (resultFromThread: AnalysisDataModel) => {
-              callback(athleteSnapshot, resultFromThread);
+            (resultFromThread: ActivityStats) => {
+              callback(athleteSnapshot, resultFromThread, hasPowerMeter);
             }
           );
         }
@@ -90,11 +88,11 @@ export class ActivityProcessor {
 
   private computeAnalysisThroughDedicatedThread(
     hasPowerMeter: boolean,
-    athleteSnapshot: AthleteSnapshotModel,
-    activitySourceData: ActivitySourceDataModel,
+    athleteSnapshot: AthleteSnapshot,
+    activityEssentials: ActivityEssentials,
     streams: Streams,
     bounds: number[],
-    callback: (analysisData: AnalysisDataModel) => void
+    callback: (activityStats: ActivityStats) => void
   ): void {
     // Lets create that worker/thread!
     this.computeAnalysisThread = new ComputeAnalysisWorker();
@@ -110,9 +108,10 @@ export class ActivityProcessor {
       isOwner: this.activityInfo.isOwner,
       athleteSnapshot: athleteSnapshot,
       hasPowerMeter: hasPowerMeter,
-      activitySourceData: activitySourceData,
+      activityEssentials: activityEssentials,
       streams: streams,
       bounds: bounds,
+      returnPeaks: true,
       returnZones: true
     };
 

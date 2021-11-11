@@ -31,7 +31,7 @@ export abstract class AdvancedMenuComponent implements OnInit {
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        this.syncService.clearSyncedActivities().then(
+        this.syncService.clearActivities().then(
           () => {
             afterClosedSubscription.unsubscribe();
             location.reload();

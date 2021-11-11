@@ -12,11 +12,12 @@ import { OptionHelperDataModel } from "./option-helper-dialog/option-helper-data
 import { Subscription } from "rxjs";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { environment } from "../../environments/environment";
-import { UserSettings } from "@elevate/shared/models";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { DomSanitizer } from "@angular/platform-browser";
-import { dirname } from "@elevate/shared/tools";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { dirname } from "@elevate/shared/tools/dirname";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @Component({
   selector: "app-global-settings",
@@ -46,7 +47,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.sections = this.globalSettingsService.getSectionsByBuildTarget(environment.buildTarget);
 
-    this.userSettingsService.fetch().then((userSettings: UserSettingsModel) => {
+    this.userSettingsService.fetch().then((userSettings: BaseUserSettings) => {
       this.renderOptionsForEachSection(userSettings);
     });
 
@@ -64,7 +65,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  public renderOptionsForEachSection(userSettings: UserSettingsModel): void {
+  public renderOptionsForEachSection(userSettings: BaseUserSettings): void {
     _.forEach(this.sections, (section: SectionModel) => {
       _.forEach(section.options, (option: OptionModel) => {
         if (option.type === GlobalSettingsService.TYPE_OPTION_CHECKBOX) {

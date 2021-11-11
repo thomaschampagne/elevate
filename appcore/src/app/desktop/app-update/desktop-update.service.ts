@@ -1,17 +1,18 @@
 import { Inject, Injectable } from "@angular/core";
-import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { IPC_TUNNEL_SERVICE } from "../ipc/ipc-tunnel-service.token";
 import pDefer, { DeferredPromise } from "p-defer";
-import { WarningException } from "@elevate/shared/exceptions";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { IpcStorageService } from "../ipc/ipc-storage.service";
-import { sleep } from "@elevate/shared/tools";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElectronService } from "../electron/electron.service";
 import { OPEN_RESOURCE_RESOLVER } from "../../shared/services/links-opener/open-resource-resolver";
 import { DesktopOpenResourceResolver } from "../../shared/services/links-opener/impl/desktop-open-resource-resolver.service";
+import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models/updates/update-notify";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { sleep } from "@elevate/shared/tools/sleep";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @Injectable()
 export class DesktopUpdateService {
@@ -19,7 +20,7 @@ export class DesktopUpdateService {
   private static readonly CONFIG_CHECK_INTERVAL_SEC = "config.update.checkIntervalSec";
   private static readonly UPDATE_CHECK_INTERVAL_SEC = 15 * 60; // 15 minutes
 
-  private static readonly WAIT_BEFORE_CLOSING_APP_ON_STATIC_DL = 1500;
+  private static readonly WAIT_BEFORE_CLOSING_APP_ON_STATIC_DL = 2500;
 
   public readonly updateNotify$: Subject<UpdateNotify>;
   public readonly downloadUpdate$: Subject<number>;
@@ -62,7 +63,6 @@ export class DesktopUpdateService {
         // In case of error, we consider no updates... So continue
         this.updateHandledPromise.resolve();
         this.logger.error(error);
-        throw new WarningException(error.message);
       });
 
     return this.updateHandledPromise.promise;
@@ -94,7 +94,6 @@ export class DesktopUpdateService {
       .catch(error => {
         // In case of error, we consider no updates... So continue
         this.logger.error(error);
-        throw new WarningException(error.message || error);
       });
   }
 
@@ -102,7 +101,7 @@ export class DesktopUpdateService {
     let promiseWait = Promise.resolve();
 
     if (closeApp) {
-      this.snackBar.open("Now closing app to apply update");
+      this.snackBar.open("Closing App & taking you to the download...");
       promiseWait = sleep(DesktopUpdateService.WAIT_BEFORE_CLOSING_APP_ON_STATIC_DL);
     }
 

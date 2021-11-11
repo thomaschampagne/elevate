@@ -97,9 +97,8 @@ export class FitnessTrendConfigDialogComponent implements OnInit {
   }
 
   public onIgnoreActivityNamePatternsChange(): void {
-    this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreActivityNamePatterns = this.formatPatternsForStorage(
-      this.ignoreActivityNamePatterns
-    );
+    this.fitnessTrendConfigDialogData.fitnessTrendConfigModel.ignoreActivityNamePatterns =
+      this.formatPatternsForStorage(this.ignoreActivityNamePatterns);
   }
 
   public onIgnoreBeforeDateChange(): void {

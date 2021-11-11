@@ -2,9 +2,9 @@ import _ from "lodash";
 import $ from "../../modules/jquery.appear";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
-import { UserSettings } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { Time } from "@elevate/shared/tools/time";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export interface EffortInfo {
   // values obtained from the HTTP request
@@ -48,7 +48,7 @@ export class ActivitySegmentTimeComparisonModifier extends AbstractModifier {
   protected deltaKomLabel: string;
 
   constructor(
-    userSettings: ExtensionUserSettingsModel,
+    userSettings: ExtensionUserSettings,
     appResources: AppResourcesModel,
     activityType: string,
     isMyOwn: boolean

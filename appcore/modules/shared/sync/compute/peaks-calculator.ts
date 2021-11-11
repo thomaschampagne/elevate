@@ -1,6 +1,6 @@
 import { SplitCalculator } from "./split-calculator";
 import _ from "lodash";
-import { PeakModel } from "../../models";
+import { Peak } from "../../models/sync/activity.model";
 
 export class PeaksCalculator {
   private static readonly MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
@@ -9,7 +9,7 @@ export class PeaksCalculator {
   /**
    * Compute peaks of data overtime up to MAX_HOURS (=2h by default)
    */
-  public static compute(time: number[], data: number[], upToHours: number = PeaksCalculator.MAX_HOURS): PeakModel[] {
+  public static compute(time: number[], data: number[], upToHours: number = PeaksCalculator.MAX_HOURS): Peak[] {
     const splitCalculator = new SplitCalculator(time, data, PeaksCalculator.MAX_SCALE_TIME_GAP_THRESHOLD);
 
     // Calculate when ranges end

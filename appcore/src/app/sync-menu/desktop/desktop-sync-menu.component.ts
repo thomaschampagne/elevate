@@ -6,18 +6,18 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { SyncState } from "../../shared/services/sync/sync-state.enum";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { AppRoutes } from "../../shared/models/app-routes";
-import { ConnectorType } from "@elevate/shared/sync";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { ElectronService } from "../../desktop/electron/electron.service";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
-import { ConnectorSyncDateTime } from "@elevate/shared/models";
 import { ConnectorService } from "../../connectors/connector.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopAppService } from "../../shared/services/app-service/desktop/desktop-app.service";
 import { DesktopBackupDialogComponent } from "../../shared/dialogs/backups/desktop/desktop-backup-dialog.component";
 import { DesktopRestoreDialogComponent } from "../../shared/dialogs/backups/desktop/desktop-restore-dialog.component";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 
 @Component({
   selector: "app-desktop-sync-menu",

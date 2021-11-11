@@ -1,5 +1,5 @@
-import { ErrorSyncEvent } from "../sync/events";
 import { ElevateException } from "./elevate.exception";
+import { ErrorSyncEvent } from "../sync/events/error-sync.event";
 
 export class SyncException extends ElevateException {
   public errorSyncEvent: ErrorSyncEvent;

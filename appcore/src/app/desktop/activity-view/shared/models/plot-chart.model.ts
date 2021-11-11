@@ -1,7 +1,7 @@
 import { Config, Layout, PlotData, PlotMarker, PlotType, ScatterLine } from "plotly.js";
 import _ from "lodash";
-import { Identifier } from "@elevate/shared/tools";
 import { Theme } from "../../../../shared/enums/theme.enum";
+import { Identifier } from "@elevate/shared/tools/identifier";
 
 interface ChartThemeStyle {
   textColor: string;
@@ -10,8 +10,8 @@ interface ChartThemeStyle {
 
 export abstract class PlotChart {
   private static readonly THEME_CHART_STYLE_MAP = new Map<Theme, ChartThemeStyle>([
-    [Theme.LIGHT, { textColor: "black", gridColor: "#e2e2e2" }],
-    [Theme.DARK, { textColor: "white", gridColor: "#5f5f5f" }]
+    [Theme.LIGHT, { textColor: "black", gridColor: "#efefef" }],
+    [Theme.DARK, { textColor: "white", gridColor: "#4d4d4d" }]
   ]);
 
   protected constructor(layout: Partial<Layout> = {}, config: Partial<Config> = {}) {

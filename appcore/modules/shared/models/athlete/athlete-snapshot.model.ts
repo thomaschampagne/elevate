@@ -1,17 +1,17 @@
-import { AbstractAthleteModel } from "./abstract-athlete.model";
+import { AbstractAthlete } from "./abstract.athlete";
 import { Gender } from "./gender.enum";
-import { AthleteSettingsModel } from "./athlete-settings";
+import { AthleteSettings } from "./athlete-settings/athlete-settings.model";
 
-export class AthleteSnapshotModel extends AbstractAthleteModel {
+export class AthleteSnapshot extends AbstractAthlete {
   constructor(
     public readonly gender: Gender,
     public readonly age: number,
-    public readonly athleteSettings: AthleteSettingsModel
+    public readonly athleteSettings: AthleteSettings
   ) {
     super();
   }
 
-  public equals(otherSnapshot: AthleteSnapshotModel): boolean {
+  public equals(otherSnapshot: AthleteSnapshot): boolean {
     const isSame =
       otherSnapshot &&
       (this.athleteSettings.maxHr !== otherSnapshot.athleteSettings.maxHr ||

@@ -1,9 +1,9 @@
 import { Component, Inject, Input, OnInit } from "@angular/core";
-import { SyncedActivityModel } from "@elevate/shared/models";
-import { MeasureSystem } from "@elevate/shared/enums";
 import { ActivityStatsService } from "../shared/activity-stats.service";
 import { StatGroupsDisplay } from "../shared/models/stats/display/stat-group-display.model";
 import { MediaObserver } from "@angular/flex-layout";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 @Component({
   selector: "app-activity-view-stats",
@@ -19,7 +19,7 @@ export class ActivityViewStatsComponent implements OnInit {
   public statsGroupDisplays: StatGroupsDisplay[];
 
   @Input()
-  public activity: SyncedActivityModel;
+  public activity: Activity;
 
   @Input()
   public measureSystem: MeasureSystem;

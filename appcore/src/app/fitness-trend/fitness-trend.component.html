@@ -1,12 +1,12 @@
 <!--Loading-->
-<div *ngIf="(isSynced !== false && areSyncedActivitiesCompliant === null && isReSyncRequired === null)">
+<div *ngIf="(isSynced !== false && areActivitiesCompliant === null && isReSyncRequired === null)">
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
 <app-sync-required></app-sync-required>
 
 <!--History not compliant with the feature-->
-<mat-card *ngIf="(areSyncedActivitiesCompliant === false && isSynced !== false)" class="no-data">
+<mat-card *ngIf="(areActivitiesCompliant === false && isSynced !== false)" class="no-data">
   <mat-card-title>
     Unable to generate fitness trend 😢
   </mat-card-title>
@@ -83,7 +83,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card *ngIf="(areSyncedActivitiesCompliant === true)">
+<mat-card *ngIf="(areActivitiesCompliant === true)">
   <mat-card-content>
     <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
       <app-fitness-trend-inputs (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)"
@@ -127,7 +127,7 @@
   </mat-card-content>
 </mat-card>
 
-<mat-card [style.visibility]="((areSyncedActivitiesCompliant === true) ? 'visible' : 'hidden')">
+<mat-card [style.visibility]="((areActivitiesCompliant === true) ? 'visible' : 'hidden')">
   <mat-card-title>
     Fitness analysis table
   </mat-card-title>

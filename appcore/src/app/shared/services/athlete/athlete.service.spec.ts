@@ -1,6 +1,5 @@
 import { TestBed } from "@angular/core/testing";
 import { AthleteService } from "./athlete.service";
-import { AthleteModel, AthleteSettingsModel, DatedAthleteSettingsModel, Gender } from "@elevate/shared/models";
 import _ from "lodash";
 import { AppError } from "../../models/app-error.model";
 import { DataStore } from "../../data-store/data-store";
@@ -10,6 +9,10 @@ import { SharedModule } from "../../shared.module";
 import { TargetModule } from "../../modules/target/desktop-target.module";
 import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 
 describe("AthleteService", () => {
   let service: AthleteService = null;
@@ -63,17 +66,17 @@ describe("AthleteService", () => {
   describe("should fetch", () => {
     it("should fetch and sort descending existing 'dated athlete settings' from athlete model", done => {
       // Given
-      const expectedAthleteSettingsModel03 = new DatedAthleteSettingsModel(
+      const expectedAthleteSettingsModel03 = new DatedAthleteSettings(
         "2018-06-01",
-        new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
       );
-      const expectedApsModel02 = new DatedAthleteSettingsModel(
+      const expectedApsModel02 = new DatedAthleteSettings(
         "2018-02-15",
-        new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
       );
-      const expectedApsModel01 = new DatedAthleteSettingsModel(
+      const expectedApsModel01 = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
       defaultAthleteModel.datedAthleteSettings = [
         expectedAthleteSettingsModel03,
@@ -109,7 +112,7 @@ describe("AthleteService", () => {
 
     it("should fetch empty 'dated athlete settings'", done => {
       // Given
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [];
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
 
@@ -163,27 +166,18 @@ describe("AthleteService", () => {
   describe("should add", () => {
     it("should add a dated athlete settings with already existing periods", done => {
       // Given
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
 
-      const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(
+      const athletePeriodSettingsToAdd = new DatedAthleteSettings(
         "2018-06-03",
-        new AthleteSettingsModel(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
+        new AthleteSettings(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
       );
 
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -200,11 +194,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
+      const promise: Promise<DatedAthleteSettings[]> = service.addSettings(athletePeriodSettingsToAdd);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -222,15 +216,15 @@ describe("AthleteService", () => {
 
     it("should add a dated athlete settings with the single 'forever' existing period", done => {
       // Given
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
 
-      const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(
+      const athletePeriodSettingsToAdd = new DatedAthleteSettings(
         "2018-06-03",
-        new AthleteSettingsModel(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
+        new AthleteSettings(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
       );
 
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -247,11 +241,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
+      const promise: Promise<DatedAthleteSettings[]> = service.addSettings(athletePeriodSettingsToAdd);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedAthleteModel.datedAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -269,13 +263,13 @@ describe("AthleteService", () => {
 
     it("should add a dated athlete settings without existing periods", done => {
       // Given
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [];
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
 
-      const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(
+      const athletePeriodSettingsToAdd = new DatedAthleteSettings(
         "2018-06-03",
-        new AthleteSettingsModel(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
+        new AthleteSettings(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
       );
 
       const expectedPeriodAthleteSettings = _.flatten([athletePeriodSettingsToAdd, existingPeriodAthleteSettings]);
@@ -295,11 +289,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
+      const promise: Promise<DatedAthleteSettings[]> = service.addSettings(athletePeriodSettingsToAdd);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -319,24 +313,15 @@ describe("AthleteService", () => {
       // Given
       const addAtDate = "2018-04-15";
       defaultAthleteModel.datedAthleteSettings = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          addAtDate,
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings(addAtDate, new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
-      const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(
+      const athletePeriodSettingsToAdd = new DatedAthleteSettings(
         addAtDate,
-        new AthleteSettingsModel(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
+        new AthleteSettings(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
       );
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -345,11 +330,11 @@ describe("AthleteService", () => {
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.stub();
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
+      const promise: Promise<DatedAthleteSettings[]> = service.addSettings(athletePeriodSettingsToAdd);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
 
@@ -370,25 +355,16 @@ describe("AthleteService", () => {
     it("should reject add of invalid dated athlete settings date", done => {
       // Given
       defaultAthleteModel.datedAthleteSettings = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const invalidDate = "2018-99-99";
-      const athletePeriodSettingsToAdd = new DatedAthleteSettingsModel(
+      const athletePeriodSettingsToAdd = new DatedAthleteSettings(
         invalidDate,
-        new AthleteSettingsModel(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
+        new AthleteSettings(maxHr, restHr, lthr, cyclingFTP, runningFTP, swimFTP, weight)
       );
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -397,11 +373,11 @@ describe("AthleteService", () => {
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.stub();
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.addSettings(athletePeriodSettingsToAdd);
+      const promise: Promise<DatedAthleteSettings[]> = service.addSettings(athletePeriodSettingsToAdd);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
 
@@ -423,20 +399,11 @@ describe("AthleteService", () => {
   describe("should save", () => {
     it("should save several dated athlete settings of AthleteModel", done => {
       // Given
-      const expectedPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+      const expectedPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const athleteModelToSave = _.cloneDeep(defaultAthleteModel);
@@ -472,33 +439,24 @@ describe("AthleteService", () => {
     it("should reset dated athlete settings of AthleteModel", done => {
       // Given
       defaultAthleteModel.datedAthleteSettings = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.callThrough();
       const addDaoSpy = spyOn(service, "addSettings").and.callThrough();
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.resetSettings();
+      const promise: Promise<DatedAthleteSettings[]> = service.resetSettings();
 
       // Then
       promise.then(
-        (datedAthleteSettings: DatedAthleteSettingsModel[]) => {
+        (datedAthleteSettings: DatedAthleteSettings[]) => {
           expect(datedAthleteSettings).not.toBeNull();
           expect(datedAthleteSettings.length).toEqual(2);
-          expect(_.first(datedAthleteSettings)).toEqual(DatedAthleteSettingsModel.DEFAULT_MODEL);
+          expect(_.first(datedAthleteSettings)).toEqual(DatedAthleteSettings.DEFAULT_MODEL);
           expect(addDaoSpy).toHaveBeenCalledTimes(1);
           expect(updateDaoSpy).toHaveBeenCalledTimes(2);
 
@@ -516,39 +474,39 @@ describe("AthleteService", () => {
     it("should edit 'settings' a of dated athlete settings with already existing periods", done => {
       // Given
       const editAtDate = "2018-04-15";
-      const datedAthleteSettingsModel01 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings01 = new DatedAthleteSettings(
         "2018-05-10",
-        new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
       );
-      const datedAthleteSettingsModel02 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings02 = new DatedAthleteSettings(
         editAtDate,
-        new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
       );
-      const datedAthleteSettingsModel03 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings03 = new DatedAthleteSettings(
         "2018-02-01",
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
-      const datedAthleteSettingsModel04 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings04 = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
 
       defaultAthleteModel.datedAthleteSettings = [
-        datedAthleteSettingsModel01,
-        datedAthleteSettingsModel02,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings01,
+        datedAthleteSettings02,
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
-      const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
+      const expectedEditedDatedAthleteSettings = new DatedAthleteSettings(
         editAtDate,
-        new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99)
+        new AthleteSettings(99, 99, lthr, 99, 99, 99, 99)
       );
       const expectedEditedPeriodAthleteSettings = [
-        datedAthleteSettingsModel01,
+        datedAthleteSettings01,
         expectedEditedDatedAthleteSettings,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -562,14 +520,14 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(
+      const promise: Promise<DatedAthleteSettings[]> = service.editSettings(
         editAtDate,
         expectedEditedDatedAthleteSettings
       );
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -588,41 +546,41 @@ describe("AthleteService", () => {
     it("should edit 'since date & settings' of a dated athlete settings with already existing periods", done => {
       // Given
       const editAtDate = "2018-04-15";
-      const datedAthleteSettingsModel01 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings01 = new DatedAthleteSettings(
         "2018-05-10",
-        new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
       );
-      const datedAthleteSettingsModel02 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings02 = new DatedAthleteSettings(
         editAtDate,
-        new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
       );
-      const datedAthleteSettingsModel03 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings03 = new DatedAthleteSettings(
         "2018-02-01",
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
-      const datedAthleteSettingsModel04 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings04 = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
 
       defaultAthleteModel.datedAthleteSettings = [
-        datedAthleteSettingsModel01,
-        datedAthleteSettingsModel02,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings01,
+        datedAthleteSettings02,
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
       const expectedNewDate = "2018-03-01";
-      const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
+      const expectedEditedDatedAthleteSettings = new DatedAthleteSettings(
         expectedNewDate,
-        new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99)
+        new AthleteSettings(99, 99, lthr, 99, 99, 99, 99)
       );
 
       const expectedEditedPeriodAthleteSettings = [
-        datedAthleteSettingsModel01,
+        datedAthleteSettings01,
         expectedEditedDatedAthleteSettings,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
       const expectedAthleteModel = _.cloneDeep(defaultAthleteModel);
@@ -636,14 +594,14 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(
+      const promise: Promise<DatedAthleteSettings[]> = service.editSettings(
         editAtDate,
         expectedEditedDatedAthleteSettings
       );
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -662,16 +620,16 @@ describe("AthleteService", () => {
     it("should edit the single 'forever' existing period", done => {
       // Given
       const editAtDate = null;
-      const foreverDatedAthleteSettingsModel = new DatedAthleteSettingsModel(
+      const foreverDatedAthleteSettings = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
 
-      defaultAthleteModel.datedAthleteSettings = [foreverDatedAthleteSettingsModel];
+      defaultAthleteModel.datedAthleteSettings = [foreverDatedAthleteSettings];
 
-      const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
+      const expectedEditedDatedAthleteSettings = new DatedAthleteSettings(
         editAtDate,
-        new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99)
+        new AthleteSettings(99, 99, lthr, 99, 99, 99, 99)
       );
       const expectedEditedPeriodAthleteSettings = [expectedEditedDatedAthleteSettings];
 
@@ -686,14 +644,14 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(
+      const promise: Promise<DatedAthleteSettings[]> = service.editSettings(
         editAtDate,
         expectedEditedDatedAthleteSettings
       );
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedEditedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -712,34 +670,34 @@ describe("AthleteService", () => {
     it("should reject edit of an non-existing dated athlete settings", done => {
       // Given
       const fakeEditAtDate = "2018-04-23";
-      const datedAthleteSettingsModel01 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings01 = new DatedAthleteSettings(
         "2018-05-10",
-        new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
       );
-      const datedAthleteSettingsModel02 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings02 = new DatedAthleteSettings(
         "2018-04-15",
-        new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
       );
-      const datedAthleteSettingsModel03 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings03 = new DatedAthleteSettings(
         "2018-02-01",
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
-      const datedAthleteSettingsModel04 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings04 = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
 
       defaultAthleteModel.datedAthleteSettings = [
-        datedAthleteSettingsModel01,
-        datedAthleteSettingsModel02,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings01,
+        datedAthleteSettings02,
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
       const expectedNewDate = "2018-03-01";
-      const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
+      const expectedEditedDatedAthleteSettings = new DatedAthleteSettings(
         expectedNewDate,
-        new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99)
+        new AthleteSettings(99, 99, lthr, 99, 99, 99, 99)
       );
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -748,14 +706,14 @@ describe("AthleteService", () => {
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.stub();
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(
+      const promise: Promise<DatedAthleteSettings[]> = service.editSettings(
         fakeEditAtDate,
         expectedEditedDatedAthleteSettings
       );
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
 
@@ -776,33 +734,33 @@ describe("AthleteService", () => {
       // Given
       const editAtDate = "2018-05-10";
       const existingDatedSettingsDate = "2018-02-01";
-      const datedAthleteSettingsModel01 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings01 = new DatedAthleteSettings(
         editAtDate,
-        new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
       );
-      const datedAthleteSettingsModel02 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings02 = new DatedAthleteSettings(
         "2018-04-15",
-        new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
       );
-      const datedAthleteSettingsModel03 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings03 = new DatedAthleteSettings(
         existingDatedSettingsDate,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
-      const datedAthleteSettingsModel04 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings04 = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
 
       defaultAthleteModel.datedAthleteSettings = [
-        datedAthleteSettingsModel01,
-        datedAthleteSettingsModel02,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings01,
+        datedAthleteSettings02,
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
-      const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
+      const expectedEditedDatedAthleteSettings = new DatedAthleteSettings(
         existingDatedSettingsDate,
-        new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99)
+        new AthleteSettings(99, 99, lthr, 99, 99, 99, 99)
       );
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -811,14 +769,14 @@ describe("AthleteService", () => {
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.stub();
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(
+      const promise: Promise<DatedAthleteSettings[]> = service.editSettings(
         editAtDate,
         expectedEditedDatedAthleteSettings
       );
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
         },
@@ -836,33 +794,33 @@ describe("AthleteService", () => {
     it("should reject edit of invalid dated athlete settings date", done => {
       // Given
       const invalidDate = "2018-99-99";
-      const datedAthleteSettingsModel01 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings01 = new DatedAthleteSettings(
         "2018-05-10",
-        new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+        new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
       );
-      const datedAthleteSettingsModel02 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings02 = new DatedAthleteSettings(
         "2018-04-15",
-        new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+        new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
       );
-      const datedAthleteSettingsModel03 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings03 = new DatedAthleteSettings(
         "2018-02-01",
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
-      const datedAthleteSettingsModel04 = new DatedAthleteSettingsModel(
+      const datedAthleteSettings04 = new DatedAthleteSettings(
         null,
-        new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+        new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
       );
 
       defaultAthleteModel.datedAthleteSettings = [
-        datedAthleteSettingsModel01,
-        datedAthleteSettingsModel02,
-        datedAthleteSettingsModel03,
-        datedAthleteSettingsModel04
+        datedAthleteSettings01,
+        datedAthleteSettings02,
+        datedAthleteSettings03,
+        datedAthleteSettings04
       ];
 
-      const expectedEditedDatedAthleteSettings = new DatedAthleteSettingsModel(
+      const expectedEditedDatedAthleteSettings = new DatedAthleteSettings(
         invalidDate,
-        new AthleteSettingsModel(99, 99, lthr, 99, 99, 99, 99)
+        new AthleteSettings(99, 99, lthr, 99, 99, 99, 99)
       );
 
       const fetchDaoSpy = spyOn(service.athleteModelDao, "findOne").and.returnValue(
@@ -871,14 +829,14 @@ describe("AthleteService", () => {
       const updateDaoSpy = spyOn(service.athleteModelDao, "update").and.stub();
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.editSettings(
+      const promise: Promise<DatedAthleteSettings[]> = service.editSettings(
         invalidDate,
         expectedEditedDatedAthleteSettings
       );
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
 
@@ -901,20 +859,14 @@ describe("AthleteService", () => {
       // Given
       const removeSinceIdentifier = "2018-04-15";
       const removeDatedAthleteSettingsIndex = 1;
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings(
           removeSinceIdentifier,
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+          new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
         ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       defaultAthleteModel.datedAthleteSettings = existingPeriodAthleteSettings;
@@ -933,11 +885,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
+      const promise: Promise<DatedAthleteSettings[]> = service.removeSettings(removeSinceIdentifier);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).not.toBeNull();
           expect(result).toEqual(expectedPeriodAthleteSettings);
           expect(fetchDaoSpy).toHaveBeenCalledTimes(1);
@@ -956,14 +908,11 @@ describe("AthleteService", () => {
     it("should reject deletion of the 'forever' existing period", done => {
       // Given
       const removeSinceIdentifier = null;
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(
           removeSinceIdentifier,
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+          new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         )
       ];
 
@@ -978,11 +927,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
+      const promise: Promise<DatedAthleteSettings[]> = service.removeSettings(removeSinceIdentifier);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
         },
@@ -1000,10 +949,10 @@ describe("AthleteService", () => {
     it("should reject deletion of the single 'forever' existing period", done => {
       // Given
       const removeSinceIdentifier = null;
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings(
           removeSinceIdentifier,
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+          new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         )
       ];
 
@@ -1018,11 +967,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
+      const promise: Promise<DatedAthleteSettings[]> = service.removeSettings(removeSinceIdentifier);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
         },
@@ -1040,20 +989,11 @@ describe("AthleteService", () => {
     it("should reject deletion of a non-existing period", done => {
       // Given
       const removeSinceIdentifier = "fake";
-      const existingPeriodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+      const existingPeriodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const expectedPeriodAthleteSettings = _.pullAt(existingPeriodAthleteSettings, 1);
@@ -1067,11 +1007,11 @@ describe("AthleteService", () => {
       );
 
       // When
-      const promise: Promise<DatedAthleteSettingsModel[]> = service.removeSettings(removeSinceIdentifier);
+      const promise: Promise<DatedAthleteSettings[]> = service.removeSettings(removeSinceIdentifier);
 
       // Then
       promise.then(
-        (result: DatedAthleteSettingsModel[]) => {
+        (result: DatedAthleteSettings[]) => {
           expect(result).toBeNull();
           throw new Error("Whoops! I should not be here!");
         },
@@ -1090,20 +1030,11 @@ describe("AthleteService", () => {
   describe("should validate", () => {
     it("should validate dated athlete settings consistency", done => {
       // Given
-      const periodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+      const periodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       const spyResolve = spyOn(Promise, "resolve").and.callThrough();
@@ -1127,20 +1058,17 @@ describe("AthleteService", () => {
     it("should not validate dated athlete settings consistency with duplicate identifier (1)", done => {
       // Given
       const duplicateSinceIdentifier = "2018-05-10";
-      const periodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
+      const periodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings(
           duplicateSinceIdentifier,
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+          new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
         ),
-        new DatedAthleteSettingsModel(
+        new DatedAthleteSettings(
           duplicateSinceIdentifier,
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
+          new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
         ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        ),
-        new DatedAthleteSettingsModel(null, new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78))
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)),
+        new DatedAthleteSettings(null, new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       // When
@@ -1163,22 +1091,19 @@ describe("AthleteService", () => {
     it("should not validate dated athlete settings consistency with duplicate identifier (2)", done => {
       // Given
       const duplicateSinceIdentifier = null;
-      const periodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
+      const periodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings(
           duplicateSinceIdentifier,
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
+          new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)
         ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings(
           duplicateSinceIdentifier,
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+          new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         ),
-        new DatedAthleteSettingsModel(
+        new DatedAthleteSettings(
           duplicateSinceIdentifier,
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
+          new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78)
         )
       ];
 
@@ -1201,19 +1126,10 @@ describe("AthleteService", () => {
 
     it("should not validate dated athlete settings consistency with missing 'forever' dated settings", done => {
       // Given
-      const periodAthleteSettings: DatedAthleteSettingsModel[] = [
-        new DatedAthleteSettingsModel(
-          "2018-05-10",
-          new AthleteSettingsModel(200, 50, lthr, 190, runningFTP, swimFTP, 75)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-04-15",
-          new AthleteSettingsModel(195, restHr, lthr, 150, runningFTP, swimFTP, 76)
-        ),
-        new DatedAthleteSettingsModel(
-          "2018-02-01",
-          new AthleteSettingsModel(190, 65, lthr, 110, runningFTP, swimFTP, 78)
-        )
+      const periodAthleteSettings: DatedAthleteSettings[] = [
+        new DatedAthleteSettings("2018-05-10", new AthleteSettings(200, 50, lthr, 190, runningFTP, swimFTP, 75)),
+        new DatedAthleteSettings("2018-04-15", new AthleteSettings(195, restHr, lthr, 150, runningFTP, swimFTP, 76)),
+        new DatedAthleteSettings("2018-02-01", new AthleteSettings(190, 65, lthr, 110, runningFTP, swimFTP, 78))
       ];
 
       // When

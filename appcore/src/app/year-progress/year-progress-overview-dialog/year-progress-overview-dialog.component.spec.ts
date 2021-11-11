@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-
 import { YearProgressOverviewDialogComponent } from "./year-progress-overview-dialog.component";
 import { YearProgressModule } from "../year-progress.module";
 import { CoreModule } from "../../core/core.module";
@@ -9,8 +8,8 @@ import { YearProgressForOverviewModel } from "../shared/models/year-progress-for
 import { YearProgressStyleModel } from "../year-progress-graph/models/year-progress-style.model";
 import moment from "moment";
 import { YearToDateProgressConfigModel } from "../shared/models/year-to-date-progress-config.model";
-import { ElevateSport } from "@elevate/shared/enums";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 describe("YearProgressOverviewDialogComponent", () => {
   let component: YearProgressOverviewDialogComponent;

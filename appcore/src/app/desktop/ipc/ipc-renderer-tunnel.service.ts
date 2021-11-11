@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@angular/core";
 import { ElectronService } from "../electron/electron.service";
-import { Channel, IpcChannelSub, IpcMessage, IpcTunnel, IpcTunnelService } from "@elevate/shared/electron";
+import { IpcChannelSub, IpcTunnel, IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @Injectable()
 export class IpcRendererTunnelService implements IpcTunnelService {

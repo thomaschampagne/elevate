@@ -1,11 +1,11 @@
 import { ComputeActivityThreadMessageModel } from "../../models/compute-activity-thread-message.model";
-import { AnalysisDataModel } from "@elevate/shared/models";
-import { ActivityComputer } from "@elevate/shared/sync";
+import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 
 onmessage = (mainThreadEvent: MessageEvent) => {
   const threadMessage: ComputeActivityThreadMessageModel = mainThreadEvent.data;
 
-  const result: AnalysisDataModel = ActivityComputer.calculate(
+  const result: ActivityStats = ActivityComputer.compute(
     {
       type: threadMessage.activityType,
       trainer: threadMessage.isTrainer,
@@ -14,10 +14,11 @@ onmessage = (mainThreadEvent: MessageEvent) => {
     threadMessage.athleteSnapshot,
     threadMessage.userSettings,
     threadMessage.streams,
+    threadMessage.returnPeaks,
     threadMessage.returnZones,
     threadMessage.bounds,
     threadMessage.isOwner,
-    threadMessage.activitySourceData
+    threadMessage.activityEssentials
   );
   postMessage(result);
 };

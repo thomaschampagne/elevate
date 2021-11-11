@@ -1,29 +1,27 @@
-import { TestBed } from "@angular/core/testing";
 import { ActivityService } from "./activity.service";
-import { TEST_SYNCED_ACTIVITIES } from "../../../../shared-fixtures/activities-2015.fixture";
-import _ from "lodash";
-import {
-  AthleteModel,
-  AthleteSettingsModel,
-  AthleteSnapshotModel,
-  DatedAthleteSettingsModel,
-  Gender,
-  SyncedActivityModel
-} from "@elevate/shared/models";
-import { FakeSyncedActivityHelper } from "../../../fitness-trend/shared/helpers/fake-synced-activity.helper";
-import { CoreModule } from "../../../core/core.module";
+import { TestBed } from "@angular/core/testing";
+import { FakeActivityHelper } from "../../../fitness-trend/shared/helpers/fake-activity.helper";
 import { SharedModule } from "../../shared.module";
-import { ElevateSport } from "@elevate/shared/enums";
+import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { DataStore } from "../../data-store/data-store";
+import ACTIVITIES_FIXTURES from "../../../../shared-fixtures/activities-2015.fixture.json";
+import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
 import { TestingDataStore } from "../../data-store/testing-datastore.service";
 import { TargetModule } from "../../modules/target/desktop-target.module";
-import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
-import { IpcRendererTunnelServiceMock } from "../../../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { CoreModule } from "../../../core/core.module";
+import _ from "lodash";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 describe("ActivityService", () => {
   let activityService: ActivityService = null;
 
-  let _TEST_SYNCED_ACTIVITIES_: SyncedActivityModel[] = null;
+  let _ACTIVITIES_FIXTURES_: Activity[] = null;
 
   beforeEach(done => {
     TestBed.configureTestingModule({
@@ -34,7 +32,7 @@ describe("ActivityService", () => {
       ]
     });
 
-    _TEST_SYNCED_ACTIVITIES_ = _.cloneDeep(TEST_SYNCED_ACTIVITIES);
+    _ACTIVITIES_FIXTURES_ = _.cloneDeep(ACTIVITIES_FIXTURES as any[]);
 
     // Retrieve injected service
     activityService = TestBed.inject(ActivityService);
@@ -51,18 +49,18 @@ describe("ActivityService", () => {
     it("should fetch activities", done => {
       // Given
       const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(_TEST_SYNCED_ACTIVITIES_)
+        Promise.resolve(_ACTIVITIES_FIXTURES_)
       );
 
       // When
-      const promise: Promise<SyncedActivityModel[]> = activityService.fetch();
+      const promise: Promise<Activity[]> = activityService.fetch();
 
       // Then
       promise.then(
-        (result: SyncedActivityModel[]) => {
+        (result: Activity[]) => {
           expect(result).not.toBeNull();
-          expect(result.length).toEqual(_TEST_SYNCED_ACTIVITIES_.length);
-          expect(result).toEqual(_TEST_SYNCED_ACTIVITIES_);
+          expect(result.length).toEqual(_ACTIVITIES_FIXTURES_.length);
+          expect(result).toEqual(_ACTIVITIES_FIXTURES_);
           expect(findDaoSpy).toHaveBeenCalledTimes(1);
 
           done();
@@ -70,12 +68,11 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
 
-    it("should clear SyncedActivityModels", done => {
+    it("should clear activities", done => {
       // Given
       const removeDaoSpy = spyOn(activityService.activityDao, "clear").and.returnValue(Promise.resolve(null));
 
@@ -91,12 +88,11 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
 
-    it("should remove SyncedActivityModel by activity ids", done => {
+    it("should remove activities by activity ids", done => {
       // Given
       const activitiesToDelete = [
         302537043, // Chamrousse 1750
@@ -119,7 +115,6 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
@@ -128,10 +123,10 @@ describe("ActivityService", () => {
   describe("Activity compliance with athlete settings", () => {
     it("should resolve activities compliant with athlete settings", done => {
       // Given
-      const athleteSnapshot = new AthleteSnapshotModel(
+      const athleteSnapshot = new AthleteSnapshot(
         Gender.MEN,
         null,
-        new AthleteSettingsModel(
+        new AthleteSettings(
           190,
           60,
           {
@@ -147,12 +142,12 @@ describe("ActivityService", () => {
       );
 
       const athleteModel = new AthleteModel(Gender.MEN, [
-        new DatedAthleteSettingsModel(null, athleteSnapshot.athleteSettings)
+        new DatedAthleteSettings(null, athleteSnapshot.athleteSettings)
       ]);
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           athleteSnapshot,
           "SuperHeartRateRide 01",
@@ -164,8 +159,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           athleteSnapshot,
           "SuperHeartRateRide 02",
@@ -177,8 +172,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           athleteSnapshot,
           "SuperHeartRateRide 03",
@@ -190,9 +185,7 @@ describe("ActivityService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(athleteModel)
@@ -211,17 +204,16 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
 
     it("should resolve activities compliant with athlete settings hasDatedAthleteSettings=true", done => {
       // Given
-      const athleteSnapshot01 = new AthleteSnapshotModel(
+      const athleteSnapshot01 = new AthleteSnapshot(
         Gender.MEN,
         null,
-        new AthleteSettingsModel(
+        new AthleteSettings(
           190,
           60,
           {
@@ -241,16 +233,16 @@ describe("ActivityService", () => {
       athleteSnapshot02.athleteSettings.restHr = 66;
       athleteSnapshot02.athleteSettings.cyclingFtp = 250;
 
-      const datedAthleteSettingsModels = [
-        new DatedAthleteSettingsModel("2018-01-14", athleteSnapshot02.athleteSettings),
-        new DatedAthleteSettingsModel(null, athleteSnapshot01.athleteSettings)
+      const datedAthleteSettings = [
+        new DatedAthleteSettings("2018-01-14", athleteSnapshot02.athleteSettings),
+        new DatedAthleteSettings(null, athleteSnapshot01.athleteSettings)
       ];
 
-      const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettingsModels);
+      const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettings);
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           athleteSnapshot01,
           "SuperHeartRateRide 01",
@@ -262,8 +254,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           athleteSnapshot02,
           "SuperHeartRateRide 02",
@@ -275,8 +267,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           athleteSnapshot02,
           "SuperHeartRateRide 03",
@@ -288,9 +280,7 @@ describe("ActivityService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(athleteModel)
@@ -309,17 +299,16 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
 
     it("should resolve non consistent activities ids which are not compliant athlete settings hasDatedAthleteSettings=true", done => {
       // Given
-      const athleteModel01 = new AthleteSnapshotModel(
+      const athleteModel01 = new AthleteSnapshot(
         Gender.MEN,
         null,
-        new AthleteSettingsModel(
+        new AthleteSettings(
           190,
           60,
           {
@@ -339,16 +328,16 @@ describe("ActivityService", () => {
       athleteModel02.athleteSettings.restHr = 66;
       athleteModel02.athleteSettings.cyclingFtp = 250;
 
-      const datedAthleteSettingsModels = [
-        new DatedAthleteSettingsModel("2018-01-15", athleteModel02.athleteSettings),
-        new DatedAthleteSettingsModel(null, athleteModel01.athleteSettings)
+      const datedAthleteSettings = [
+        new DatedAthleteSettings("2018-01-15", athleteModel02.athleteSettings),
+        new DatedAthleteSettings(null, athleteModel01.athleteSettings)
       ];
 
-      const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettingsModels);
+      const athleteModel = new AthleteModel(Gender.MEN, datedAthleteSettings);
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           athleteModel01,
           "SuperHeartRateRide 01",
@@ -360,8 +349,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           athleteModel01,
           "SuperHeartRateRide 02",
@@ -373,8 +362,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           athleteModel01,
           "SuperHeartRateRide 03",
@@ -386,9 +375,7 @@ describe("ActivityService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(athleteModel)
@@ -411,17 +398,16 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });
 
     it("should resolve activities NOT compliant with athlete settings", done => {
       // Given
-      const athleteSnapshot = new AthleteSnapshotModel(
+      const athleteSnapshot = new AthleteSnapshot(
         Gender.MEN,
         null,
-        new AthleteSettingsModel(
+        new AthleteSettings(
           190,
           60,
           {
@@ -436,9 +422,9 @@ describe("ActivityService", () => {
         )
       );
 
-      const syncedActivityModels: SyncedActivityModel[] = [];
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
           1,
           athleteSnapshot,
           "SuperHeartRateRide 01",
@@ -452,8 +438,8 @@ describe("ActivityService", () => {
 
       const variousAthleteSnapshotModel = _.cloneDeep(athleteSnapshot);
       variousAthleteSnapshotModel.athleteSettings.maxHr = 666; // Introducing a little settings change
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           2,
           variousAthleteSnapshotModel,
           "SuperHeartRateRide 02",
@@ -465,8 +451,8 @@ describe("ActivityService", () => {
         )
       );
 
-      syncedActivityModels.push(
-        FakeSyncedActivityHelper.create(
+      activities.push(
+        FakeActivityHelper.create(
           3,
           athleteSnapshot,
           "SuperHeartRateRide 03",
@@ -478,9 +464,7 @@ describe("ActivityService", () => {
         )
       );
 
-      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(
-        Promise.resolve(syncedActivityModels)
-      );
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
 
       spyOn(activityService.athleteSnapshotResolver.athleteService, "fetch").and.returnValue(
         Promise.resolve(AthleteModel.DEFAULT_MODEL)
@@ -499,7 +483,6 @@ describe("ActivityService", () => {
         error => {
           expect(error).toBeNull();
           throw new Error("Whoops! I should not be here!");
-          done();
         }
       );
     });

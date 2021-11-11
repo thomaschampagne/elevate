@@ -2,11 +2,11 @@ import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from "@angula
 import { SplashScreenComponent } from "../splash-screen.component";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { DesktopUpdateService } from "../../desktop/app-update/desktop-update.service";
-import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models";
 import { Observable, Subscription } from "rxjs";
-import { countdown } from "@elevate/shared/tools";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { LoggerService } from "../../shared/services/logging/logger.service";
+import { countdown } from "@elevate/shared/tools/countdown";
+import { StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models/updates/update-notify";
 
 @Component({
   selector: "app-desktop-splash-screen",
@@ -30,16 +30,14 @@ import { LoggerService } from "../../shared/services/logging/logger.service";
               <div class="loading-text-status">
                 New update <strong>{{ updateNotify.version }}</strong> available.
               </div>
-              <div class="loading-text-status mat-h5">
+              <div class="loading-text-status mat-h4">
                 <i
                   >Installing new updates is strongly recommended. <strong>Don't skip them!</strong>.<br />Auto-update
-                  for this platform will be available in a future version to be installed manually like this one.</i
+                  for this platform will be available in a future version.</i
                 >
               </div>
               <div>
-                <button (click)="onStaticDownload()" color="primary" mat-stroked-button>
-                  Download & install yourself
-                </button>
+                <button (click)="onStaticDownload()" color="primary" mat-stroked-button>Download update</button>
                 <span fxFlex="1"></span>
                 <button
                   *ngIf="this.skipCountdown$"
@@ -95,7 +93,7 @@ export class DesktopSplashScreenComponent extends SplashScreenComponent implemen
     );
   }
 
-  private static readonly SKIP_COUNTDOWN = 10;
+  private static readonly SKIP_COUNTDOWN = 5;
 
   public updateNotify: UpdateNotify;
   public downloadUpdateProgress: number;

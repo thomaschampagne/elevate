@@ -35,8 +35,7 @@ import { ExtensionBackupModel } from "../../../models/extension-backup.model";
       <span fxFlex="1"></span>
       <button (click)="onRestore()" *ngIf="file" color="primary" mat-stroked-button>Restore</button>
     </mat-dialog-actions>
-  `,
-  styles: [``]
+  `
 })
 export class ExtensionRestoreBackupDialogComponent implements OnInit {
   constructor(

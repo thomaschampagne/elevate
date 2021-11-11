@@ -1,36 +1,25 @@
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
-import {
-  ActivityComputer,
-  CompleteSyncEvent,
-  ConnectorType,
-  ErrorSyncEvent,
-  FileConnectorInfo,
-  GenericSyncEvent,
-  SyncEvent
-} from "@elevate/shared/sync";
-import { Subject } from "rxjs";
-import { IpcMainTunnelService } from "../ipc-main-tunnel.service";
+import { FileConnector } from "./file/file.connector";
 import { container } from "tsyringe";
 import { ConnectorSyncService } from "./connector-sync.service";
-import { FileConnector } from "./file/file.connector";
 import { StravaConnector } from "./strava/strava.connector";
+import { Subject } from "rxjs";
+import { IpcMainTunnelService } from "../ipc-main-tunnel.service";
 import { StravaConnectorConfig } from "./connector-config.model";
-import {
-  AnalysisDataModel,
-  AthleteSettingsModel,
-  AthleteSnapshotModel,
-  Gender,
-  Streams,
-  SyncedActivityModel
-} from "@elevate/shared/models";
-import { ElevateException } from "@elevate/shared/exceptions";
-import _ from "lodash";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
+import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
+import { GenericSyncEvent } from "@elevate/shared/sync/events/generic-sync.event";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 describe("ConnectorSyncService", () => {
   const syncFromDateTime = null;
   const athleteModel = null;
   const connectorInfo = null;
-  const userSettingsModel = null;
+  const userSettings = null;
 
   let connectorSyncService: ConnectorSyncService;
   let ipcTunnelService: IpcTunnelService;
@@ -46,7 +35,7 @@ describe("ConnectorSyncService", () => {
     const stravaConnectorConfig: StravaConnectorConfig = {
       syncFromDateTime: syncFromDateTime,
       athleteModel: athleteModel,
-      userSettingsModel: userSettingsModel,
+      userSettings: userSettings,
       info: connectorInfo
     };
     stravaConnector = stravaConnector.configure(stravaConnectorConfig);
@@ -54,7 +43,7 @@ describe("ConnectorSyncService", () => {
     const fileConnectorConfig = {
       syncFromDateTime: syncFromDateTime,
       athleteModel: athleteModel,
-      userSettingsModel: userSettingsModel,
+      userSettings: userSettings,
       athleteMachineId: null,
       info: connectorInfo
     };
@@ -79,7 +68,7 @@ describe("ConnectorSyncService", () => {
         syncFromDateTime,
         connectorInfo,
         athleteModel,
-        userSettingsModel
+        userSettings
       );
 
       // Then
@@ -106,7 +95,7 @@ describe("ConnectorSyncService", () => {
         connectorType,
         fileConnectorInfo,
         athleteModel,
-        userSettingsModel,
+        userSettings,
         syncFromDateTime
       );
 
@@ -163,7 +152,7 @@ describe("ConnectorSyncService", () => {
         ConnectorType.STRAVA,
         athleteModel,
         connectorInfo,
-        userSettingsModel,
+        userSettings,
         connectorInfo
       );
 
@@ -186,7 +175,7 @@ describe("ConnectorSyncService", () => {
       const fakeErrorSyncEvent = new ErrorSyncEvent(ConnectorType.STRAVA, {
         code: "fake_code",
         description: "fake_desc",
-        stacktrace: "fake_stack"
+        sourceError: new Error("fake_err")
       });
       const expectedMessageSent = new IpcMessage(Channel.syncEvent, fakeErrorSyncEvent);
       const expected = "Started sync of connector " + ConnectorType.STRAVA;
@@ -202,7 +191,7 @@ describe("ConnectorSyncService", () => {
         ConnectorType.STRAVA,
         athleteModel,
         connectorInfo,
-        userSettingsModel,
+        userSettings,
         connectorInfo
       );
       syncEvent$.error(fakeErrorSyncEvent);
@@ -248,7 +237,7 @@ describe("ConnectorSyncService", () => {
         ConnectorType.STRAVA,
         athleteModel,
         connectorInfo,
-        userSettingsModel,
+        userSettings,
         connectorInfo
       );
       syncEvent$.complete();
@@ -334,102 +323,6 @@ describe("ConnectorSyncService", () => {
         .catch(err => {
           expect(stopConnectorSyncSpy).not.toBeCalled();
           expect(err).toEqual(expected);
-          done();
-        });
-    });
-  });
-
-  describe("Handle compute activity (case: fix activities, recompute single activity)", () => {
-    it("should compute activity", done => {
-      // Given
-      const syncedActivityModel = new SyncedActivityModel();
-      syncedActivityModel.name = "My activity";
-      syncedActivityModel.start_time = new Date().toISOString();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL);
-      const streams = new Streams();
-      const analysisDataModel = new AnalysisDataModel();
-
-      const calculateSpy = spyOn(ActivityComputer, "calculate").and.returnValue(analysisDataModel);
-
-      // When
-      const promise = connectorSyncService.computeActivity(
-        syncedActivityModel,
-        userSettingsModel,
-        athleteSnapshotModel,
-        streams
-      );
-
-      // Then
-      promise.then(activity => {
-        expect(calculateSpy).toBeCalledTimes(1);
-        expect(activity).toBeInstanceOf(SyncedActivityModel);
-        expect(activity.athleteSnapshot).toEqual(athleteSnapshotModel);
-        done();
-      });
-    });
-
-    it("should compute activity without streams", done => {
-      // Given
-      const syncedActivityModel = new SyncedActivityModel();
-      syncedActivityModel.name = "My activity";
-      syncedActivityModel.start_time = new Date().toISOString();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL);
-      const streams = null;
-      const analysisDataModel = new AnalysisDataModel();
-
-      const calculateSpy = spyOn(ActivityComputer, "calculate").and.returnValue(analysisDataModel);
-
-      // When
-      const promise = connectorSyncService.computeActivity(
-        syncedActivityModel,
-        userSettingsModel,
-        athleteSnapshotModel,
-        streams
-      );
-
-      // Then
-      promise.then(activity => {
-        expect(calculateSpy).toBeCalledTimes(1);
-        expect(activity).toBeInstanceOf(SyncedActivityModel);
-        expect(activity.athleteSnapshot).toEqual(athleteSnapshotModel);
-        done();
-      });
-    });
-
-    it("should reject compute activity", done => {
-      // Given
-      const syncedActivityModel = new SyncedActivityModel();
-      syncedActivityModel.name = "My activity";
-      syncedActivityModel.start_time = new Date().toISOString();
-      const athleteSnapshotModel = new AthleteSnapshotModel(Gender.MEN, 30, AthleteSettingsModel.DEFAULT_MODEL);
-      const streams = new Streams();
-      const analysisDataModel = new AnalysisDataModel();
-      const expectedSyncedActivityModel = _.cloneDeep(syncedActivityModel);
-      expectedSyncedActivityModel.extendedStats = analysisDataModel;
-      expectedSyncedActivityModel.athleteSnapshot = athleteSnapshotModel;
-      const expectedErrorMessage = `unable to calculate activity ${syncedActivityModel.name} started at ${syncedActivityModel.start_timestamp}: Whoops.`;
-      const expectedElevateException = new ElevateException(expectedErrorMessage);
-
-      const calculateSpy = spyOn(ActivityComputer, "calculate").and.callFake(() => {
-        throw expectedElevateException;
-      });
-
-      // When
-      const promise = connectorSyncService.computeActivity(
-        syncedActivityModel,
-        userSettingsModel,
-        athleteSnapshotModel,
-        streams
-      );
-
-      // Then
-      promise
-        .then(() => {
-          throw new Error("Should not be here");
-        })
-        .catch(err => {
-          expect(calculateSpy).toBeCalledTimes(1);
-          expect(err).toEqual(expectedElevateException);
           done();
         });
     });

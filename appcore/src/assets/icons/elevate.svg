@@ -3,29 +3,29 @@
 
   <style type="text/css">.st0 {
     fill: none;
-    stroke: #E94E1B;
+    stroke: #000000;
     stroke-width: 5;
     stroke-linecap: round;
     stroke-miterlimit: 10;
   }
 
   .st1 {
-    fill: #E94F1C;
+    fill: #000000;
   }
 
   .st2 {
     fill: none;
-    stroke: #e94f1c;
+    stroke: #000000;
     stroke-miterlimit: 10;
   }
 
   .st3 {
-    fill: #e94f1c;
+    fill: #000000;
   }
 
   .st4 {
     fill: none;
-    stroke: #e94f1c;
+    stroke: #000000;
     stroke-width: 0.54;
     stroke-miterlimit: 10;
   }

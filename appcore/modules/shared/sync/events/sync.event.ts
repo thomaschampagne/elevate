@@ -1,5 +1,5 @@
 import { SyncEventType } from "./sync-event-type";
-import { ConnectorType } from "../connectors";
+import { ConnectorType } from "../connectors/connector-type.enum";
 
 export abstract class SyncEvent {
   public type: SyncEventType;

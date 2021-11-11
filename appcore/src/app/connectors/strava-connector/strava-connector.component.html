@@ -225,8 +225,8 @@
         </div>
         <div class="others-options">
           <mat-checkbox (change)="onUpdateActivitiesNameAndTypeChanged()"
-                        [(ngModel)]="stravaConnectorInfo.updateSyncedActivitiesNameAndType">
-            Override existing activities names and types with those fetched from Strava.
+                        [(ngModel)]="stravaConnectorInfo.updateExistingNamesTypesCommutes">
+            Override existing activities names, types and commute statuses with those fetched from Strava.
           </mat-checkbox>
         </div>
         <div>

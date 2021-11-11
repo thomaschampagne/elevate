@@ -1,8 +1,9 @@
 import _ from "lodash";
-import { CoreMessages, SyncResultModel } from "@elevate/shared/models";
-import { Constant } from "@elevate/shared/constants";
 import { LegacyBrowserStorage } from "./legacy-browser-storage";
 import { BrowserStorage } from "./browser-storage";
+import { SyncResultModel } from "@elevate/shared/models/sync/sync-result.model";
+import { CoreMessages } from "@elevate/shared/models/core-messages";
+import { Constant } from "@elevate/shared/constants/constant";
 
 export class Background {
   public init(): void {

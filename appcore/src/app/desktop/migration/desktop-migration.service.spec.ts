@@ -1,6 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-
-import { DesktopMigrationService } from "./desktop-migration.service";
+import { DesktopMigrationService, UpgradeResult } from "./desktop-migration.service";
 import { CoreModule } from "../../core/core.module";
 import { SharedModule } from "../../shared/shared.module";
 import { DesktopMigration } from "./desktop-migrations.model";
@@ -150,8 +149,8 @@ describe("DesktopMigrationService", () => {
 
     // Then
     promise.then(
-      hasBeenUpgradedTo => {
-        expect(hasBeenUpgradedTo).toEqual(packageVersion);
+      (upgradeResult: UpgradeResult) => {
+        expect(upgradeResult.toVersion).toEqual(packageVersion);
         expect(detectUpgradeSpy).toHaveBeenCalledTimes(1);
         expect(setExistingVersionSpy).toHaveBeenCalledTimes(1);
         expect(persistSpy).toHaveBeenCalledTimes(1);
@@ -183,8 +182,8 @@ describe("DesktopMigrationService", () => {
 
     // Then
     promise.then(
-      hasBeenUpgradedTo => {
-        expect(hasBeenUpgradedTo).toBeNull();
+      (upgradeResult: UpgradeResult) => {
+        expect(upgradeResult.toVersion).toBeNull();
         expect(detectUpgradeSpy).toHaveBeenCalledTimes(1);
         expect(setExistingVersionSpy).toHaveBeenCalledTimes(1);
         expect(persistSpy).not.toHaveBeenCalled();

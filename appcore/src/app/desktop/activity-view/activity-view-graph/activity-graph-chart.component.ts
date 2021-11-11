@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, Inject, Input, OnInit } from "@angular/core";
-import { Streams, SyncedActivityModel } from "@elevate/shared/models";
 import { AxisType, Datum, Layout, LayoutAxis, PlotMouseEvent, PlotRelayoutEvent } from "plotly.js";
 import _ from "lodash";
 import moment from "moment";
@@ -7,13 +6,16 @@ import { Sensor } from "../shared/models/sensors/sensor.model";
 import { BaseChartComponent } from "../shared/base-chart.component";
 import { ScatterChart } from "../shared/models/plot-chart.model";
 import { ActivityViewService } from "../shared/activity-view.service";
-import { MeasureSystem } from "@elevate/shared/enums";
-import { Constant } from "@elevate/shared/constants";
 import { AppService } from "../../../shared/services/app-service/app.service";
 import { PlotlyService } from "angular-plotly.js";
-import { PaceSensor } from "../shared/models/sensors/move.sensor";
+import { GradeAdjustedPaceSensor, PaceSensor } from "../shared/models/sensors/move.sensor";
 import { ActivitySensorsService } from "../shared/activity-sensors.service";
-import { ElevateException } from "@elevate/shared/exceptions";
+import { environment } from "../../../../environments/environment";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { Constant } from "@elevate/shared/constants/constant";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 enum ScaleMode {
   TIME,
@@ -31,12 +33,26 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     "velocity_smooth",
     "heartrate",
     "watts",
-    "cadence"
+    "cadence",
+    "grade_adjusted_speed"
   ];
+
+  private static readonly DEBUG_STREAMS: (keyof Streams)[] = ["grade_smooth", "watts_calc"];
 
   private static readonly PER_SENSOR_LAYOUT_SPECIFICS = new Map<string, Partial<Layout>>([
     [
       PaceSensor.NAME,
+      {
+        yaxis: {
+          autorange: "reversed",
+          type: "date",
+          tickformat: "%M:%S",
+          hoverformat: null
+        }
+      }
+    ],
+    [
+      GradeAdjustedPaceSensor.NAME,
       {
         yaxis: {
           autorange: "reversed",
@@ -60,7 +76,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   };
 
   @Input()
-  public activity: SyncedActivityModel;
+  public activity: Activity;
 
   @Input()
   public streams: Streams;
@@ -74,6 +90,8 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
 
   public isZooming: boolean;
 
+  public hasDistance: boolean;
+
   private availableSensors: Sensor[];
 
   constructor(
@@ -84,8 +102,16 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     super(appService, plotlyService);
-    this.scaleMode = ActivityGraphChartComponent.DEFAULT_SCALE_MODE;
     this.isZooming = false;
+
+    // Add referenced debug streams for debugging activities while in development mode
+    if (environment.showActivityDebugData) {
+      ActivityGraphChartComponent.DEBUG_STREAMS.forEach(stream => {
+        if (ActivityGraphChartComponent.CHERRY_PICKED_STREAMS.indexOf(stream) === -1) {
+          ActivityGraphChartComponent.CHERRY_PICKED_STREAMS.push(stream);
+        }
+      });
+    }
   }
 
   public createChart(): ScatterChart {
@@ -93,6 +119,10 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   }
 
   public ngOnInit(): void {
+    this.hasDistance = !_.isEmpty(this.streams.distance);
+
+    this.updateScaleMode(ActivityGraphChartComponent.DEFAULT_SCALE_MODE, this.hasDistance);
+
     // Filter available sensors for current activity base on his streams content
     this.availableSensors = this.filterAvailableSensors(
       this.streams,
@@ -109,17 +139,8 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     // Add traces data to scatter chart from every available sensors
     this.addTracesFromAvailableSensors();
 
-    // Define which stream to use
-    let scaleStream = this.getActiveScaleStream();
-
-    // Switch to time stream if distance stream is not available
-    if (this.scaleMode === ScaleMode.DISTANCE && _.isEmpty(this.streams.distance)) {
-      this.scaleMode = ScaleMode.TIME;
-      scaleStream = this.streams.time;
-    }
-
     // Inject every sensor data in scatter chart
-    this.populateTracesDataOnScaledStream(scaleStream);
+    this.populateTracesDataOnScaledStream(this.getActiveScaleStream());
 
     // Y/X Axis configuration
     this.specificAxisConfiguration();
@@ -127,6 +148,10 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
 
   private getActiveScaleStream(): number[] {
     return this.scaleMode === ScaleMode.TIME ? this.streams.time : this.streams.distance;
+  }
+
+  private updateScaleMode(target: ScaleMode, hasDistance: boolean): void {
+    this.scaleMode = hasDistance ? target : ScaleMode.TIME;
   }
 
   /**
@@ -310,9 +335,11 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   /**
    * Calculate the left/right graph margin and yAxis step padding for multi yAxis placement purpose
    */
-  private calculateMultiYAxisPosition(
-    availableSensors: Sensor[]
-  ): { domainMarginLeft: number; domainMarginRight: number; yAxisPadding: number } {
+  private calculateMultiYAxisPosition(availableSensors: Sensor[]): {
+    domainMarginLeft: number;
+    domainMarginRight: number;
+    yAxisPadding: number;
+  } {
     // Calculate y-axis padding value for 1 yAxis from window width
     const yAxisPadding = (1 / window.innerWidth) * ActivityGraphChartComponent.WINDOW_SCALED_YAXIS_PADDING_FACTOR;
 

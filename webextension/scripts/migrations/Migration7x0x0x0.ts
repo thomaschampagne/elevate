@@ -1,16 +1,16 @@
-import { AthleteModel, SyncedActivityModel, UserSettings } from "@elevate/shared/models";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
-import { YearToDateProgressPresetModel } from "../../../appcore/src/app/year-progress/shared/models/year-to-date-progress-preset.model";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 interface IOldV6Database {
   athlete?: AthleteModel;
   athleteId?: number;
   bestSplitsConfiguration?: {};
   syncDateTime?: number;
-  syncedActivities?: SyncedActivityModel[];
-  userSettings?: ExtensionUserSettingsModel;
-  yearProgressPresets?: YearToDateProgressPresetModel[];
+  syncedActivities?: any[];
+  userSettings?: ExtensionUserSettings;
+  yearProgressPresets?: any[];
   versionInstalled?: { on: number; version: string };
 }
 
@@ -50,16 +50,16 @@ interface INewV7Database {
         values: [];
       };
     };
-    data: SyncedActivityModel[] & { $loki: number; meta: {} }[];
+    data: any[] & { $loki: number; meta: {} }[];
     uniqueNames: ["id"];
   };
   userSettings?: {
     name: "userSettings";
-    data: ExtensionUserSettingsModel[] & { $loki: number; meta: {} }[];
+    data: ExtensionUserSettings[] & { $loki: number; meta: {} }[];
   };
   yearProgressPresets?: {
     name: "yearProgressPresets";
-    data: YearToDateProgressPresetModel[] & { $loki: number; meta: {} }[];
+    data: any[] & { $loki: number; meta: {} }[];
   };
   versionInstalled?: {
     name: "versionInstalled";

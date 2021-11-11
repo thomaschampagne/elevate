@@ -1,12 +1,16 @@
 import { Inject, Injectable } from "@angular/core";
-import { ConnectorType, StravaAccount, StravaConnectorInfo } from "@elevate/shared/sync";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { ConnectorService } from "../connector.service";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
-import { Gender } from "@elevate/shared/models";
 import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @Injectable()
 export class StravaConnectorService extends ConnectorService {

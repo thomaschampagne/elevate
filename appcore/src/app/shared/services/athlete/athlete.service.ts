@@ -1,7 +1,8 @@
-import { AthleteModel, DatedAthleteSettingsModel } from "@elevate/shared/models";
 import { AthleteDao } from "../../dao/athlete/athlete.dao";
 import _ from "lodash";
 import { AppError } from "../../models/app-error.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 
 /**
  * The latest managed period must have "since" as "forever"
@@ -14,13 +15,10 @@ export abstract class AthleteService {
    */
   public fetch(): Promise<AthleteModel> {
     return this.athleteModelDao.findOne().then((athleteModel: AthleteModel) => {
-      athleteModel.datedAthleteSettings = _.sortBy(
-        athleteModel.datedAthleteSettings,
-        (model: DatedAthleteSettingsModel) => {
-          const sortOnDate: Date = _.isNull(model.since) ? new Date(0) : new Date(model.since);
-          return sortOnDate.getTime() * -1;
-        }
-      );
+      athleteModel.datedAthleteSettings = _.sortBy(athleteModel.datedAthleteSettings, (model: DatedAthleteSettings) => {
+        const sortOnDate: Date = _.isNull(model.since) ? new Date(0) : new Date(model.since);
+        return sortOnDate.getTime() * -1;
+      });
       return Promise.resolve(athleteModel);
     });
   }
@@ -28,7 +26,7 @@ export abstract class AthleteService {
   /**
    * Add a athlete dated settings.
    */
-  public addSettings(datedAthleteSettings: DatedAthleteSettingsModel): Promise<DatedAthleteSettingsModel[]> {
+  public addSettings(datedAthleteSettings: DatedAthleteSettings): Promise<DatedAthleteSettings[]> {
     return this.validateSingle(datedAthleteSettings)
       .then(() => {
         return this.fetch();
@@ -51,10 +49,10 @@ export abstract class AthleteService {
         if (athleteModel.datedAthleteSettings.length > 0) {
           athleteModel.datedAthleteSettings = _.flatten([datedAthleteSettings, athleteModel.datedAthleteSettings]);
         } else {
-          // No existing DatedAthleteSettingsModel stored... Add the current
+          // No existing DatedAthleteSettings stored... Add the current
           athleteModel.datedAthleteSettings.push(datedAthleteSettings);
 
-          // And append a default forever DatedAthleteSettingsModel must be created
+          // And append a default forever DatedAthleteSettings must be created
           const defaultForeverDatedAthleteSettings = _.cloneDeep(datedAthleteSettings);
           defaultForeverDatedAthleteSettings.since = null;
           athleteModel.datedAthleteSettings.push(defaultForeverDatedAthleteSettings);
@@ -89,14 +87,14 @@ export abstract class AthleteService {
   /**
    * Reset (replace existing) athlete DatedAthleteSettings with default AthleteSettings
    */
-  public resetSettings(): Promise<DatedAthleteSettingsModel[]> {
+  public resetSettings(): Promise<DatedAthleteSettings[]> {
     return this.fetch()
       .then((athleteModel: AthleteModel) => {
         athleteModel.datedAthleteSettings = [];
         return this.update(athleteModel);
       })
       .then(() => {
-        return this.addSettings(DatedAthleteSettingsModel.DEFAULT_MODEL);
+        return this.addSettings(DatedAthleteSettings.DEFAULT_MODEL);
       });
   }
 
@@ -105,8 +103,8 @@ export abstract class AthleteService {
    */
   public editSettings(
     sinceIdentifier: string,
-    datedAthleteSettings: DatedAthleteSettingsModel
-  ): Promise<DatedAthleteSettingsModel[]> {
+    datedAthleteSettings: DatedAthleteSettings
+  ): Promise<DatedAthleteSettings[]> {
     return this.validateSingle(datedAthleteSettings)
       .then(() => {
         return this.fetch();
@@ -152,7 +150,7 @@ export abstract class AthleteService {
   /**
    * Remove a dated athlete settings
    */
-  public removeSettings(sinceIdentifier: string): Promise<DatedAthleteSettingsModel[]> {
+  public removeSettings(sinceIdentifier: string): Promise<DatedAthleteSettings[]> {
     return this.fetch().then((athleteModel: AthleteModel) => {
       if (_.isNull(sinceIdentifier)) {
         return Promise.reject(
@@ -183,7 +181,7 @@ export abstract class AthleteService {
     });
   }
 
-  public validate(datedAthleteSettings: DatedAthleteSettingsModel[]): Promise<void> {
+  public validate(datedAthleteSettings: DatedAthleteSettings[]): Promise<void> {
     let hasForeverSettings = false;
     let hasDuplicate = false;
 
@@ -217,14 +215,14 @@ export abstract class AthleteService {
     return Promise.resolve();
   }
 
-  public validateSingle(datedAthleteSettingsModel: DatedAthleteSettingsModel): Promise<void> {
+  public validateSingle(datedAthleteSettings: DatedAthleteSettings): Promise<void> {
     let promise = Promise.resolve();
 
     // Checking date format and validity
-    if (datedAthleteSettingsModel) {
-      if (!_.isNull(datedAthleteSettingsModel.since)) {
-        const isDateWellFormatted = /([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm.exec(datedAthleteSettingsModel.since);
-        const onDate = new Date(datedAthleteSettingsModel.since);
+    if (datedAthleteSettings) {
+      if (!_.isNull(datedAthleteSettings.since)) {
+        const isDateWellFormatted = /([0-9]{4})\-([0-9]{2})\-([0-9]{2})/gm.exec(datedAthleteSettings.since);
+        const onDate = new Date(datedAthleteSettings.since);
         const isValidDate = !isNaN(onDate.getTime());
 
         if (!isDateWellFormatted || !isValidDate) {

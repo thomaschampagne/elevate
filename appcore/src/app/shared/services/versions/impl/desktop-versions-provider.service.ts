@@ -3,11 +3,14 @@ import { HttpClient } from "@angular/common/http";
 import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { VersionsProvider } from "../versions-provider";
 import { MatDialog } from "@angular/material/dialog";
-import { Platform } from "@elevate/shared/enums";
-import { GhRelease } from "@elevate/shared/models";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
+
 import { IpcStorageService } from "../../../../desktop/ipc/ipc-storage.service";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @Injectable()
 export class DesktopVersionsProvider extends VersionsProvider {

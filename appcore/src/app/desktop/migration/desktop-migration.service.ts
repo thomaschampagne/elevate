@@ -13,6 +13,11 @@ import { ActivityService } from "../../shared/services/activity/activity.service
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { IpcStorageService } from "../ipc/ipc-storage.service";
 
+export interface UpgradeResult {
+  toVersion: string;
+  firstInstall: boolean;
+}
+
 @Injectable()
 export class DesktopMigrationService {
   constructor(
@@ -35,8 +40,8 @@ export class DesktopMigrationService {
    * Do nothing if no new versions.
    * @return Promise of upgraded version or null if no upgrade
    */
-  public upgrade(): Promise<string> {
-    let hasBeenUpgradedToVersion = null;
+  public upgrade(): Promise<UpgradeResult> {
+    const upgradeResult: UpgradeResult = { toVersion: null, firstInstall: false };
     return this.detectUpgrade()
       .then((upgradeData: { fromVersion: string; toVersion: string }) => {
         if (upgradeData) {
@@ -47,20 +52,23 @@ export class DesktopMigrationService {
             })
             .then(() => {
               this.logger.info(`Upgrade to ${upgradeData.toVersion} done.`);
-              hasBeenUpgradedToVersion = upgradeData.toVersion;
-              return Promise.resolve();
+              upgradeResult.toVersion = upgradeData.toVersion;
+              return Promise.resolve(upgradeResult);
             });
         } else {
           this.logger.debug("No upgrade detected");
+          // Check if first install...
+          return this.versionsProvider.getExistingVersion().then(existingVersion => {
+            if (!existingVersion) {
+              this.logger.info(`First install detected.`);
+              upgradeResult.firstInstall = true;
+            }
+            return Promise.resolve(upgradeResult);
+          });
         }
-
-        return Promise.resolve();
       })
       .then(() => {
-        return this.trackPackageVersion();
-      })
-      .then(() => {
-        return Promise.resolve(hasBeenUpgradedToVersion);
+        return this.trackPackageVersion().then(() => Promise.resolve(upgradeResult));
       })
       .catch(err => {
         if (err.reason && err.reason === "DOWNGRADE") {
@@ -69,7 +77,7 @@ export class DesktopMigrationService {
               content: err.message
             } as GotItDialogDataModel
           });
-          return this.trackPackageVersion();
+          return this.trackPackageVersion().then(() => Promise.resolve(upgradeResult));
         }
         return Promise.reject(err);
       });
@@ -82,7 +90,6 @@ export class DesktopMigrationService {
         const packageVersion = results[1];
 
         if (!existingVersion) {
-          this.logger.info(`First install detected.`);
           return Promise.resolve(null);
         }
 

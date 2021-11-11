@@ -17,16 +17,18 @@
       Zoom out
     </button>
 
-    <button mat-button *ngIf="scaleMode === ScaleMode.TIME && streams.distance?.length" color="primary"
-            (click)="onToggleScaleMode()">
-      <mat-icon [inline]="true" fontSet="material-icons-outlined">straighten</mat-icon>
-      Distance scale
-    </button>
+    <ng-container *ngIf="hasDistance">
+      <button mat-button *ngIf="scaleMode === ScaleMode.TIME && streams.distance?.length" color="primary"
+              (click)="onToggleScaleMode()">
+        <mat-icon [inline]="true" fontSet="material-icons-outlined">straighten</mat-icon>
+        Distance scale
+      </button>
 
-    <button mat-button *ngIf="scaleMode === ScaleMode.DISTANCE && streams.time?.length" color="primary"
-            (click)="onToggleScaleMode()">
-      <mat-icon [inline]="true" fontSet="material-icons-outlined">schedule</mat-icon>
-      Time scale
-    </button>
+      <button mat-button *ngIf="scaleMode === ScaleMode.DISTANCE && streams.time?.length" color="primary"
+              (click)="onToggleScaleMode()">
+        <mat-icon [inline]="true" fontSet="material-icons-outlined">schedule</mat-icon>
+        Time scale
+      </button>
+    </ng-container>
   </div>
 </div>

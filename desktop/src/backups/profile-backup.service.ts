@@ -1,6 +1,8 @@
 import { inject, singleton } from "tsyringe";
 import { ObjectsStreamCompressor } from "./objects-stream-compressor";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 @singleton()
 export class ProfileBackupService {

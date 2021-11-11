@@ -2,19 +2,19 @@ import _ from "lodash";
 import { Helper } from "../helper";
 import { EffortInfo, LeaderBoardData } from "./activity-segment-time-comparison.modifier";
 import { AbstractModifier } from "./abstract.modifier";
-import { AthleteSnapshotModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { Time } from "@elevate/shared/tools/time";
 
 export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
   protected displayRecentEffortsHRAdjustedPacePower: boolean;
-  protected athleteSnapshot: AthleteSnapshotModel;
+  protected athleteSnapshot: AthleteSnapshot;
   protected athleteId: number;
   protected segmentId: number;
   protected hraTimeLoop: number;
 
   constructor(
     displayRecentEffortsHRAdjustedPacePower: boolean,
-    athleteSnapshot: AthleteSnapshotModel,
+    athleteSnapshot: AthleteSnapshot,
     athleteId: number,
     segmentId: number
   ) {
@@ -66,7 +66,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
         // Make any recursive leaderboardData fetched flatten with previous one
         fetchedLeaderBoardData = _.flatten(_.union(leaderBoardData.top_results, fetchedLeaderBoardData));
 
-        if (leaderBoardData.top_results.length == 0) {
+        if (leaderBoardData.top_results.length === 0) {
           deferred.resolve(fetchedLeaderBoardData);
         } else {
           // Not yet resolved then seek recursive on next page

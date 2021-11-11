@@ -1,4 +1,4 @@
-import { Gender } from "../../models";
+import { Gender } from "../../models/athlete/gender.enum";
 
 export class StravaAccount {
   constructor(

@@ -1,8 +1,8 @@
 import { Stat } from "./stat.model";
-import { WarningException } from "@elevate/shared/exceptions";
-import { SyncedActivityModel } from "@elevate/shared/models";
 import _ from "lodash";
 import { StatsGroup } from "./stat-group.model";
+import { WarningException } from "@elevate/shared/exceptions/warning.exception";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 export abstract class SummaryStatsGroup extends StatsGroup {
   public static readonly DEFAULT_COLUMNS_COUNT: number = 3;
@@ -32,7 +32,7 @@ export abstract class SummaryStatsGroup extends StatsGroup {
     this.statsPools.push(pool);
   }
 
-  public mutateAsStatsGroup(activity: SyncedActivityModel): StatsGroup {
+  public mutateAsStatsGroup(activity: Activity): StatsGroup {
     let isGridFull = false;
     for (const pool of this.statsPools) {
       // Grid size reached? If yes leave and return

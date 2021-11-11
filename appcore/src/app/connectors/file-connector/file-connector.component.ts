@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ElectronService } from "../../desktop/electron/electron.service";
-import { ConnectorType, FileConnectorInfo } from "@elevate/shared/sync";
 import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
 import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
@@ -15,6 +14,8 @@ import { Subscription } from "rxjs";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
 import { FileConnectorService } from "./file-connector.service";
+import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 
 @Component({
   selector: "app-file-connector",
@@ -88,17 +89,12 @@ export class FileConnectorComponent extends ConnectorsComponent implements OnIni
   }
 
   public sync(fastSync: boolean = null, forceSync: boolean = null): Promise<void> {
-    return super
-      .sync()
-      .then(() => {
-        return this.fileConnectorService.sync(fastSync, forceSync);
-      })
-      .catch(err => {
-        if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
-          return Promise.reject(err);
-        }
-        return Promise.resolve();
-      });
+    return this.fileConnectorService.sync(fastSync, forceSync).catch(err => {
+      if (err !== ConnectorsComponent.ATHLETE_CHECKING_FIRST_SYNC_MESSAGE) {
+        return Promise.reject(err);
+      }
+      return Promise.resolve();
+    });
   }
 
   public ngOnDestroy(): void {

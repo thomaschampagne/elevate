@@ -17,10 +17,10 @@
       <mat-form-field fxFill>
         <input (dateChange)="onDateChange()"
                [(ngModel)]="sinceDate"
-               [disabled]="(datedAthleteSettingsModel.isForever())"
+               [disabled]="(datedAthleteSettings.isForever())"
                [matDatepicker]="datePickerSince"
                matInput
-               placeholder="{{(datedAthleteSettingsModel.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
+               placeholder="{{(datedAthleteSettings.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
         <mat-datepicker-toggle [for]="datePickerSince" matSuffix></mat-datepicker-toggle>
         <mat-datepicker #datePickerSince></mat-datepicker>
       </mat-form-field>
@@ -29,8 +29,8 @@
   </mat-card>
 
   <app-athlete-settings-form (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"
-                             *ngIf="datedAthleteSettingsModel"
-                             [athleteSettingsModel]="datedAthleteSettingsModel"></app-athlete-settings-form>
+                             *ngIf="datedAthleteSettings"
+                             [athleteSettingsModel]="datedAthleteSettings"></app-athlete-settings-form>
 
   <div class="actions" fxLayoutAlign="center center">
     <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" color="primary"

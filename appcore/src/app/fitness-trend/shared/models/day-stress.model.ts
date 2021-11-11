@@ -1,4 +1,4 @@
-import { AthleteSnapshotModel } from "@elevate/shared/models";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 
 export class DayStressModel {
   public ids: (string | number)[];
@@ -6,7 +6,7 @@ export class DayStressModel {
   public timestamp: number;
   public types: string[];
   public activitiesName: string[];
-  public athleteSnapshot: AthleteSnapshotModel;
+  public athleteSnapshot: AthleteSnapshot;
 
   public heartRateStressScore?: number = null;
   public trainingImpulseScore?: number = null;

@@ -1,5 +1,5 @@
 import { ListItemModel } from "./list-item.model";
-import { UserSettings } from "@elevate/shared/models";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 
 export class OptionModel {
   public key: UserSettings.Props;

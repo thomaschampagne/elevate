@@ -11,8 +11,8 @@ import { filter } from "rxjs/operators";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
-import { UserSettings } from "@elevate/shared/models";
-import UserSettingsModel = UserSettings.UserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import BaseUserSettings = UserSettings.BaseUserSettings;
 
 export const RECALCULATE_ACTIVITIES_BAR_COMPONENT = new InjectionToken<RecalculateActivitiesBarComponent>(
   "RECALCULATE_ACTIVITIES_BAR_COMPONENT"
@@ -91,10 +91,10 @@ export abstract class RecalculateActivitiesBarComponent implements OnInit {
   public onShowActivitiesWithSettingsLacks(): void {
     const loadingDialog = this.dialog.open(LoadingDialogComponent);
 
-    this.activityService.findActivitiesWithSettingsLacks().then(syncedActivityModels => {
+    this.activityService.findActivitiesWithSettingsLacks().then(activities => {
       loadingDialog.close();
       this.dialog.open(ActivitiesSettingsLacksDialogComponent, {
-        data: syncedActivityModels,
+        data: activities,
         minWidth: ActivitiesSettingsLacksDialogComponent.MIN_WIDTH
       });
     });
@@ -102,7 +102,7 @@ export abstract class RecalculateActivitiesBarComponent implements OnInit {
 
   public onHideActivitiesWithSettingsLacks(): void {
     const title = 'Disable <i>"Missing stress scores detected..."</i> warning';
-    const optionKey: keyof UserSettingsModel = "disableMissingStressScoresWarning";
+    const optionKey: keyof BaseUserSettings = "disableMissingStressScoresWarning";
     const onCloseAction = () => this.onCloseSettingsLacksWarning();
 
     this.onHideActivitiesConsistencyWarning(title, optionKey, onCloseAction);
@@ -110,7 +110,7 @@ export abstract class RecalculateActivitiesBarComponent implements OnInit {
 
   public onHideActivitiesRecalculation(): void {
     const title = 'Disable <i>"Activities need to be recalculated..."</i> warning';
-    const optionKey: keyof UserSettingsModel = "disableActivitiesNeedRecalculationWarning";
+    const optionKey: keyof BaseUserSettings = "disableActivitiesNeedRecalculationWarning";
     const onCloseAction = () => this.onCloseSettingsConsistencyWarning();
 
     this.onHideActivitiesConsistencyWarning(title, optionKey, onCloseAction);
@@ -118,7 +118,7 @@ export abstract class RecalculateActivitiesBarComponent implements OnInit {
 
   public onHideActivitiesConsistencyWarning(
     title: string,
-    optionKey: keyof UserSettingsModel,
+    optionKey: keyof BaseUserSettings,
     onCloseAction: () => void
   ): void {
     const data: ConfirmDialogDataModel = {
@@ -139,7 +139,7 @@ export abstract class RecalculateActivitiesBarComponent implements OnInit {
 
     const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
       if (confirm) {
-        this.userSettingsService.updateOption<UserSettingsModel>(optionKey, true).then(onCloseAction);
+        this.userSettingsService.updateOption<BaseUserSettings>(optionKey, true).then(onCloseAction);
         afterClosedSubscription.unsubscribe();
       }
     });

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import { AppLoadService } from "../app-load.service";
 import { DataStore } from "../../shared/data-store/data-store";
-import { sleep } from "@elevate/shared/tools";
+import { sleep } from "@elevate/shared/tools/sleep";
 
 @Injectable()
 export class ExtensionLoadService extends AppLoadService {

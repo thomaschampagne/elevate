@@ -1,9 +1,12 @@
 import { Inject, Injectable } from "@angular/core";
 import { StreamsDao } from "../../dao/streams/streams.dao";
-import { AthleteSnapshotModel, DeflatedActivityStreams, Streams } from "@elevate/shared/models";
-import { StreamProcessor } from "@elevate/shared/sync";
-import { ElevateSport } from "@elevate/shared/enums";
-import { WarningException } from "@elevate/shared/exceptions";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import {
+  ProcessStreamMode,
+  StreamProcessor,
+  StreamProcessorParams
+} from "@elevate/shared/sync/compute/stream-processor";
+import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
 
 @Injectable()
 export class StreamsService {
@@ -24,17 +27,12 @@ export class StreamsService {
   }
 
   public getProcessedById(
+    processMode: ProcessStreamMode,
     id: number | string,
-    activityParams: { type: ElevateSport; hasPowerMeter: boolean; athleteSnapshot: AthleteSnapshotModel }
+    params: StreamProcessorParams
   ): Promise<Streams> {
-    const errorCallback = err => {
-      if (!(err instanceof WarningException)) {
-        throw err;
-      }
-    };
-
     return this.getInflatedById(id).then(streams => {
-      return Promise.resolve(streams ? StreamProcessor.handle(activityParams, streams, errorCallback) : null);
+      return Promise.resolve(streams ? StreamProcessor.handle(processMode, params, streams) : null);
     });
   }
 

@@ -1,19 +1,19 @@
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";
-import { SpeedDataModel } from "@elevate/shared/models";
 import _ from "lodash";
+import { SpeedStats } from "@elevate/shared/models/sync/activity.model";
 
 export class SpeedDataView extends AbstractDataView {
-  protected speedData: SpeedDataModel;
+  protected speed: SpeedStats;
 
-  constructor(speedData: SpeedDataModel, units: string) {
+  constructor(speed: SpeedStats, units: string) {
     super(units);
     this.mainColor = [36, 130, 210];
     this.setGraphTitleFromUnits();
-    this.speedData = speedData;
+    this.speed = speed;
     this.speedUnitsData = Helper.getSpeedUnitData(window.currentAthlete.get("measurement_preference"));
-    this.setupDistributionGraph(this.speedData.speedZones, this.speedUnitsData.speedUnitFactor);
-    this.setupDistributionTable(this.speedData.speedZones, this.speedUnitsData.speedUnitFactor);
+    this.setupDistributionGraph(this.speed.zones, this.speedUnitsData.speedUnitFactor);
+    this.setupDistributionTable(this.speed.zones, this.speedUnitsData.speedUnitFactor);
   }
 
   public render(): void {
@@ -38,11 +38,11 @@ export class SpeedDataView extends AbstractDataView {
   }
 
   protected insertDataIntoGrid(): void {
-    if (_.isNumber(this.speedData.best20min) && !this.isSegmentEffortView) {
+    if (_.isNumber(this.speed.best20min) && !this.isSegmentEffortView) {
       this.insertContentAtGridPosition(
         0,
         0,
-        this.printNumber(this.speedData.best20min * this.speedUnitsData.speedUnitFactor, 1),
+        this.printNumber(this.speed.best20min * this.speedUnitsData.speedUnitFactor, 1),
         "Best 20min Speed <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
         this.speedUnitsData.speedUnitPerHour,
         "displayAdvancedSpeedData"
@@ -53,7 +53,7 @@ export class SpeedDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       1,
-      this.printNumber(this.speedData.lowerQuartileSpeed * this.speedUnitsData.speedUnitFactor, 1),
+      this.printNumber(this.speed.lowQ * this.speedUnitsData.speedUnitFactor, 1),
       "25% Quartile Speed",
       this.speedUnitsData.speedUnitPerHour,
       "displayAdvancedSpeedData"
@@ -61,7 +61,7 @@ export class SpeedDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       1,
-      this.printNumber(this.speedData.medianSpeed * this.speedUnitsData.speedUnitFactor, 1),
+      this.printNumber(this.speed.median * this.speedUnitsData.speedUnitFactor, 1),
       "50% Quartile Speed",
       this.speedUnitsData.speedUnitPerHour,
       "displayAdvancedSpeedData"
@@ -69,7 +69,7 @@ export class SpeedDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       1,
-      this.printNumber(this.speedData.upperQuartileSpeed * this.speedUnitsData.speedUnitFactor, 1),
+      this.printNumber(this.speed.upperQ * this.speedUnitsData.speedUnitFactor, 1),
       "75% Quartile Speed",
       this.speedUnitsData.speedUnitPerHour,
       "displayAdvancedSpeedData"
@@ -78,7 +78,7 @@ export class SpeedDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       2,
-      this.printNumber(this.speedData.standardDeviationSpeed * this.speedUnitsData.speedUnitFactor, 1),
+      this.printNumber(this.speed.stdDev * this.speedUnitsData.speedUnitFactor, 1),
       "Std Deviation &sigma;",
       this.speedUnitsData.speedUnitPerHour,
       "displayAdvancedSpeedData"
@@ -86,21 +86,10 @@ export class SpeedDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       2,
-      this.printNumber(this.speedData.genuineAvgSpeed * this.speedUnitsData.speedUnitFactor, 1),
+      this.printNumber(this.speed.avg * this.speedUnitsData.speedUnitFactor, 1),
       "Average speed",
       this.speedUnitsData.speedUnitPerHour,
       "displayAdvancedSpeedData"
     );
-
-    if (!this.isSegmentEffortView) {
-      this.insertContentAtGridPosition(
-        2,
-        2,
-        this.printNumber(this.speedData.totalAvgSpeed * this.speedUnitsData.speedUnitFactor, 1),
-        "Full time Avg speed",
-        this.speedUnitsData.speedUnitPerHour,
-        "displayAdvancedSpeedData"
-      );
-    }
   }
 }

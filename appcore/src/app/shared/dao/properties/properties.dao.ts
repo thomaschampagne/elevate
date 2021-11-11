@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
-import { PropertiesModel } from "@elevate/shared/models";
 import { CollectionDef } from "../../data-store/collection-def";
+import { PropertiesModel } from "@elevate/shared/models/properties.model";
 
 @Injectable()
 export class PropertiesDao extends BaseDao<PropertiesModel> {

@@ -1,12 +1,15 @@
 import { Inject, Injectable } from "@angular/core";
-import { SyncEvent, SyncEventType } from "@elevate/shared/sync";
-import { Channel, IpcTunnelService } from "@elevate/shared/electron";
 import { Subject } from "rxjs";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { StreamsService } from "../../shared/services/streams/streams.service";
-import { DeflatedActivityStreams, SyncedActivityModel } from "@elevate/shared/models";
 import { IPC_TUNNEL_SERVICE } from "./ipc-tunnel-service.token";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
+import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Channel } from "@elevate/shared/electron/channels.enum";
 
 /**
  * Listen and send sync related messages
@@ -30,9 +33,9 @@ export class IpcSyncMessagesListener {
       return Promise.resolve(syncEvent.type);
     });
 
-    this.ipcTunnelService.on<[string, number], SyncedActivityModel[]>(Channel.findActivity, payload => {
-      const [startTime, activityDurationSeconds] = payload;
-      return this.handleFindActivity(startTime, activityDurationSeconds);
+    this.ipcTunnelService.on<[string, string], Activity[]>(Channel.findActivity, payload => {
+      const [startTime, endTime] = payload;
+      return this.handleFindActivity(startTime, endTime);
     });
 
     this.ipcTunnelService.on<[number | string], DeflatedActivityStreams>(Channel.findStreams, payload => {
@@ -46,9 +49,9 @@ export class IpcSyncMessagesListener {
     this.syncEvents$.next(syncEvent); // forward sync event
   }
 
-  public handleFindActivity(startTime: string, activityDurationSeconds: number): Promise<SyncedActivityModel[]> {
-    this.logger.debug("[Renderer] Received FindActivity. Params:", startTime, activityDurationSeconds);
-    return this.activityService.findByDatedSession(startTime, activityDurationSeconds);
+  public handleFindActivity(startTime: string, endTime: string): Promise<Activity[]> {
+    this.logger.debug("[Renderer] Received FindActivity. Params:", startTime, endTime);
+    return this.activityService.findByDatedSession(startTime, endTime);
   }
 
   public handleFindStreams(activityId: number | string): Promise<DeflatedActivityStreams> {

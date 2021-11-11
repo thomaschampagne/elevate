@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BaseDao } from "../base.dao";
 import { CollectionDef } from "../../data-store/collection-def";
-import { AthleteModel } from "@elevate/shared/models";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Injectable()
 export class AthleteDao extends BaseDao<AthleteModel> {

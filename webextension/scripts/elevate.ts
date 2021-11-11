@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { Helper } from "./helper";
-import { ActivityInfoModel, AthleteModel, CoreMessages, SyncResultModel, UserSettings } from "@elevate/shared/models";
 import { ExtensionEnv } from "../config/extension-env";
 import { AppResourcesModel } from "./models/app-resources.model";
 import { AthleteUpdateModel } from "./models/athlete-update.model";
@@ -40,13 +39,18 @@ import { AthleteUpdate } from "./utils/athlete-update";
 import "./follow";
 import * as Cookies from "js-cookie";
 import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers";
 import { BrowserStorageType } from "./models/browser-storage-type.enum";
 import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
-import { ElevateSport } from "@elevate/shared/enums";
 import { BrowserStorage } from "./browser-storage";
 import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
+import { CoreMessages } from "@elevate/shared/models/core-messages";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { SyncResultModel } from "@elevate/shared/models/sync/sync-result.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class Elevate {
   public static instance: Elevate = null;
@@ -64,12 +68,12 @@ export class Elevate {
   public isOwner: boolean;
   public extensionId: string;
   public appResources: AppResourcesModel;
-  public userSettings: ExtensionUserSettingsModel;
+  public userSettings: ExtensionUserSettings;
   public vacuumProcessor: VacuumProcessor;
   public activitiesSynchronize: ActivitiesSynchronize;
   public pageMatches: { activity: boolean; dashboard: boolean; segment: boolean };
 
-  constructor(userSettings: ExtensionUserSettingsModel, appResources: AppResourcesModel) {
+  constructor(userSettings: ExtensionUserSettings, appResources: AppResourcesModel) {
     this.userSettings = userSettings;
     this.appResources = appResources;
 
@@ -96,10 +100,10 @@ export class Elevate {
         console.log("Clearing local storage");
         localStorage.clear();
         BrowserStorage.getInstance()
-          .get<ExtensionUserSettingsModel>(BrowserStorageType.LOCAL, "userSettings", true)
+          .get<ExtensionUserSettings>(BrowserStorageType.LOCAL, "userSettings", true)
           .then(userSettings => {
             userSettings.localStorageMustBeCleared = false;
-            BrowserStorage.getInstance().set<ExtensionUserSettingsModel>(
+            BrowserStorage.getInstance().set<ExtensionUserSettings>(
               BrowserStorageType.LOCAL,
               "userSettings",
               userSettings
@@ -762,12 +766,8 @@ export class Elevate {
     const activityType: string = window.pageView.activity().get("type");
 
     // PR only for my own activities
-    const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier = new ActivitySegmentTimeComparisonModifier(
-      this.userSettings,
-      this.appResources,
-      activityType,
-      this.isOwner
-    );
+    const activitySegmentTimeComparisonModifier: ActivitySegmentTimeComparisonModifier =
+      new ActivitySegmentTimeComparisonModifier(this.userSettings, this.appResources, activityType, this.isOwner);
     activitySegmentTimeComparisonModifier.modify();
   }
 

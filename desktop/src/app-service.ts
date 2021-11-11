@@ -1,12 +1,12 @@
 import os from "os";
 import { machineIdSync } from "node-machine-id";
-import { RuntimeInfo } from "@elevate/shared/electron";
 import crypto from "crypto";
 import { app } from "electron";
 import path from "path";
 import { singleton } from "tsyringe";
-import { Platform } from "@elevate/shared/enums";
-import { Arch } from "../../appcore/modules/shared/enums/arch";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { Arch } from "@elevate/shared/enums/arch";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @singleton()
 export class AppService {
@@ -74,6 +74,10 @@ export class AppService {
       );
     }
     return this._runtimeInfo;
+  }
+
+  public getUnpackedNodeModules(): string {
+    return `${this.getResourceFolder()}/app.asar.unpacked/node_modules/`;
   }
 
   public printRuntimeInfo(): string {

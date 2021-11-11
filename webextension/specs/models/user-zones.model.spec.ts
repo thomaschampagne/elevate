@@ -1,4 +1,5 @@
-import { UserZonesModel, ZoneModel } from "@elevate/shared/models";
+import { ZoneModel } from "@elevate/shared/models/zone.model";
+import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
 
 describe("UserZonesModel", () => {
   it("should serialize ZoneModel[] to number[]", done => {

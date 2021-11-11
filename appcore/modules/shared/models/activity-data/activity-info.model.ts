@@ -1,4 +1,4 @@
-import { ElevateSport } from "../../enums";
+import { ElevateSport } from "../../enums/elevate-sport.enum";
 
 export class ActivityInfoModel {
   // TODO Merge with ActivitySourceDataModel?!

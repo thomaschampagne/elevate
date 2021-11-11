@@ -1,17 +1,15 @@
 import _ from "lodash";
 import { AbstractDataView } from "./abstract-data.view";
-import { PowerDataModel } from "@elevate/shared/models";
+import { PowerStats, StressScores } from "@elevate/shared/models/sync/activity.model";
 
 export class CyclingPowerDataView extends AbstractDataView {
-  protected powerData: PowerDataModel;
-
-  constructor(powerData: PowerDataModel, units: string) {
+  constructor(protected power: PowerStats, protected stressScores: StressScores, units: string) {
     super(units);
     this.mainColor = [63, 64, 72];
     this.setGraphTitleFromUnits();
-    this.powerData = powerData;
-    this.setupDistributionGraph(this.powerData.powerZones);
-    this.setupDistributionTable(this.powerData.powerZones);
+    this.power = power;
+    this.setupDistributionGraph(this.power.zones);
+    this.setupDistributionTable(this.power.zones);
   }
 
   public render(): void {
@@ -40,25 +38,25 @@ export class CyclingPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       0,
-      this.printNumber(this.powerData.weightedPower, 0),
-      "Weighted Power",
+      this.printNumber(this.power.weighted, 0),
+      "Normalized Power®",
       "W",
       "displayAdvancedPowerData"
     );
     this.insertContentAtGridPosition(
       1,
       0,
-      this.printNumber(this.powerData.variabilityIndex, 2),
+      this.printNumber(this.power.variabilityIndex, 2),
       "Variability Index",
       "",
       "displayAdvancedPowerData"
     );
 
-    if (this.powerData.punchFactor) {
+    if (this.power.intensityFactor) {
       this.insertContentAtGridPosition(
         2,
         0,
-        this.printNumber(this.powerData.punchFactor, 2),
+        this.printNumber(this.power.intensityFactor, 2),
         "Intensity",
         "",
         "displayAdvancedPowerData"
@@ -68,7 +66,7 @@ export class CyclingPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       1,
-      this.powerData.lowerQuartileWatts,
+      this.printNumber(this.power.lowQ),
       "25% Quartile Watts",
       "W",
       "displayAdvancedPowerData"
@@ -76,7 +74,7 @@ export class CyclingPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       1,
-      this.powerData.medianWatts,
+      this.printNumber(this.power.median),
       "50% Quartile Watts",
       "W",
       "displayAdvancedPowerData"
@@ -84,60 +82,60 @@ export class CyclingPowerDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       1,
-      this.powerData.upperQuartileWatts,
+      this.printNumber(this.power.upperQ),
       "75% Quartile Watts",
       "W",
       "displayAdvancedPowerData"
     );
 
-    if (_.isNumber(this.powerData.avgWattsPerKg)) {
+    if (_.isNumber(this.power.avgKg)) {
       this.insertContentAtGridPosition(
         0,
         2,
-        this.printNumber(this.powerData.avgWattsPerKg, 2),
+        this.printNumber(this.power.avgKg, 2),
         "Avg Watts/Kg",
         "W/Kg",
         "displayAdvancedPowerData"
       );
     }
 
-    if (_.isNumber(this.powerData.weightedWattsPerKg)) {
+    if (_.isNumber(this.power.weightedKg)) {
       this.insertContentAtGridPosition(
         1,
         2,
-        this.printNumber(this.powerData.weightedWattsPerKg, 2),
-        "Weighted Watts/Kg",
+        this.printNumber(this.power.weightedKg, 2),
+        "Normalized Power®/Kg",
         "W/Kg",
         "displayAdvancedPowerData"
       );
     }
-    if (_.isNumber(this.powerData.best20min) && !this.isSegmentEffortView) {
+    if (_.isNumber(this.power.best20min) && !this.isSegmentEffortView) {
       this.insertContentAtGridPosition(
         2,
         2,
-        this.printNumber(this.powerData.best20min, 0),
+        this.printNumber(this.power.best20min, 0),
         "Best 20min Power <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
         "W",
         "displayAdvancedPowerData"
       );
     }
 
-    if (_.isNumber(this.powerData.powerStressScore)) {
+    if (_.isNumber(this.stressScores?.pss)) {
       this.insertContentAtGridPosition(
         0,
         3,
-        this.printNumber(this.powerData.powerStressScore, 0),
+        this.printNumber(this.stressScores.pss, 0),
         "Power Stress Score",
         "",
         "displayAdvancedPowerData"
       );
     }
 
-    if (_.isNumber(this.powerData.powerStressScorePerHour)) {
+    if (_.isNumber(this.stressScores?.pssPerHour)) {
       this.insertContentAtGridPosition(
         1,
         3,
-        this.printNumber(this.powerData.powerStressScorePerHour, 1),
+        this.printNumber(this.stressScores.pssPerHour, 1),
         "Power Stress Score / Hour",
         "",
         "displayAdvancedPowerData"

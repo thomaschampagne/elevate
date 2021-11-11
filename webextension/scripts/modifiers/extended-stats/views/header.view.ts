@@ -1,7 +1,7 @@
 import _ from "lodash";
 import { AbstractDataView } from "./abstract-data.view";
-import { ActivityInfoModel } from "@elevate/shared/models";
-import { Time } from "@elevate/shared/tools";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import { Time } from "@elevate/shared/tools/time";
 
 export class HeaderView extends AbstractDataView {
   protected activityInfo: ActivityInfoModel;

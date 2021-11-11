@@ -1,8 +1,8 @@
 import { StatsGroup } from "../stat-group.model";
 import { Stat } from "../stat.model";
-import { CadenceDataModel } from "@elevate/shared/models";
 import { CyclingCadenceSensor, RunningCadenceSensor, SwimmingCadenceSensor } from "../../sensors/cadence.sensor";
 import { StatsDef } from "../stats-def.namespace";
+import { CadenceStats } from "@elevate/shared/models/sync/activity.model";
 
 export abstract class CadenceStatsGroup extends StatsGroup {
   protected constructor(name: string, stats: Stat<any>[], color: string) {
@@ -11,7 +11,7 @@ export abstract class CadenceStatsGroup extends StatsGroup {
 }
 
 export class CyclingCadenceStatsGroup extends CadenceStatsGroup {
-  private static readonly STATS: Stat<CadenceDataModel>[] = [
+  private static readonly STATS: Stat<CadenceStats>[] = [
     StatsDef.Cadence.Cycling.activeAvg,
     StatsDef.Cadence.Cycling.avg,
     StatsDef.Cadence.Cycling.max,
@@ -40,7 +40,7 @@ export class CyclingCadenceStatsGroup extends CadenceStatsGroup {
 }
 
 export class RunningCadenceStatsGroup extends CadenceStatsGroup {
-  private static readonly STATS: Stat<CadenceDataModel>[] = [
+  private static readonly STATS: Stat<CadenceStats>[] = [
     StatsDef.Cadence.Running.activeAvg,
     StatsDef.Cadence.Running.avg,
     StatsDef.Cadence.Running.max,
@@ -67,7 +67,7 @@ export class RunningCadenceStatsGroup extends CadenceStatsGroup {
 }
 
 export class SwimmingCadenceStatsGroup extends CadenceStatsGroup {
-  private static readonly STATS: Stat<CadenceDataModel>[] = [
+  private static readonly STATS: Stat<CadenceStats>[] = [
     StatsDef.Cadence.Swimming.activeAvg,
     StatsDef.Cadence.Swimming.avg,
     StatsDef.Cadence.Swimming.max,

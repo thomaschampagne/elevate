@@ -1,24 +1,27 @@
 import { repository, version as installedVersion } from "../../package.json";
 import { inject, singleton } from "tsyringe";
-import { HttpClient } from "../clients/http.client";
 import { Logger } from "../logger";
-import { Arch, Platform } from "@elevate/shared/enums";
 import semverGreaterThan from "semver/functions/gt";
 import semverEquals from "semver/functions/eq";
 import _ from "lodash";
 import { AppService } from "../app-service";
-import { AutoUpdateNotify, GhAsset, GhRelease, StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models";
 import { IpcMainTunnelService } from "../ipc-main-tunnel.service";
-import { Channel, IpcMessage, IpcTunnelService } from "@elevate/shared/electron";
 import { AppUpdater } from "electron-updater/out/AppUpdater";
 import { UpdateInfo } from "electron-updater";
 import { IpcListener } from "../listeners/ipc-listener.interface";
 import { UpdateFileInfo } from "builder-util-runtime/out/updateInfo";
 import { ProgressInfo } from "electron-updater/out/differentialDownloader/ProgressDifferentialDownloadCallbackTransform";
-import { HttpCodes } from "typed-rest-client/HttpClient";
-import { ElevateException } from "@elevate/shared/exceptions";
 import { Subject } from "rxjs";
 import pDefer from "p-defer";
+import { HttpClient } from "../clients/http.client";
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { AutoUpdateNotify, StaticUpdateNotify, UpdateNotify } from "@elevate/shared/models/updates/update-notify";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { GhAsset, GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { Platform } from "@elevate/shared/enums/platform.enum";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import { Arch } from "@elevate/shared/enums/arch";
 
 enum AutoUpdateEvent {
   CHECKING_FOR_UPDATE = "checking-for-update",
@@ -241,17 +244,14 @@ export class UpdateHandler implements IpcListener {
 
     return this.httpClient
       .get(releasesEndpoint, {
-        "Content-Type": "application/json",
-        "Cache-Control": "no-store"
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store"
+        }
       })
       .then(response => {
-        return response.message.statusCode === HttpCodes.OK
-          ? response.readBody()
-          : Promise.reject(`Unable to get github releases. Error: ${response.message.statusMessage}`);
-      })
-      .then(body => {
         try {
-          const releases = JSON.parse(body) as GhRelease[];
+          const releases = response.data as GhRelease[];
           if (releases) {
             this.logger.info(`Found ${releases ? releases.length : 0} github releases`);
             return Promise.resolve(releases);

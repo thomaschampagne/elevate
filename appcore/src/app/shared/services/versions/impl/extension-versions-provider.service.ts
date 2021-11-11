@@ -1,10 +1,11 @@
 import { Inject, Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { VersionsProvider } from "../versions-provider";
-import { Platform } from "@elevate/shared/enums";
 import { MatDialog } from "@angular/material/dialog";
-import { GhRelease } from "@elevate/shared/models";
 import _ from "lodash";
+import { AppPackage } from "../../../../app-package";
+import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
+import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @Injectable()
 export class ExtensionVersionsProvider extends VersionsProvider {
@@ -22,7 +23,7 @@ export class ExtensionVersionsProvider extends VersionsProvider {
   }
 
   public getWebExtGithubReleases(acceptPreReleases: boolean = false): Promise<GhRelease[]> {
-    const githubReleaseApiUrl = VersionsProvider.getGithubReleasesApiEndpoint(this.getRepositoryUrl());
+    const githubReleaseApiUrl = VersionsProvider.getGithubReleasesApiEndpoint(AppPackage.getRepositoryUrl());
     return this.httpClient
       .get<GhRelease[]>(githubReleaseApiUrl)
       .toPromise()

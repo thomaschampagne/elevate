@@ -4,14 +4,17 @@ import { ActivityService } from "../../activity/activity.service";
 import { DesktopSyncService } from "../../sync/impl/desktop-sync.service";
 import { SyncService } from "../../sync/sync.service";
 import { DesktopActivityService } from "../../activity/impl/desktop-activity.service";
-import { UserSettings } from "@elevate/shared/models";
 import { UserSettingsService } from "../../user-settings/user-settings.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
-import { Channel, IpcMessage, IpcTunnelService, RuntimeInfo } from "@elevate/shared/electron";
 import { IPC_TUNNEL_SERVICE } from "../../../../desktop/ipc/ipc-tunnel-service.token";
 import _ from "lodash";
-import DesktopUserSettingsModel = UserSettings.DesktopUserSettingsModel;
+import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
+import { IpcMessage } from "@elevate/shared/electron/ipc-message";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { Channel } from "@elevate/shared/electron/channels.enum";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Injectable()
 export class DesktopAppService extends AppService {
@@ -37,12 +40,12 @@ export class DesktopAppService extends AppService {
       this.desktopMigrationService.recalculateRequestedBy().then(requestedByVersion => {
         if (requestedByVersion) {
           // Observe for recalculation done asked by an applied migration
-          this.userSettingsService.fetch().then((userSettingsModel: DesktopUserSettingsModel) => {
+          this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
             const snackRef = this.snackBar.open(
               "Last upgrade requires activities recalculation. Let it proceed.",
               "Ok"
             );
-            this.activityService.recalculateAll(userSettingsModel).then(() => {
+            this.activityService.recalculateAll(userSettings).then(() => {
               this.desktopMigrationService.clearRequiredRecalculation();
               snackRef.dismiss();
             });

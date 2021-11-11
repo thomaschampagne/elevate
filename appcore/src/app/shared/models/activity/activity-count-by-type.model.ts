@@ -1,4 +1,4 @@
-import { ElevateSport } from "@elevate/shared/enums";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 
 export class ActivityCountByType {
   public type: ElevateSport;

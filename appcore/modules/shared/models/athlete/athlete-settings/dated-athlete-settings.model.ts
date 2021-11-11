@@ -1,6 +1,6 @@
-import { AthleteSettingsModel } from "./athlete-settings.model";
+import { AthleteSettings } from "./athlete-settings.model";
 
-export class DatedAthleteSettingsModel extends AthleteSettingsModel {
+export class DatedAthleteSettings extends AthleteSettings {
   public static readonly DEFAULT_SINCE: string =
     new Date().getFullYear() +
     "-" +
@@ -8,9 +8,9 @@ export class DatedAthleteSettingsModel extends AthleteSettingsModel {
     "-" +
     new Date().getDate().toString().padStart(2, "0");
   public static readonly SINCE_DATE_FORMAT: string = "YYYY-MM-DD";
-  public static readonly DEFAULT_MODEL: DatedAthleteSettingsModel = new DatedAthleteSettingsModel(
-    DatedAthleteSettingsModel.DEFAULT_SINCE,
-    AthleteSettingsModel.DEFAULT_MODEL
+  public static readonly DEFAULT_MODEL: DatedAthleteSettings = new DatedAthleteSettings(
+    DatedAthleteSettings.DEFAULT_SINCE,
+    AthleteSettings.DEFAULT_MODEL
   );
   /**
    * Start period date. A null value means since "forever"
@@ -21,7 +21,7 @@ export class DatedAthleteSettingsModel extends AthleteSettingsModel {
    * @param since Date format YYYY-MM-DD
    * @param athleteSettingsModel AthleteSettingsModel
    */
-  constructor(since: string, athleteSettingsModel: AthleteSettingsModel) {
+  constructor(since: string, athleteSettingsModel: AthleteSettings) {
     super(
       athleteSettingsModel.maxHr,
       athleteSettingsModel.restHr,
@@ -34,23 +34,23 @@ export class DatedAthleteSettingsModel extends AthleteSettingsModel {
     this.since = since;
   }
 
-  public static asInstance(datedAthleteSettingsModel: DatedAthleteSettingsModel): DatedAthleteSettingsModel {
-    return new DatedAthleteSettingsModel(
-      datedAthleteSettingsModel.since,
-      new AthleteSettingsModel(
-        datedAthleteSettingsModel.maxHr,
-        datedAthleteSettingsModel.restHr,
-        datedAthleteSettingsModel.lthr,
-        datedAthleteSettingsModel.cyclingFtp,
-        datedAthleteSettingsModel.runningFtp,
-        datedAthleteSettingsModel.swimFtp,
-        datedAthleteSettingsModel.weight
+  public static asInstance(datedAthleteSettings: DatedAthleteSettings): DatedAthleteSettings {
+    return new DatedAthleteSettings(
+      datedAthleteSettings.since,
+      new AthleteSettings(
+        datedAthleteSettings.maxHr,
+        datedAthleteSettings.restHr,
+        datedAthleteSettings.lthr,
+        datedAthleteSettings.cyclingFtp,
+        datedAthleteSettings.runningFtp,
+        datedAthleteSettings.swimFtp,
+        datedAthleteSettings.weight
       )
     );
   }
 
-  public toAthleteSettingsModel(): AthleteSettingsModel {
-    return new AthleteSettingsModel(
+  public toAthleteSettingsModel(): AthleteSettings {
+    return new AthleteSettings(
       this.maxHr,
       this.restHr,
       this.lthr,

@@ -1,5 +1,4 @@
 import { TestBed } from "@angular/core/testing";
-
 import { StravaConnectorInfoService } from "./strava-connector-info.service";
 import { CoreModule } from "../../../core/core.module";
 import { SharedModule } from "../../shared.module";

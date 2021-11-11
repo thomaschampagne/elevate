@@ -239,24 +239,23 @@
       <i>Intensity</i> is defined by:
 
       <div class="maths-area">
-        <katex [expression]="'Intensity=\\frac{WeightedPower}{FTP}'"></katex>
+        <katex [expression]="'Intensity=\\frac{NormalizedPower}{FTP}'"></katex>
       </div>
 
-      Where <i>Weighted Power</i> is the average power that you could have maintained for the same physiological
-      cost if your power output had been constant. It is also called <i>Normalized Power (NP&reg;)</i> in
-      TrainingPeaks&trade;.<br/><br/>
+      Where <i>Normalized Power®</i> is the average power that you could have maintained for the same physiological
+      cost if your power output had been constant.
 
-      <i>Weighted Power</i> is defined by:
+      <i>Normalized Power®</i> is defined by:
 
       <div class="maths-area">
-        <katex [expression]="'WeightedPower = \\sqrt{\\sqrt{\\sum(powerSample^4/count(powerSample))}}'"></katex>
+        <katex [expression]="'NormalizedPower = \\sqrt{\\sqrt{\\sum(powerSample^4/count(powerSample))}}'"></katex>
       </div>
 
       To conclude <i>Power Stress Score</i> is defined by:
 
       <div class="maths-area">
         <katex
-          [expression]="'PSS=\\frac{EffortInSeconds~\\times~WeightedPower~\\times~Intensity}{FTP~\\times~3600}~\\times~100'"></katex>
+          [expression]="'PSS=\\frac{EffortInSeconds~\\times~NormalizedPower~\\times~Intensity}{FTP~\\times~3600}~\\times~100'"></katex>
       </div>
 
       Note that <i>PSS</i> is equivalent to <i>TSS&reg;</i> from TrainingPeaks&trade;

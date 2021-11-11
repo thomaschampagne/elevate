@@ -3,9 +3,9 @@ import $ from "jquery";
 import { AppResourcesModel } from "../models/app-resources.model";
 import { AbstractModifier } from "./abstract.modifier";
 import * as Cookies from "js-cookie";
-import { UserSettings } from "@elevate/shared/models";
-import ExtensionUserSettingsModel = UserSettings.ExtensionUserSettingsModel;
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import MapOptions = google.maps.MapOptions;
+import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export class GoogleMapsModifier extends AbstractModifier {
   // Disabled at the moment (Not free any more).
@@ -14,11 +14,11 @@ export class GoogleMapsModifier extends AbstractModifier {
 
   protected activityId: number;
   protected appResources: AppResourcesModel;
-  protected userSettings: ExtensionUserSettingsModel;
+  protected userSettings: ExtensionUserSettings;
   protected pathArray: number[][];
   protected map: google.maps.Map;
 
-  constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettingsModel) {
+  constructor(activityId: number, appResources: AppResourcesModel, userSettings: ExtensionUserSettings) {
     super();
     this.activityId = activityId;
     this.appResources = appResources;

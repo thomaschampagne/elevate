@@ -17,9 +17,9 @@ export class UnArchiver {
     this._7zBin = require(UnArchiver.NODE_MODULE_NAME).path7za;
 
     if (this.appService.isPackaged) {
-      this._7zBin = `${this.appService.getResourceFolder()}/app.asar.unpacked/node_modules/${
-        UnArchiver.NODE_MODULE_NAME
-      }${this._7zBin.split(UnArchiver.NODE_MODULE_NAME)[1]}`;
+      this._7zBin = `${this.appService.getUnpackedNodeModules()}/${UnArchiver.NODE_MODULE_NAME}${
+        this._7zBin.split(UnArchiver.NODE_MODULE_NAME)[1]
+      }`;
     }
   }
 

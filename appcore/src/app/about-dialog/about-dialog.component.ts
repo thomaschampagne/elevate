@@ -1,12 +1,11 @@
 import { Component, Inject, OnInit, VERSION as angularCoreVersion } from "@angular/core";
-import { VERSION as angularMaterialVersion } from "@angular/material/core";
-import * as d3 from "d3";
 import { AppUsageDetails } from "../shared/models/app-usage-details.model";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { environment } from "../../environments/environment";
-import { BuildTarget } from "@elevate/shared/enums";
 import { DataStore } from "../shared/data-store/data-store";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
+import { LoggerService } from "../shared/services/logging/logger.service";
+import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 
 @Component({
   selector: "app-about-dialog",
@@ -20,19 +19,16 @@ export class AboutDialogComponent implements OnInit {
   public buildTarget: BuildTarget = environment.buildTarget;
   public BuildTarget = BuildTarget;
 
-  public angularCoreVersion: string;
-  public angularMaterialVersion: string;
-  public d3Version: string;
   public appUsageDetails: AppUsageDetails;
   public installedVersion: string;
   public remoteVersion: string;
   public buildMetadata: { commit: string; date: string };
-  public wrapperVersion: string;
 
   constructor(
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(DataStore) private readonly dataStore: DataStore<object>,
-    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider
+    @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
+    @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   public ngOnInit(): void {
@@ -47,10 +43,19 @@ export class AboutDialogComponent implements OnInit {
       this.buildMetadata.date = this.buildMetadata.date.slice(0, 10).replace(/-/g, "");
     });
 
-    this.angularCoreVersion = angularCoreVersion.full;
-    this.angularMaterialVersion = angularMaterialVersion.full;
-    this.d3Version = d3.version;
-    this.wrapperVersion = this.versionsProvider.getWrapperVersion();
+    this.printAboutBanner();
+  }
+
+  private printAboutBanner(): void {
+    this.logger.info(`
+========================================================
+                      ABOUT ELEVATE
+--------------------------------------------------------
+App Version:                      ${this.installedVersion}
+Angular Version:                  ${angularCoreVersion.full}
+Angular Material Version:         ${angularCoreVersion.full}
+Wrapper Version:                  ${this.versionsProvider.getWrapperVersion()}
+========================================================`);
   }
 
   public openSocial(url: string): void {
