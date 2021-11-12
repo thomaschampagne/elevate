@@ -1,8 +1,6 @@
 <h1 class="mat-display-1">Fitness trend user guide</h1>
-<mat-dialog-content class="mat-body-1">
-
+<div class="mat-body-1">
   <div>
-
     <h2 class="mat-headline">The basics</h2>
     In simple terms, the fitness trend is a kind of "black box system" that models the response of your body exposed
     to various efforts performed over time. Your body reacts to these stimuli with "fatigue" and creates a
@@ -10,7 +8,7 @@
     fitness, you have to be in "form," meaning that you have overcome fatigue with rest and recovery.
 
     To put numbers on fitness, fatigue and form over time, each effort has to be quantified. This is where "stress
-    scores" are used.<br/><br/>
+    scores" are used.<br /><br />
 
     There exist several recognized stress score calculation methods depending on available sensors. These stress
     scores are detailed in a further section.
@@ -66,15 +64,15 @@
 
     <a href="https://help.trainingpeaks.com/hc/en-us/articles/204071944-Training-Stress-Scores-TSS-Explained"
        target="_blank">Read Training Stress Scores&reg; explained by TrainingPeaks&trade;</a>
-    <br/><br/>
+    <br /><br />
 
 
     Each activity with a stress score may be related to an "impulse" causing its own amount of fatigue and fitness.
     An impulse amplitude is directly correlated to the stress score value: high stress score provides high impulse
-    amplitude.<br/><br/>
+    amplitude.<br /><br />
 
     Next, the job of the fitness trend "black box" is to provide a view of your <i>Fatigue</i>, <i>Fitness</i> and
-    <i>Form</i> over time based on your given impulses.<br/><br/>
+    <i>Form</i> over time based on your given impulses.<br /><br />
 
     Note that the Elevate's "Fitness Trend" is also called
     <a href="https://www.trainingpeaks.com/blog/what-is-the-performance-management-chart/" target="_blank">"Performance
@@ -89,7 +87,7 @@
     explain. It's the tiredness which limits your performance. <i>Fitness</i> is the foundations, the potential
     availability of the athlete. An athlete can't get into big workouts or races without a minimum of fitness
     acquired. When resting, both fatigue and fitness are eliminated over days. The difference is that fatigue is
-    lost faster than fitness.<br/><br/>
+    lost faster than fitness.<br /><br />
 
     This implies that <i>Fitness</i> can be higher than <i>Fatigue</i> on some periods. Since modelization also
     admits that athlete's <i>Form</i> is globally the difference between <i>Fitness</i> and <i>Fatigue</i>. In that
@@ -98,7 +96,7 @@
     training. If difference is reasonable, athlete is probably in an "optimal" <i>Form</i> to build a solid fitness.
     However if <i>Fitness</i> is <strong>too low</strong> compared to <i>Fatigue</i> (difference is too high),
     athlete can reach an over-training <i>Form</i>. Athlete should consider rest at this point. These "limits" are
-    covered in details through a <strong>training zones</strong> section below.<br/><br/>
+    covered in details through a <strong>training zones</strong> section below.<br /><br />
 
     Modelization of fitness, fatigue and form is calculated using athlete stress scores impulses. Here is how
     impulses are mathematically processed:
@@ -106,10 +104,10 @@
     <div class="maths-area">
       <katex
         [expression]="'Fitness_{(day)} = Fitness_{(day - 1)} + (StressScore_{(day)} - Fitness_{(day - 1)})~\\times~(1-e^{-1 / 42})'"></katex>
-      <br/>
+      <br />
       <katex
         [expression]="'Fatigue_{(day)} = Fatigue_{(day - 1)} + (StressScore_{(day)} - Fatigue_{(day - 1)})~\\times~(1-e^{-1 / 7})'"></katex>
-      <br/>
+      <br />
       <katex [expression]="'Form_{(day)} = Fitness_{(day - 1)} - Fatigue_{(day - 1)}'"></katex>
     </div>
 
@@ -117,18 +115,18 @@
 
     As explained in previous section, the athlete's <i>Form</i> is the difference between yesterday <i>Fitness</i>
     and
-    yesterday <i>Fatigue</i>:<br/><br/>
+    yesterday <i>Fatigue</i>:<br /><br />
 
     <katex [expression]="'Form_{(today)} = Fitness_{(yesterday)} - Fatigue_{(yesterday)}'"></katex>
-    <br/><br/>
+    <br /><br />
 
     A <i>Training Zone</i> is defined by a range of <i>Form</i> values and <i>Training Zones</i> can be: Transition
     zone, Freshness,
     Neutral, Optimal and Over-Training. So, a <i>Form</i> value can be associated to a particular <i>Training
-    Zone</i>.<br/><br/>
+    Zone</i>.<br /><br />
 
     Depending on the <i>Form</i> value, you can manage and plan your training to reach or avoid a particular
-    zone. So when:<br/>
+    zone. So when:<br />
     <ul>
       <li><i>+25 < Form :</i> Transition zone. Athlete is on form. Case where athlete has an
         extended break. (e.g. illness, injury or end of the season).
@@ -146,27 +144,26 @@
     <a href="http://www.joefrielsblog.com/2015/12/managing-training-using-tsb.html" target="_blank">Read more about
       training zones from Joe Friels' blog</a>
   </div>
-
   <div>
     <h2 class="mat-headline">Stress scores explained</h2>
 
     This section includes some mathematics formulas. They can help some of you to a deeper understanding.
     If mathematics are not your friend, just close your eyes on: explanations are understandable without formulas.
 
-    <h1 class="mat-title">Training Impulse (TRIMP)</h1>
+    <h3 class="mat-title">Training Impulse (TRIMP)</h3>
 
     <div>
       The <i>Training Impulse</i> stress score represents a training load based on your heart rate activity during
       an effort. It provides a good indicator to compare commitment between activities. It applies to all workout
       types since you hold an heart rate monitor. <i>TRIMP</i> takes into consideration the duration and the
       intensity of exercise as calculated by the <i>Heart Rate Reserve (HRR)</i>. The <i>Heart Rate Reserve</i> is
-      a heart effort level according to a heart capacity. It is defined by:<br/>
+      a heart effort level according to a heart capacity. It is defined by:<br />
 
       <div class="maths-area">
         <katex [expression]="'HRR=\\frac{HR~-~HR_{rest}}{HR_{max}~-~HR_{rest}}'"></katex>
       </div>
 
-      And <i>Training Impulse</i> is defined the below formula:<br/>
+      And <i>Training Impulse</i> is defined the below formula:<br />
 
       <div class="maths-area">
         <katex
@@ -195,46 +192,47 @@
 
     </div>
 
-    <h1 class="mat-title">Heart Rate Stress Score (HRSS)</h1>
+    <h3 class="mat-title">Heart Rate Stress Score (HRSS)</h3>
 
     <div>
       <i>HRSS</i> also represents a training load based on your heart rate activity. It is based on <i>TRIMP</i>
-      behind. That's why <i>HRSS</i> depends also on exercise duration and intensity.<br/><br/>
+      behind. That's why <i>HRSS</i> depends also on exercise duration and intensity.<br /><br />
 
       The major difference with <i>TRIMP</i> is that <i>HRSS</i> is based on athlete's <i>Lactate Threshold Heart
       Rate (LTHR)</i>. <i>LTHR</i> is the point, above which, increased blood acidification occurs in your body.
       Above this threshold your endurance performance will rapidly decrease. Basically it's the latest best
-      average heart rate you can maintain for up to an hour. You can setup your own LTHR in athlete settings.<br/><br/>
+      average heart rate you can maintain for up to an hour. You can setup your own LTHR in athlete
+      settings.<br /><br />
 
       <i>HRSS</i> is defined by:
 
       <div class="maths-area">
         <katex
           [expression]="'HRSS = \\frac{Activity~Trimp}{OneHourTrimp@LTHR}~\\times~100'"></katex>
-        <br/><br/>
+        <br /><br />
 
         <katex
           [expression]="'Where~~OneHourTrimp@LTHR = 60min~\\times~HRR@LTHR~\\times~0.64~\\times~e^{k~\\times~HRR@LTHR}'"></katex>
-        <br/><br/>
+        <br /><br />
         <katex
           [expression]="'And~~HRR@LTHR = \\frac{LTHR~-~HR_{rest}}{HR_{max}~-~HR_{rest}}~~and~~k=1.92~~(for~mens)~~~or~~~k=1.67~~(for~womens)'"></katex>
       </div>
 
       You should use <i>HRSS</i> as default heart rate stress score calculation method in the fitness trend
       instead of <i>TRIMP</i>.
-      Because it allows a right use of <i>Training Zones</i> and comparison with others stress scores.<br/><br/>
+      Because it allows a right use of <i>Training Zones</i> and comparison with others stress scores.<br /><br />
 
       Note that <i>HRSS</i> is close to <i>HrTSS&reg;</i> from TrainingPeaks&trade;
 
     </div>
 
-    <h1 class="mat-title">Power Stress Score (PSS)</h1>
+    <h3 class="mat-title">Power Stress Score (PSS)</h3>
     <div>
       <i>Power Stress Score</i> is a stress score designed for cyclists having a power meter. It is the more
       accurate of all. The <i>PSS</i> is calculated from the duration of the workout, the athlete's <i>Functional
       Threshold Power (FTP)</i> and the
 
-      <i>Intensity</i>.<br/><br/>
+      <i>Intensity</i>.<br /><br />
 
       <i>Intensity</i> is defined by:
 
@@ -262,14 +260,14 @@
 
     </div>
 
-    <h1 class="mat-title">Estimated Power Stress Score (PSS)</h1>
+    <h3 class="mat-title">Estimated Power Stress Score (PSS)</h3>
 
     <div>
       Same as <i>Power Stress Score (PSS)</i> described above but calculation of <i>PSS</i> is performed on
       estimated power data.
     </div>
 
-    <h1 class="mat-title">Swimming Stress Score (SSS)</h1>
+    <h3 class="mat-title">Swimming Stress Score (SSS)</h3>
 
     <div>
       No surprise the <i>Swimming Stress Score</i> is designed for swimming activities. In prerequisites you have
@@ -277,7 +275,7 @@
       There is no need to wear a swimming heart rate monitor. Workout distance and active swimming time are the
       only required to compute the <i>SSS</i>. If your watch supports indoor and/or outdoor swimming, it's all
       good. Else if you have a simple waterproof stopwatch you need to know the distance of your workout and the
-      time of active swimming without rest periods (before entering your manual entry in Strava).<br/><br/>
+      time of active swimming without rest periods (before entering your manual entry in Strava).<br /><br />
 
       <i>Swimming Stress Score</i> is defined by:
 
@@ -301,13 +299,13 @@
       Note that <i>SSS</i> is equivalent to <i>sTSS&reg;</i> from TrainingPeaks&trade;
     </div>
 
-    <h1 class="mat-title">Running Stress Score (RSS)</h1>
+    <h3 class="mat-title">Running Stress Score (RSS)</h3>
 
     <div>
       The <i>Running Stress Score</i> is an estimated stress score for runners. It can be used as stress score
       input for fitness trend when athlete don't own (or forgot) heart rate monitor. In prerequisites you have
       to set your Running Functional Threshold Pace (RFTP) in athlete settings to access this stress score.
-      <br/><br/>
+      <br /><br />
 
       <i>Running Stress Score</i> is defined by:
 
@@ -320,7 +318,7 @@
       pace on hilly terrain. (Running uphill requires more effort than running on a flat grade, so GAP adjusts
       pace
       to be faster than the actual running pace. Similarly, GAP is slower than actual pace on downhill
-      terrain).<br/><br/>
+      terrain).<br /><br />
 
       And Intensity is:
 
@@ -332,10 +330,4 @@
     </div>
 
   </div>
-
-</mat-dialog-content>
-
-<mat-dialog-actions>
-  <button color="primary" mat-dialog-close mat-stroked-button>Got It</button>
-</mat-dialog-actions>
-
+</div>

@@ -11,7 +11,7 @@ import { AppService } from "../shared/services/app-service/app.service";
       <mat-card-content>
         <div>This feature requires activities and none has been found.</div>
         <div>
-          <button [disabled]="appService.isSyncing" (click)="syncRedirect()" color="primary" mat-stroked-button>
+          <button [disabled]="appService.isSyncing" (click)="syncRedirect()" color="primary" mat-flat-button>
             Sync your activities
           </button>
         </div>

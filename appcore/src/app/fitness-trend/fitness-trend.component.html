@@ -5,6 +5,10 @@
 
 <app-sync-required></app-sync-required>
 
+<mat-card *ngIf="isSynced === false">
+  <app-fitness-trend-user-guide></app-fitness-trend-user-guide>
+</mat-card>
+
 <!--History not compliant with the feature-->
 <mat-card *ngIf="(areActivitiesCompliant === false && isSynced !== false)" class="no-data">
   <mat-card-title>

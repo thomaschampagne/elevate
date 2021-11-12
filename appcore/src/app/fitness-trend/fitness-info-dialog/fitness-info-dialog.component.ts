@@ -2,8 +2,12 @@ import { Component, OnInit } from "@angular/core";
 
 @Component({
   selector: "app-fitness-info-dialog",
-  templateUrl: "./fitness-info-dialog.component.html",
-  styleUrls: ["./fitness-info-dialog.component.scss"]
+  template: `
+    <mat-dialog-content>
+      <app-fitness-trend-user-guide></app-fitness-trend-user-guide>
+    </mat-dialog-content>
+  `,
+  styles: []
 })
 export class FitnessInfoDialogComponent implements OnInit {
   public static readonly MAX_WIDTH: string = "80%";
@@ -11,5 +15,5 @@ export class FitnessInfoDialogComponent implements OnInit {
 
   constructor() {}
 
-  public ngOnInit() {}
+  public ngOnInit(): void {}
 }
