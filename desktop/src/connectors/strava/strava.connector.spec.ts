@@ -242,22 +242,17 @@ describe("StravaConnector", () => {
 
       // When
       const syncEvent$ = stravaConnector.sync();
+      const syncEvents$NextSpy = spyOn(syncEvent$, "next").and.callThrough();
       const syncEvents$ErrorsSpy = spyOn(syncEvent$, "error").and.callThrough();
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
       syncEvent$.pipe(filter(evt => evt.type !== SyncEventType.GENERIC)).subscribe(
-        (syncEvent: SyncEvent) => {
-          if (syncEvent.type !== SyncEventType.STARTED) {
-            expect(syncEvent.type).toEqual(SyncEventType.ACTIVITY);
-            expect((syncEvent as ActivitySyncEvent).activity).toBeDefined();
-          }
-
-          expect(stravaConnector.isSyncing).toBeTruthy();
-        },
+        () => {},
         error => {
           expect(error).toBeDefined();
           expect(syncPagesSpy).toBeCalledTimes(expectedSyncPagesCalls);
+          expect(syncEvents$NextSpy).toHaveBeenCalledWith(new StoppedSyncEvent(ConnectorType.STRAVA));
           expect(syncEvents$CompleteSpy).not.toBeCalled();
           expect(syncEvents$ErrorsSpy).toBeCalledTimes(expectedSyncEventErrorCalls);
           expect(stravaConnector.isSyncing).toBeFalsy();

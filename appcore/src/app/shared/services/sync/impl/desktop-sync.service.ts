@@ -345,8 +345,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       }
 
       this.ipcSyncMessageSender.stopSync(this.currentConnectorType).then(
-        (response: string) => {
-          this.logger.debug("Sync stopped. Response from main:", response);
+        () => {
+          this.logger.debug("Sync stopped");
           resolve();
           this.isSyncing$.next(false);
         },

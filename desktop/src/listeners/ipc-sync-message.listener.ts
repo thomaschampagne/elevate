@@ -30,7 +30,7 @@ export class IpcSyncMessageListener implements IpcListener {
     );
 
     // Stop sync
-    ipcTunnelService.on<Array<[ConnectorType]>, string>(Channel.stopSync, payload => {
+    ipcTunnelService.on<Array<[ConnectorType]>, void>(Channel.stopSync, payload => {
       const connectorType = payload[0][0];
       return this.handleStopSync(connectorType);
     });
@@ -48,7 +48,7 @@ export class IpcSyncMessageListener implements IpcListener {
     return this.connectorSyncService.sync(connectorType, connectorInfo, athleteModel, userSettings, syncFromDateTime);
   }
 
-  public handleStopSync(requestConnectorType: ConnectorType): Promise<string> {
+  public handleStopSync(requestConnectorType: ConnectorType): Promise<void> {
     this.logger.debug("[Main] Received StartSync. Params:", requestConnectorType);
     return this.connectorSyncService.stop(requestConnectorType);
   }

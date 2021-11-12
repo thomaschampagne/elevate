@@ -32,8 +32,8 @@ export class IpcSyncMessageSender {
     return this.ipcTunnelService.send<IpcMessage, string>(startSyncMessage);
   }
 
-  public stopSync(connectorType: ConnectorType): Promise<string> {
+  public stopSync(connectorType: ConnectorType): Promise<void> {
     const stopSyncMessage = new IpcMessage(Channel.stopSync, connectorType);
-    return this.ipcTunnelService.send<IpcMessage, string>(stopSyncMessage);
+    return this.ipcTunnelService.send<IpcMessage, void>(stopSyncMessage);
   }
 }

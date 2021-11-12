@@ -3,7 +3,6 @@ import { BaseConnector } from "./base.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { FileConnector } from "./file/file.connector";
 import { ConnectorConfig } from "./connector-config.model";
-import _ from "lodash";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import { Logger } from "../logger";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
@@ -102,18 +101,15 @@ export class ConnectorSyncService {
     return Promise.resolve(`Started sync of connector ${connectorType}`);
   }
 
-  public stop(requestConnectorType: ConnectorType): Promise<string> {
-    if (_.isEmpty(this.currentConnector)) {
-      const errorMessage = "No existing connector found to stop sync";
-      this.logger.error(errorMessage);
-      return Promise.reject(errorMessage);
-    } else {
+  public stop(requestConnectorType: ConnectorType): Promise<void> {
+    this.logger.info(`Received stop request on connector ${requestConnectorType}`);
+
+    if (this.currentConnector) {
       if (this.currentConnector.type === requestConnectorType) {
         return this.currentConnector.stop().then(
           () => {
-            const successMessage = "Sync of connector '" + requestConnectorType + "' has been cancelled";
-            this.logger.info(successMessage);
-            return Promise.resolve(successMessage);
+            this.logger.info(`Sync stopped on connector ${requestConnectorType}`);
+            return Promise.resolve();
           },
           error => {
             this.logger.error(error);
@@ -125,6 +121,10 @@ export class ConnectorSyncService {
           `Trying to stop a sync on ${requestConnectorType} connector but current connector synced type is: ${this.currentConnector.type}`
         );
       }
+    } else {
+      this.logger.info(`No connector currently registered to stop`);
     }
+
+    return Promise.resolve();
   }
 }

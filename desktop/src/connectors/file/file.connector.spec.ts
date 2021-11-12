@@ -489,16 +489,16 @@ describe("FileConnector", () => {
 
       // When
       const syncEvent$ = fileConnector.sync();
+      const syncEvents$NextSpy = spyOn(syncEvent$, "next").and.callThrough();
       const syncEvents$ErrorsSpy = spyOn(syncEvent$, "error").and.callThrough();
       const syncEvents$CompleteSpy = spyOn(syncEvent$, "complete").and.callThrough();
 
       // Then
       syncEvent$.subscribe(
-        () => {
-          expect(fileConnector.isSyncing).toBeTruthy();
-        },
+        () => {},
         error => {
           expect(error).toBeDefined();
+          expect(syncEvents$NextSpy).toHaveBeenCalledWith(new StoppedSyncEvent(ConnectorType.FILE));
           expect(syncFilesSpy).toBeCalledTimes(1);
           expect(syncEvents$CompleteSpy).not.toBeCalled();
           expect(syncEvents$ErrorsSpy).toBeCalledTimes(1);

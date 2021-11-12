@@ -91,7 +91,7 @@ export abstract class BaseConnector {
         });
     } else {
       this.stopRequested = false;
-      stopPromise.reject(this.type + " connector is not syncing currently.");
+      stopPromise.reject(`Unable to stop connector ${this.type} because not syncing currently.`);
     }
 
     return stopPromise.promise;

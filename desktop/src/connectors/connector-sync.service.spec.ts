@@ -276,16 +276,14 @@ describe("ConnectorSyncService", () => {
       const promise = connectorSyncService.stop(connectorSyncService.currentConnector.type);
 
       // Then
-      promise.then(result => {
-        expect(result).toBeDefined();
+      promise.then(() => {
         expect(stopConnectorSyncSpy).toBeCalledTimes(1);
         done();
       });
     });
 
-    it("should not stop sync if no connector is mapped to service", done => {
+    it("should do nothing when stop sync with no connector mapped to service", done => {
       // Given
-      const expected = "No existing connector found to stop sync";
       connectorSyncService.currentConnector = null;
       const stopConnectorSyncSpy = spyOn(stravaConnector, "stop").and.stub();
 
@@ -295,12 +293,11 @@ describe("ConnectorSyncService", () => {
       // Then
       promise
         .then(() => {
-          throw new Error("Should not be here");
+          expect(stopConnectorSyncSpy).not.toBeCalled();
+          done();
         })
         .catch(err => {
-          expect(stopConnectorSyncSpy).not.toBeCalled();
-          expect(err).toEqual(expected);
-          done();
+          throw err;
         });
     });
 

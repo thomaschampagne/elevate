@@ -292,8 +292,9 @@ export class FileConnector extends BaseConnector {
           if (isCancelEvent) {
             this.syncEvents$.next(syncEvent);
           } else {
-            this.logger.error(syncEvent);
+            this.syncEvents$.next(new StoppedSyncEvent(this.type));
             this.syncEvents$.error(syncEvent);
+            this.logger.error(syncEvent);
           }
         }
       );

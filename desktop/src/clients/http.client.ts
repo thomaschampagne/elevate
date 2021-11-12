@@ -32,9 +32,7 @@ export class HttpClient {
       noResponseRetries: 2, // Retries on errors that don't return a response (ENOTFOUND, ETIMEDOUT, etc).
       onRetryAttempt: err => {
         const cfg = rax.getConfig(err);
-        this.logger.error(
-          `Attempt ${cfg.currentRetryAttempt} failed on url ${err.request.url}. Error message: ${err.message}`
-        );
+        this.logger.error(`Http request attempt ${cfg.currentRetryAttempt} failed. Error message: ${err.message}`);
       }
     };
 
