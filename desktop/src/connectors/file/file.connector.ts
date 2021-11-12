@@ -952,100 +952,12 @@ export class FileConnector extends BaseConnector {
     type: ElevateSport;
     autoDetected: boolean;
   } {
-    let elevateSport = FileConnector.SPORTS_LIB_TO_ELEVATE_SPORTS_MAP.get(sportsLibActivity.type);
+    const elevateSport = FileConnector.SPORTS_LIB_TO_ELEVATE_SPORTS_MAP.get(sportsLibActivity.type);
     if (elevateSport) {
       return { type: elevateSport, autoDetected: false };
     } else {
-      if (this.fileConnectorConfig.info.detectSportTypeWhenUnknown) {
-        const stats = sportsLibActivity.stats;
-
-        const distance = stats[DataDistance.type] as number;
-        const duration = stats[DataDuration.type] as number;
-        const ascent = stats[DataAscent.type] as number;
-        const avgSpeed = stats[DataSpeedAvg.type] as number;
-        const maxSpeed = stats[DataSpeedMax.type] as number;
-
-        elevateSport = this.attemptDetectCommonSport(distance, duration, ascent, avgSpeed, maxSpeed);
-        return { type: elevateSport, autoDetected: elevateSport !== ElevateSport.Other };
-      } else {
-        return { type: ElevateSport.Other, autoDetected: false };
-      }
+      return { type: ElevateSport.Other, autoDetected: false };
     }
-  }
-
-  public attemptDetectCommonSport(
-    distance: number,
-    duration: number,
-    ascent: number,
-    avgSpeed: number,
-    maxSpeed: number
-  ): ElevateSport {
-    const MAX_CYCLING_SPEED_THRESHOLD = 100 / 3.6; // 100kph
-    const MAX_RUNNING_SPEED_THRESHOLD = 40 / 3.6; // 40kph
-
-    /**
-     * Models the max possible running average speed to perform the given distance
-     *
-     * Data:
-     * meters, avg kph
-     * -----------
-     * 0.4, 33.4
-     * 1, 27
-     * 5, 23.7
-     * 10, 22.7
-     * 21, 21.7
-     * 42, 20.71
-     * @param meters running distance
-     * @return max running average speed in m/s
-     */
-    const maxAvgRunningSpeedForDistance = (meters: number): number => {
-      const perfRatio = 0.8; // Percentage of performance reachable by a well trained athlete (1 => world record);
-      const y0 = 21.485097981749487;
-      const a = 7.086180143945561;
-      const x0 = -0.19902800428936693;
-      return ((y0 + a / (meters / 1000 - x0)) / 3.6) * perfRatio;
-    };
-
-    /**
-     * Detect if entry param could have been performed with or without climb assistance
-     */
-    const isAssisted = (pMaxSpeed: number, pDistance: number, pDuration: number, pAscent: number): boolean => {
-      const criteria = Math.pow(pAscent, 2) / ((pDistance / 1000) * (pDuration / 60)) / 1000;
-      return criteria >= 1;
-    };
-
-    if (maxSpeed > 0) {
-      if (maxSpeed >= MAX_CYCLING_SPEED_THRESHOLD || maxSpeed >= MAX_RUNNING_SPEED_THRESHOLD) {
-        return isAssisted(maxSpeed, distance, duration, ascent) ? ElevateSport.Other : ElevateSport.Ride;
-      }
-    }
-
-    if (avgSpeed > 0 && distance > 0 && maxSpeed > 0) {
-      const maxAvgRunningSpeed = maxAvgRunningSpeedForDistance(distance);
-
-      const grade = (ascent / distance) * 1000;
-      const gradeSpeed = avgSpeed + avgSpeed * (grade / 100) * 1.5;
-
-      if (gradeSpeed > maxAvgRunningSpeed) {
-        return isAssisted(maxSpeed, distance, duration, ascent) ? ElevateSport.Other : ElevateSport.Ride;
-      } else {
-        const highlightRideActivity =
-          (((Math.pow(maxSpeed - avgSpeed, 3) * Math.pow(maxSpeed, 4)) / Math.pow(10, 4)) * 2) / 5;
-        const decisionSecureTolerance = 0.2;
-
-        const isRide = highlightRideActivity > 1 + decisionSecureTolerance;
-        if (isRide) {
-          return ElevateSport.Ride;
-        }
-
-        const isRun = highlightRideActivity < 1 - decisionSecureTolerance;
-        if (isRun) {
-          return ElevateSport.Run;
-        }
-      }
-    }
-
-    return ElevateSport.Other;
   }
 
   public mapStreams(sportsLibActivity: ActivityJSONInterface): Streams {

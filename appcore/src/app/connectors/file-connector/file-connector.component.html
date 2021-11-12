@@ -77,14 +77,12 @@
             Delete archives files (.zip, .tar, .gz, ...) once activity files have been extracted (recommended) *
           </mat-checkbox>
         </div>
-        <div>
+<!--        <div>
           <mat-checkbox (change)="saveChanges()"
-                        [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown"
-                        matTooltip="This case often occurs on GPX files. Note that this may introduce errors (e.g.: Inline skating gpx activity without sport type could be detected as 'Ride')">
-            <strong>Experimental:</strong> Try to set the activity type to <i>Ride or Run</i>
-            if unknown sport <i>(adds "#detected" in name)</i>
+                        [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown">
+            <strong>Experimental:</strong> Try to find out unknown activities types based on your others activities where type is known
           </mat-checkbox>
-        </div>
+        </div>-->
         <div>
           * Only when <u>syncing all activities</u>
         </div>
