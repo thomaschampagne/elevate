@@ -10,6 +10,7 @@ import { YearProgressRoutingModule } from "./year-progress-routing.module";
 import { YearProgressPresetDao } from "./shared/dao/year-progress-preset.dao";
 import { AddYearProgressPresetDialogComponent } from "./add-year-progress-presets-dialog/add-year-progress-preset-dialog.component";
 import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress-presets-dialog/manage-year-progress-presets-dialog.component";
+import { YearProgressUserGuideComponent } from "./year-progress-user-guide/year-progress-user-guide.component";
 
 @NgModule({
   imports: [CoreModule, YearProgressRoutingModule],
@@ -20,7 +21,8 @@ import { ManageYearProgressPresetsDialogComponent } from "./manage-year-progress
     YearProgressOverviewDialogComponent,
     YearProgressHelperDialogComponent,
     AddYearProgressPresetDialogComponent,
-    ManageYearProgressPresetsDialogComponent
+    ManageYearProgressPresetsDialogComponent,
+    YearProgressUserGuideComponent
   ],
   providers: [YearProgressService, YearProgressPresetDao]
 })
