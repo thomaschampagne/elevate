@@ -268,31 +268,23 @@ distinguished_name = req_distinguished_name
 x509_extensions = v3_req
 prompt = no
 [req_distinguished_name]
-C = US
-ST = CA
-L = Los Angeles
-O = Elevate
-OU = Elevate Sports App
-CN = John Doo
-stateOrProvinceName = California
-emailAddress = your.email@domain.com
-[usr_cert]
-basicConstraints = CA:FALSE
-keyUsage = digitalSignature
-extendedKeyUsage = codeSigning
+countryName             = FR
+stateOrProvinceName     = Rhone Alpes
+localityName            = Grenoble
+organizationName        = Elevate
+commonName              = Elevate Sports App
+emailAddress            = you@email.com
+
 [v3_req]
-keyUsage = digitalSignature
-extendedKeyUsage = codeSigning
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = your.domain.com
-DNS.2 = your.domain2.com
+basicConstraints        = CA:FALSE
+keyUsage                = critical,digitalSignature
+extendedKeyUsage        = critical,codeSigning
 ```
 
 * Generate private key and certificate with a `passphrase`
 
 ```bash
-openssl req -x509 -newkey rsa:4096 -sha256 -keyout code_sign.key -out code_sign.crt -days 1825 -config code_sign.cnf
+openssl req -x509 -newkey rsa:4096 -sha256 -keyout code_sign.key -out code_sign.crt -days 1096 -config code_sign.cnf
 ```  
 
 * Create `.pxf` file from the private key and certificate previously generated. `.pxf` file will be used to sign app under windows.
