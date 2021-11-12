@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import moment, { Moment } from "moment";
 
 @Component({
@@ -7,6 +7,9 @@ import moment, { Moment } from "moment";
   styleUrls: ["./year-progress-user-guide.component.scss"]
 })
 export class YearProgressUserGuideComponent implements OnInit {
+  @Input()
+  public readMore: boolean;
+
   public todayMoment: Moment;
 
   constructor() {}

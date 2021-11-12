@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
   selector: "app-fitness-info-dialog",
   template: `
     <mat-dialog-content>
-      <app-fitness-trend-user-guide></app-fitness-trend-user-guide>
+      <app-fitness-trend-user-guide [readMore]="true"></app-fitness-trend-user-guide>
     </mat-dialog-content>
   `,
   styles: []

@@ -4,7 +4,7 @@ import { Component, OnInit } from "@angular/core";
   selector: "app-year-progress-helper-dialog",
   template: `
     <mat-dialog-content>
-      <app-year-progress-user-guide></app-year-progress-user-guide>
+      <app-year-progress-user-guide [readMore]="true"></app-year-progress-user-guide>
     </mat-dialog-content>
   `,
   styles: []

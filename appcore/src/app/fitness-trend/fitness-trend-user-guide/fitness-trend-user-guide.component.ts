@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 
 @Component({
   selector: "app-fitness-trend-user-guide",
@@ -6,6 +6,9 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./fitness-trend-user-guide.component.scss"]
 })
 export class FitnessTrendUserGuideComponent implements OnInit {
+  @Input()
+  public readMore: boolean;
+
   constructor() {}
 
   public ngOnInit(): void {}

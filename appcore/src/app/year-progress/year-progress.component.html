@@ -6,7 +6,7 @@
 <app-sync-required></app-sync-required>
 
 <mat-card *ngIf="hasActivityModels === false">
-  <app-year-progress-user-guide></app-year-progress-user-guide>
+  <app-year-progress-user-guide [readMore]="false"></app-year-progress-user-guide>
 </mat-card>
 
 <mat-card *ngIf="hasActivityModels">

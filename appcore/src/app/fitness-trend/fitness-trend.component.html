@@ -6,7 +6,7 @@
 <app-sync-required></app-sync-required>
 
 <mat-card *ngIf="isSynced === false">
-  <app-fitness-trend-user-guide></app-fitness-trend-user-guide>
+  <app-fitness-trend-user-guide [readMore]="false"></app-fitness-trend-user-guide>
 </mat-card>
 
 <!--History not compliant with the feature-->
