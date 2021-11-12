@@ -166,9 +166,9 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.caloriesPerHour, 531);
 
           // Scores
-          SpecsUtils.assertNearEqual(computedStats.scores.stress.trimp, 508);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.trimp, 445);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.trimpPerHour, 83);
-          SpecsUtils.assertNearEqual(computedStats.scores.stress.hrss, 304);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.hrss, 267);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.hrssPerHour, 51);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.pss, 549);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.pssPerHour, 103);

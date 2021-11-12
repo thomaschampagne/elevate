@@ -857,10 +857,10 @@ export class ActivityComputer {
 
     // Training impulse (+ per hour)
     scores.stress.trimp = stats?.heartRate?.avgReserve
-      ? ActivityComputer.trainingImpulse(stats.elapsedTime, stats.heartRate.avgReserve, this.athleteSnapshot.gender)
+      ? ActivityComputer.trainingImpulse(stats.movingTime, stats.heartRate.avgReserve, this.athleteSnapshot.gender)
       : null;
     scores.stress.trimpPerHour = scores.stress.trimp
-      ? (scores.stress.trimp / stats.elapsedTime) * Constant.SEC_HOUR_FACTOR
+      ? (scores.stress.trimp / stats.movingTime) * Constant.SEC_HOUR_FACTOR
       : null;
 
     // Heart rate stress score (HRSS) (+ per hour)
@@ -874,7 +874,7 @@ export class ActivityComputer {
     );
 
     scores.stress.hrssPerHour = scores.stress.hrss
-      ? (scores.stress.hrss / stats.elapsedTime) * Constant.SEC_HOUR_FACTOR
+      ? (scores.stress.hrss / stats.movingTime) * Constant.SEC_HOUR_FACTOR
       : null;
 
     // Running stress score
