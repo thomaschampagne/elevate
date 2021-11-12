@@ -98,7 +98,6 @@ export class ActivityComputer {
   public static readonly GRADE_DOWNHILL_LIMIT: number = -1 * ActivityComputer.GRADE_CLIMBING_LIMIT;
   private static readonly GRADE_FLAT_PROFILE_THRESHOLD: number = 60;
   private static readonly WEIGHTED_WATTS_TIME_BUFFER: number = 30; // Seconds
-  private static readonly SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
 
   private readonly isMoving: (speed: number) => boolean;
   private readonly isActiveCadence: (cadence: number) => boolean;
@@ -460,7 +459,7 @@ export class ActivityComputer {
       const splitCalculator = new SplitCalculator(
         timeScale,
         values,
-        ActivityComputer.SPLIT_MAX_SCALE_TIME_GAP_THRESHOLD
+        60 * 60 * Constant.SPLIT_COMPUTE_MAX_ACTIVITY_HOURS
       );
       bestSplitResult = _.round(splitCalculator.getBestSplit(rangeSeconds), ActivityComputer.RND);
     } catch (err) {
@@ -1003,14 +1002,13 @@ export class ActivityComputer {
     // const avgSpeed = _.mean(velocityKphArray);
     const standardDeviation = ActivityComputer.computeStandardDeviation(velocityKphArray, avgSpeed);
     const [q25, q50, q75] = ActivityComputer.quartiles(velocityKphArray);
-    const best20min =
-      ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR || null;
+    const best20min = ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR;
 
     // Prepare stats results
     const speedStats: SpeedStats = {
       avg: _.round(avgSpeed, ActivityComputer.RND),
       max: _.round(_.max(velocityArray) * Constant.MPS_KPH_FACTOR, ActivityComputer.RND),
-      best20min: _.round(best20min, ActivityComputer.RND),
+      best20min: Number.isFinite(best20min) ? _.round(best20min, ActivityComputer.RND) : null,
       lowQ: _.round(q25, ActivityComputer.RND),
       median: _.round(q50, ActivityComputer.RND),
       upperQ: _.round(q75, ActivityComputer.RND),
@@ -1084,6 +1082,8 @@ export class ActivityComputer {
     const standardDeviation = ActivityComputer.computeStandardDeviation(powerArray, avgWatts);
     const [q25, q50, q75]: number[] = ActivityComputer.quartiles(powerArray);
 
+    const best20min = ActivityComputer.computeSplit(powerArray, timeArray, 60 * 20);
+
     return {
       avg: _.round(avgWatts, ActivityComputer.RND),
       avgKg: _.round(avgWattsPerKg, ActivityComputer.RND),
@@ -1091,7 +1091,7 @@ export class ActivityComputer {
       weightedKg: _.round(weightedWattsPerKg, ActivityComputer.RND),
       max: _.isNumber(maxWatts) ? _.round(maxWatts, ActivityComputer.RND) : 0,
       work: totalWork,
-      best20min: ActivityComputer.computeSplit(powerArray, timeArray, 60 * 20),
+      best20min: Number.isFinite(best20min) ? _.round(best20min, ActivityComputer.RND) : null,
       variabilityIndex: _.round(variabilityIndex, ActivityComputer.RND),
       intensityFactor: intensityFactor ? _.round(intensityFactor, ActivityComputer.RND) : null,
       lowQ: _.round(q25, ActivityComputer.RND),
@@ -1151,16 +1151,17 @@ export class ActivityComputer {
     );
 
     const [q25, q50, q75]: number[] = ActivityComputer.quartiles(heartRateArray);
-
     const standardDeviation = ActivityComputer.computeStandardDeviation(heartRateArray, avgHeartRate);
+    const best20min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 20);
+    const best60min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 60);
 
     return {
       avg: _.round(avgHeartRate),
       max: _.round(maxHeartRate),
       avgReserve: _.round(hrrRatio * 100, ActivityComputer.RND),
       maxReserve: _.round(hrrMaxRatio * 100, ActivityComputer.RND),
-      best20min: ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 20),
-      best60min: ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 60),
+      best20min: Number.isFinite(best20min) ? _.round(best20min, ActivityComputer.RND) : null,
+      best60min: Number.isFinite(best60min) ? _.round(best60min, ActivityComputer.RND) : null,
       lowQ: _.round(q25, ActivityComputer.RND),
       median: _.round(q50, ActivityComputer.RND),
       upperQ: _.round(q75, ActivityComputer.RND),

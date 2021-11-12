@@ -28,9 +28,10 @@ import {
   StressScores,
   TrainingEffect
 } from "@elevate/shared/models/sync/activity.model";
+import { Constant } from "@elevate/shared/constants/constant";
 
 export namespace StatsDef {
-  const emptyThreshold20MinMessage = "Empty because activity under 20 min";
+  const emptyThreshold20MinMessage = `Empty because activity under 20 min or over ${Constant.SPLIT_COMPUTE_MAX_ACTIVITY_HOURS}h`;
 
   const missingFtpMessage = (sport: string, dataType: string, activityStartTime: string): string => {
     return `⚠️ ${sport} threshold ${dataType} required on ${moment(activityStartTime).format("MMM Do YYYY")}`;
@@ -235,7 +236,7 @@ export namespace StatsDef {
       "Best heart rate held during 60 min"
     )
       .asForceDisplay()
-      .setMissingMessage("Empty because activity under 60 min");
+      .setMissingMessage(`Empty because activity under 60 min or over ${Constant.SPLIT_COMPUTE_MAX_ACTIVITY_HOURS}h`);
 
     export const hrr = Stat.create<HeartRateStats>(
       HeartRateSensor.DEFAULT,
