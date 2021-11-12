@@ -1104,6 +1104,7 @@ export namespace ActivityColumns {
         1
       ).setDescription("Anaerobic Training Effect"),
       new TextColumn(Category.OTHERS, ["trainer"], Print.boolean, "Indoor"),
+      new TextColumn(Category.OTHERS, ["isSwimPool"], Print.boolean, "Swim Pool").setBuildTarget(BuildTarget.DESKTOP),
       new TextColumn(Category.OTHERS, ["device"], Print.field, "Device")
         .setBuildTarget(BuildTarget.DESKTOP)
         .setWidth("150px"),

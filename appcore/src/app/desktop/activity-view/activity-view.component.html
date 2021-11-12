@@ -90,7 +90,7 @@
       </div>
     </div>
 
-    <app-activity-graph-chart *ngIf="streams" [measureSystem]="userSettings.systemUnit"
+    <app-activity-graph-chart *ngIf="streams && !activity.isSwimPool" [measureSystem]="userSettings.systemUnit"
                               [activity]="activity"
                               [streams]="streams">
     </app-activity-graph-chart>
