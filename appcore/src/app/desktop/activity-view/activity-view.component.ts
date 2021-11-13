@@ -32,6 +32,7 @@ import { Activity } from "@elevate/shared/models/sync/activity.model";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { Time } from "@elevate/shared/tools/time";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
@@ -283,6 +284,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
 
         // Grade related debug
         if (this.streams.distance?.length && this.streams.altitude?.length) {
+          const mapDeltaTime = _.round(this.streams.time[selectedBounds[1]] - this.streams.time[selectedBounds[0]], 1);
           const mapDeltaDistance = _.round(
             this.streams.distance[selectedBounds[1]] - this.streams.distance[selectedBounds[0]],
             1
@@ -295,6 +297,8 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
           const processedGradeStream = this.streams.grade_smooth.slice(selectedBounds[0], selectedBounds[1] + 1);
           const processedGradeMean = _.round(_.mean(processedGradeStream), 2);
 
+          dialogTemplate += `<div><strong>Indexes:</strong> ${selectedBounds[0]} to ${selectedBounds[1]}</div>`;
+          dialogTemplate += `<div><strong>Map Δ Time:</strong> ${Time.secToMilitary(mapDeltaTime)}</div>`;
           dialogTemplate += `<div><strong>Map Δ Distance:</strong> ${mapDeltaDistance}m</div>`;
           dialogTemplate += `<div><strong>Map Δ Elevation:</strong> ${mapDeltaElevation}m</div>`;
           dialogTemplate += `<div><strong>Grade:</strong> Map ${mapGrade}%; Stream: ${processedGradeMean}%</div>`;
