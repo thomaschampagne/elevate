@@ -396,6 +396,7 @@ class Main {
       titleBarStyle: "hidden",
       autoHideMenuBar: true,
       webPreferences: {
+        webgl: true,
         contextIsolation: true,
         nodeIntegration: false,
         preload: path.join(__dirname, "pre-loader.js")

@@ -60,6 +60,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
     this.streams = null;
     this.userSettings = null;
     this.hasMapData = false;
+    this.displayGraph = false;
   }
 
   private static readonly DEVICE_WATCH_SPORTS = [
@@ -84,6 +85,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
   public userSettings: DesktopUserSettings;
   public hasMapData: boolean;
   public deviceIcon: string;
+  public displayGraph: boolean;
 
   /**
    * Displays debug "on map statistics" activity data on graph bound selection

@@ -90,10 +90,22 @@
       </div>
     </div>
 
-    <app-activity-graph-chart *ngIf="streams && !activity.isSwimPool" [measureSystem]="userSettings.systemUnit"
+    <app-activity-graph-chart *ngIf="streams && displayGraph && !activity.isSwimPool"
+                              [measureSystem]="userSettings.systemUnit"
                               [activity]="activity"
                               [streams]="streams">
     </app-activity-graph-chart>
+
+    <div fxLayoutAlign="center start" fxFill class="display-analysis-graph-button">
+      <button mat-stroked-button color="primary" fxFill (click)="displayGraph = !displayGraph">
+        <mat-icon fontSet="material-icons-outlined" color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
+        &nbsp;
+        <span *ngIf="!displayGraph">Show analysis graph</span>
+        <span *ngIf="displayGraph">Hide analysis graph</span>
+        &nbsp;
+        <mat-icon fontSet="material-icons-outlined" color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+    </div>
 
     <mat-tab-group mat-stretch-tabs>
 
