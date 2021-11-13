@@ -1,15 +1,21 @@
 import _ from "lodash";
 import { WarningException } from "../../exceptions/warning.exception";
 
-export class SplitCalculator {
-  public scale: number[];
-  public data: number[];
-  public maxScaleGapThreshold: number;
+export interface SplitCalculatorOptions {
+  // Maximal scale gap under which data is interpolated
+  maxScaleGapToLerp?: number;
+  maxScaleGapAllowed?: number;
+}
 
-  constructor(scale: number[], data: number[], maxScaleGapThreshold?: number) {
+export class SplitCalculator {
+  private static readonly MAX_SCALE_GAP_TO_LERP = 60;
+  private static readonly MAX_SCALE_GAP_ALLOWED = 60 * 60;
+
+  constructor(public scale: number[], public data: number[], public options: SplitCalculatorOptions = {}) {
     this.scale = _.cloneDeep(scale);
     this.data = _.cloneDeep(data);
-    this.maxScaleGapThreshold = maxScaleGapThreshold;
+    this.options.maxScaleGapToLerp = this.options.maxScaleGapToLerp || SplitCalculator.MAX_SCALE_GAP_TO_LERP;
+    this.options.maxScaleGapAllowed = this.options.maxScaleGapAllowed || SplitCalculator.MAX_SCALE_GAP_ALLOWED;
     this.normalize();
   }
 
@@ -30,11 +36,14 @@ export class SplitCalculator {
           throw new Error("Scale should have gaps >= 0");
         }
 
-        if (_.isNumber(this.maxScaleGapThreshold) && nextScaleDiff > this.maxScaleGapThreshold) {
+        if (this.options.maxScaleGapAllowed && nextScaleDiff > this.options.maxScaleGapAllowed) {
           throw new WarningException("Scale has a too importants gap. Cannot normalize scale");
         }
 
-        if (nextScaleDiff > 1) {
+        // If we step over 1 seconds and stay under min scale gap, then we can perform interpolation of values between
+        // Use case example: We want to avoid interpolation during a too long pause (let's say 30s) which could generate invalid data
+        // In this case the scale is the time and  minScaleGap = 30 sec. Over 30s we don't interpolate.
+        if (nextScaleDiff > 1 && nextScaleDiff <= this.options.maxScaleGapToLerp) {
           // Is next scale not linear normalized (+1) with current scale?
           const linearFunction = this.getLinearFunction(
             this.data[index + 1],
@@ -49,6 +58,18 @@ export class SplitCalculator {
             normalizedScale.push(missingScaleValue);
             missingScaleValue++;
           }
+        } else if (nextScaleDiff > this.options.maxScaleGapToLerp) {
+          // The scale gap to the next value is over minimal gap threshold.
+          // Interpolating data here might lead to invalid data
+          let missingScaleValue = scaleValue + 1;
+
+          while (missingScaleValue < nextScaleValue) {
+            interpolatedData.push(null);
+            normalizedScale.push(missingScaleValue);
+            missingScaleValue++;
+          }
+        } else {
+          // Next scale gap should be increment by 1 here. It's perfect, do nothing.
         }
       }
     });

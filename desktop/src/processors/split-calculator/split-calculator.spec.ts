@@ -1,4 +1,4 @@
-import { SplitCalculator } from "@elevate/shared/sync/compute/split-calculator";
+import { SplitCalculator, SplitCalculatorOptions } from "@elevate/shared/sync/compute/split-calculator";
 import FIXTURE from "./power_data_1480020375.json";
 
 describe("SplitCalculator", () => {
@@ -27,16 +27,38 @@ describe("SplitCalculator", () => {
     done();
   });
 
-  it("should NOT normalize scale having a gaps over 5000", done => {
+  it("should normalize data over scale under max scale linear interpolate gap", done => {
     // Given
-    const maxScaleGapThreshold = 60 * 60 * 8; // 8 hours
-    const scale: number[] = [0, 1, 3, 6, 50 + maxScaleGapThreshold];
+    const options: SplitCalculatorOptions = { maxScaleGapToLerp: 5 };
+    const scale: number[] = [0, 1, 3, 5, /*      fill scale here     */ 11, 13, 14, 15];
+    const data: number[] = [0, 10, 30, 50, /* skip interpolation here */ 110, 130, 140, 150];
+    const expectedNormalizedScale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+    const expectedInterpolatedData = [0, 10, 20, 30, 40, 50, null, null, null, null, null, 110, 120, 130, 140, 150];
+
+    // When
+    const splitCalculator = new SplitCalculator(scale, data, options);
+
+    // Then
+    expect(splitCalculator.scale).toEqual(expectedNormalizedScale);
+    expect(splitCalculator.data).toEqual(expectedInterpolatedData);
+    expect(splitCalculator.scale.length).toEqual(splitCalculator.data.length);
+
+    done();
+  });
+
+  it("should NOT normalize scale having a gaps over maxScaleGapThreshold", done => {
+    // Given
+    const options: SplitCalculatorOptions = {
+      maxScaleGapAllowed: 60 * 60 * 8 // 8 hours
+    };
+
+    const scale: number[] = [0, 1, 3, 6, 50 + (options.maxScaleGapAllowed as number)];
     const data: number[] = [0, 10, 40, 60, 90];
     const scaleRange = 3;
 
     // When
     const call = () => {
-      const splitCalculator = new SplitCalculator(scale, data, maxScaleGapThreshold);
+      const splitCalculator = new SplitCalculator(scale, data, options);
       splitCalculator.getBestSplit(scaleRange);
     };
 

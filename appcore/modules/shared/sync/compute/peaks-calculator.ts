@@ -10,7 +10,10 @@ export class PeaksCalculator {
    * Compute peaks of data overtime up to MAX_HOURS (=2h by default)
    */
   public static compute(time: number[], data: number[], upToHours: number = PeaksCalculator.MAX_HOURS): Peak[] {
-    const splitCalculator = new SplitCalculator(time, data, 60 * 60 * Constant.SPLIT_COMPUTE_MAX_ACTIVITY_HOURS);
+    const splitCalculator = new SplitCalculator(time, data, {
+      maxScaleGapToLerp: Constant.SPLITS_MAX_SECONDS_GAP_TO_LERP,
+      maxScaleGapAllowed: 60 * 60 * Constant.SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS
+    });
 
     // Calculate when ranges end
     const endSeconds = upToHours * 60 * 60;

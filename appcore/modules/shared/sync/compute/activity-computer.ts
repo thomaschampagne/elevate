@@ -456,11 +456,10 @@ export class ActivityComputer {
   private static computeSplit(values: number[], timeScale: number[], rangeSeconds: number): number {
     let bestSplitResult = null;
     try {
-      const splitCalculator = new SplitCalculator(
-        timeScale,
-        values,
-        60 * 60 * Constant.SPLIT_COMPUTE_MAX_ACTIVITY_HOURS
-      );
+      const splitCalculator = new SplitCalculator(timeScale, values, {
+        maxScaleGapToLerp: Constant.SPLITS_MAX_SECONDS_GAP_TO_LERP,
+        maxScaleGapAllowed: 60 * 60 * Constant.SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS
+      });
       bestSplitResult = _.round(splitCalculator.getBestSplit(rangeSeconds), ActivityComputer.RND);
     } catch (err) {
       if (!(err instanceof WarningException)) {
