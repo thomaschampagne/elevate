@@ -97,7 +97,7 @@
     </app-activity-graph-chart>
 
     <div fxLayoutAlign="center start" fxFill class="display-analysis-graph-button">
-      <button mat-stroked-button color="primary" fxFill (click)="displayGraph = !displayGraph">
+      <button mat-button color="primary" fxFill (click)="displayGraph = !displayGraph">
         <mat-icon fontSet="material-icons-outlined" color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
         &nbsp;
         <span *ngIf="!displayGraph">Show analysis graph</span>
