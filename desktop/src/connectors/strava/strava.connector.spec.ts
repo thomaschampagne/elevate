@@ -10,7 +10,7 @@ import { AppService } from "../../app-service";
 import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { StravaConnectorConfig } from "../connector-config.model";
-import { ActivityComputeProcessor } from "../../processors/activity-compute.processor";
+import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
 import { AxiosError, AxiosResponse } from "axios";
 import { StatusCodes } from "../../enum/status-codes.enum";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";

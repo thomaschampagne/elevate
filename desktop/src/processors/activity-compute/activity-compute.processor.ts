@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Hash } from "../tools/hash";
+import { Hash } from "../../tools/hash";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";

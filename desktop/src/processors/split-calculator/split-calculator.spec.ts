@@ -1,12 +1,11 @@
-import { powerTimeData } from "./power_data_1480020375";
-import _ from "lodash";
 import { SplitCalculator } from "@elevate/shared/sync/compute/split-calculator";
+import FIXTURE from "./power_data_1480020375.json";
 
 describe("SplitCalculator", () => {
   let _POWER_TIME_DATA_: { time: number[]; watts: number[] };
 
   beforeEach(done => {
-    _POWER_TIME_DATA_ = _.cloneDeep(powerTimeData);
+    _POWER_TIME_DATA_ = FIXTURE;
     done();
   });
 

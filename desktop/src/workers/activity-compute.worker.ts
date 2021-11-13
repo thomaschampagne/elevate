@@ -1,5 +1,5 @@
 import { parentPort, workerData } from "worker_threads";
-import { ActivityComputeProcessor } from "../processors/activity-compute.processor";
+import { ActivityComputeProcessor } from "../processors/activity-compute/activity-compute.processor";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { ActivityEssentials } from "@elevate/shared/models/activity-data/activity-essentials.model";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";

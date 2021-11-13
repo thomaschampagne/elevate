@@ -6,7 +6,7 @@ import path from "path";
 import { SpecsUtils } from "../specs-utils";
 import { ActivityFile } from "../../connectors/file/activity-file.model";
 import { SportsLibProcessor } from "../../processors/sports-lib.processor";
-import { ActivityComputeProcessor } from "../../processors/activity-compute.processor";
+import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
 import _ from "lodash";
 import { EmptyEventLibError } from "@sports-alliance/sports-lib/lib/errors/empty-event-sports-libs.error";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";

@@ -14,7 +14,7 @@ import { Hash } from "../../tools/hash";
 import { ActivityJSONInterface } from "@sports-alliance/sports-lib/lib/activities/activity.json.interface";
 import { ActivityFile } from "./activity-file.model";
 import { SportsLibProcessor } from "../../processors/sports-lib.processor";
-import { ActivityComputeProcessor } from "../../processors/activity-compute.processor";
+import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
