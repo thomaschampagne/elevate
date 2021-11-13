@@ -1,16 +1,16 @@
 import { SplitCalculator } from "./split-calculator";
 import _ from "lodash";
 import { Peak } from "../../models/sync/activity.model";
+import { Constant } from "../../constants/constant";
 
 export class PeaksCalculator {
-  private static readonly MAX_SCALE_TIME_GAP_THRESHOLD: number = 60 * 60 * 12; // 12 hours
   private static readonly MAX_HOURS: number = 4;
 
   /**
    * Compute peaks of data overtime up to MAX_HOURS (=2h by default)
    */
   public static compute(time: number[], data: number[], upToHours: number = PeaksCalculator.MAX_HOURS): Peak[] {
-    const splitCalculator = new SplitCalculator(time, data, PeaksCalculator.MAX_SCALE_TIME_GAP_THRESHOLD);
+    const splitCalculator = new SplitCalculator(time, data, 60 * 60 * Constant.SPLIT_COMPUTE_MAX_ACTIVITY_HOURS);
 
     // Calculate when ranges end
     const endSeconds = upToHours * 60 * 60;
