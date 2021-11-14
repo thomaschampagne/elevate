@@ -262,6 +262,11 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
     return !!this.activity?.extras?.file?.path;
   }
 
+  public getActivityFileType(): string {
+    const type = this.activity?.extras?.file?.type;
+    return type ? `(.${type})` : "";
+  }
+
   public onBack(): void {
     this.location.back();
   }

@@ -53,10 +53,10 @@
         </button>
       </div>
       <mat-menu #moreMenu="matMenu">
-        <button mat-menu-item matTooltip="View file location" *ngIf="hasActivityFilePath()"
+        <button mat-menu-item *ngIf="hasActivityFilePath()"
                 (click)="onOpenSourceActivity(ConnectorType.FILE)">
           <mat-icon fontSet="material-icons-outlined">folder</mat-icon>
-          View file location
+          View file location {{ getActivityFileType() }}
         </button>
         <button mat-menu-item (click)="onEditActivity()">
           <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
