@@ -148,6 +148,8 @@ describe("File activities integration tests", () => {
         // Given https://connect.garmin.com/modern/activity/828989227 OR https://www.strava.com/activities/343080886
         const filePath = `${__dirname}/fixtures/cycling/huez.fit`;
         injectActivityForTesting(filePath);
+        athleteSettings.weight = 72; // Kg
+
         // When
         const promise = fileConnector.syncFiles(syncEvents$);
 
@@ -162,16 +164,16 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 2052);
           SpecsUtils.assertNearEqual(computedStats.elevation.ascent, 2052);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 2036);
-          SpecsUtils.assertNearEqual(computedStats.calories, 3252);
-          SpecsUtils.assertNearEqual(computedStats.caloriesPerHour, 531);
+          SpecsUtils.assertNearEqual(computedStats.calories, 3204);
+          SpecsUtils.assertNearEqual(computedStats.caloriesPerHour, 524);
 
           // Scores
           SpecsUtils.assertNearEqual(computedStats.scores.stress.trimp, 445);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.trimpPerHour, 83);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.hrss, 267);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.hrssPerHour, 51);
-          SpecsUtils.assertNearEqual(computedStats.scores.stress.pss, 549);
-          SpecsUtils.assertNearEqual(computedStats.scores.stress.pssPerHour, 103);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.pss, 472);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.pssPerHour, 88);
           expect(computedStats.scores.stress.sss).toBeNull();
           expect(computedStats.scores.stress.sssPerHour).toBeNull();
 
@@ -198,16 +200,16 @@ describe("File activities integration tests", () => {
 
           // Power
           SpecsUtils.assertNearEqual(computedStats.power.avg, 168);
-          SpecsUtils.assertNearEqual(computedStats.power.avgKg, 2.24, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.weighted, 212);
-          SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.82, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.best20min, 273);
-          SpecsUtils.assertNearEqual(computedStats.power.lowQ, 117);
-          SpecsUtils.assertNearEqual(computedStats.power.median, 198);
-          SpecsUtils.assertNearEqual(computedStats.power.upperQ, 233);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 644);
-          SpecsUtils.assertNearEqual(computedStats.power.intensityFactor, 1.01, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.variabilityIndex, 1.26, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.avgKg, 2.3, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.weighted, 197);
+          SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.74, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.best20min, 265);
+          SpecsUtils.assertNearEqual(computedStats.power.lowQ, 133);
+          SpecsUtils.assertNearEqual(computedStats.power.median, 181);
+          SpecsUtils.assertNearEqual(computedStats.power.upperQ, 214);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 357);
+          SpecsUtils.assertNearEqual(computedStats.power.intensityFactor, 0.94, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.variabilityIndex, 1.19, 2);
 
           // Cadence
           SpecsUtils.assertNearEqual(computedStats.cadence.avg, 67);
@@ -289,6 +291,7 @@ describe("File activities integration tests", () => {
       it("should sync on brevet 200k (fit)", done => {
         // Given https://connect.garmin.com/modern/activity/568251524 OR https://www.strava.com/activities/181999714
         injectActivityForTesting(`${__dirname}/fixtures/cycling/brevet-200k.fit`);
+        athleteSettings.weight = 70; // Kg
 
         // When
         const promise = fileConnector.syncFiles(syncEvents$);
@@ -303,8 +306,8 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.up, 71);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.flat, 79);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.down, 89);
-          SpecsUtils.assertNearEqual(computedStats.power.avg, 163);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 579);
+          SpecsUtils.assertNearEqual(computedStats.power.avg, 158);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 337);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.down, 40.4, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.up, 17.3, 1);
 
@@ -420,7 +423,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 1770);
           SpecsUtils.assertNearEqual(computedStats.calories, 3063);
           SpecsUtils.assertNearEqual(computedStats.power.avg, 150);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 604);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 279);
           SpecsUtils.assertNearEqual(computedStats.cadence.avg, 63);
           SpecsUtils.assertNearEqual(computedStats.cadence.avgActive, 75);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.up, 73);
@@ -441,6 +444,7 @@ describe("File activities integration tests", () => {
       it("should sync on Frozen feet (fit)", done => {
         // Given https://connect.garmin.com/modern/activity/1131205197 OR  https://www.strava.com/activities/549238663
         injectActivityForTesting(`${__dirname}/fixtures/cycling/frozen.fit`);
+        athleteSettings.weight = 73; // Kg
 
         // When
         const promise = fileConnector.syncFiles(syncEvents$);
@@ -453,7 +457,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "04:56:21");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 534);
           SpecsUtils.assertNearEqual(computedStats.power.avg, 139);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 827);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 289);
 
           const activity = extractResultActivity();
           expect(activity.srcStats.speed.avg).toBeCloseTo(28.6, 1);

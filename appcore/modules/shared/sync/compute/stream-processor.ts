@@ -250,6 +250,11 @@ export class StreamProcessor {
       const estimatedPowerStream = this.estimatedPowerStream(streams, params);
       if (estimatedPowerStream) {
         streams.watts = estimatedPowerStream;
+        const EST_POWER_KALMAN_FACTORS = {
+          R: 0.1, // Quite reliable model
+          Q: 400 // Measure error can be high (in watts)
+        };
+        streams.watts = KalmanFilter.apply(streams.watts, EST_POWER_KALMAN_FACTORS);
       }
     }
 
