@@ -16,6 +16,10 @@ export class SpecsUtils {
     decimals: number = 0,
     tolerancePercentage: number = 1
   ): void {
+    if (actual === null || actual === undefined) {
+      throw new Error("actual cannot be null or undefined");
+    }
+
     const actualRounded = _.round(actual, decimals);
     const expectedRounded = _.round(expected, decimals);
 
@@ -79,6 +83,10 @@ export class SpecsUtils {
     tolerancePercentage: number = 1,
     roundTime = false
   ): void {
+    if (actualTime === null || actualTime === undefined) {
+      throw new Error("actualTime cannot be null or undefined");
+    }
+
     let expectedSeconds = typeof expectedTime === "string" ? Time.militaryToSec(expectedTime) : expectedTime;
     let actualSeconds = typeof actualTime === "string" ? Time.militaryToSec(actualTime) : actualTime;
 
