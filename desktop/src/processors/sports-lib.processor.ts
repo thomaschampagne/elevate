@@ -44,7 +44,8 @@ export class SportsLibProcessor {
         altitudeSmooth: true,
         grade: false,
         gradeSmooth: false
-      }
+      },
+      maxActivityDurationDays: 7
     });
 
     const srcFileType = extension(path) as FileType;
