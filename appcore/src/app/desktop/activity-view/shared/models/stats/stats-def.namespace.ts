@@ -166,6 +166,13 @@ export namespace StatsDef {
       );
 
       export const q75 = Stat.create<PaceStats>(PaceSensor.DEFAULT, "75% Quartile", ["stats", "pace", "upperQ"]);
+
+      export const stdDeviation = Stat.create<PaceStats>(
+        SpeedSensor.DEFAULT,
+        "Std Deviation σ",
+        ["stats", "speed", "stdDev"],
+        "Standard deviation"
+      );
     }
 
     export namespace Swimming {

@@ -18,6 +18,7 @@ export class RunningPaceStatsGroup extends StatsGroup {
       StatsDef.Pace.Running.q25,
       StatsDef.Pace.Running.q50,
       StatsDef.Pace.Running.q75,
+      StatsDef.Pace.Running.stdDeviation,
       StatsDef.Scores.Stress.Running.runningStressScore(activity.startTime),
       StatsDef.Scores.Stress.Running.runningStressScorePerHour(activity.startTime)
     ];
