@@ -231,7 +231,7 @@ export namespace StatsDef {
       HeartRateSensor.DEFAULT,
       "Threshold",
       ["stats", "heartRate", "best20min"],
-      "Best heart rate held during 20 min"
+      "Best heart rate held during 20 min (LTHR)"
     )
       .asForceDisplay()
       .setMissingMessage(emptyThreshold20MinMessage);

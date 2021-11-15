@@ -8,7 +8,7 @@ import { MachineService } from "../machine/machine.service";
 import _ from "lodash";
 import { MachineAuthenticatedService } from "../machine/machine-authenticated.service";
 import { RuntimeInfoService } from "../machine/runtime-info.service";
-import { SyncedActivityModel } from "@elevate/shared/models";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
 
 @Injectable()
 export class DesktopInsightsService extends MachineAuthenticatedService {
@@ -30,9 +30,9 @@ export class DesktopInsightsService extends MachineAuthenticatedService {
     super(httpClient, machineService);
   }
 
-  public registerActivities(syncedActivities: SyncedActivityModel[], replaceAll: boolean): void {
+  public registerActivities(activities: Activity[], replaceAll: boolean): void {
     // Skip if no activities to push
-    if (!syncedActivities || syncedActivities.length === 0) {
+    if (!activities || activities.length === 0) {
       return;
     }
 
@@ -41,7 +41,7 @@ export class DesktopInsightsService extends MachineAuthenticatedService {
 
       // Extract insight activities
       const insightActivities: InsightActivity[] = [];
-      syncedActivities.forEach(syncedActivity => {
+      activities.forEach(syncedActivity => {
         insightActivities.push(new InsightActivity(machineId, syncedActivity));
       });
 

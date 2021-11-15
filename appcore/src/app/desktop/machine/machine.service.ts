@@ -7,7 +7,6 @@ import { Observable, Subject } from "rxjs";
 import { RuntimeInfoService } from "./runtime-info.service";
 import { Machine } from "../models/machine";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
-import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import _ from "lodash";
 
@@ -25,7 +24,6 @@ export class MachineService {
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(AthleteService) private readonly athleteService: AthleteService,
-    @Inject(StravaConnectorInfoService) private readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
@@ -83,9 +81,9 @@ export class MachineService {
   }
 
   public checkIn(): void {
-    Promise.all([this.runtimeInfoService.get(), this.stravaConnectorInfoService.fetch(), this.athleteService.fetch()])
+    Promise.all([this.runtimeInfoService.get(), this.athleteService.fetch()])
       .then(results => {
-        const [runtimeInfo, stravaConnectorInfo, athleteModel] = _.cloneDeep(results);
+        const [runtimeInfo, athleteModel] = _.cloneDeep(results);
 
         // Register machine for insights
         const machine = new Machine(
@@ -93,8 +91,7 @@ export class MachineService {
           runtimeInfo.athleteMachineKey,
           this.versionsProvider.getPackageVersion(),
           runtimeInfo,
-          athleteModel,
-          stravaConnectorInfo.stravaAccount
+          athleteModel
         );
 
         return this.httpClient.put<void>(MachineService.MACHINE_CHECKIN_ENDPOINT, machine).toPromise();

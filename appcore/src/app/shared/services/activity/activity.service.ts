@@ -38,11 +38,11 @@ export abstract class ActivityService {
     });
   }
 
-  public findByIds(ids: (number | string)[]): Promise<SyncedActivityModel[]> {
+  public findByIds(ids: (number | string)[]): Promise<Activity[]> {
     return this.activityDao.find({ id: { $in: ids } });
   }
 
-  public findSince(dateTime: number): Promise<SyncedActivityModel[]> {
+  public findSince(dateTime: number): Promise<Activity[]> {
     return this.activityDao.find({ startTimestamp: { $gt: Math.floor(dateTime / 1000) } }); // Divide by 1000 to match the db
   }
 

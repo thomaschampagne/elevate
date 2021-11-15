@@ -163,10 +163,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         const athleteModel: AthleteModel = result[0] as AthleteModel;
         const userSettings: BaseUserSettings = result[1] as BaseUserSettings;
         const connectorSyncFromDateTime: number = result[2] as number;
-        const mostRecentActivity: SyncedActivityModel = result[3] as SyncedActivityModel;
+        const mostRecentActivity: Activity = result[3] as Activity;
 
         // When fast sync keep tracking of the most recent activity before syncing: we need it to get the activity delta added once done.
-        this.previousLastActivityStartTime = mostRecentActivity && fastSync ? mostRecentActivity.start_timestamp : null;
+        this.previousLastActivityStartTime = mostRecentActivity && fastSync ? mostRecentActivity.startTimestamp : null;
 
         // Get timestamp on which we have to sync
         const syncFromDateTime = connectorSyncFromDateTime && fastSync ? connectorSyncFromDateTime : null;

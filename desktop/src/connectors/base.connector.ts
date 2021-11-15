@@ -180,32 +180,34 @@ export abstract class BaseConnector {
 
     this.logger.info(`Uploading file ${pathToFile} for debug`);
 
-    // Construct url
-    const requestUrl = normalizeUrl(`${this.environment.debugActivityFiles.endpoint}/connectors/${connectorSubPath}`);
+    this.appService.getRuntimeInfo().then(runTimeInfo => {
+      // Construct url
+      const requestUrl = normalizeUrl(`${this.environment.debugActivityFiles.endpoint}/connectors/${connectorSubPath}`);
 
-    // Prepare multi-part form
-    const formData = new FormData();
-    formData.append("fileType", fileType);
-    formData.append("machineId", this.appService.getRuntimeInfo().athleteMachineId);
-    formData.append("reason", reason);
-    formData.append("file", fs.createReadStream(pathToFile));
+      // Prepare multi-part form
+      const formData = new FormData();
+      formData.append("fileType", fileType);
+      formData.append("machineId", runTimeInfo.athleteMachineId);
+      formData.append("reason", reason);
+      formData.append("file", fs.createReadStream(pathToFile));
 
-    if (activityId) {
-      formData.append("activityId", activityId);
-    }
+      if (activityId) {
+        formData.append("activityId", activityId);
+      }
 
-    // Push
-    this.httpClient
-      .post(requestUrl, formData, { headers: formData.getHeaders() })
-      .then(() => {
-        this.logger.info(`Uploaded ${pathToFile} file for debug. Reason: ${reason}`);
-      })
-      .catch(err => {
-        this.logger.error(
-          `Unable to upload file ${pathToFile} to ${requestUrl} for debugging purpose: ${err.message}`,
-          err
-        );
-      });
+      // Push
+      this.httpClient
+        .post(requestUrl, formData, { headers: formData.getHeaders() })
+        .then(() => {
+          this.logger.info(`Uploaded ${pathToFile} file for debug. Reason: ${reason}`);
+        })
+        .catch(err => {
+          this.logger.error(
+            `Unable to upload file ${pathToFile} to ${requestUrl} for debugging purpose: ${err.message}`,
+            err
+          );
+        });
+    });
   }
 
   protected uploadActivityInError(

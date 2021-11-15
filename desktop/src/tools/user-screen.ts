@@ -9,6 +9,6 @@ export class UserScreen {
     const primaryDisplay = this.getPrimaryDisplay();
     const width = primaryDisplay.size.width * primaryDisplay.scaleFactor;
     const height = primaryDisplay.size.height * primaryDisplay.scaleFactor;
-    return { width: width, height };
+    return { width: width, height: height };
   }
 }

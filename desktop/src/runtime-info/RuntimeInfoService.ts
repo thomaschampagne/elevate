@@ -1,12 +1,13 @@
 import { inject, singleton } from "tsyringe";
-import { RuntimeInfo } from "@elevate/shared/electron";
 import os from "os";
 import { machineIdSync } from "node-machine-id";
 import { HttpClient } from "../clients/http.client";
 import { Hash } from "../tools/hash";
 import { Logger } from "../logger";
 import { UserScreen } from "../tools/user-screen";
-import { Arch, Platform } from "@elevate/shared/enums";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { Platform } from "@elevate/shared/enums/platform.enum";
+import { Arch } from "@elevate/shared/enums/arch";
 
 @singleton()
 export class RuntimeInfoService {

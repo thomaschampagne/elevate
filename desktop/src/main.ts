@@ -337,7 +337,6 @@ class Main {
   }
 
   private startElevate(): void {
-
     // Print user runtime info in logs
     this.appService.printRuntimeInfo();
 
@@ -398,7 +397,7 @@ class Main {
       width: workAreaSize.width,
       height: workAreaSize.height,
       center: true,
-      frame: this.appService.getPlatform() === Platform.MACOS,
+      frame: platform() === Platform.MACOS,
       trafficLightPosition: { x: 15, y: 10 },
       titleBarStyle: "hidden",
       autoHideMenuBar: true,

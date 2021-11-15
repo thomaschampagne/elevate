@@ -1,4 +1,5 @@
-import { Arch, Platform } from "../enums";
+import { Platform } from "../enums/platform.enum";
+import { Arch } from "../enums/arch";
 
 export class RuntimeInfo {
   constructor(

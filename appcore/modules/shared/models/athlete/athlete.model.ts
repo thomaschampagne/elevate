@@ -5,7 +5,7 @@ import { DatedAthleteSettings } from "./athlete-settings/dated-athlete-settings.
 import { AthleteSettings } from "./athlete-settings/athlete-settings.model";
 import { ElevateSport } from "../../enums/elevate-sport.enum";
 import { AthleteSnapshot } from "./athlete-snapshot.model";
-import { age } from "../../tools";
+import { age } from "@elevate/shared/tools/age";
 
 export class AthleteModel extends AbstractAthlete {
   public static readonly DEFAULT_MODEL: AthleteModel = new AthleteModel(

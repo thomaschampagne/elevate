@@ -15,6 +15,8 @@ import { AppUsageDetails } from "../../shared/models/app-usage-details.model";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
 import { RuntimeInfoService } from "../../desktop/machine/runtime-info.service";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
   selector: "app-advanced-menu",

@@ -10,6 +10,9 @@ import { MachineService } from "../../desktop/machine/machine.service";
 import { AppRoutes } from "../../shared/models/app-routes";
 import { GotItDialogComponent } from "../../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
+import { MatDialog } from "@angular/material/dialog";
+import { Router } from "@angular/router";
+import { sleep } from "@elevate/shared/tools/sleep";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
@@ -20,6 +23,8 @@ export class DesktopLoadService extends AppLoadService {
     @Inject(DesktopMigrationService) private readonly desktopMigrationService: DesktopMigrationService,
     @Inject(FileConnectorInfoService) private readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(MachineService) private readonly machineService: MachineService,
+    @Inject(Router) private readonly router: Router,
+    @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     super(dataStore);
@@ -38,16 +43,10 @@ export class DesktopLoadService extends AppLoadService {
           return this.fsConnectorInfoService.ensureSourceDirectoryCompliance();
         })
         .then(() => {
-          return Promise.resolve(hasBeenUpgradedToVersion);
-        })
-        .then(() => {
           // Check if a version has been installed. If so show release note popup
           if (upgradeResult.toVersion) {
             this.versionsProvider.notifyInstalledVersion(upgradeResult.toVersion);
           }
-
-          // Perform checkin
-          this.machineService.checkIn();
 
           if (upgradeResult.firstInstall) {
             this.dialog
@@ -65,6 +64,9 @@ export class DesktopLoadService extends AppLoadService {
               .toPromise()
               .then(() => this.router.navigate([AppRoutes.athleteSettings]));
           }
+
+          // Perform checkin with 1 sec delay
+          sleep(1000).then(() => this.machineService.checkIn());
         });
     });
   }

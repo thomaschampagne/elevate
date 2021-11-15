@@ -5,6 +5,7 @@ import { Arch } from "@elevate/shared/enums/arch";
 import { Platform } from "@elevate/shared/enums/platform.enum";
 import { inject, singleton } from "tsyringe";
 import { RuntimeInfoService } from "./runtime-info/RuntimeInfoService";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 
 @singleton()
 export class AppService {

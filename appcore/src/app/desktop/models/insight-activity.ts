@@ -1,8 +1,9 @@
-import { AthleteSnapshotModel, SyncedActivityModel } from "@elevate/shared/models";
-import { ConnectorType } from "@elevate/shared/sync";
-import { ElevateSport, GradeProfile } from "@elevate/shared/enums";
 import { NoSqlDoc } from "./nosql-doc";
 import _ from "lodash";
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { Activity, SlopeProfile } from "@elevate/shared/models/sync/activity.model";
 
 export class InsightActivity implements NoSqlDoc {
   public id: string;
@@ -21,7 +22,7 @@ export class InsightActivity implements NoSqlDoc {
   public calories: number;
   public connector: ConnectorType;
   public latLngCenter?: number[];
-  public athleteSnapshot: AthleteSnapshotModel;
+  public athleteSnapshot: AthleteSnapshot;
   public avgPace?: number;
   public rss?: number;
   public sss?: number;
@@ -39,127 +40,127 @@ export class InsightActivity implements NoSqlDoc {
   public normWatts?: number;
   public ftpWatts?: number;
   public pss?: number;
-  public profile?: GradeProfile;
+  public profile?: SlopeProfile;
   public extras: { stravaId: number };
 
-  constructor(machineId: string, syncedActivityModel: SyncedActivityModel) {
-    this.id = syncedActivityModel.hash;
+  constructor(machineId: string, activity: Activity) {
+    this.id = activity.hash;
     this.machineId = machineId;
 
     // Common
-    this.type = syncedActivityModel.type;
-    this.startTime = new Date(syncedActivityModel.start_time);
-    this.endTime = new Date(syncedActivityModel.end_time);
-    this.connector = syncedActivityModel.sourceConnectorType;
-    this.athleteSnapshot = syncedActivityModel.athleteSnapshot;
+    this.type = activity.type;
+    this.startTime = new Date(activity.startTime);
+    this.endTime = new Date(activity.endTime);
+    this.connector = activity.connector;
+    this.athleteSnapshot = activity.athleteSnapshot;
 
-    if (_.isNumber(syncedActivityModel.distance_raw)) {
-      this.distance = syncedActivityModel.distance_raw;
+    if (_.isNumber(activity.stats.distance)) {
+      this.distance = activity.stats.distance;
     }
 
-    if (_.isNumber(syncedActivityModel.moving_time_raw)) {
-      this.movingTime = syncedActivityModel.moving_time_raw;
+    if (_.isNumber(activity.stats.movingTime)) {
+      this.movingTime = activity.stats.movingTime;
     }
 
-    if (_.isNumber(syncedActivityModel.elapsed_time_raw)) {
-      this.elapsedTime = syncedActivityModel.elapsed_time_raw;
+    if (_.isNumber(activity.stats.elapsedTime)) {
+      this.elapsedTime = activity.stats.elapsedTime;
     }
 
-    if (_.isNumber(syncedActivityModel.elevation_gain_raw)) {
-      this.elevationGain = syncedActivityModel.elevation_gain_raw;
+    if (_.isNumber(activity.stats.elevationGain)) {
+      this.elevationGain = activity.stats.elevationGain;
     }
 
-    if (_.isBoolean(syncedActivityModel.hasPowerMeter)) {
-      this.powerMeter = syncedActivityModel.hasPowerMeter;
+    if (_.isBoolean(activity.hasPowerMeter)) {
+      this.powerMeter = activity.hasPowerMeter;
     }
 
-    if (_.isBoolean(syncedActivityModel.trainer)) {
-      this.trainer = syncedActivityModel.trainer;
+    if (_.isBoolean(activity.trainer)) {
+      this.trainer = activity.trainer;
     }
 
-    if (_.isBoolean(syncedActivityModel.commute)) {
-      this.commute = syncedActivityModel.commute;
+    if (_.isBoolean(activity.commute)) {
+      this.commute = activity.commute;
     }
 
-    if (syncedActivityModel.extendedStats && _.isNumber(syncedActivityModel.extendedStats.calories)) {
-      this.calories = syncedActivityModel.extendedStats.calories;
+    if (activity.stats && _.isNumber(activity.stats.calories)) {
+      this.calories = activity.stats.calories;
     }
 
-    if (_.isArray(syncedActivityModel.latLngCenter) && syncedActivityModel.latLngCenter.length > 0) {
-      this.latLngCenter = syncedActivityModel.latLngCenter;
+    if (_.isArray(activity.latLngCenter) && activity.latLngCenter.length > 0) {
+      this.latLngCenter = activity.latLngCenter;
     }
 
-    if (syncedActivityModel.extras && syncedActivityModel.extras.strava_activity_id) {
+    if (activity?.extras?.strava?.activityId) {
       this.extras = {
-        stravaId: syncedActivityModel.extras.strava_activity_id
+        stravaId: activity.extras.strava.activityId
       };
     }
 
-    const extendedStats = syncedActivityModel?.extendedStats;
+    const stats = activity?.stats;
 
-    if (extendedStats) {
+    if (stats) {
       // Movement
-      if (extendedStats.speedData?.genuineAvgSpeed) {
-        this.avgSpeed = _.round(extendedStats?.speedData?.genuineAvgSpeed, 2);
+      if (stats?.speed?.avg) {
+        this.avgSpeed = _.round(stats.speed.avg, 2);
       }
-      if (extendedStats.speedData?.maxSpeed) {
-        this.maxSpeed = _.round(extendedStats?.speedData?.maxSpeed, 2);
+      if (stats?.speed?.max) {
+        this.maxSpeed = _.round(stats.speed.max, 2);
       }
-      if (extendedStats.speedData?.best20min) {
-        this.ftpSpeed = _.round(extendedStats?.speedData?.best20min, 2);
+      if (stats?.speed?.best20min) {
+        this.ftpSpeed = _.round(stats.speed.best20min, 2);
       }
-      if (extendedStats.paceData?.avgPace) {
-        this.avgPace = _.round(extendedStats?.paceData?.avgPace, 2);
+      if (stats?.pace?.avg) {
+        this.avgPace = _.round(stats.pace.avg, 2);
       }
-      if (extendedStats.paceData?.runningStressScore) {
-        this.rss = _.round(extendedStats?.paceData?.runningStressScore, 2);
+      if (stats?.scores?.stress?.rss) {
+        this.rss = _.round(stats.scores.stress?.rss, 2);
       }
-      if (extendedStats.paceData?.swimStressScore) {
-        this.sss = _.round(extendedStats?.paceData?.swimStressScore, 2);
+      if (stats?.scores?.stress?.sss) {
+        this.sss = _.round(stats.scores.stress.sss, 2);
       }
 
       // Cadence
-      if (extendedStats.cadenceData?.averageActiveCadence) {
-        this.avgCad = _.round(extendedStats?.cadenceData?.averageActiveCadence, 2);
+      if (stats?.cadence?.avgActive) {
+        this.avgCad = _.round(stats.cadence.avgActive, 2);
       }
-      if (extendedStats.cadenceData?.maxCadence) {
-        this.maxCad = _.round(extendedStats?.cadenceData?.maxCadence, 2);
+      if (stats?.cadence?.max) {
+        this.maxCad = _.round(stats.cadence.max, 2);
       }
 
       // Heartrate
-      if (extendedStats.heartRateData?.maxHeartRate) {
-        this.maxHr = _.round(extendedStats?.heartRateData?.maxHeartRate, 2);
+      if (stats?.heartRate?.max) {
+        this.maxHr = _.round(stats.heartRate.max, 2);
       }
-      if (extendedStats.heartRateData?.averageHeartRate) {
-        this.avgHr = _.round(extendedStats?.heartRateData?.averageHeartRate, 2);
+      if (stats?.heartRate?.avg) {
+        this.avgHr = _.round(stats.heartRate.avg, 2);
       }
-      if (extendedStats.heartRateData?.HRSS) {
-        this.hrss = _.round(extendedStats?.heartRateData?.HRSS, 2);
+      if (stats?.scores?.stress.hrss) {
+        this.hrss = _.round(stats.scores.stress.hrss, 2);
       }
-      if (extendedStats.heartRateData?.best20min) {
-        this.lthr = _.round(extendedStats?.heartRateData?.best20min, 2);
+      if (stats?.heartRate?.best20min) {
+        this.lthr = _.round(stats.heartRate.best20min, 2);
       }
 
       // Power
-      if (extendedStats.powerData?.avgWatts) {
-        this.avgWatts = _.round(extendedStats?.powerData?.avgWatts, 2);
+      if (stats?.power?.avg) {
+        this.avgWatts = _.round(stats.power.avg, 2);
       }
-      if (extendedStats.powerData?.avgWattsPerKg) {
-        this.avgKgWatts = _.round(extendedStats?.powerData?.avgWattsPerKg, 2);
+      if (stats?.power?.avgKg) {
+        this.avgKgWatts = _.round(stats.power.avgKg, 2);
       }
-      if (extendedStats.powerData?.weightedPower) {
-        this.normWatts = _.round(extendedStats?.powerData?.weightedPower, 2);
+      if (stats?.power?.weighted) {
+        this.normWatts = _.round(stats.power.weighted, 2);
       }
-      if (extendedStats.powerData?.best20min) {
-        this.ftpWatts = _.round(extendedStats?.powerData?.best20min, 2);
+      if (stats?.power?.best20min) {
+        this.ftpWatts = _.round(stats.power.best20min, 2);
       }
-      if (extendedStats.powerData?.powerStressScore) {
-        this.pss = _.round(extendedStats?.powerData?.powerStressScore, 2);
+      if (stats?.scores?.stress?.pss) {
+        this.pss = _.round(stats.scores.stress.pss, 2);
       }
 
       // Others
-      if (extendedStats.gradeData?.gradeProfile) {
-        this.profile = extendedStats?.gradeData?.gradeProfile;
+      if (stats?.grade?.slopeProfile) {
+        this.profile = stats?.grade?.slopeProfile;
       }
     }
   }

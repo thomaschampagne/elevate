@@ -129,7 +129,7 @@ export class DesktopActivityService extends ActivityService {
       })
       .then(() => {
         // Push insight activities and continue without wait for success or error
-        this.find().then(activities => this.insightsService.registerActivities(activities, true));
+        this.find().then(localActivities => this.insightsService.registerActivities(localActivities, true));
         return Promise.resolve();
       })
       .catch(err => {

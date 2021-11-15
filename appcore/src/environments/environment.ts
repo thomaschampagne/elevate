@@ -16,5 +16,5 @@ export const environment = {
   showActivityDebugData: false,
   showRouteUrl: false,
   bypassProfileRestoreChecks: false,
-  backendBaseUrl: "http://localhost:8081"
+  backendBaseUrl: null // Only for desktop app
 };
