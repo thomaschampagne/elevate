@@ -4,12 +4,13 @@ import path from "path";
 import { Arch } from "@elevate/shared/enums/arch";
 import { Platform } from "@elevate/shared/enums/platform.enum";
 import { inject, singleton } from "tsyringe";
-import { RuntimeInfoService } from "./runtime-info/RuntimeInfoService";
+import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
 import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { RuntimeInfoProviderToken } from "./runtime-info/runtime-info.provider";
 
 @singleton()
 export class AppService {
-  constructor(@inject(RuntimeInfoService) private readonly runtimeInfoService: RuntimeInfoService) {}
+  constructor(@inject(RuntimeInfoProviderToken) private readonly runtimeInfoService: RuntimeInfoService) {}
 
   private _isPackaged: boolean;
 

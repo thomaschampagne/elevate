@@ -36,11 +36,16 @@ import { IpcMessage } from "@elevate/shared/electron/ipc-message";
 import { Platform } from "@elevate/shared/enums/platform.enum";
 import { UserScreen } from "./tools/user-screen";
 import { platform } from "os";
+import { RuntimeInfoProviderToken } from "./runtime-info/runtime-info.provider";
+import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 
 @singleton()
-@registry([{ token: EnvironmentToken, useClass: IS_ELECTRON_DEV ? DevEnvironment : ProdEnvironment }])
+@registry([
+  { token: EnvironmentToken, useClass: IS_ELECTRON_DEV ? DevEnvironment : ProdEnvironment },
+  { token: RuntimeInfoProviderToken, useClass: RuntimeInfoService }
+])
 class Main {
   constructor(
     @inject(AppService) private readonly appService: AppService,

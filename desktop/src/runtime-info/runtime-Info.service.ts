@@ -8,9 +8,10 @@ import { UserScreen } from "../tools/user-screen";
 import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 import { Platform } from "@elevate/shared/enums/platform.enum";
 import { Arch } from "@elevate/shared/enums/arch";
+import { RuntimeInfoProvider } from "./runtime-info.provider";
 
 @singleton()
-export class RuntimeInfoService {
+export class RuntimeInfoService implements RuntimeInfoProvider {
   constructor(
     @inject(HttpClient) private readonly httpClient: HttpClient,
     @inject(Logger) private readonly logger: Logger
