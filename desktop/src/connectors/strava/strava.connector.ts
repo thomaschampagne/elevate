@@ -674,7 +674,7 @@ export class StravaConnector extends BaseConnector {
     });
   }
 
-  protected uploadStravaActivityInError(stravaActivity: StravaActivity, streams: Streams, reason: string): void {
+  public uploadStravaActivityInError(stravaActivity: StravaActivity, streams: Streams, reason: string): void {
     // Prepare source stravaActivity and streams
     const payload = {
       activity: stravaActivity,

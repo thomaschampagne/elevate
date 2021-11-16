@@ -128,7 +128,7 @@ describe("StravaConnector", () => {
     // Skip sleep to 0ms
     spyOn(stravaConnector.stravaApiClient, "sleep").and.returnValue(Promise.resolve());
 
-    spyOn(stravaConnector, "uploadToConnectorDebug").and.stub();
+    spyOn(stravaConnector, "uploadStravaActivityInError").and.stub();
 
     // Avoid worker use for activity computing
     computeActivitySpy = spyOn(stravaConnector, "computeActivity").and.callFake(
