@@ -66,7 +66,7 @@ export class DesktopLoadService extends AppLoadService {
           }
 
           // Perform checkin with 1 sec delay
-          sleep(1000).then(() => this.machineService.checkIn());
+          sleep().then(() => this.machineService.checkIn());
         });
     });
   }
