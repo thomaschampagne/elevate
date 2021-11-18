@@ -32,7 +32,8 @@ export class CyclingPowerStatsGroup extends PowerStatsGroup {
       StatsDef.Power.Cycling.intensity(cyclingPowerSensor, activity.startTime),
       StatsDef.Power.q25(cyclingPowerSensor),
       StatsDef.Power.q50(cyclingPowerSensor),
-      StatsDef.Power.q75(cyclingPowerSensor)
+      StatsDef.Power.q75(cyclingPowerSensor),
+      StatsDef.Power.stdDeviation(cyclingPowerSensor)
     ];
   }
 
@@ -61,7 +62,8 @@ export class RunningPowerStatsGroup extends PowerStatsGroup {
       StatsDef.Power.variabilityIndex(runningPowerSensor),
       StatsDef.Power.q25(runningPowerSensor),
       StatsDef.Power.q50(runningPowerSensor),
-      StatsDef.Power.q75(runningPowerSensor)
+      StatsDef.Power.q75(runningPowerSensor),
+      StatsDef.Power.stdDeviation(runningPowerSensor)
     ];
   }
 

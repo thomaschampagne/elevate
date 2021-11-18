@@ -758,7 +758,7 @@ export namespace ActivityColumns {
         ["stats", "cadence", "stdDev"],
         Definition.CADENCE_UNITS,
         "σ Cadence"
-      ).setDescription("Standard Deviation σ"),
+      ).setDescription("Standard Deviation Cadence"),
       new NumberColumn(Category.CADENCE, ["stats", "cadence", "cycles"])
         .setHeader("Cadence Count")
         .setDescription("Total Crank Revolutions for cycling and Steps for running"),
@@ -838,6 +838,9 @@ export namespace ActivityColumns {
         true
       ),
       new NumberColumn(Category.POWER, ["stats", "scores", "stress", "pssPerHour"], null, "Power Stress Score / h"),
+      new NumberColumn(Category.POWER, ["stats", "power", "stdDev"], "w", "σ Power").setDescription(
+        "Standard Deviation Power"
+      ),
       new NumberColumn(Category.POWER, ["stats", "power", "lowQ"], "w", "25% Watts").setDescription(
         "Lower Quartile Watts"
       ),

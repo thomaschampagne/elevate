@@ -351,6 +351,10 @@ export namespace StatsDef {
       return Stat.create<PowerStats>(powerSensor, "75% Quartile", ["stats", "power", "upperQ"]);
     }
 
+    export function stdDeviation(powerSensor: PowerSensor) {
+      return Stat.create<PowerStats>(powerSensor, "Std Deviation σ", ["stats", "power", "stdDev"]);
+    }
+
     export namespace Cycling {
       export function intensity(powerSensor: PowerSensor, activityStartTime: string) {
         return Stat.create<PowerStats>(
