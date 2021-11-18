@@ -42,8 +42,8 @@ export class SportsLibProcessor {
     const parsingOptions = new ActivityParsingOptions({
       streams: {
         altitudeSmooth: true,
-        grade: false,
-        gradeSmooth: false
+        grade: true,
+        gradeSmooth: true
       },
       maxActivityDurationDays: 7
     });

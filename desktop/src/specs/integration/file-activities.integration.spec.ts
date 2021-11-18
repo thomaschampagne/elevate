@@ -159,7 +159,7 @@ describe("File activities integration tests", () => {
           const computedStats = extractComputedActivityStats();
           expect(computedStats.speed.avg).toBeCloseTo(26.4, 1);
           expect(computedStats.distance).toBeCloseTo(141930, 0);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "05:22:05");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "05:22:21");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "06:07:13");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 2052);
           SpecsUtils.assertNearEqual(computedStats.elevation.ascent, 2052);
@@ -204,10 +204,10 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.power.weighted, 197);
           SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.74, 2);
           SpecsUtils.assertNearEqual(computedStats.power.best20min, 265);
-          SpecsUtils.assertNearEqual(computedStats.power.lowQ, 133);
-          SpecsUtils.assertNearEqual(computedStats.power.median, 181);
+          SpecsUtils.assertNearEqual(computedStats.power.lowQ, 131);
+          SpecsUtils.assertNearEqual(computedStats.power.median, 184);
           SpecsUtils.assertNearEqual(computedStats.power.upperQ, 214);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 357);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 375);
           SpecsUtils.assertNearEqual(computedStats.power.intensityFactor, 0.94, 2);
           SpecsUtils.assertNearEqual(computedStats.power.variabilityIndex, 1.19, 2);
 
@@ -229,15 +229,15 @@ describe("File activities integration tests", () => {
 
           // Grade
           SpecsUtils.assertNearEqual(computedStats.grade.avg, 1.6, 1);
-          SpecsUtils.assertNearEqual(computedStats.grade.max, 11.5, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.max, 12.1, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.min, -12);
           SpecsUtils.assertNearEqual(computedStats.grade.lowQ, -1);
           SpecsUtils.assertNearEqual(computedStats.grade.stdDev, 5);
           SpecsUtils.assertNearEqual(computedStats.grade.median, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.upperQ, 4);
-          SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.down, 44258.5, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.down, 44841, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.flat, 59600.5, 1);
-          SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.up, 41957.9, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.up, 41768.5, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.down, 41.9, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.flat, 31.2, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.up, 15.6, 1);
@@ -300,16 +300,16 @@ describe("File activities integration tests", () => {
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
           SpecsUtils.assertNearEqual(computedStats.speed.avg, 27);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "07:39:19");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "07:39:39");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "08:27:17");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 1955);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.up, 71);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.flat, 79);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.down, 89);
-          SpecsUtils.assertNearEqual(computedStats.power.avg, 158);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 337);
+          SpecsUtils.assertNearEqual(computedStats.power.avg, 152);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 345);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.down, 40.4, 1);
-          SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.up, 17.3, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.up, 17, 1);
 
           const activity = extractResultActivity();
           expect(activity.srcStats.elevationGain).toEqual(2068);
@@ -333,7 +333,7 @@ describe("File activities integration tests", () => {
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
           SpecsUtils.assertNearEqual(computedStats.speed.avg, 25);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "02:47:36");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "02:47:38");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "02:54:13");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 669);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 637);
@@ -374,7 +374,7 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          SpecsUtils.assertNearEqual(computedStats.grade.max, 12, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.max, 12.2, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.min, -11);
           done();
         });
@@ -391,7 +391,7 @@ describe("File activities integration tests", () => {
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
           SpecsUtils.assertNearEqual(computedStats.speed.avg, 16);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "01:36:06");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "01:35:35");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "03:05:14");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 315);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 396);
@@ -417,13 +417,13 @@ describe("File activities integration tests", () => {
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
           SpecsUtils.assertNearEqual(computedStats.speed.avg, 24.4);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "05:40:41");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "05:40:38");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "07:04:40");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 1752);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 1770);
-          SpecsUtils.assertNearEqual(computedStats.calories, 3063);
-          SpecsUtils.assertNearEqual(computedStats.power.avg, 150);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 279);
+          SpecsUtils.assertNearEqual(computedStats.calories, 2902);
+          SpecsUtils.assertNearEqual(computedStats.power.avg, 142);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 292);
           SpecsUtils.assertNearEqual(computedStats.cadence.avg, 63);
           SpecsUtils.assertNearEqual(computedStats.cadence.avgActive, 75);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.up, 73);
@@ -453,11 +453,11 @@ describe("File activities integration tests", () => {
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
           SpecsUtils.assertNearEqual(computedStats.speed.avg, 28.6);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "04:17:47");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "04:17:57");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "04:56:21");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 534);
           SpecsUtils.assertNearEqual(computedStats.power.avg, 139);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 289);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 339);
 
           const activity = extractResultActivity();
           expect(activity.srcStats.speed.avg).toBeCloseTo(28.6, 1);
@@ -578,8 +578,8 @@ describe("File activities integration tests", () => {
 
           // Grade
           SpecsUtils.assertNearEqual(computedStats.grade.avg, 1, 1);
-          SpecsUtils.assertNearEqual(computedStats.grade.max, 45.2, 1);
-          SpecsUtils.assertNearEqual(computedStats.grade.min, -33);
+          SpecsUtils.assertNearEqual(computedStats.grade.max, 44.1, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.min, -31);
           SpecsUtils.assertNearEqual(computedStats.grade.lowQ, -3);
           SpecsUtils.assertNearEqual(computedStats.grade.stdDev, 12);
           SpecsUtils.assertNearEqual(computedStats.grade.median, 0);
@@ -588,7 +588,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.flat, 4917, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeDistance.up, 4577, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.down, 9.5, 1);
-          SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.flat, 12.3, 1);
+          SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.flat, 12.1, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.up, 9, 1);
           expect(computedStats.grade.slopeProfile).toEqual(SlopeProfile.HILLY);
 
@@ -618,7 +618,7 @@ describe("File activities integration tests", () => {
 
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 347);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "05:56");
-          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:17");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:16");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "01:19:45");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "01:23:09");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -646,6 +646,7 @@ describe("File activities integration tests", () => {
 
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 363);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "05:38");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:16");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "01:19:46");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "01:23:09");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -664,10 +665,10 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          SpecsUtils.assertEqualTime(computedStats.pace.avg, "07:27");
+          SpecsUtils.assertEqualTime(computedStats.pace.avg, "07:28");
           SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "06:56");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(computedStats.pace.avg);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "02:40:31");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "02:40:32");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "02:41:39");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 524);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 504);
@@ -675,6 +676,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 539);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "07:31");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "06:56");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "02:40:09");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "02:41:39");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -693,10 +695,10 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          SpecsUtils.assertEqualTime(computedStats.pace.avg, "07:48");
-          SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "05:29");
+          SpecsUtils.assertEqualTime(computedStats.pace.avg, "07:49");
+          SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "05:31");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(computedStats.pace.avg);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "04:48:33");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "04:48:43");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "05:13:11");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 2578);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 2578);
@@ -704,6 +706,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 2578);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "07:38");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:41");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "04:39:07");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "05:13:10");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -733,6 +736,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 142);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "04:32");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "04:22");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "48:30");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "48:42");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -751,10 +755,10 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          SpecsUtils.assertEqualTime(computedStats.pace.avg, "06:21");
-          SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "05:38");
+          SpecsUtils.assertEqualTime(computedStats.pace.avg, "06:22");
+          SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "05:39");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(computedStats.pace.avg);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "01:42:01");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "01:42:13");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "01:53:11");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 571);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 582);
@@ -762,6 +766,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 543);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "06:24");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:42");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "01:40:30");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "01:53:11");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -780,8 +785,8 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          expect(computedStats.power.work).toEqual(694);
-          expect(computedStats.cadence.cycles).toEqual(4234);
+          expect(computedStats.power.work).toEqual(695);
+          expect(computedStats.cadence.cycles).toEqual(4235);
 
           const activity = extractResultActivity();
           expect(activity.hasPowerMeter).toBeTruthy();
@@ -850,7 +855,7 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          SpecsUtils.assertEqualTime(SpecsUtils.kmPaceToSwim100mPace(computedStats.pace.avg), "02:27");
+          SpecsUtils.assertEqualTime(SpecsUtils.kmPaceToSwim100mPace(computedStats.pace.avg), "02:28");
           SpecsUtils.assertNearEqualTime(computedStats.movingTime, "01:02:03");
           SpecsUtils.assertNearEqualTime(computedStats.elapsedTime, "01:14:47");
           SpecsUtils.assertNearEqual(computedStats.calories, 850);

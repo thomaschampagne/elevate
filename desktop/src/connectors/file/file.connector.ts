@@ -99,6 +99,7 @@ import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer
 import { GenericSyncEvent } from "@elevate/shared/sync/events/generic-sync.event";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { StartedSyncEvent } from "@elevate/shared/sync/events/started-sync.event";
+import { DataGradeAdjustedPaceAvg } from "@sports-alliance/sports-lib/lib/data/data.grade-adjusted-pace-avg";
 
 // TODO Experimental: Keep @false. Rename files in a directory to $Sports_$Date.$ext (only new file detected at the moment)
 const ALLOW_FILE_RENAME_FIRST_DISCOVER = false;
@@ -754,6 +755,10 @@ export class FileConnector extends BaseConnector {
 
       if (Number.isFinite(source.stats[DataPaceAvg.type])) {
         srcStats.pace.avg = _.round(source.stats[DataPaceAvg.type] as number, ActivityComputer.RND);
+      }
+
+      if (Number.isFinite(source.stats[DataGradeAdjustedPaceAvg.type])) {
+        srcStats.pace.gapAvg = _.round(source.stats[DataGradeAdjustedPaceAvg.type] as number, ActivityComputer.RND);
       }
     };
 

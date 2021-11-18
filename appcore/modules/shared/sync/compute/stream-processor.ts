@@ -82,7 +82,7 @@ export class StreamProcessor {
   private static smoothVelocity(streams: Streams, params: StreamProcessorParams): Streams {
     // We intend to remove velocity spikes for every activities not performed in a swim pool :)
     if (streams.velocity_smooth?.length > 0 && !params.isSwimPool) {
-      streams.velocity_smooth = medianFilter(streams.velocity_smooth);
+      streams.velocity_smooth = meanWindowSmoothing(streams.velocity_smooth);
     }
     return streams;
   }
@@ -141,10 +141,10 @@ export class StreamProcessor {
    */
   private static computeShapeGrade(streams: Streams): Streams {
     const GRADE_CLAMP = 50;
-    const DISTANCE_AHEAD_MIN_METERS = 7;
+    const DISTANCE_AHEAD_MIN_METERS = 10;
     const GRADE_KALMAN_SMOOTHING = {
       R: 0.01, // Grade model is stable
-      Q: 0.6 // Measures grades errors expected
+      Q: 0.5 // Measures grades errors expected
     };
 
     if (streams.distance?.length > 0 && streams.altitude?.length > 0) {
@@ -252,7 +252,7 @@ export class StreamProcessor {
         streams.watts = estimatedPowerStream;
         const EST_POWER_KALMAN_FACTORS = {
           R: 0.1, // Quite reliable model
-          Q: 400 // Measure error can be high (in watts)
+          Q: 200 // Measure errors in watts on estimation
         };
         streams.watts = KalmanFilter.apply(streams.watts, EST_POWER_KALMAN_FACTORS);
       }
