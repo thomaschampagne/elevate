@@ -177,7 +177,7 @@ export class ActivityComputer {
   }
 
   private static heartRateReserveRatio(hr: number, maxHr: number, restHr: number): number {
-    return (hr - restHr) / (maxHr - restHr);
+    return Math.max((hr - restHr) / (maxHr - restHr), 0);
   }
 
   /**
