@@ -173,6 +173,18 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
         label: "24 months"
       },
       {
+        from: moment().startOf("day").subtract(3, "years").toDate(),
+        to: toDate,
+        key: "36_months",
+        label: "36 months"
+      },
+      {
+        from: moment().startOf("day").subtract(4, "years").toDate(),
+        to: toDate,
+        key: "48_months",
+        label: "48 months"
+      },
+      {
         from: minDate,
         to: toDate,
         key: "beginning",

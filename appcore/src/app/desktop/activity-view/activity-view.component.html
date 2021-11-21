@@ -1,4 +1,17 @@
 <mat-card *ngIf="activity">
+  <div class="warn-note flags" *ngIf="displayFlags && activity.flags?.length" fxLayout="row" fxLayoutAlign="space-between center">
+    <div>
+      <strong>Issue(s) have been detected on this activity:</strong>&nbsp;&nbsp;<span *ngFor="let flag of activity.flags;">{{ getFlagReason(flag) }};&nbsp;&nbsp;</span>
+    </div>
+    <div>
+      <button mat-button (click)="onClearFlags()">
+        Clear flags
+      </button>
+      <button mat-icon-button (click)="displayFlags = false">
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+    </div>
+  </div>
   <div fxLayout="row" fxLayoutAlign="space-between start">
     <div>
       <mat-card-title>
@@ -96,14 +109,17 @@
                               [streams]="streams">
     </app-activity-graph-chart>
 
-    <div fxLayoutAlign="center start" fxFill class="display-analysis-graph-button">
+    <div *ngIf="streams && !activity.isSwimPool" fxLayoutAlign="center start" fxFill
+         class="display-analysis-graph-button">
       <button mat-stroked-button color="primary" fxFill (click)="displayGraph = !displayGraph">
-        <mat-icon fontSet="material-icons-outlined" color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
+        <mat-icon fontSet="material-icons-outlined"
+                  color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
         &nbsp;
         <span *ngIf="!displayGraph">Show analysis graph</span>
         <span *ngIf="displayGraph">Hide analysis graph</span>
         &nbsp;
-        <mat-icon fontSet="material-icons-outlined" color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
+        <mat-icon fontSet="material-icons-outlined"
+                  color="primary">{{ displayGraph ? 'expand_less' : 'expand_more' }}</mat-icon>
       </button>
     </div>
 

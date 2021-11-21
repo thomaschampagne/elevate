@@ -70,6 +70,7 @@ export class Upgrade_7_0_0_$13_alpha extends DesktopMigration {
       autoDetectedType: false,
       manual: null,
       notes: null,
+      flags: [],
       extras: {}
     };
 

@@ -339,7 +339,13 @@ export namespace ActivityColumns {
     }
 
     public static boolean(activity: Activity, path: string): string {
-      return _.get(activity as any, path) ? "Yes" : "No";
+      let value: any = _.get(activity as any, path);
+
+      if (_.isArray(value)) {
+        value = !!(value as any[]).length;
+      }
+
+      return value ? "Yes" : "No";
     }
 
     public static field(activity: Activity, path: string): string {
@@ -1111,6 +1117,7 @@ export namespace ActivityColumns {
       new TextColumn(Category.OTHERS, ["device"], Print.field, "Device")
         .setBuildTarget(BuildTarget.DESKTOP)
         .setWidth("150px"),
+      new TextColumn(Category.OTHERS, ["flags"], Print.boolean, "Flagged").setBuildTarget(BuildTarget.DESKTOP),
       new TextColumn(Category.OTHERS, ["connector"], Print.field, "Connector").setBuildTarget(BuildTarget.DESKTOP),
       new TextColumn(Category.OTHERS, ["extras", "file", "type"], Print.field, "File Type").setBuildTarget(
         BuildTarget.DESKTOP

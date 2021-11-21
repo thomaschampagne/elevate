@@ -277,6 +277,12 @@ export namespace StatsDef {
       "heartRate",
       "upperQ"
     ]);
+
+    export const stdDeviation = Stat.create<HeartRateStats>(HeartRateSensor.DEFAULT, "Std Deviation σ", [
+      "stats",
+      "heartRate",
+      "stdDev"
+    ]);
   }
 
   export namespace Power {

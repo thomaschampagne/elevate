@@ -8,7 +8,7 @@ import { FitnessPreparedActivityModel } from "../models/fitness-prepared-activit
 import { HeartRateImpulseMode } from "../enums/heart-rate-impulse-mode.enum";
 import { AppError } from "../../../shared/models/app-error.model";
 import { FitnessTrendConfigModel } from "../models/fitness-trend-config.model";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityFlag } from "@elevate/shared/models/sync/activity.model";
 
 @Injectable()
 export class FitnessService {
@@ -68,14 +68,26 @@ export class FitnessService {
               return;
             }
 
+            // Check for abnormal stress scores
+            const hasAbnormalHrss =
+              activity.flags?.length > 0 && activity.flags.indexOf(ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL) >= 0;
+            const hasAbnormalPss =
+              activity.flags?.length > 0 && activity.flags.indexOf(ActivityFlag.SCORE_PSS_PER_HOUR_ABNORMAL) >= 0;
+            const hasAbnormalRss =
+              activity.flags?.length > 0 && activity.flags.indexOf(ActivityFlag.SCORE_RSS_PER_HOUR_ABNORMAL) >= 0;
+            const hasAbnormalSss =
+              activity.flags?.length > 0 && activity.flags.indexOf(ActivityFlag.SCORE_SSS_PER_HOUR_ABNORMAL) >= 0;
+
             // Check if activity is eligible to fitness computing
             const hasHeartRateData: boolean =
-              (activity.stats?.scores?.stress?.trimp > 0 &&
+              !hasAbnormalHrss &&
+              ((activity.stats?.scores?.stress?.trimp > 0 &&
                 fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.TRIMP) ||
-              (activity.stats?.scores?.stress?.hrss > 0 &&
-                fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS);
+                (activity.stats?.scores?.stress?.hrss > 0 &&
+                  fitnessTrendConfigModel.heartRateImpulseMode === HeartRateImpulseMode.HRSS));
 
             const hasPowerData: boolean =
+              !hasAbnormalPss &&
               Activity.isRide(activity.type, true) &&
               powerMeterEnable &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
@@ -84,6 +96,7 @@ export class FitnessService {
               activity.stats?.scores?.stress?.pss > 0;
 
             const hasRunningData: boolean =
+              !hasAbnormalRss &&
               Activity.isRun(activity.type) &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&
               activity.athleteSnapshot.athleteSettings.runningFtp > 0 &&
@@ -91,6 +104,7 @@ export class FitnessService {
               fitnessTrendConfigModel.allowEstimatedRunningStressScore;
 
             const hasSwimmingData: boolean =
+              !hasAbnormalSss &&
               swimEnable &&
               Activity.isSwim(activity.type) &&
               fitnessTrendConfigModel.heartRateImpulseMode !== HeartRateImpulseMode.TRIMP &&

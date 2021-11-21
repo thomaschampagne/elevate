@@ -106,7 +106,7 @@ export class StreamProcessor {
   private static shapeHeartRate(streams: Streams): Streams {
     if (streams.heartrate?.length > 0) {
       // Clamp as human heart rate
-      const MAX_HUMAN_HR = 225;
+      const MAX_HUMAN_HR = 250;
       streams.heartrate = streams.heartrate.map(hr => _.clamp(hr, MAX_HUMAN_HR));
 
       // Remove spikes

@@ -6,6 +6,7 @@ import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { ActivityEssentials } from "@elevate/shared/models/activity-data/activity-essentials.model";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { ActivityFlagsProcessor } from "../activity-flags/activity-flags.processor";
 
 export class ActivityComputeProcessor {
   public static hash(activity: Partial<Activity>): string {
@@ -90,6 +91,9 @@ export class ActivityComputeProcessor {
 
       // Compute activity hash
       activity.hash = this.hash(activity);
+
+      // Verify activity integrity and assign flags if necessary
+      activity.flags = ActivityFlagsProcessor.verify(activity as Activity, streams);
 
       // Deflate streams if required by client
       const deflatedStreams = deflateStreams && streams ? Streams.deflate(streams) : null;

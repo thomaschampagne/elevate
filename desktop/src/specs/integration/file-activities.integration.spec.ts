@@ -20,7 +20,7 @@ import {
   StreamProcessorParams
 } from "@elevate/shared/sync/compute/stream-processor";
 import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { Activity, ActivityStats, SlopeProfile } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityFlag, ActivityStats, SlopeProfile } from "@elevate/shared/models/sync/activity.model";
 import { Gender } from "@elevate/shared/models/athlete/gender.enum";
 import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
@@ -512,7 +512,7 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          expect(computedStats.power.work).toEqual(831);
+          expect(computedStats.power.work).toEqual(830);
 
           const activity = extractResultActivity();
           expect(activity.hasPowerMeter).toBeTruthy();
@@ -645,7 +645,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
 
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 363);
-          SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "05:38");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "05:41");
           SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:16");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "01:19:46");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "01:23:09");
@@ -952,6 +952,37 @@ describe("File activities integration tests", () => {
             expect(err.code).toEqual(EmptyEventLibError.CODE);
             done();
           });
+        });
+      });
+
+      it("should flag/detect abnormal avg speed", done => {
+        // Given https://connect.garmin.com/modern/activity/7848542087 OR https://www.strava.com/activities/6241774100
+        injectActivityForTesting(`${__dirname}/fixtures/others/flagged-speed.fit`);
+
+        // When
+        const promise = fileConnector.syncFiles(syncEvents$);
+
+        // Then
+        promise.then(() => {
+          const activity = extractResultActivity();
+          expect(_.indexOf(activity.flags, ActivityFlag.SPEED_AVG_ABNORMAL) !== -1).toBeTruthy();
+          done();
+        });
+      });
+
+      it("should flag/detect abnormal heart rate data", done => {
+        // Given https://connect.garmin.com/modern/activity/7848568703 OR https://www.strava.com/activities/6284385914
+        injectActivityForTesting(`${__dirname}/fixtures/others/flagged-hr.fit`);
+
+        // When
+        const promise = fileConnector.syncFiles(syncEvents$);
+
+        // Then
+        promise.then(() => {
+          const activity = extractResultActivity();
+          expect(_.indexOf(activity.flags, ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL) !== -1).toBeTruthy();
+          expect(_.indexOf(activity.flags, ActivityFlag.HR_AVG_ABNORMAL) !== -1).toBeTruthy();
+          done();
         });
       });
     });

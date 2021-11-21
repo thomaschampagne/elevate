@@ -18,7 +18,8 @@ export class HearRateStatsGroup extends StatsGroup {
     StatsDef.HeartRate.maxHrr,
     StatsDef.HeartRate.q25,
     StatsDef.HeartRate.q50,
-    StatsDef.HeartRate.q75
+    StatsDef.HeartRate.q75,
+    StatsDef.HeartRate.stdDeviation
   ];
 
   public static readonly DEFAULT: HearRateStatsGroup = new HearRateStatsGroup(

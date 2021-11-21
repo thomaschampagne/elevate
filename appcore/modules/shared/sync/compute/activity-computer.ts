@@ -995,8 +995,8 @@ export class ActivityComputer {
     // Compute avg moving speed
     const avgMovingSpeed = _.mean(velocityKphArray.filter(speed => this.isMoving(speed)));
 
-    // Then moving time using avg moving speed
-    const movingTime = _.last(distanceArray) / (avgMovingSpeed / Constant.MPS_KPH_FACTOR);
+    // Then compute moving time using avg moving speed. Keep the lower value between moving time & elapsed time (case movingTime > elapsedTime)
+    const movingTime = Math.min(_.last(distanceArray) / (avgMovingSpeed / Constant.MPS_KPH_FACTOR), _.last(timeArray));
 
     // const avgSpeed = _.mean(velocityKphArray);
     const standardDeviation = ActivityComputer.computeStandardDeviation(velocityKphArray, avgSpeed);
@@ -1025,7 +1025,7 @@ export class ActivityComputer {
     const gradeAdjustedPace = (() => {
       if (gradeAdjSpeeds?.length > 0) {
         const gradeAdjustedSpeed = _.mean(gradeAdjSpeeds) * Constant.MPS_KPH_FACTOR;
-        return _.round(Movement.speedToPace(gradeAdjustedSpeed));
+        return _.round(Movement.speedToPace(gradeAdjustedSpeed > avgSpeed ? gradeAdjustedSpeed : avgSpeed));
       }
       return null;
     })();

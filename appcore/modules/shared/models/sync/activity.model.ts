@@ -266,6 +266,31 @@ export interface ActivityExtras {
   file?: { path: string; type: ActivityFileType };
 }
 
+export enum ActivityFlag {
+  // Time
+  MOVING_TIME_GREATER_THAN_ELAPSED,
+
+  // Speed
+  SPEED_AVG_ABNORMAL,
+  SPEED_STD_DEV_ABNORMAL,
+
+  // Pace
+  PACE_AVG_FASTER_THAN_GAP,
+
+  // Power
+  POWER_AVG_KG_ABNORMAL,
+  POWER_THRESHOLD_ABNORMAL,
+
+  // Heart-rate
+  HR_AVG_ABNORMAL,
+
+  // Scores
+  SCORE_HRSS_PER_HOUR_ABNORMAL,
+  SCORE_PSS_PER_HOUR_ABNORMAL,
+  SCORE_RSS_PER_HOUR_ABNORMAL,
+  SCORE_SSS_PER_HOUR_ABNORMAL
+}
+
 export class Activity extends BareActivity {
   /**
    * Athlete snapshot of the activity
@@ -336,6 +361,13 @@ export class Activity extends BareActivity {
    * Tell if sport type has been automatically detected (because source type was unknown/other)
    */
   public autoDetectedType: boolean;
+
+  /**
+   * Has activity issues? And which one?
+   * If value is [], then activity not in error
+   * If value is null, user removed all the flags on it
+   */
+  public flags: ActivityFlag[] | null;
 
   public extras?: ActivityExtras = {};
 

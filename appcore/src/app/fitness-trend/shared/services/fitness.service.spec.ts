@@ -24,7 +24,7 @@ import { MockElevateErrorHandler } from "../../../errors-handler/mock-elevate-er
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityFlag } from "@elevate/shared/models/sync/activity.model";
 import { Gender } from "@elevate/shared/models/athlete/gender.enum";
 
 describe("FitnessService", () => {
@@ -273,6 +273,257 @@ describe("FitnessService", () => {
       );
     });
 
+    it("should prepare fitness activities w/ TOGGLE_POWER_METER=ON & TOGGLE_SWIM=ON & CONFIG_HR_MODE=HRSS & Est.PSS=ON & Est.RSS=ON (w/ abnormal stress scores)", done => {
+      // Given
+      fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
+      fitnessTrendConfigModel.allowEstimatedRunningStressScore = true;
+      const skipActivityTypes = null;
+      const expectedFitnessPreparedActivitiesLength = 14;
+      const expectedTrimpScoredActivitiesLength = 5;
+      const expectedPowerScoredActivitiesLength = 3;
+      const expectedRunningScoredActivitiesLength = 6;
+      const expectedSwimScoredActivitiesLength = 1;
+
+      const activities: Activity[] = [];
+      activities.push(
+        FakeActivityHelper.create(
+          10,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "Power Ride", // PSS Scored
+          ElevateSport.Ride,
+          "2018-01-01",
+          null,
+          250,
+          true
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          20,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Ride", // HR Scored + Est PSS Scored
+          ElevateSport.Ride,
+          "2018-01-15",
+          190,
+          150,
+          false
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          30,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "No sensor Ride", // PSS Scored (estimated)
+          ElevateSport.Ride,
+          "2018-01-30",
+          null,
+          150,
+          false
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          40,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Run", // HR Scored + Est RSS scored
+          ElevateSport.Run,
+          "2018-02-02",
+          175,
+          null,
+          false,
+          [],
+          300
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          50,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Run", // HR Scored + Est RSS scored
+          ElevateSport.Run,
+          "2018-02-03",
+          182,
+          null,
+          false,
+          [],
+          300
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          51,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Run", // HR Bad Scored + Est RSS scored
+          ElevateSport.Run,
+          "2018-02-04",
+          182,
+          null,
+          false,
+          [ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL],
+          300
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          52,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Ride", // HR Scored + PSS Bad Scored
+          ElevateSport.Ride,
+          "2018-02-04",
+          182,
+          666,
+          false,
+          [ActivityFlag.SCORE_PSS_PER_HOUR_ABNORMAL]
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          53,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Run", // HR Scored + Est RSS bad scored
+          ElevateSport.Run,
+          "2018-02-05",
+          182,
+          null,
+          false,
+          [ActivityFlag.SCORE_RSS_PER_HOUR_ABNORMAL],
+          10
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          54,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "Swim", // SSS bad scored
+          ElevateSport.Swim,
+          "2018-02-05",
+          null,
+          null,
+          false,
+          [ActivityFlag.SCORE_SSS_PER_HOUR_ABNORMAL],
+          50
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          55,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "HR Ride", // HR Bad Scored + PSS Bad Scored
+          ElevateSport.Ride,
+          "2018-02-06",
+          182,
+          666,
+          true,
+          [ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL, ActivityFlag.SCORE_PSS_PER_HOUR_ABNORMAL]
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          60,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "No sensor Run", // RSS Scored
+          ElevateSport.Run,
+          "2018-02-08",
+          null,
+          null,
+          false,
+          [],
+          300
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          70,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "No sensor Run 2", // RSS Scored
+          ElevateSport.Run,
+          "2018-02-08",
+          null,
+          null,
+          false,
+          [],
+          300
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          80,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "Swimming", // SSS Scored
+          ElevateSport.Swim,
+          "2018-02-09",
+          null,
+          null,
+          false,
+          [],
+          419
+        )
+      );
+
+      activities.push(
+        FakeActivityHelper.create(
+          90,
+          _ATHLETE_MODEL_SNAPSHOT_,
+          "No sensor VirtualRun 1", // RSS Scored
+          ElevateSport.VirtualRun,
+          "2018-02-10",
+          null,
+          null,
+          false,
+          [],
+          300
+        )
+      );
+
+      const findDaoSpy = spyOn(activityService.activityDao, "find").and.returnValue(Promise.resolve(activities));
+
+      // When
+      const promise: Promise<FitnessPreparedActivityModel[]> = fitnessService.prepare(
+        fitnessTrendConfigModel,
+        powerMeterEnable,
+        swimEnable,
+        skipActivityTypes
+      );
+
+      // Then
+      promise.then(
+        (result: FitnessPreparedActivityModel[]) => {
+          expect(result).not.toBeNull();
+          expect(result.length).toEqual(expectedFitnessPreparedActivitiesLength);
+
+          const heartRateStressScoredActivities = _.filter(result, "heartRateStressScore");
+          const powerScoredActivities = _.filter(result, "powerStressScore");
+          const runningScoredActivities = _.filter(result, "runningStressScore");
+          const swimScored = _.filter(result, "swimStressScore");
+
+          expect(heartRateStressScoredActivities.length).toEqual(expectedTrimpScoredActivitiesLength);
+          expect(powerScoredActivities.length).toEqual(expectedPowerScoredActivitiesLength);
+          expect(runningScoredActivities.length).toEqual(expectedRunningScoredActivitiesLength);
+          expect(swimScored.length).toEqual(expectedSwimScoredActivitiesLength);
+
+          expect(findDaoSpy).toHaveBeenCalledTimes(1);
+
+          done();
+        },
+        error => {
+          expect(error).toBeNull();
+          throw new Error("Whoops! I should not be here!");
+        }
+      );
+    });
+
     it("should prepare fitness activities w/ TOGGLE_POWER_METER=ON & TOGGLE_SWIM=ON & CONFIG_HR_MODE=HRSS & Est.PSS=ON & Est.RSS=ON", done => {
       // Given
       fitnessTrendConfigModel.allowEstimatedPowerStressScore = true;
@@ -334,6 +585,7 @@ describe("FitnessService", () => {
           175,
           null,
           false,
+          [],
           300
         )
       );
@@ -348,6 +600,7 @@ describe("FitnessService", () => {
           182,
           null,
           false,
+          [],
           300
         )
       );
@@ -362,6 +615,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -376,6 +630,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -390,6 +645,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -404,6 +660,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -506,6 +763,7 @@ describe("FitnessService", () => {
           175,
           null,
           false,
+          [],
           300
         )
       );
@@ -520,6 +778,7 @@ describe("FitnessService", () => {
           182,
           null,
           false,
+          [],
           300
         )
       );
@@ -534,6 +793,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -548,6 +808,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -562,6 +823,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -665,6 +927,7 @@ describe("FitnessService", () => {
           175,
           null,
           false,
+          [],
           300
         )
       );
@@ -679,6 +942,7 @@ describe("FitnessService", () => {
           182,
           null,
           false,
+          [],
           300
         )
       );
@@ -693,6 +957,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -707,6 +972,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -721,6 +987,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -824,6 +1091,7 @@ describe("FitnessService", () => {
           175,
           null,
           false,
+          [],
           300
         )
       );
@@ -838,6 +1106,7 @@ describe("FitnessService", () => {
           182,
           null,
           false,
+          [],
           300
         )
       );
@@ -852,6 +1121,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -866,6 +1136,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -880,6 +1151,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -984,6 +1256,7 @@ describe("FitnessService", () => {
           175,
           null,
           false,
+          [],
           300
         )
       );
@@ -998,6 +1271,7 @@ describe("FitnessService", () => {
           182,
           null,
           false,
+          [],
           300
         )
       );
@@ -1012,6 +1286,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1026,6 +1301,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1040,6 +1316,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -1119,6 +1396,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1133,6 +1411,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1147,6 +1426,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -1372,6 +1652,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1386,6 +1667,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1400,6 +1682,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -1475,6 +1758,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1489,6 +1773,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1503,6 +1788,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -1619,6 +1905,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1633,6 +1920,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -1647,6 +1935,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -1865,6 +2154,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -1879,6 +2169,7 @@ describe("FitnessService", () => {
         null,
         null,
         false,
+        [],
         419
       );
       activity05.athleteSnapshot.athleteSettings.swimFtp = null;
@@ -1909,6 +2200,7 @@ describe("FitnessService", () => {
           null, // => NO HRSS
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 100 (priority)
@@ -1923,6 +2215,7 @@ describe("FitnessService", () => {
         null, // => NO HRSS
         null,
         false,
+        [],
         300
       ); // => RSS: 100 (priority)
       activity08.athleteSnapshot.athleteSettings.runningFtp = null;
@@ -2058,6 +2351,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -2072,6 +2366,7 @@ describe("FitnessService", () => {
         null,
         null,
         false,
+        [],
         419
       );
       activity05.athleteSnapshot.athleteSettings.swimFtp = null;
@@ -2102,6 +2397,7 @@ describe("FitnessService", () => {
           null, // => NO HRSS
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 100 (priority)
@@ -2116,6 +2412,7 @@ describe("FitnessService", () => {
         null, // => NO HRSS
         null,
         false,
+        [],
         300
       ); // => RSS: 100 (priority)
       activity08.athleteSnapshot.athleteSettings.runningFtp = null;
@@ -2995,6 +3292,7 @@ describe("FitnessService", () => {
           190,
           null,
           false,
+          [],
           300
         )
       );
@@ -3009,6 +3307,7 @@ describe("FitnessService", () => {
           190,
           null,
           false,
+          [],
           300
         )
       );
@@ -3023,6 +3322,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -3037,6 +3337,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -3051,6 +3352,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           419
         )
       );
@@ -3066,6 +3368,7 @@ describe("FitnessService", () => {
           190, // => HRSS: 190 (priority)
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 100
@@ -3094,6 +3397,7 @@ describe("FitnessService", () => {
           190, // => HRSS: 190 (priority)
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 100
@@ -3108,6 +3412,7 @@ describe("FitnessService", () => {
           null, // => NO HRSS
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 300 (priority)
@@ -3149,6 +3454,7 @@ describe("FitnessService", () => {
           190, // => HRSS: 190 (priority)
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 300
@@ -3162,6 +3468,7 @@ describe("FitnessService", () => {
         null,
         null,
         false,
+        [],
         419
       );
       swimActivity.stats.distance = 3000; // SSS => 419 (priority)
@@ -3451,6 +3758,7 @@ describe("FitnessService", () => {
           190,
           null,
           false,
+          [],
           300
         )
       );
@@ -3465,6 +3773,7 @@ describe("FitnessService", () => {
           190,
           null,
           false,
+          [],
           300
         )
       );
@@ -3479,6 +3788,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -3493,6 +3803,7 @@ describe("FitnessService", () => {
           null,
           null,
           false,
+          [],
           300
         )
       );
@@ -3506,6 +3817,7 @@ describe("FitnessService", () => {
         null,
         null,
         false,
+        [],
         419
       );
       swimActivity1.stats.distance = 3000; // SSS => 419 (priority)
@@ -3522,6 +3834,7 @@ describe("FitnessService", () => {
           190, // => HRSS: 190 (priority)
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 100
@@ -3550,6 +3863,7 @@ describe("FitnessService", () => {
           190, // => HRSS: 190 (priority)
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 100
@@ -3564,6 +3878,7 @@ describe("FitnessService", () => {
           null, // => NO HRSS
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 300 (priority)
@@ -3605,6 +3920,7 @@ describe("FitnessService", () => {
           190, // => HRSS: 190 (priority)
           null,
           false,
+          [],
           300
         )
       ); // => RSS: 300
@@ -3618,6 +3934,7 @@ describe("FitnessService", () => {
         null,
         null,
         false,
+        [],
         419
       );
       swimActivity2.stats.distance = 3000; // SSS => 419 (priority)

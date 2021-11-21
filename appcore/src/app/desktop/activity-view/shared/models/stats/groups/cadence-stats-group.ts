@@ -21,11 +21,11 @@ export class CyclingCadenceStatsGroup extends CadenceStatsGroup {
     StatsDef.Cadence.Cycling.avgFlat,
     StatsDef.Cadence.Cycling.avgDown,
     StatsDef.Cadence.Cycling.totalOccurrences,
-    StatsDef.Cadence.Cycling.stdDeviation,
+    StatsDef.Cadence.Cycling.avgDistPerRev,
     StatsDef.Cadence.Cycling.q25,
     StatsDef.Cadence.Cycling.q50,
     StatsDef.Cadence.Cycling.q75,
-    StatsDef.Cadence.Cycling.avgDistPerRev
+    StatsDef.Cadence.Cycling.stdDeviation
   ];
 
   public static readonly DEFAULT: CyclingCadenceStatsGroup = new CyclingCadenceStatsGroup(

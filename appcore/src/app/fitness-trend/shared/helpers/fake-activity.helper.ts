@@ -2,7 +2,7 @@ import moment from "moment";
 import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
-import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityFlag, ActivityStats } from "@elevate/shared/models/sync/activity.model";
 
 export class FakeActivityHelper {
   public static create(
@@ -14,6 +14,7 @@ export class FakeActivityHelper {
     avgHr: number,
     avgWatts: number,
     hasPowerMeter: boolean,
+    flags: ActivityFlag[] = [],
     avgPace?: number
   ): Activity {
     const fakeActivity = new Activity();
@@ -23,6 +24,7 @@ export class FakeActivityHelper {
     fakeActivity.type = type;
     fakeActivity.startTime = moment(dateStr, "YYYY-MM-DD").toISOString();
     fakeActivity.hasPowerMeter = _.isBoolean(hasPowerMeter) ? hasPowerMeter : true;
+    fakeActivity.flags = flags;
 
     fakeActivity.stats = {
       distance: 30000,

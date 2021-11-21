@@ -28,11 +28,12 @@ import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.en
 import { WarningException } from "@elevate/shared/exceptions/warning.exception";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { ProcessStreamMode } from "@elevate/shared/sync/compute/stream-processor";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityFlag } from "@elevate/shared/models/sync/activity.model";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { Time } from "@elevate/shared/tools/time";
+import { ActivityFlagsProcessor } from "../../../../../desktop/src/processors/activity-flags/activity-flags.processor";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
@@ -62,6 +63,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
     this.userSettings = null;
     this.hasMapData = false;
     this.displayGraph = false;
+    this.displayFlags = true;
   }
 
   private static readonly DEVICE_WATCH_SPORTS = [
@@ -87,6 +89,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
   public hasMapData: boolean;
   public deviceIcon: string;
   public displayGraph: boolean;
+  public displayFlags: boolean;
 
   /**
    * Displays debug "on map statistics" activity data on graph bound selection
@@ -145,8 +148,8 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
 
   public onEditActivity(): void {
     const dialogRef = this.dialog.open(ActivityEditDialogComponent, {
-      minWidth: ConfirmDialogComponent.MIN_WIDTH,
-      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      minWidth: ActivityEditDialogComponent.MIN_WIDTH,
+      maxWidth: ActivityEditDialogComponent.MAX_WIDTH,
       data: this.activity.id
     });
 
@@ -158,6 +161,36 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
       }
       afterClosedSubscription.unsubscribe();
     });
+  }
+
+  public onClearFlags(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: ConfirmDialogComponent.MIN_WIDTH,
+      maxWidth: ConfirmDialogComponent.MAX_WIDTH,
+      data: {
+        title: "Clear activity flags",
+        content:
+          "This will remove issues on this activity forever.</br></br>Removing issues may introduce non legit behavior into Elevate features " +
+          "(e.g. unexpected fitness trend bumps if issues are related to a stress score).</br></br>To get issues back, you need to remove activity " +
+          "and sync it again</br></br>Are you sure to perform this action?"
+      } as ConfirmDialogDataModel
+    });
+
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+      if (confirm) {
+        this.activity.flags = null;
+        this.activityService.update(this.activity).then(() => {
+          this.reloadActivityView().then(() => {
+            this.snackBar.open("Issues have been removed.", "Ok", { duration: 5000 });
+          });
+          afterClosedSubscription.unsubscribe();
+        });
+      }
+    });
+  }
+
+  public getFlagReason(flag: ActivityFlag): string {
+    return ActivityFlagsProcessor.REASONS_MAP.get(flag) || null;
   }
 
   public formatAthleteSnapshot(activity: Activity, systemUnit: MeasureSystem): string {
