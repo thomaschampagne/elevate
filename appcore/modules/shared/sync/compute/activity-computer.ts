@@ -86,7 +86,6 @@ export class ActivityComputer {
   private static readonly CYCLING_THRESHOLD_KPH: number = 4; // Kph
   private static readonly RUNNING_THRESHOLD_KPH: number = 1.5; // Kph
   private static readonly SWIMMING_THRESHOLD_KPH: number = 0.5; // Kph
-  // private static readonly DISTANCE_SAMPLES_BUFFER: number = 5;
 
   private static readonly CYCLING_CADENCE_THRESHOLD: number = 30; // revolutions per min
   private static readonly DEFAULT_CADENCE_THRESHOLD: number = 1;
@@ -1001,7 +1000,8 @@ export class ActivityComputer {
     // const avgSpeed = _.mean(velocityKphArray);
     const standardDeviation = ActivityComputer.computeStandardDeviation(velocityKphArray, avgSpeed);
     const [q25, q50, q75] = ActivityComputer.quartiles(velocityKphArray);
-    const best20min = ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR;
+    const best20min =
+      ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR || null;
 
     // Prepare stats results
     const speedStats: SpeedStats = {
@@ -1081,7 +1081,7 @@ export class ActivityComputer {
     const standardDeviation = ActivityComputer.computeStandardDeviation(powerArray, avgWatts);
     const [q25, q50, q75]: number[] = ActivityComputer.quartiles(powerArray);
 
-    const best20min = ActivityComputer.computeSplit(powerArray, timeArray, 60 * 20);
+    const best20min = ActivityComputer.computeSplit(powerArray, timeArray, 60 * 20) || null;
 
     return {
       avg: _.round(avgWatts, ActivityComputer.RND),
@@ -1151,8 +1151,8 @@ export class ActivityComputer {
 
     const [q25, q50, q75]: number[] = ActivityComputer.quartiles(heartRateArray);
     const standardDeviation = ActivityComputer.computeStandardDeviation(heartRateArray, avgHeartRate);
-    const best20min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 20);
-    const best60min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 60);
+    const best20min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 20) || null;
+    const best60min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 60) || null;
 
     return {
       avg: _.round(avgHeartRate),
@@ -1309,8 +1309,8 @@ export class ActivityComputer {
     }
 
     const totalTime: number = _.last(timeArray);
-    const minGrade = _.min(gradeArray);
-    const maxGrade = _.max(gradeArray);
+    const minGrade: number = _.min(gradeArray);
+    const maxGrade: number = _.max(gradeArray);
     const avgGrade: number = _.mean(gradeArray);
 
     const [q25, q50, q75] = ActivityComputer.quartiles(gradeArray);
