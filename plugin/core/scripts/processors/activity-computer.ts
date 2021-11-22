@@ -449,7 +449,7 @@ export class ActivityComputer {
 	protected runningPerformanceIndex(athleteSnapshot: AthleteSnapshotModel, activitySourceData: ActivitySourceDataModel, elevationData: ElevationDataModel, heartRateData: HeartRateDataModel): number {
 		const averageHeartRate: number = heartRateData.averageHeartRate;
 		const userMaxHr: number = athleteSnapshot.athleteSettings.maxHr;
-		const runIntensity: number = Math.round((averageHeartRate / userMaxHr * 1.45 - 0.3) * 100) / 100; // Calculate the run intensity; this is rounded to 2 decimal points
+		const runIntensity: number = Math.min(Math.round((averageHeartRate / userMaxHr * 1.45 - 0.3) * 100) / 100, 1); // Calculate the run intensity; this is rounded to 2 decimal points
 		const gradeAdjustedDistance = activitySourceData.distance + (elevationData.accumulatedElevationAscent * 6) - (elevationData.accumulatedElevationDescent * 4);
 		const distanceRate: number = (213.9 / (activitySourceData.movingTime / 60) * ((gradeAdjustedDistance / 1000) ** 1.06)) + 3.5;
 		return distanceRate / runIntensity;
