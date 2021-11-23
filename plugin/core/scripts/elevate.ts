@@ -1201,7 +1201,7 @@ export class Elevate {
 			activityML.baryCenter = (streams.latlng && streams.latlng.length > 0) ? geoBaryCenter(streams.latlng) : null;
 		}
 
-		const endPoint = `https://elevate-ml-data.thomaschampagne.duckdns.org/activities`;
+		const endPoint = `https://peak-dev-elevate.koyeb.app/ml-data/activities`;
 
 		const options = {
 			method: "POST",
