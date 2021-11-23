@@ -50,7 +50,7 @@ export class MenuModifier extends AbstractModifier {
     const styleSideLeft = "border-top: 1px solid #DDD; width: 50%;";
 
     html +=
-      "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='selection' " +
+      "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='nav-item drop-down-menu accessible-nav-dropdown' " +
       menuStyle +
       "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" +
       menuIcon +
