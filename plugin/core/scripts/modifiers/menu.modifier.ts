@@ -41,7 +41,7 @@ export class MenuModifier extends AbstractModifier {
 		const styleSideRight = "display: inline; float: right; border-top: 1px solid #DDD; border-left: 1px solid #DDD; width: 50%;";
 		const styleSideLeft = "border-top: 1px solid #DDD; width: 50%;";
 
-		html += "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='selection' " + menuStyle + "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" + menuIcon + "'/></a>";
+		html += "<a title='Click Left > \"My Activity Feed\", click right > \"My Activities\"' href='https://www.strava.com/dashboard?feed_type=my_activity' class='nav-item drop-down-menu accessible-nav-dropdown' " + menuStyle + "><img style='vertical-align:middle' id='drop-down-menu_img' oncontextmenu='return false;' src='" + menuIcon + "'/></a>";
 		html += "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";
 		html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
 		html += "<li><a target='_blank' href='" + this.appResources.settingsLink + "#/newApp2021Update'><img style='vertical-align:middle' src='" + this.appResources.aboutIcon + "'/>&nbsp;&nbsp;&nbsp;<strong>New App 2021 Update</strong></a></li>";
