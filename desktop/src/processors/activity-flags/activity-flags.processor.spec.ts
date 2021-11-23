@@ -226,5 +226,20 @@ describe("ActivityFlagsProcessor", () => {
       expect(_.indexOf(flags, ActivityFlag.SPEED_STD_DEV_ABNORMAL) !== -1).toBeTruthy();
       done();
     });
+
+    it("should return flag when speed std dev is inappropriate (other)", done => {
+      // Given
+      const streams = new Streams();
+      const activity = new Activity();
+      activity.type = ElevateSport.Other;
+      streams.velocity_smooth = [10, 65, 10, 65, 10, 65, 10].map(v => v / Constant.MPS_KPH_FACTOR); // std dev: ~27 kph
+
+      // When
+      const flags: ActivityFlag[] = ActivityFlagsProcessor.verify(activity, streams);
+
+      // Then
+      expect(_.indexOf(flags, ActivityFlag.SPEED_STD_DEV_ABNORMAL) !== -1).toBeTruthy();
+      done();
+    });
   });
 });

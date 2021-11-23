@@ -40,7 +40,8 @@ export class ActivityFlagsProcessor {
     [ElevateSport.Swim, 8.5] // Kph
   ]);
 
-  public static readonly SPEED_STREAM_STD_DEV_THRESHOLD_MAP = new Map<ElevateSport, number>([
+  public static readonly SPEED_STREAM_STD_DEV_THRESHOLD_DEFAULT = 25 / Constant.MPS_KPH_FACTOR; // Kph to mps
+  static readonly SPEED_STREAM_STD_DEV_THRESHOLD_MAP = new Map<ElevateSport, number>([
     [ElevateSport.Ride, 27 / Constant.MPS_KPH_FACTOR], // Kph to mps
     [ElevateSport.VirtualRide, 27 / Constant.MPS_KPH_FACTOR], // Kph to mps
     [ElevateSport.Run, 15 / Constant.MPS_KPH_FACTOR], // Kph to mps
@@ -74,8 +75,9 @@ export class ActivityFlagsProcessor {
   public static verifyStreams(sport: ElevateSport, streams: Streams): ActivityFlag[] {
     const flags: ActivityFlag[] = [];
 
-    const stdDevSpeedThreshold = this.SPEED_STREAM_STD_DEV_THRESHOLD_MAP.get(sport) || null;
-    if (Number.isFinite(stdDevSpeedThreshold) && streams?.velocity_smooth?.length) {
+    const stdDevSpeedThreshold =
+      this.SPEED_STREAM_STD_DEV_THRESHOLD_MAP.get(sport) || this.SPEED_STREAM_STD_DEV_THRESHOLD_DEFAULT;
+    if (streams?.velocity_smooth?.length) {
       const standardDeviation = ActivityComputer.computeStandardDeviation(
         streams.velocity_smooth,
         _.mean(streams.velocity_smooth)
