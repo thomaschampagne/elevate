@@ -2,6 +2,20 @@ import { ReleaseNoteModel } from "../models";
 
 export let releaseNotesData: ReleaseNoteModel[] = [
 	{
+		version: "6.17.0",
+		date: "2021-11-23",
+		message: "Improved running index accuracy, fixed burger menu visual glitch, and patching vulnerabilities fixes",
+		hotFixes: [],
+		features: [
+			"Improved running index accuracy"
+		],
+		isPatch: false,
+		fixes: [
+			"Fixed burger menu visual glitch appeared after recent strava site update",
+			"Updating project dependencies with vulnerabilities fixes."
+		]
+	},
+	{
 		version: "6.16.6",
 		date: "2021-06-02",
 		message: "Updating project dependencies with vulnerabilities fixes.",
