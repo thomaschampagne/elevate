@@ -42,6 +42,7 @@ export class InsightActivity implements NoSqlDoc {
   public pss?: number;
   public profile?: SlopeProfile;
   public device?: string;
+  public flagged: boolean;
   public extras: { stravaId: number };
 
   constructor(machineId: string, activity: Activity) {
@@ -90,6 +91,8 @@ export class InsightActivity implements NoSqlDoc {
     if (_.isArray(activity.latLngCenter) && activity.latLngCenter.length > 0) {
       this.latLngCenter = activity.latLngCenter;
     }
+
+    this.flagged = activity.flags?.length > 0;
 
     if (activity?.device) {
       this.device = activity?.device;
