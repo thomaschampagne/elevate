@@ -12,6 +12,7 @@ export class ElevationSensor extends Sensor {
   public streamKey: keyof Streams = "altitude";
   public name = ElevationSensor.NAME;
   public color = "#29b13d";
+  public areaColor = "#29B13D0C";
   public defaultRoundDecimals = 0;
   public displayUnit: { short: string; full: string } | Map<MeasureSystem, { short: string; full: string }> = new Map<
     MeasureSystem,

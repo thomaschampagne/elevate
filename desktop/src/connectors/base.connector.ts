@@ -134,7 +134,7 @@ export abstract class BaseConnector {
 
     // If swim activity and no position data, it's considered as a pool swim activity
     if (Activity.isSwim(activity.type)) {
-      activity.isSwimPool = !streams?.latlng?.length;
+      activity.isSwimPool = Activity.isSwimPool(activity.type, streams);
     }
 
     return activity;

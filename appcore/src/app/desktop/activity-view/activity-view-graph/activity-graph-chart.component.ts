@@ -179,10 +179,10 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     // For every available sensors on current activity
     for (const [index, sensor] of this.availableSensors.entries()) {
       // create trace on scatter chart
-      const addedTrace = this.chart.addTrace(index + 1, sensor.name, {
+      const addedTrace = this.chart.addTrace(index + 1, sensor, {
         color: sensor.color,
-        shape: "linear",
-        width: 1,
+        shape: "spline",
+        width: 1.25,
         simplify: true
       });
 

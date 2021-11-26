@@ -28,12 +28,11 @@ import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.en
 import { WarningException } from "@elevate/shared/exceptions/warning.exception";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { ProcessStreamMode } from "@elevate/shared/sync/compute/stream-processor";
-import { Activity, ActivityFlag } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ACTIVITY_FLAGS_DESC_MAP, ActivityFlag } from "@elevate/shared/models/sync/activity.model";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { Time } from "@elevate/shared/tools/time";
-import { ActivityFlagsProcessor } from "../../../../../desktop/src/processors/activity-flags/activity-flags.processor";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
@@ -170,9 +169,8 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
       data: {
         title: "Clear activity flags",
         content:
-          "This will remove issues on this activity forever.</br></br>Removing issues may introduce non legit behavior into Elevate features " +
-          "(e.g. unexpected fitness trend bumps if issues are related to a stress score).</br></br>To get issues back, you need to remove activity " +
-          "and sync it again</br></br>Are you sure to perform this action?"
+          "This will remove flagged issues on this activity <strong>forever</strong>. Removing issues may introduce unexpected behavior into Elevate features " +
+          "(e.g. fitness trend bumps when an issue is related to a stress score).</br></br>To get issues back, remove activity and sync it again.</br></br>Are you sure to perform this action?</br></br>"
       } as ConfirmDialogDataModel
     });
 
@@ -190,7 +188,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
   }
 
   public getFlagReason(flag: ActivityFlag): string {
-    return ActivityFlagsProcessor.REASONS_MAP.get(flag) || null;
+    return ACTIVITY_FLAGS_DESC_MAP.get(flag) || null;
   }
 
   public formatAthleteSnapshot(activity: Activity, systemUnit: MeasureSystem): string {

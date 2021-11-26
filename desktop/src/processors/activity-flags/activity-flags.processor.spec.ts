@@ -181,7 +181,7 @@ describe("ActivityFlagsProcessor", () => {
     });
   });
 
-  describe("Streams", () => {
+  describe("Raw streams", () => {
     it("should return flag when speed std dev is inappropriate (cycling)", done => {
       // Given
       const streams = new Streams();

@@ -11,6 +11,7 @@ export abstract class Sensor extends BaseSensor implements PlottableSensor {
   public abstract peaksPath: [keyof ActivityStats, keyof Peaks];
   public abstract zoneType: ZoneType;
   public abstract color: string;
+  public areaColor?: string;
 
   public fromStreamConvert(streamValue: number, measureSystem: MeasureSystem, lastConvertedValue?: number): number {
     return streamValue;

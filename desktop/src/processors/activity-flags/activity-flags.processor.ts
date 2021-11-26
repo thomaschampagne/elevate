@@ -2,35 +2,10 @@ import { Activity, ActivityFlag, ActivityStats } from "@elevate/shared/models/sy
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
-import { Constant } from "@elevate/shared/constants/constant";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
+import { Constant } from "@elevate/shared/constants/constant";
 
 export class ActivityFlagsProcessor {
-  public static readonly REASONS_MAP = new Map<ActivityFlag, string>([
-    // Time
-    [ActivityFlag.MOVING_TIME_GREATER_THAN_ELAPSED, "Moving time greater than elapsed time"],
-
-    // Speed
-    [ActivityFlag.SPEED_AVG_ABNORMAL, "Abnormal average speed"],
-    [ActivityFlag.SPEED_STD_DEV_ABNORMAL, "Abnormal speed behavior"],
-
-    // Pace
-    [ActivityFlag.PACE_AVG_FASTER_THAN_GAP, "average pace is faster than grade adjusted pace"],
-
-    // Power
-    [ActivityFlag.POWER_AVG_KG_ABNORMAL, "Abnormal average watts/kg"],
-    [ActivityFlag.POWER_THRESHOLD_ABNORMAL, "Abnormal power behavior"],
-
-    // Heart-rate
-    [ActivityFlag.HR_AVG_ABNORMAL, "Abnormal average heart rate"],
-
-    // Scores
-    [ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL, "Abnormal Heart Rate Stress Score (HRSS)"],
-    [ActivityFlag.SCORE_PSS_PER_HOUR_ABNORMAL, "Abnormal Power Stress Score (PSS)"],
-    [ActivityFlag.SCORE_RSS_PER_HOUR_ABNORMAL, "Abnormal Running Stress Score (RSS)"],
-    [ActivityFlag.SCORE_SSS_PER_HOUR_ABNORMAL, "Abnormal Swimming Stress Score (SSS)"]
-  ]);
-
   // Speed
   private static readonly SPEED_AVG_THRESHOLD_MAP = new Map<ElevateSport, number>([
     [ElevateSport.Ride, 60], // Kph
@@ -69,10 +44,13 @@ export class ActivityFlagsProcessor {
       return null;
     }
 
-    return _.union(this.verifyStreams(activity.type, streams), this.verifyStats(activity));
+    return _.union(this.verifyRawStreams(activity.type, streams), this.verifyStats(activity));
   }
 
-  public static verifyStreams(sport: ElevateSport, streams: Streams): ActivityFlag[] {
+  /**
+   * Verify streams consistency independently from stream processor
+   */
+  public static verifyRawStreams(sport: ElevateSport, streams: Streams): ActivityFlag[] {
     const flags: ActivityFlag[] = [];
 
     const stdDevSpeedThreshold =

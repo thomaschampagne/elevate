@@ -2,6 +2,7 @@ import { Config, Layout, PlotData, PlotMarker, PlotType, ScatterLine } from "plo
 import _ from "lodash";
 import { Theme } from "../../../../shared/enums/theme.enum";
 import { Identifier } from "@elevate/shared/tools/identifier";
+import { Sensor } from "./sensors/sensor.model";
 
 interface ChartThemeStyle {
   textColor: string;
@@ -88,13 +89,17 @@ export class ScatterChart extends PlotChart {
     super(layout, config);
   }
 
-  public addTrace(traceIndex: number, name: string, lineProperty: Partial<ScatterLine>): Partial<PlotData> {
+  public addTrace(traceIndex: number, sensor: Sensor, lineProperty: Partial<ScatterLine>): Partial<PlotData> {
     // Create trace data
-    const traceData = super.addPlotData("scatter", name);
+    const traceData = super.addPlotData("scatter", sensor.name);
 
     // Add trace specifics
     traceData.yaxis = `y${traceIndex}`;
     traceData.line = lineProperty;
+    if (sensor.areaColor) {
+      traceData.fill = "tozeroy";
+      traceData.fillcolor = sensor.areaColor;
+    }
 
     // Return as pointer for external specific config
     return traceData;
@@ -137,8 +142,7 @@ export class LogChart extends ScatterChart {
   };
 
   constructor(layout: Partial<Layout> = {}, config: Partial<Config> = {}) {
-    layout = _.merge(_.cloneDeep(LogChart.CHART_LAYOUT_SPECIFICS), layout);
-    super(layout, config);
+    super(_.merge(_.cloneDeep(LogChart.CHART_LAYOUT_SPECIFICS), layout), config);
   }
 
   protected getThemedLayout(chartThemeStyle: ChartThemeStyle): Partial<Layout> {
@@ -165,8 +169,7 @@ export class BarsChart extends PlotChart {
   };
 
   constructor(layout: Partial<Layout> = {}, config: Partial<Config> = {}) {
-    layout = _.merge(_.cloneDeep(BarsChart.CHART_LAYOUT_SPECIFICS), layout);
-    super(layout, config);
+    super(_.merge(_.cloneDeep(BarsChart.CHART_LAYOUT_SPECIFICS), layout), config);
   }
 
   public addBarsData(name: string, marker: Partial<PlotMarker>): Partial<PlotData> {

@@ -80,7 +80,7 @@ export class StreamProcessor {
    * Remove some unusual spikes
    */
   private static smoothVelocity(streams: Streams, params: StreamProcessorParams): Streams {
-    // We intend to remove velocity spikes for every activities not performed in a swim pool :)
+    // We intend to remove velocity stream for every activities not performed in a swim pool :)
     if (streams.velocity_smooth?.length > 0 && !params.isSwimPool) {
       streams.velocity_smooth = meanWindowSmoothing(streams.velocity_smooth);
     }
@@ -207,20 +207,36 @@ export class StreamProcessor {
     }
 
     if (Activity.isByFoot(params.type)) {
-      const RUN_LOWER_SPEED_THRESHOLD = 3 / 3.6; // 3kph = 0.83 m/s = 20:00/km
+      const DEFAULT_MAX_SPEED_THRESHOLD = 34 / 3.6; // 3kph = 01:45/km
       const DEFAULT_LOWER_SPEED_THRESHOLD = 2 / 3.6; // 2kph = 0.55 m/s = 30:00/km
+      const RUN_LOWER_SPEED_THRESHOLD = 3 / 3.6; // 3kph = 0.83 m/s = 20:00/km
       const BY_FOOT_PACE_KALMAN_SMOOTHING = {
-        R: 0.01, // Grade model is stable
+        R: 0.01, // Speed model is stable
         Q: 1 / 3.6 // 1 kph possible measurements errors
       };
 
       // Clamp low speed along activity type to avoid infinite paces
       const minSpeedThreshold = Activity.isRun(params.type) ? RUN_LOWER_SPEED_THRESHOLD : DEFAULT_LOWER_SPEED_THRESHOLD;
-      streams.velocity_smooth = this.clampMinStream(streams.velocity_smooth, minSpeedThreshold);
+      streams.velocity_smooth = this.clampStream(
+        streams.velocity_smooth,
+        minSpeedThreshold,
+        DEFAULT_MAX_SPEED_THRESHOLD
+      );
 
       // Fix potentials pace errors for foot activities and smooth out pace signal
       streams.velocity_smooth = KalmanFilter.apply(streams.velocity_smooth, BY_FOOT_PACE_KALMAN_SMOOTHING);
     }
+
+    if (Activity.isSwim(params.type) && !params.isSwimPool) {
+      const SWIM_MAX_SPEED_THRESHOLD = 8.5 / 3.6;
+      const SWIM_LOWER_SPEED_THRESHOLD = 0.3;
+      streams.velocity_smooth = this.clampStream(
+        streams.velocity_smooth,
+        SWIM_LOWER_SPEED_THRESHOLD,
+        SWIM_MAX_SPEED_THRESHOLD
+      );
+    }
+
     return streams;
   }
 
@@ -416,8 +432,8 @@ export class StreamProcessor {
     return RunningPowerEstimator.createRunningPowerEstimationStream(athleteWeight, gradeAdjustedSpeedArray);
   }
 
-  private static clampMinStream(stream: number[], minValue: number): number[] {
-    const highValue = _.max(stream);
+  private static clampStream(stream: number[], minValue: number, maxValue: number = null): number[] {
+    const highValue: number = Number.isFinite(maxValue) ? maxValue : _.max(stream);
     return stream.map(value => {
       return _.clamp(value, minValue, highValue);
     });

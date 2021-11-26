@@ -6,6 +6,7 @@ import { ActivityFileType } from "../../sync/connectors/activity-file-type.enum"
 import { AthleteSnapshot } from "../athlete/athlete-snapshot.model";
 import { ConnectorType } from "../../sync/connectors/connector-type.enum";
 import { ElevateSport } from "../../enums/elevate-sport.enum";
+import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 export class ActivityStats {
   public distance: number;
@@ -399,6 +400,10 @@ export class Activity extends BareActivity {
     return activityType === ElevateSport.Swim;
   }
 
+  public static isSwimPool(activityType: ElevateSport, streams: Streams): boolean {
+    return Activity.isSwim(activityType) && !streams?.latlng?.length;
+  }
+
   public static isPaced(activityType: ElevateSport): boolean {
     return Activity.isByFoot(activityType) || Activity.isSwim(activityType);
   }
@@ -408,3 +413,28 @@ export class Activity extends BareActivity {
     activity.stats = _.merge(_.cloneDeep(stats), sourceStats);
   }
 }
+
+export const ACTIVITY_FLAGS_DESC_MAP = new Map<ActivityFlag, string>([
+  // Time
+  [ActivityFlag.MOVING_TIME_GREATER_THAN_ELAPSED, "Moving time greater than elapsed time"],
+
+  // Speed
+  [ActivityFlag.SPEED_AVG_ABNORMAL, "Abnormal average speed"],
+  [ActivityFlag.SPEED_STD_DEV_ABNORMAL, "Abnormal speed behavior"],
+
+  // Pace
+  [ActivityFlag.PACE_AVG_FASTER_THAN_GAP, "average pace is faster than grade adjusted pace"],
+
+  // Power
+  [ActivityFlag.POWER_AVG_KG_ABNORMAL, "Abnormal average watts/kg"],
+  [ActivityFlag.POWER_THRESHOLD_ABNORMAL, "Abnormal power behavior"],
+
+  // Heart-rate
+  [ActivityFlag.HR_AVG_ABNORMAL, "Abnormal average heart rate"],
+
+  // Scores
+  [ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL, "Abnormal Heart Rate Stress Score (HRSS)"],
+  [ActivityFlag.SCORE_PSS_PER_HOUR_ABNORMAL, "Abnormal Power Stress Score (PSS)"],
+  [ActivityFlag.SCORE_RSS_PER_HOUR_ABNORMAL, "Abnormal Running Stress Score (RSS)"],
+  [ActivityFlag.SCORE_SSS_PER_HOUR_ABNORMAL, "Abnormal Swimming Stress Score (SSS)"]
+]);

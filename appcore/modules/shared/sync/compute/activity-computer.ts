@@ -82,7 +82,7 @@ export class ActivityComputer {
     [ElevateSport.Swim, ActivityComputer.isActiveCadenceSwimming]
   ]);
 
-  private static readonly DEFAULT_THRESHOLD_KPH: number = 0; // Kph
+  private static readonly DEFAULT_THRESHOLD_KPH: number = 0.3; // Kph
   private static readonly CYCLING_THRESHOLD_KPH: number = 4; // Kph
   private static readonly RUNNING_THRESHOLD_KPH: number = 1.5; // Kph
   private static readonly SWIMMING_THRESHOLD_KPH: number = 0.5; // Kph

@@ -41,11 +41,10 @@ export class SportsLibProcessor {
 
     const parsingOptions = new ActivityParsingOptions({
       streams: {
-        altitudeSmooth: true,
-        grade: true,
-        gradeSmooth: true
+        smooth: { altitudeSmooth: true, grade: true, gradeSmooth: true },
+        fixAbnormal: { speed: true }
       },
-      maxActivityDurationDays: 7
+      maxActivityDurationDays: 30
     });
 
     const srcFileType = extension(path) as FileType;

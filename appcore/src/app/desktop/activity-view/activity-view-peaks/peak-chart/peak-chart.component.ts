@@ -98,10 +98,10 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
   }
 
   public ngOnInit(): void {
-    const trace = this.chart.addTrace(1, this.sensor.name, {
+    const trace = this.chart.addTrace(1, this.sensor, {
       color: this.sensor.color,
       shape: "spline",
-      width: 1
+      width: 1.25
     });
 
     // Getting the unit (with measure system specific support)

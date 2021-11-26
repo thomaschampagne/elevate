@@ -274,7 +274,7 @@ class Main {
     );
 
     this.ipcTunnelService.on<string, void>(Channel.openExternal, (pPath: string) => {
-      return pPath ? shell.openExternal(path.normalize(pPath)) : Promise.reject(`Given path is empty`);
+      return pPath ? shell.openExternal(pPath) : Promise.reject(`Given path is empty`);
     });
 
     this.ipcTunnelService.on<string, string>(Channel.openPath, (pPath: string) => {
