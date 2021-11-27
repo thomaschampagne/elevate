@@ -981,7 +981,8 @@ export namespace StatsDef {
         VoidSensor.DEFAULT,
         "Perf. Index",
         ["stats", "scores", "runPerfIndex"],
-        "Running Performance Index from Polar company."
+        "Running Performance Index from Polar company.",
+        1
       );
     }
 

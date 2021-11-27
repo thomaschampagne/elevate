@@ -556,6 +556,10 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.calories, 1090);
           SpecsUtils.assertNearEqual(computedStats.caloriesPerHour, 787);
 
+          // Scores
+          SpecsUtils.assertNearEqual(computedStats.scores.runPerfIndex, 72.5, 1);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.hrss, 51.3, 1);
+
           // Heart rate
           expect(computedStats.heartRate.avg).toEqual(137);
           expect(computedStats.heartRate.max).toEqual(166);
@@ -676,7 +680,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 539);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "07:31");
-          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "06:56");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "06:57");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "02:40:09");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "02:41:39");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -736,7 +740,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 142);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "04:32");
-          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "04:22");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "04:23");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "48:30");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "48:42");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);

@@ -472,11 +472,11 @@ export namespace ActivityColumns {
       ).setDefault(true),
       new NumberColumn(
         Category.COMMON,
-        ["stats", "scores", "scores", "stress", "runPerfIndex"],
+        ["stats", "scores", "runPerfIndex"],
         null,
         "Run Perf. Index",
         Print.number,
-        2
+        1
       ).setDescription("Running Performance Index from Polar company."),
       new NumberColumn(Category.COMMON, ["stats", "calories"], null, "Calories", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "caloriesPerHour"], null, "Calories / Hour", Print.number),
@@ -725,6 +725,9 @@ export namespace ActivityColumns {
       ),
       new NumberColumn(Category.HEART_RATE, ["stats", "heartRate", "upperQ"], "bpm", "75% HR").setDescription(
         "Upper Quartile Bpm"
+      ),
+      new NumberColumn(Category.HEART_RATE, ["stats", "heartRate", "stdDev"], "bpm", "σ HR").setDescription(
+        "Standard Deviation Bpm"
       ),
       /**
        * Cadence

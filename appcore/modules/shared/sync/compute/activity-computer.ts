@@ -40,6 +40,7 @@ import { AthleteSettings } from "../../models/athlete/athlete-settings/athlete-s
 import { Movement } from "../../tools/movement";
 import { percentile } from "../../tools/percentile";
 import { UserSettings } from "../../models/user-settings/user-settings.namespace";
+import { ElevateException } from "../../exceptions/elevate.exception";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 export class ActivityComputer {
@@ -206,29 +207,48 @@ export class ActivityComputer {
   }
 
   /**
-   * Computes Polar running index
+   * Computes equivalent Polar running index
    * https://support.polar.com/en/support/tips/Running_Index_feature
    * https://www.polar.com/en/smart_coaching/features/running_index/chart
-   * TODO Disable until fixed? Find github issue and ask for help !
    */
   public static runningPerformanceIndex(
     athleteSnapshot: AthleteSnapshot,
-    distance: number,
     movingSeconds: number,
-    elevationStats: ElevationStats,
-    heartRateStats: HeartRateStats
+    avgHr: number,
+    avgGap: number,
+    timeArray: number[],
+    distanceArray: number[],
+    velocityArray: number[]
   ): number {
-    if (!distance || !movingSeconds || !heartRateStats?.avg || !athleteSnapshot?.athleteSettings?.maxHr) {
+    if (
+      !movingSeconds ||
+      !avgHr ||
+      !avgGap ||
+      !athleteSnapshot?.athleteSettings?.maxHr ||
+      _.isEmpty(timeArray) ||
+      _.isEmpty(distanceArray) ||
+      _.isEmpty(velocityArray)
+    ) {
+      return null;
+    }
+    const COOPER_KPH_THRESHOLD = 6;
+
+    // Verify that athlete ran at least 12 minutes over 6 kph. If not, no running performance index
+    const bestCooperSpeed = ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 12) * Constant.MPS_KPH_FACTOR;
+    if (bestCooperSpeed < COOPER_KPH_THRESHOLD) {
       return null;
     }
 
-    const runIntensity: number = _.round(
-      (heartRateStats.avg / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3,
-      ActivityComputer.RND
-    );
-    const gradeAdjustedDistance = distance + elevationStats.ascent * 6 - elevationStats.descent * 4;
+    // Compute the grade adjusted speed in meters per seconds
+    const gradeAdjustedMetersPerSec = Movement.paceToSpeed(avgGap) / Constant.MPS_KPH_FACTOR;
+
+    // Keep the greatest adjusted distance
+    const gradeAdjustedDistance = Math.max(gradeAdjustedMetersPerSec * movingSeconds, _.last(distanceArray));
+
+    // Now compute the running performance index
     const distanceRate: number = (213.9 / (movingSeconds / 60)) * (gradeAdjustedDistance / 1000) ** 1.06 + 3.5;
-    return distanceRate / runIntensity;
+    const intensity: number = Math.min((avgHr / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3, 1);
+    return _.round(distanceRate / intensity, ActivityComputer.RND) || null;
   }
 
   public static computeRunningStressScore(
@@ -924,19 +944,17 @@ export class ActivityComputer {
       : null;
 
     // Running Index
-    scores.runPerfIndex =
-      Activity.isRun(type) && stats.distance && stats.movingTime && !stats.elevation && !stats.heartRate
-        ? _.round(
-            ActivityComputer.runningPerformanceIndex(
-              this.athleteSnapshot,
-              stats.distance,
-              stats.movingTime,
-              stats.elevation,
-              stats.heartRate
-            ),
-            ActivityComputer.RND
-          )
-        : null;
+    scores.runPerfIndex = Activity.isRun(type)
+      ? ActivityComputer.runningPerformanceIndex(
+          this.athleteSnapshot,
+          stats.movingTime,
+          stats.heartRate?.avg,
+          stats.pace?.gapAvg,
+          this.streams.time,
+          this.streams.distance,
+          this.streams.velocity_smooth
+        )
+      : null;
 
     // Swim SWOLF
     if (Activity.isSwim(type) && stats?.speed?.avg && stats?.cadence?.avgActive) {
@@ -1426,7 +1444,7 @@ export class ActivityComputer {
     zoneType: ZoneType
   ): ZoneModel[] {
     if (values.length !== timeArray.length) {
-      throw new Error(`Values length ${values.length} must match time array length ${timeArray.length}`);
+      throw new ElevateException(`Values length ${values.length} must match time array length ${timeArray.length}`);
     }
 
     // Find out user zones on which we will loop and prepare for computation

@@ -541,7 +541,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
 
             switch (column.type) {
               case ActivityColumns.ColumnType.DATE:
-                cellValue = moment(activity.startTime).format();
+                cellValue = moment(activity.startTime).toISOString();
                 break;
 
               case ActivityColumns.ColumnType.TEXT:
