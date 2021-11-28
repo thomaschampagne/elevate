@@ -18,7 +18,7 @@ export abstract class MachineAuthenticatedService {
   protected ensureAuthenticated(): OperatorFunction<HttpResponse<any>, any> {
     return catchError((error, caught: Observable<HttpResponse<any>>) => {
       // If unauthorized try to authenticate before and replay request with concat
-      if (error.status === StatusCodes.UNAUTHORIZED) {
+      if (error.status === StatusCodes.FORBIDDEN) {
         return concat(this.machineService.auth(), caught);
       }
       throw new Error(error);

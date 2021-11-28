@@ -9,6 +9,8 @@ import { Machine } from "../models/machine";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
 import { VersionsProvider } from "../../shared/services/versions/versions-provider";
 import _ from "lodash";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Injectable()
 export class MachineService {
@@ -83,7 +85,7 @@ export class MachineService {
   public checkIn(): void {
     Promise.all([this.runtimeInfoService.get(), this.athleteService.fetch()])
       .then(results => {
-        const [runtimeInfo, athleteModel] = _.cloneDeep(results);
+        const [runtimeInfo, athleteModel] = _.cloneDeep<[RuntimeInfo, AthleteModel]>(results);
 
         // Register machine for insights
         const machine = new Machine(
