@@ -86,7 +86,7 @@
     "@types/semver": "^7.3.8",
     "chokidar": "^3.5.2",
     "codelyzer": "^6.0.2",
-    "electron": "^15.3.0",
+    "electron": "^15.3.2",
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~7.0.0",
     "jest": "^27.3.1",
