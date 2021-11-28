@@ -16,6 +16,8 @@ import { sleep } from "@elevate/shared/tools/sleep";
 
 @Injectable()
 export class DesktopLoadService extends AppLoadService {
+  public static readonly CHECK_IN_FREQUENCY = 5 * 60 * 1000; // 5 minutes
+
   constructor(
     @Inject(DataStore) protected readonly dataStore: DataStore<object>,
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
@@ -66,7 +68,13 @@ export class DesktopLoadService extends AppLoadService {
           }
 
           // Perform checkin with 1 sec delay
-          sleep().then(() => this.machineService.checkIn());
+          sleep().then(() => {
+            // Check-in now
+            this.machineService.checkIn();
+
+            // And do it every X minutes
+            setInterval(() => this.machineService.checkIn(), DesktopLoadService.CHECK_IN_FREQUENCY);
+          });
         });
     });
   }
