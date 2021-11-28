@@ -43,16 +43,27 @@
     <mat-divider></mat-divider>
   </ng-container>
 
+  <ng-container>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFill>
+      <div>Partners</div>
+      <div fxFlex="3"></div>
+      <div>
+        <mat-icon class="koyeb-icon clickable" svgIcon="koyeb" inline="true" (click)="openLink('https://www.koyeb.com')"></mat-icon>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+
   <div class="links" fxLayout="row" fxLayoutAlign="center center">
-    <button (click)="openSocial('https://twitter.com/champagnethomas')" mat-icon-button
+    <button (click)="openLink('https://twitter.com/champagnethomas')" mat-icon-button
             matTooltip="Stay tuned for updates on twitter">
       <mat-icon fontSet="material-icons-outlined" svgIcon="twitter"></mat-icon>
     </button>
-    <button (click)="openSocial('https://thomaschampagne.github.io/elevate/#/discord')" mat-icon-button
+    <button (click)="openLink('https://thomaschampagne.github.io/elevate/#/discord')" mat-icon-button
             matTooltip="Join discord">
       <mat-icon fontSet="material-icons-outlined" svgIcon="discord"></mat-icon>
     </button>
-    <button (click)="openSocial('https://github.com/thomaschampagne/elevate')" mat-icon-button
+    <button (click)="openLink('https://github.com/thomaschampagne/elevate')" mat-icon-button
             matTooltip="View source code on github">
       <mat-icon fontSet="material-icons-outlined" svgIcon="github"></mat-icon>
     </button>

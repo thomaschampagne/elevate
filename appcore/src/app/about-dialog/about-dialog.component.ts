@@ -58,7 +58,7 @@ Wrapper Version:                  ${this.versionsProvider.getWrapperVersion()}
 ========================================================`);
   }
 
-  public openSocial(url: string): void {
+  public openLink(url: string): void {
     this.openResourceResolver.openLink(url);
   }
 }

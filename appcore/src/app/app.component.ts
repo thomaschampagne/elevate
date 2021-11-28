@@ -49,7 +49,7 @@ import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 export class AppComponent implements OnInit, OnDestroy {
   private static readonly DEFAULT_SIDE_NAV_STATUS: SideNavStatus = SideNavStatus.OPENED;
   public static readonly LS_SIDE_NAV_OPENED_KEY: string = "app_sideNavOpened";
-  private readonly CUSTOM_ICONS: string[] = ["strava", "twitter", "github", "discord"];
+  private readonly CUSTOM_ICONS: string[] = ["strava", "twitter", "github", "discord", "koyeb"];
   public readonly buildTarget: BuildTarget = environment.buildTarget;
   public BuildTarget = BuildTarget;
   public Theme = Theme;
