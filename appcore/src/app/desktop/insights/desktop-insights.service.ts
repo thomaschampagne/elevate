@@ -41,8 +41,8 @@ export class DesktopInsightsService extends MachineAuthenticatedService {
 
       // Extract insight activities
       const insightActivities: InsightActivity[] = [];
-      activities.forEach(syncedActivity => {
-        insightActivities.push(new InsightActivity(machineId, syncedActivity));
+      activities.forEach(activity => {
+        insightActivities.push(new InsightActivity(machineId, activity));
       });
 
       // Compress insight activities before sending

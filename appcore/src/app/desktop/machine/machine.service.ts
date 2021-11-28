@@ -3,7 +3,7 @@ import { environment } from "../../../environments/environment";
 import { HttpClient, HttpRequest } from "@angular/common/http";
 import { LoggerService } from "../../shared/services/logging/logger.service";
 import { StatusCodes } from "http-status-codes";
-import { Observable, Subject } from "rxjs";
+import { Subject } from "rxjs";
 import { RuntimeInfoService } from "./runtime-info.service";
 import { Machine } from "../models/machine";
 import { AthleteService } from "../../shared/services/athlete/athlete.service";
@@ -11,6 +11,9 @@ import { VersionsProvider } from "../../shared/services/versions/versions-provid
 import _ from "lodash";
 import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { sha256 } from "@elevate/shared/tools/hash";
 
 @Injectable()
 export class MachineService {
@@ -26,13 +29,14 @@ export class MachineService {
     @Inject(VersionsProvider) private readonly versionsProvider: VersionsProvider,
     @Inject(HttpClient) private readonly httpClient: HttpClient,
     @Inject(AthleteService) private readonly athleteService: AthleteService,
+    @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {}
 
   /**
    * Authenticate machine and provide JWT token
    */
-  public auth(): Observable<void> {
+  public auth(): Subject<void> {
     const authentication$ = new Subject<void>();
     this.runtimeInfoService.getMachineCredentials().then(machineCredentials => {
       this.httpClient
@@ -83,20 +87,28 @@ export class MachineService {
   }
 
   public checkIn(): void {
-    Promise.all([this.runtimeInfoService.get(), this.athleteService.fetch()])
+    Promise.all([this.runtimeInfoService.get(), this.athleteService.fetch(), this.stravaConnectorInfoService.fetch()])
       .then(results => {
-        const [runtimeInfo, athleteModel] = _.cloneDeep<[RuntimeInfo, AthleteModel]>(results);
+        const [runtimeInfo, athleteModel, stravaConnectorInfo] =
+          _.cloneDeep<[RuntimeInfo, AthleteModel, StravaConnectorInfo]>(results);
 
-        // Register machine for insights
-        const machine = new Machine(
-          runtimeInfo.athleteMachineId,
-          runtimeInfo.athleteMachineKey,
-          this.versionsProvider.getPackageVersion(),
-          runtimeInfo,
-          athleteModel
-        );
+        const stravaHashPromise = stravaConnectorInfo?.stravaAccount?.id
+          ? sha256(stravaConnectorInfo.stravaAccount.id.toString(), true)
+          : Promise.resolve(null);
 
-        return this.httpClient.put<void>(MachineService.MACHINE_CHECKIN_ENDPOINT, machine).toPromise();
+        return stravaHashPromise.then((stravaHash: string | null) => {
+          // Register machine for insights
+          const machine = new Machine(
+            runtimeInfo.athleteMachineId,
+            runtimeInfo.athleteMachineKey,
+            this.versionsProvider.getPackageVersion(),
+            runtimeInfo,
+            athleteModel,
+            stravaHash
+          );
+
+          return this.httpClient.put<void>(MachineService.MACHINE_CHECKIN_ENDPOINT, machine).toPromise();
+        });
       })
       .catch(error => {
         // We dont care about errors for this request

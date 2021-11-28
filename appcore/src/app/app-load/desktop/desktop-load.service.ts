@@ -67,7 +67,7 @@ export class DesktopLoadService extends AppLoadService {
               .then(() => this.router.navigate([AppRoutes.athleteSettings]));
           }
 
-          // Perform checkin with 1 sec delay
+          // Perform checkin at end of executions
           sleep().then(() => {
             // Check-in now
             this.machineService.checkIn();

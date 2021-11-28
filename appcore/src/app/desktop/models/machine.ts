@@ -13,11 +13,16 @@ export class Machine implements NoSqlDoc {
     athleteMachineKey: string,
     public readonly version: string,
     public readonly runtimeInfo: RuntimeInfo,
-    public readonly athlete: AthleteModel
+    public readonly athlete: AthleteModel,
+    public readonly stravaHash: string | null
   ) {
     this.id = athleteMachineId;
     this.key = athleteMachineKey;
     this.latestAthleteSnapshot = AthleteModel.getCurrentAthleteSnapshot(this.athlete);
+
+    // Don't track first and last name
+    delete this.athlete.firstName;
+    delete this.athlete.lastName;
 
     // Don't keep all datedAthleteSettings, latestAthleteSnapshot is sufficient
     delete this.athlete.datedAthleteSettings;
