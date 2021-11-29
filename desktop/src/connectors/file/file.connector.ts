@@ -101,9 +101,6 @@ import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { StartedSyncEvent } from "@elevate/shared/sync/events/started-sync.event";
 import { DataGradeAdjustedPaceAvg } from "@sports-alliance/sports-lib/lib/data/data.grade-adjusted-pace-avg";
 
-// TODO Experimental: Keep @false. Rename files in a directory to $Sports_$Date.$ext (only new file detected at the moment)
-const ALLOW_FILE_RENAME_FIRST_DISCOVER = false;
-
 @singleton()
 export class FileConnector extends BaseConnector {
   private static readonly SLEEP_TIME_BETWEEN_FILE_PARSED: number = 5;
@@ -416,8 +413,15 @@ export class FileConnector extends BaseConnector {
                               .then(results => {
                                 const { computedActivity, deflatedStreams } = results;
 
-                                // TODO Experimental: Rename files in a directory to $Sports_$Date.$ext (only new file detected at the moment)
-                                this.renameProcessedFile(activityFile, activity, computedActivity);
+                                // Rename activity files to Sport_YYYY-MM-DD_HH-mm-ss.extension if requested by user
+                                if (this.fileConnectorConfig.info.renameActivityFiles) {
+                                  this.renameProcessedFile(
+                                    result.event.activities.length,
+                                    activityFile,
+                                    activity,
+                                    computedActivity
+                                  );
+                                }
 
                                 // Notify the new Activity
                                 syncEvents$.next(
@@ -550,31 +554,32 @@ export class FileConnector extends BaseConnector {
   }
 
   /**
-   * TODO Rename file option while discovering activities
-   * TODO Enable once stable
-   * TODO Support rename on files in errors (e.g. Empty, Duplicate, InError)
-   * @param activityFile
-   * @param activity
-   * @param computedActivity
-   * @private
-   * @return TODO Should return promise
+   * Rename file option while discovering activities
    */
   private renameProcessedFile(
+    activityEventCount: number,
     activityFile: ActivityFile,
     activity: Partial<Activity>,
     computedActivity: Activity
   ): void {
-    if (ALLOW_FILE_RENAME_FIRST_DISCOVER) {
+    // Rename file if option is enabled and only 1 activity exists in current event
+    if (activityEventCount === 1) {
       // Rebuild new name
       const dirname = path.dirname(activityFile.location.path);
       const ext = path.extname(activityFile.location.path);
+
+      // Track old path
+      const oldPath = path.normalize(computedActivity.extras.file.path);
+
+      // Build new path
       const newPath = path.normalize(
         `${dirname}/${activity.type}_${moment(activity.startTime).format("YYYY-MM-DD_HH-mm-ss")}${ext}`
       );
 
-      if (!fs.existsSync(newPath)) {
+      // Rename file
+      if (fs.existsSync(oldPath) && !fs.existsSync(newPath)) {
         // Rename file
-        fs.renameSync(path.normalize(activityFile.location.path), newPath);
+        fs.renameSync(oldPath, newPath);
 
         // Update link to activity
         computedActivity.extras.file.path = newPath;

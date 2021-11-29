@@ -29,6 +29,7 @@ export class FileConnectorInfoService {
           connectorInfo.deleteActivityFilesAfterSync,
           connectorInfo.extractArchiveFiles,
           connectorInfo.deleteArchivesAfterExtract,
+          connectorInfo.renameActivityFiles,
           connectorInfo.detectSportTypeWhenUnknown
         );
       } else {

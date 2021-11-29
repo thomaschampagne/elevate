@@ -8,6 +8,7 @@ export class FileConnectorInfo extends ConnectorInfo {
   public deleteActivityFilesAfterSync: boolean;
   public extractArchiveFiles: boolean;
   public deleteArchivesAfterExtract: boolean;
+  public renameActivityFiles: boolean;
   public detectSportTypeWhenUnknown: boolean;
 
   constructor(
@@ -16,6 +17,7 @@ export class FileConnectorInfo extends ConnectorInfo {
     deleteActivityFilesAfterSync: boolean = false,
     extractArchiveFiles: boolean = true,
     deleteArchivesAfterExtract: boolean = true,
+    renameActivityFiles: boolean = false,
     detectSportTypeWhenUnknown: boolean = false
   ) {
     super();
@@ -24,6 +26,7 @@ export class FileConnectorInfo extends ConnectorInfo {
     this.deleteActivityFilesAfterSync = deleteActivityFilesAfterSync;
     this.extractArchiveFiles = extractArchiveFiles;
     this.deleteArchivesAfterExtract = deleteArchivesAfterExtract;
+    this.renameActivityFiles = renameActivityFiles;
     this.detectSportTypeWhenUnknown = detectSportTypeWhenUnknown;
   }
 }

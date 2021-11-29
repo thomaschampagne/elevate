@@ -53,7 +53,8 @@
           your activities.
         </div>
         <div class="primary-note">
-          <strong>Hint:</strong> during <i>alpha</i> testing phase, please keep your activity files safe in configured folder. An alpha update may ask you to wipe/rescan your activities from there.
+          <strong>Hint:</strong> during <i>alpha</i> testing phase, please keep your activity files safe in configured
+          folder. An alpha update may ask you to wipe/rescan your activities from there.
         </div>
       </div>
 
@@ -77,12 +78,18 @@
             Delete archives files (.zip, .tar, .gz, ...) once activity files have been extracted (recommended) *
           </mat-checkbox>
         </div>
-<!--        <div>
-          <mat-checkbox (change)="saveChanges()"
-                        [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown">
-            <strong>Experimental:</strong> Try to find out unknown activities types based on your others activities where type is known
+        <div>
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.renameActivityFiles"
+                        matTooltip="Rename files to pattern 'Sport_YYYY-MM-DD_HH-mm-ss.extension' on first discovery only. Multiple activity file (e.g. Triathlon) will not be renamed. Format example: Ride_2021-09-23_13-46-47.fit">
+            Rename activity files to <i>Sport_YYYY-MM-DD_HH-mm-ss.extension</i> on first discovery
           </mat-checkbox>
-        </div>-->
+        </div>
+        <!--        <div>
+                  <mat-checkbox (change)="saveChanges()"
+                                [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown">
+                    <strong>Experimental:</strong> Try to find out unknown activities types based on your others activities where type is known
+                  </mat-checkbox>
+                </div>-->
         <div>
           * Only when <u>syncing all activities</u>
         </div>
