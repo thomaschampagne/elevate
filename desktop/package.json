@@ -18,7 +18,7 @@
     "package:win": "electron-builder build --windows",
     "package:linux": "electron-builder build --linux",
     "package:mac": "electron-builder build --mac --universal",
-    "publish:win": "npm run build:package:win -- --publish onTagOrDraft",
+    "publish:win": "npm run build:package:win -- -- --publish onTagOrDraft",
     "publish:linux": "npm run build:package:linux -- --publish onTagOrDraft",
     "publish:mac": "npm run build:package:mac -- --publish onTagOrDraft",
     "build:package:win": "npm run build:prod && npm run package:win",
