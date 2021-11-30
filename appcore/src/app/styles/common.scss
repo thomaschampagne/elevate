@@ -14,6 +14,8 @@ mat-card {
   cursor: pointer;
 }
 
+/* SECTIONS */
+
 .centered-section {
   margin-top: 35px;
   margin-left: $centered-section-margin;
@@ -24,4 +26,29 @@ mat-card {
   @extend .centered-section;
   margin-left: $centered-section-margin * 1.75;
   margin-right: $centered-section-margin * 1.75;
+}
+
+/* TEXT */
+.centered-text {
+  text-align: center;
+}
+
+/* PADDING */
+$padding-sml: 5px;
+$padding-std: 10px;
+$padding-large: 20px;
+
+.pad-sml-bt {
+  padding-top: $padding-sml;
+  padding-bottom: $padding-sml;
+}
+
+.pad-std-bt {
+  padding-top: $padding-std;
+  padding-bottom: $padding-std;
+}
+
+.pad-lrg-bt {
+  padding-top: $padding-large;
+  padding-bottom: $padding-large;
 }

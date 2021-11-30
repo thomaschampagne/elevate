@@ -14,6 +14,7 @@
     <button mat-icon-button color="primary" matTooltip="View documentation online" (click)="viewHelpOnline()">
       <mat-icon fontSet="material-icons-outlined">assistant_photo</mat-icon>
     </button>
+
   </div>
 
   <mat-accordion [multi]="true">
@@ -32,4 +33,11 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
+
+  <div class="centered-text pad-std-bt">
+    <button mat-button color="primary" matTooltip="View documentation online" (click)="openLink('https://thomaschampagne.github.io/elevate/#/discord')">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="discord"></mat-icon>
+      Join discord for community help
+    </button>
+  </div>
 </div>

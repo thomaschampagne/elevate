@@ -164,4 +164,8 @@ export class HelpComponent implements OnInit {
     const anchorFaqUrl = faqEntry.faqUrl + (faqEntry.anchor ? `#${faqEntry.anchor}` : "");
     this.openResourceResolver.openLink(anchorFaqUrl);
   }
+
+  public openLink(url: string): void {
+    this.openResourceResolver.openLink(url);
+  }
 }
