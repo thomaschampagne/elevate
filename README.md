@@ -349,11 +349,11 @@ _Note: You may already pushed a git tag matching your version. If not, the git t
 * Run packaging to publish installer:
 
 ```bash
-npm run publish:win
+npm run build:package:win
 ```
 or
 ```bash
-npm run publish:mac
+npm run build:package:mac
 ```
 
 * Open [https://github.com/your_owner/your_repo/releases/edit/your_version](https://github.com/your_owner/your_repo/releases/edit/your_version): Some files should have been uploaded on the github draft release.
