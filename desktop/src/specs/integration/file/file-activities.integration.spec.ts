@@ -1,14 +1,13 @@
-import { FileConnector } from "../../connectors/file/file.connector";
-import { FileConnectorConfig } from "../../connectors/connector-config.model";
+import { FileConnector } from "../../../connectors/file/file.connector";
+import { FileConnectorConfig } from "../../../connectors/connector-config.model";
 import { container } from "tsyringe";
 import { Subject } from "rxjs";
 import path from "path";
-import { SpecsUtils } from "../specs-utils";
-import { ActivityFile } from "../../connectors/file/activity-file.model";
-import { SportsLibProcessor } from "../../processors/sports-lib.processor";
-import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
+import { SpecsUtils } from "../../specs-utils";
+import { ActivityFile } from "../../../connectors/file/activity-file.model";
+import { SportsLibProcessor } from "../../../processors/sports-lib.processor";
+import { ActivityComputeProcessor } from "../../../processors/activity-compute/activity-compute.processor";
 import _ from "lodash";
-import { EmptyEventLibError } from "@sports-alliance/sports-lib/lib/errors/empty-event-sports-libs.error";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 import { ActivityFileType } from "@elevate/shared/sync/connectors/activity-file-type.enum";
@@ -28,6 +27,7 @@ import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.eve
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
+import { EmptyEventLibError } from "../../../../../../sports-lib/lib/errors/empty-event-sports-libs.error";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 describe("File activities integration tests", () => {
