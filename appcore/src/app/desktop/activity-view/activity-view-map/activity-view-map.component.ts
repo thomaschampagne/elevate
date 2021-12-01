@@ -1,100 +1,16 @@
-import { Component, Inject, Input, OnDestroy, OnInit } from "@angular/core";
-import L, {
-  Control,
-  Icon,
-  LatLngTuple,
-  Layer,
-  Map as LeafLetMap,
-  MapOptions,
-  marker,
-  Marker,
-  PointTuple,
-  Polyline,
-  polyline,
-  TileLayer,
-  tileLayer
-} from "leaflet";
-import { ActivityViewService } from "../shared/activity-view.service";
+import { Component, HostListener, Inject, Input, OnDestroy, OnInit } from "@angular/core";
+import mapboxgl, { FitBoundsOptions, LngLatBounds } from "mapbox-gl";
+import { StylesControl } from "mapbox-gl-controls";
+import { dirname } from "@elevate/shared/tools/dirname";
 import _ from "lodash";
-
-// Map fullscreen support and declaration
-import "../../../../../node_modules/leaflet-fullscreen/dist/Leaflet.fullscreen.js";
-import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
-import { DesktopUserSettingsService } from "../../../shared/services/user-settings/desktop/desktop-user-settings.service";
+import { ActivityViewService } from "../shared/activity-view.service";
 import { LoggerService } from "../../../shared/services/logging/logger.service";
 import { Subscription } from "rxjs";
-import { LeafletMapType } from "@elevate/shared/enums/leaflet-map-type.enum";
-import { dirname } from "@elevate/shared/tools/dirname";
+import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
+import { DesktopUserSettingsService } from "../../../shared/services/user-settings/desktop/desktop-user-settings.service";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { StyleOption } from "mapbox-gl-controls/lib/StylesControl/types";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
-
-declare module "leaflet" {
-  namespace Control {
-    function Fullscreen(v: any): void;
-  }
-}
-
-const THUNDER_FOREST_KEYS: string[] = JSON.parse(
-  atob(
-    "WyI3YzM1MmM4ZmYxMjQ0ZGQ4YjczMmUzNDllMGIwZmU4ZCIsImRlZjRkZGFlMTNlNDRiZDc5ODgyY2NjMjRjZjQ4NmQ5IiwiZGI1YWUxZjU3NzhhNDQ4Y2E2NjI1NTQ1ODFmMjgzYzUiLCI4ZGI1YmYzOGUzZDg0MWI2YTU3YTcyMDFmNzhjZmJlYyIsImU2MDQyMmU2MzZmMzQ5ODhhNzkwMTU0MDI3MjQ3NTdiIiwiYWM3Mjc0NDQwMjJjNDYxMzlkYjlkZTU0ZmU4MGJlZTgiLCIxZjEwMzgxM2NjZjA0ZDcyYTExMGM3MGRlYjhlYjZlMSIsIjcyYjc3ZjdmYmU4MTQ4YTlhMDFiODQ2ZjZlODU0MDg5IiwiOTRjYmY1ODYzOTY1NGUzODk2YjliNDVkYTVhOTJmOTgiLCJhMGEwNDdmZWRmMDI0ZmE0OTI1ZGZjMTRkYzhmYmQ1MyIsIjA0NDhjODliMTNhYzQzN2ViNzIxNTNlMGI4ODc5YTU5IiwiN2ZlYjJkY2U2NGQ3NDQyNzhiNjM4NDI4NDYzYzQ1MmYiLCI2NThkNWNkOTUwMzE0NmY4OTE4N2M2MjY0YzZlODNiNiIsIjhmYzE1YTExZWRmOTRhZTA5ZWZjMDNkNDAxYTdkZTRiIiwiZWQ4YThjOTg0NDI5NDk1ODg1MDE0ODllN2Y4MzY4MzEiLCI4YzExMGQ1ZmEwYTc0Y2NmYjIxOWExM2Y5NjU0MWZiMCIsImY1NzBkNzMxZmRkMzQwMDRhNjQ1ODdkODdhMDJjODFkIiwiNjE3MGFhZDEwZGZkNDJhMzhkNGQ4YzcwOWE1MzZmMzgiLCIyMDVmNzU4MDM3ZTI0ZjU0OGI0YzMxMDQzMzA4NzlkYyIsImVjMjQ4ODkwYTZlZDQzYjg4NDFlYTI0MzgxOWY4ZDBkIiwiMmExMTBlZGM4M2U5NDNlZmIxZTgzNjQwNjAzNTFjOTUiLCIxMjVhYTZjY2M3NGY0MzJlYTgxNzE2OTI1YWEzNzRjYSIsIjgxNmY4OTdhNDU2YjQ1OTVhMDliZjhlMWQ0MmNmYTBiIiwiYjQ3YTNjZjg5NWI5NGFlZGFkNDFlNWNmYjUyMjJiODciLCJmNDQzMzQ1NjBiZGI0NzcxYTA0MTYwOWNjNzVhODk4MyIsImVkMDNlNTk2M2ZmZjQ1Nzc5YzcyOGRiZmJkNTlhMTU2IiwiYTEwOWI4MWE5NzliNDFiZTg5NzE2N2YyOWU3ZjM1N2IiLCI4ZWM5ZmYxYTFhNjY0OWFmYTM0NTc1MDIwZWUxOTMwMCIsImFlM2M1NjQ1ZjFmMzQ0MGJiMTk5OWY3N2I1NjE2NGFkIl0="
-  )
-);
-
-const getThunderForestApiKey = (): string => {
-  return THUNDER_FOREST_KEYS[_.random(0, THUNDER_FOREST_KEYS.length - 1)];
-};
-
-const TILES_DEF_MAP: Map<LeafletMapType, TileLayer> = new Map<LeafletMapType, TileLayer>([
-  [
-    LeafletMapType.ATLAS,
-    tileLayer(`https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}.png?apikey=${getThunderForestApiKey()}`, {
-      subdomains: "abc",
-      maxZoom: 18,
-      attribution: "&copy; Thunderforest"
-    })
-  ],
-
-  [
-    LeafletMapType.LANDSCAPE,
-    tileLayer(`https://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=${getThunderForestApiKey()}`, {
-      subdomains: "abc",
-      maxZoom: 19,
-      attribution: "&copy; Thunderforest"
-    })
-  ],
-  [
-    LeafletMapType.OUTDOOR,
-    tileLayer(`https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=${getThunderForestApiKey()}`, {
-      subdomains: "abc",
-      maxZoom: 18,
-      attribution: "&copy; Thunderforest"
-    })
-  ],
-  [
-    LeafletMapType.TOPOGRAPHIC,
-    tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-      maxZoom: 17,
-      subdomains: "abc",
-      opacity: 0.6,
-      attribution: "&copy; OpenTopoMap"
-    })
-  ],
-  [
-    LeafletMapType.STREETS,
-    tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      subdomains: "abc",
-      maxZoom: 18,
-      attribution: "&copy; OpenStreetMap"
-    })
-  ],
-  [
-    LeafletMapType.SATELLITE,
-    tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-      maxZoom: 18,
-      attribution: "&copy; Esri"
-    })
-  ]
-]);
 
 @Component({
   selector: "app-activity-view-map",
@@ -107,203 +23,300 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
     @Inject(ActivityViewService) private readonly activityViewService: ActivityViewService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
-    this.map = null;
-    this.selectedBoundedPath = null;
-    this.activityPath = null;
-    this.syncedGraphMarker = null;
-    this.layersControl = null;
-    this.leafletLayers = [];
+    this.isMapReady = null;
   }
 
-  private static readonly DEFAULT_ACTIVITY_PATH_COLOR: string = "#ff4800";
+  private static readonly STYLES: StyleOption[] = [
+    {
+      label: "Outdoor",
+      styleName: "outdoor",
+      styleUrl: "mapbox://styles/thomaschampagne/ckwtg0i5k0lv915paq5sxff4j"
+    },
+    {
+      label: "Satellite",
+      styleName: "satellite",
+      styleUrl: "mapbox://styles/mapbox/satellite-v9?optimize=true"
+    }
+  ];
 
-  private static readonly DEFAULT_MAP_ICON_SIZE: PointTuple = [16, 16];
-
-  private static readonly START_ACTIVITY_ICON: Icon = L.icon({
-    iconUrl: `${ActivityViewMapComponent.getMapIconDir()}/start.svg`,
-    iconSize: ActivityViewMapComponent.DEFAULT_MAP_ICON_SIZE
-  });
-
-  private static readonly END_ACTIVITY_ICON: Icon = L.icon({
-    iconUrl: `${ActivityViewMapComponent.getMapIconDir()}/end.svg`,
-    iconSize: ActivityViewMapComponent.DEFAULT_MAP_ICON_SIZE
-  });
-
-  private static readonly MOVE_ACTIVITY_ICON: Icon = L.icon({
-    iconUrl: `${ActivityViewMapComponent.getMapIconDir()}/move.svg`,
-    iconSize: ActivityViewMapComponent.DEFAULT_MAP_ICON_SIZE
-  });
-
-  public static readonly MAP_WIDTH_PERCENT = 100;
   public static readonly MAP_HEIGHT_PX = 375;
-
-  private selectedGraphBoundsSubscription: Subscription;
+  private static readonly FIT_OPTIONS: FitBoundsOptions = { padding: 20 };
+  private static readonly ACTIVITY_PATH_COLOR: string = "#f1083a";
+  private static readonly SELECTED_PATH_COLOR: string = "#1e1e1e";
 
   @Input()
-  public latLng: LatLngTuple[];
+  public latLng: [number, number][];
 
-  public readonly MAP_WIDTH_PERCENT = ActivityViewMapComponent.MAP_WIDTH_PERCENT;
-  public readonly MAP_HEIGHT_PX = ActivityViewMapComponent.MAP_HEIGHT_PX;
+  public lngLat: [number, number][];
+  private map: mapboxgl.Map;
+  private activityBounds: mapboxgl.LngLatBounds;
+  private moveMarker: mapboxgl.Marker;
+  private selectedGraphBoundsSubscription: Subscription;
+  public isMapReady: boolean;
 
-  public options: MapOptions;
-  public layersControl: Control.Layers;
-  public leafletLayers: Layer[];
-  public map: LeafLetMap;
-  private syncedGraphMarker: Marker;
-  private selectedBoundedPath: Polyline;
-  private activityPath: Polyline;
+  private static getActivityBounds(lngLat: [number, number][]): LngLatBounds {
+    const bounds = new LngLatBounds(lngLat[0], lngLat[1]);
 
-  private static getMapIconDir(): string {
-    return `${dirname(location.pathname)}/assets/leaflet-icons`;
+    // Extend the 'LngLatBounds' to include every coordinate in the bounds result.
+    for (const point of lngLat) {
+      bounds.extend(point);
+    }
+    return bounds;
+  }
+
+  private static createMapMarkerElement(iconName: string): HTMLElement {
+    const element = document.createElement("div");
+    element.className = "marker";
+    element.style.backgroundImage = `url(${dirname(location.pathname)}/assets/map-icons/${iconName}.svg)`;
+    element.style.width = "16px";
+    element.style.height = "16px";
+    element.style.backgroundSize = "100%";
+    return element;
+  }
+
+  @HostListener("fullscreenchange")
+  public onFullScreenChange(): void {
+    setTimeout(() => this.map.resize());
   }
 
   public ngOnInit(): void {
-    // Configure leaflet map
-    this.options = {
-      scrollWheelZoom: false
-    };
-
-    this.handleSelectedGraphBounds();
+    this.getMapBoxToken().then(token => {
+      this.configure(token);
+    });
   }
 
-  public ngOnDestroy(): void {
-    this.selectedGraphBoundsSubscription.unsubscribe();
+  private getMapBoxToken(): Promise<string> {
+    return this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
+      return Promise.resolve(userSettings.mapToken);
+    });
   }
 
-  public onMapReady(map: LeafLetMap): void {
-    this.logger.debug("Map is ready");
+  private configure(mapBoxToken: string): void {
+    if (!mapBoxToken) {
+      this.isMapReady = false;
+      return;
+    }
 
-    // Store map
-    this.map = map;
+    // Assign token
+    mapboxgl.accessToken = mapBoxToken;
 
-    // Find and apply default layer preference
-    this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
-      const defaultTileLayerPreferences = TILES_DEF_MAP.get(userSettings.defaultMapType);
-      this.map.addLayer(defaultTileLayerPreferences);
+    // Invert lat and long for map box
+    this.lngLat = this.latLng.map(latLng => [latLng[1], latLng[0]]) as [number, number][];
+
+    // Get activity path bounds and declare fit options
+    this.activityBounds = ActivityViewMapComponent.getActivityBounds(this.lngLat);
+
+    // Create map
+    this.map = new mapboxgl.Map({
+      optimizeForTerrain: true,
+      container: "map", // container ID
+      bounds: this.activityBounds,
+      fitBoundsOptions: ActivityViewMapComponent.FIT_OPTIONS,
+      antialias: false,
+      zoom: 13, // starting zoom,
+      maxZoom: 17,
+      attributionControl: false,
+      touchPitch: false,
+      touchZoomRotate: false,
+      doubleClickZoom: false,
+      pitchWithRotate: false
     });
 
-    // Configure map fullscreen
-    this.map.addControl(new L.Control.Fullscreen({ fullscreenControl: true }));
+    // Configure fullscreen
+    this.map.addControl(new mapboxgl.FullscreenControl());
 
-    // Clean attributions
-    this.map.attributionControl.setPrefix(false);
+    // ... and navigation
+    this.map.addControl(new mapboxgl.NavigationControl());
 
-    // Create polyline path of activity
-    this.activityPath = polyline(this.latLng, {
-      color: ActivityViewMapComponent.DEFAULT_ACTIVITY_PATH_COLOR
-    }).addTo(this.map);
+    // Setup map styles and switch buttons
+    this.setupStyles();
 
-    // Add start/end markers
-    marker(_.first(this.latLng), { icon: ActivityViewMapComponent.START_ACTIVITY_ICON }).addTo(this.map);
-    marker(_.last(this.latLng), { icon: ActivityViewMapComponent.END_ACTIVITY_ICON }).addTo(this.map);
+    // Support section selection from user (graph, intervals, best splits)
+    this.handleSelectedGraphBounds();
 
-    // Zoom the map to the polyline
-    this.fitToActivityPath();
-
-    // Listen for graph hover index changes to update position of syncedGraphMarker on map
-    this.syncedGraphMarker = marker(_.first(this.latLng), {
-      icon: ActivityViewMapComponent.MOVE_ACTIVITY_ICON,
-      opacity: 0
-    }).addTo(this.map);
-
+    // Listen mouse over graph event and move "move marker" at proper location
     this.handleMoveOverGraphIndexes();
+
+    // Setup ready callback
+    this.map.on("load", () => this.onMapReady());
+
+    // Listen for style data events: we have to wait this event to draw paths/markers on style change
+    this.map.on("styledata", evt => {
+      this.onStyleReady();
+    });
+
+    // Reset map fit to bound on double click
+    this.map.on("dblclick", () => this.fitBoundsToActivity());
+
+    // Handle map error
+    this.map.on("error", event => {
+      this.logger.error(event.error.message);
+      this.isMapReady = false;
+    });
+  }
+
+  private setupStyles(): void {
+    // Find and apply default style preference
+    this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
+      const preferredStyle =
+        _.find<StyleOption>(ActivityViewMapComponent.STYLES, { styleName: userSettings.defaultMapType }) ||
+        ActivityViewMapComponent.STYLES[0];
+      this.map.setStyle(preferredStyle.styleUrl);
+    });
+
+    // Add map switch controls
+    this.map.addControl(
+      new StylesControl({
+        styles: ActivityViewMapComponent.STYLES,
+        onChange: () => this.onMapReady() // On change style call map ready callback
+      }),
+      "bottom-right"
+    );
+  }
+
+  public onStyleReady(): void {
+    this.logger.debug("Style ready");
+    this.drawActivityPath();
+  }
+
+  public onMapReady(): void {
+    this.logger.debug("Map is ready");
+    this.createMapMarkers(this.lngLat);
+    this.drawActivityPath();
+    this.isMapReady = true;
   }
 
   private handleMoveOverGraphIndexes(): void {
     this.activityViewService.graphMouseOverIndex$.subscribe(graphMouseOverEvent => {
-      if (Number.isFinite(graphMouseOverEvent)) {
-        // On graph index event
-        this.showMoveMarkerAtLatLngIndex(graphMouseOverEvent as number);
-      } else {
-        if (!graphMouseOverEvent) {
-          // On graph out event
-          this.hideMoveMarker();
-        }
-      }
-    });
-  }
-
-  private handleSelectedGraphBounds(): void {
-    this.selectedGraphBoundsSubscription = this.activityViewService.selectedGraphBounds$.subscribe(selectedBounds => {
-      if (!this.map) {
+      if (!this.isMapReady) {
         return;
       }
 
-      if (selectedBounds && selectedBounds.length === 2) {
-        // Remove any existing selected bounded path if exist
-        if (this.selectedBoundedPath) {
-          this.selectedBoundedPath.remove();
-        }
-
-        // We have to ensure overlayPane exists before adding a polyline
-        if (!this.map.getPanes().overlayPane) {
-          return;
-        }
-
-        // Create polyline bounded path from sliced lat/lng array
-        const boundedPathLatLng = this.latLng.slice(selectedBounds[0], selectedBounds[1]);
-        this.selectedBoundedPath = polyline(boundedPathLatLng, { color: "black" }).addTo(this.map);
-
-        // Zoom in selected path
-        const bounds = this.selectedBoundedPath.getBounds();
-        if (bounds && bounds.isValid()) {
-          this.map.fitBounds(bounds, { maxZoom: 17 });
-        }
+      if (Number.isFinite(graphMouseOverEvent)) {
+        this.showMoveMarkerAtLatLngIndex(graphMouseOverEvent as number);
       } else {
-        // Selected bounds might have been reset, remove existing selected bounded path if necessary
-        if (this.selectedBoundedPath) {
-          this.selectedBoundedPath.remove();
+        if (!graphMouseOverEvent) {
+          this.hideMoveMarker(); // On graph out event
         }
-
-        // Reset map center
-        this.fitToActivityPath();
       }
     });
   }
 
-  private fitToActivityPath(): void {
-    if (!this.map.getPanes().overlayPane) {
-      return;
+  private drawPath(name: string, color: string, pathLngLat: [number, number][]): void {
+    // Remove move marker to avoid move marker duplicate glitch on source+layer add or remove
+    if (!this.map.getSource(name)) {
+      this.map.addSource(name, {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "LineString",
+            coordinates: pathLngLat
+          }
+        }
+      });
     }
 
-    if (this.activityPath) {
-      const bounds = this.activityPath.getBounds();
-      if (bounds && bounds.isValid()) {
-        this.map.fitBounds(bounds);
-      }
+    if (!this.map.getLayer(name)) {
+      this.map.addLayer({
+        id: name,
+        type: "line",
+        source: name,
+        layout: {
+          "line-join": "round",
+          "line-cap": "round"
+        },
+        paint: {
+          "line-color": color,
+          "line-width": 3
+        }
+      });
     }
   }
 
+  private removePath(name: string): void {
+    // Remove move marker to avoid move marker duplicate glitch on source+layer add or remove
+
+    if (this.map.getLayer(name)) {
+      this.map.removeLayer(name);
+    }
+
+    if (this.map.getSource(name)) {
+      this.map.removeSource(name);
+    }
+  }
+
+  private drawActivityPath(): void {
+    this.drawPath("activity", ActivityViewMapComponent.ACTIVITY_PATH_COLOR, this.lngLat);
+  }
+
+  private createMapMarkers(lngLat: [number, number][]): void {
+    // Create start marker
+    new mapboxgl.Marker(ActivityViewMapComponent.createMapMarkerElement("start")).setLngLat(lngLat[0]).addTo(this.map);
+
+    // Create end marker
+    new mapboxgl.Marker(ActivityViewMapComponent.createMapMarkerElement("end"))
+      .setLngLat(_.last(lngLat))
+      .addTo(this.map);
+
+    // Create move marker
+    this.moveMarker = new mapboxgl.Marker(ActivityViewMapComponent.createMapMarkerElement("move")).setLngLat(lngLat[0]);
+
+    // Add marker to map and don't display the move marker on first load: only when mouse moves on graph
+    this.moveMarker.addTo(this.map);
+    this.hideMoveMarker();
+  }
+
   private hideMoveMarker(): void {
-    this.syncedGraphMarker.setOpacity(0);
+    this.moveMarker.remove();
   }
 
   private showMoveMarkerAtLatLngIndex(latLngIndex: number): void {
     const latLng = this.latLng[latLngIndex];
+
     if (latLng) {
-      this.syncedGraphMarker.setLatLng(latLng);
-      this.syncedGraphMarker.setOpacity(1);
+      this.moveMarker.addTo(this.map);
+      this.moveMarker.setLngLat([latLng[1], latLng[0]]);
     }
   }
 
-  public onLayersControlReady(layersControl: Control.Layers): void {
-    setTimeout(() => {
-      this.layersControl = layersControl;
+  private handleSelectedGraphBounds(): void {
+    const pathName = "selectedPath";
+    this.selectedGraphBoundsSubscription = this.activityViewService.selectedGraphBounds$.subscribe(selectedBounds => {
+      // Do we have bounds selected?
+      if (selectedBounds?.length === 2) {
+        // Remove any existing path if exists
+        this.removePath(pathName);
 
-      // Configure available layers
-      // Reverse LeafletMapType to get enum values as keys and enum keys as values
-      // This will allow to get nice name of the map type in below loop
-      const invertedLeafletMapTypes = _.invert(LeafletMapType);
-      for (const [mapType, layer] of TILES_DEF_MAP.entries()) {
-        layersControl.addBaseLayer(layer, _.startCase(invertedLeafletMapTypes[mapType].toLowerCase()));
+        // Get activity path bounds from selected indexes
+        const boundedLngLat = this.lngLat.slice(selectedBounds[0], selectedBounds[1]);
+
+        // Get path bounds
+        const pathBounds = ActivityViewMapComponent.getActivityBounds(boundedLngLat);
+
+        // Draw selected bound path
+        this.drawPath(pathName, ActivityViewMapComponent.SELECTED_PATH_COLOR, boundedLngLat);
+
+        // And fit map to him
+        this.map.fitBounds(pathBounds, ActivityViewMapComponent.FIT_OPTIONS);
+      } else {
+        // No bounds selected, remove any existing path if exists
+        this.removePath(pathName);
+
+        // And fit map to activity
+        this.fitBoundsToActivity();
       }
     });
   }
 
-  /**
-   * This allow centering on map using right click
-   */
-  public onAuxClick(mouseEvent: MouseEvent): void {
-    this.fitToActivityPath();
+  private fitBoundsToActivity(): void {
+    this.map.fitBounds(this.activityBounds, ActivityViewMapComponent.FIT_OPTIONS);
+  }
+
+  public ngOnDestroy(): void {
+    if (this.selectedGraphBoundsSubscription) {
+      this.selectedGraphBoundsSubscription.unsubscribe();
+    }
   }
 }

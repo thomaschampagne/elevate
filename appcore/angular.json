@@ -128,8 +128,7 @@
                 "node_modules/katex/dist/katex.css",
                 "node_modules/github-markdown-css/github-markdown.css",
                 "node_modules/metrics-graphics/dist/metricsgraphics.css",
-                "node_modules/leaflet/dist/leaflet.css",
-                "node_modules/leaflet-fullscreen/dist/leaflet.fullscreen.css"
+                "node_modules/mapbox-gl/dist/mapbox-gl.css"
               ],
               "fileReplacements": [
                 {
@@ -165,8 +164,7 @@
                 "node_modules/katex/dist/katex.css",
                 "node_modules/github-markdown-css/github-markdown.css",
                 "node_modules/metrics-graphics/dist/metricsgraphics.css",
-                "node_modules/leaflet/dist/leaflet.css",
-                "node_modules/leaflet-fullscreen/dist/leaflet.fullscreen.css"
+                "node_modules/mapbox-gl/dist/mapbox-gl.css"
               ],
               "fileReplacements": [
                 {

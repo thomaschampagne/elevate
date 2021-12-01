@@ -3,13 +3,13 @@ import _ from "lodash";
 import { Temperature } from "../../enums/temperature.enum";
 import { MeasureSystem } from "../../enums/measure-system.enum";
 import { BuildTarget } from "../../enums/build-target.enum";
-import { LeafletMapType } from "../../enums/leaflet-map-type.enum";
+import { MapBoxType } from "@elevate/shared/enums/mapbox-type.enum";
 
 export namespace UserSettings {
   export const DEFAULT_TEMPERATURE = Temperature.CELSIUS;
   export const DISABLE_MISSING_STRESS_SCORES_WARNING = false;
   export const DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING = false;
-  export const DEFAULT_MAP_TYPE = LeafletMapType.ATLAS;
+  export const DEFAULT_MAP_TYPE = MapBoxType.OUTDOOR;
 
   export type Props =
     | keyof UserSettings.BaseUserSettings
@@ -43,12 +43,14 @@ export namespace UserSettings {
       disableMissingStressScoresWarning: DISABLE_MISSING_STRESS_SCORES_WARNING,
       disableActivitiesNeedRecalculationWarning: DISABLE_ACTIVITIES_NEED_RECALCULATION_WARNING,
       zones: UserZonesModel.DEFAULT_MODEL,
-      defaultMapType: DEFAULT_MAP_TYPE
+      defaultMapType: DEFAULT_MAP_TYPE,
+      mapToken: null
     };
 
     public buildTarget: BuildTarget = BuildTarget.DESKTOP;
 
-    public defaultMapType: LeafletMapType = DEFAULT_MAP_TYPE;
+    public defaultMapType: MapBoxType = DEFAULT_MAP_TYPE;
+    public mapToken: string = null;
   }
 
   export class ExtensionUserSettings extends BaseUserSettings {

@@ -4,8 +4,6 @@ import Plotly from "plotly.js-basic-dist";
 import { PlotlyModule } from "angular-plotly.js";
 import { ActivityViewRoutingModule } from "./activity-view-routing.module";
 import { CoreModule } from "../../core/core.module";
-import { LeafletModule } from "@asymmetrik/ngx-leaflet";
-import { ActivityViewMapComponent } from "./activity-view-map/activity-view-map.component";
 import { ActivityGraphChartComponent } from "./activity-view-graph/activity-graph-chart.component";
 import { ActivityViewTimeInZonesComponent } from "./activity-view-time-in-zones/activity-view-time-in-zones.component";
 import { ActivityViewPeaksComponent } from "./activity-view-peaks/activity-view-peaks.component";
@@ -21,11 +19,12 @@ import { ActivityViewStatsComponent } from "./activity-view-stats/activity-view-
 import { ActivityStatsService } from "./shared/activity-stats.service";
 import { ActivitySensorsService } from "./shared/activity-sensors.service";
 import { ActivityEditDialogComponent } from "./activity-edit/activity-edit-dialog.component";
+import { ActivityViewMapComponent } from "./activity-view-map/activity-view-map.component";
 
 PlotlyModule.plotlyjs = Plotly;
 
 @NgModule({
-  imports: [CoreModule, ActivityViewRoutingModule, PlotlyModule, LeafletModule],
+  imports: [CoreModule, ActivityViewRoutingModule, PlotlyModule],
   declarations: [
     ActivityViewComponent,
     ActivityViewMapComponent,

@@ -277,9 +277,7 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
           } else if (appError.code === AppError.FT_NO_ACTIVITY_ATHLETE_MODEL) {
             this.isReSyncRequired = true;
           } else {
-            const message =
-              appError.toString() +
-              ". Press (Alt+Shift+D+E+V) to see a more detailed error message in browser console.";
+            const message = appError.toString();
             this.snackBar.open(message, "Close");
             this.logger.error(message);
           }

@@ -314,8 +314,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
         this.dataSource.data = activities;
       })
       .catch(error => {
-        const message =
-          error.toString() + ". Press (Alt+Shift+D+E+V) to see a more detailed error message in browser console.";
+        const message = error.toString();
         this.snackBar.open(message, "Close");
         this.logger.error(message);
       })

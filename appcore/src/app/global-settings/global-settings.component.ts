@@ -80,7 +80,10 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
           option.active = _.find(option.list, {
             key: _.propertyOf(userSettings)(option.key)
           });
-        } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
+        } else if (
+          option.type === GlobalSettingsService.TYPE_OPTION_NUMBER ||
+          option.type === GlobalSettingsService.TYPE_OPTION_TEXT
+        ) {
           option.value = _.propertyOf(userSettings)(option.key);
         } else {
           this.logger.error("Option type not supported");
@@ -107,6 +110,9 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     } else if (option.type === GlobalSettingsService.TYPE_OPTION_LIST) {
       optionKey = option.key;
       optionValue = option.active.key;
+    } else if (option.type === GlobalSettingsService.TYPE_OPTION_TEXT) {
+      optionKey = option.key;
+      optionValue = option.value;
     } else if (option.type === GlobalSettingsService.TYPE_OPTION_NUMBER) {
       if (_.isNull(option.value) || _.isUndefined(option.value) || !_.isNumber(option.value)) {
         this.resetOptionToDefaultValue(option);

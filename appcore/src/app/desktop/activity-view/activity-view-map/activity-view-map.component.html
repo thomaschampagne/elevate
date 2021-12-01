@@ -1,10 +1,12 @@
-<div leaflet
-     [style.width]="MAP_WIDTH_PERCENT + '%'"
-     [style.height]="MAP_HEIGHT_PX + 'px'"
-     [leafletOptions]="options"
-     [leafletLayers]="leafletLayers"
-     [leafletLayersControl]="layersControl"
-     (leafletMapReady)="onMapReady($event)"
-     (leafletLayersControlReady)="onLayersControlReady($event)"
-     (auxclick)="onAuxClick($event)">
+<div class="wrapper">
+  <div *ngIf="isMapReady === false" fxLayout="column" fxLayoutAlign="center center" class="h-100">
+    <div>Unable to load map data at the moment. Please try again later...</div>
+
+    <div class="pad-sml-bt">
+      <button mat-stroked-button color="primary" [routerLink]="'/globalSettings'">
+        ...or configure your personal MapBox account now
+      </button>
+    </div>
+  </div>
+  <div id="map" *ngIf="isMapReady !== false"></div>
 </div>

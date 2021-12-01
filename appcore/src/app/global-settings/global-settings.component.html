@@ -16,7 +16,7 @@
     </mat-card-title>
     <mat-card-content>
       <mat-list>
-      <ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
+        <ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
           <mat-list-item *ngIf="!option.hidden">
           <span matLine>
             <span [innerHTML]="domSanitizer.bypassSecurityTrustHtml(option.title)"></span>
@@ -63,7 +63,14 @@
                 max="{{option.max}}"
                 min="{{option.min}}"
                 step="{{option.step}}"
-                type="number" />
+                type="number"/>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="option.type == 'text'">
+              <input
+                (change)="onOptionChange(option)"
+                [(ngModel)]="option.value"
+                matInput type="text"/>
             </mat-form-field>
 
           </mat-list-item>

@@ -90,8 +90,7 @@
 
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <div *ngIf="hasMapData" fxFlex="67">
-        <app-activity-view-map [latLng]="streams.latlng">
-        </app-activity-view-map>
+        <app-activity-view-map [latLng]="streams.latlng"></app-activity-view-map>
       </div>
       <div *ngIf="hasMapData" fxFlex="1"></div>
       <div fxFlex="{{hasMapData ? 32 : 100}}">

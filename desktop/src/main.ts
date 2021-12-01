@@ -141,7 +141,7 @@ class Main {
     // Configure shortcuts on focus
     this.app.on("browser-window-focus", () => {
       // Toggle dev tool shortcut
-      globalShortcut.register("Alt+Shift+D+E+V", () => {
+      globalShortcut.register("D+Ctrl+Alt+E+V+Shift", () => {
         this.mainWindow.webContents.toggleDevTools();
       });
 

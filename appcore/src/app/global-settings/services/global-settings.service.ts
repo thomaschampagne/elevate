@@ -5,13 +5,14 @@ import _ from "lodash";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { Temperature } from "@elevate/shared/enums/temperature.enum";
 import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
-import { LeafletMapType } from "@elevate/shared/enums/leaflet-map-type.enum";
+import { MapBoxType } from "@elevate/shared/enums/mapbox-type.enum";
 
 @Injectable()
 export class GlobalSettingsService {
   public static readonly TYPE_OPTION_CHECKBOX: string = "checkbox";
   public static readonly TYPE_OPTION_LIST: string = "list";
   public static readonly TYPE_OPTION_NUMBER: string = "number";
+  public static readonly TYPE_OPTION_TEXT: string = "text";
 
   public readonly sections: SectionModel[] = [
     {
@@ -63,9 +64,15 @@ export class GlobalSettingsService {
           title: "Default map type",
           type: "list",
           labels: ["All"],
-          list: _.keys(LeafletMapType).map(mapTypeKey => {
-            return { name: _.startCase(mapTypeKey.toLowerCase()), key: LeafletMapType[mapTypeKey] };
+          list: _.keys(MapBoxType).map(mapTypeKey => {
+            return { name: _.startCase(mapTypeKey.toLowerCase()), key: MapBoxType[mapTypeKey] };
           })
+        },
+        {
+          key: "mapToken",
+          title: "Personal Mapbox Token",
+          type: "text",
+          labels: ["All"]
         }
       ]
     },
