@@ -27,7 +27,7 @@ import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.eve
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
-import { EmptyEventLibError } from "../../../../../../sports-lib/lib/errors/empty-event-sports-libs.error";
+import { EmptyEventLibError } from "@sports-alliance/sports-lib/lib/errors/empty-event-sports-libs.error";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 describe("File activities integration tests", () => {
