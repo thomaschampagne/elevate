@@ -944,17 +944,22 @@ export class ActivityComputer {
       : null;
 
     // Running Index
-    scores.runPerfIndex = Activity.isRun(type)
-      ? ActivityComputer.runningPerformanceIndex(
-          this.athleteSnapshot,
-          stats.movingTime,
-          stats.heartRate?.avg,
-          stats.pace?.gapAvg,
-          this.streams.time,
-          this.streams.distance,
-          this.streams.velocity_smooth
-        )
-      : null;
+    scores.runPerfIndex =
+      Activity.isRun(type) &&
+      this.streams &&
+      this.streams.time?.length &&
+      this.streams.distance?.length &&
+      this.streams.velocity_smooth?.length
+        ? ActivityComputer.runningPerformanceIndex(
+            this.athleteSnapshot,
+            stats.movingTime,
+            stats.heartRate?.avg,
+            stats.pace?.gapAvg,
+            this.streams.time,
+            this.streams.distance,
+            this.streams.velocity_smooth
+          )
+        : null;
 
     // Swim SWOLF
     if (Activity.isSwim(type) && stats?.speed?.avg && stats?.cadence?.avgActive) {
