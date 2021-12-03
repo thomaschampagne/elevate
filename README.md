@@ -9,27 +9,11 @@
 
 ## Desktop App
 
-### Download installer (Windows, MacOS, Linux)
+### Download & Install
 
-#### Windows 
-_TODO_
-  
-#### MacOS
-_TODO_
-
-> ⚠️ You will get a "Unidentified developer" warning message when running app the first time. Of course, there is no malwares or virus in app. This message is displayed because the app is not yet signed with a Apple developer certificate.
->
-> See: [Open a Mac app from an unidentified developer](https://support.apple.com/en-gb/guide/mac-help/mh40616/mac)
-> 
-> **How-to open (first launch)**:
-> 
-> 1. In the Finder on your Mac, locate the "Elevate" app (Don't use Launchpad to do this. Launchpad doesn't allow you to access the shortcut menu)
-> 1. Right-click the "Elevate" app icon, then choose `Open` from the shortcut menu.
-> 1. Click also `Open` in the prompted dialog.
-> 1. You're done. You will not get the message again for the version installed.
-
-#### Linux
-_TODO_
+- [For Windows](https://thomaschampagne.github.io/elevate-docs/Download-%26-Install/Windows/)
+- [For macOS](https://thomaschampagne.github.io/elevate-docs/Download-%26-Install/macOS/)
+- For Linux: not shipped yet
 
 ### Build from sources
 
