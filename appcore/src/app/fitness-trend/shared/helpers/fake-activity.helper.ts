@@ -35,7 +35,7 @@ export class FakeActivityHelper {
       calories: 1,
       caloriesPerHour: 1,
       scores: {
-        runPerfIndex: 25.0,
+        runningRating: 25.0,
         stress: {}
       }
     } as ActivityStats;

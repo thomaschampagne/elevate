@@ -34,7 +34,7 @@ export class DefaultEssentialStatsGroup extends EssentialStatsGroup {
 export class RunningEssentialStatsGroup extends EssentialStatsGroup {
   public static readonly DEFAULT: RunningEssentialStatsGroup = new RunningEssentialStatsGroup(
     _.union([StatsDef.Distance.Running.distance, StatsDef.Generic.ascentGain], EssentialStatsGroup.BASE_STATS, [
-      StatsDef.Scores.Running.performanceIndex
+      StatsDef.Scores.Running.runningRating
     ])
   );
 

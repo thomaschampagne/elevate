@@ -59,7 +59,7 @@ export class AthleteSnapshotResolver {
     if (_.isNull(onDateString)) {
       // No compliant date given
 
-      const foreverDatedAthleteSettings = _.last(this.athleteModel.datedAthleteSettings);
+      const foreverDatedAthleteSettings = _.last<DatedAthleteSettings>(this.athleteModel.datedAthleteSettings);
       datedAthleteSettings = foreverDatedAthleteSettings
         ? foreverDatedAthleteSettings
         : DatedAthleteSettings.DEFAULT_MODEL;
@@ -70,7 +70,7 @@ export class AthleteSnapshotResolver {
       datedAthleteSettings = this.resolveDatedAthleteSettingsAtDate(onDateString);
     }
 
-    const athleteAge = this.athleteModel.birthDate ? age(this.athleteModel.birthDate, onDate) : null;
+    const athleteAge = this.athleteModel.birthDate && onDate ? age(this.athleteModel.birthDate, onDate) : null;
 
     return datedAthleteSettings
       ? new AthleteSnapshot(this.athleteModel.gender, athleteAge, datedAthleteSettings.toAthleteSettingsModel())
@@ -84,7 +84,7 @@ export class AthleteSnapshotResolver {
   public resolveDatedAthleteSettingsAtDate(onDate: string): DatedAthleteSettings {
     const onDateTime: number = new Date(onDate).getTime();
 
-    const datedAthleteSettings: DatedAthleteSettings = _.find(
+    const datedAthleteSettings: DatedAthleteSettings = _.find<DatedAthleteSettings>(
       this.athleteModel.datedAthleteSettings,
       (datedAthleteSettings: DatedAthleteSettings) => {
         const fromDate = datedAthleteSettings.since ? new Date(datedAthleteSettings.since) : new Date(0);

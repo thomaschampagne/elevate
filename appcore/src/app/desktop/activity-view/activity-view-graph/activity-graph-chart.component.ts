@@ -16,6 +16,7 @@ import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { Constant } from "@elevate/shared/constants/constant";
 import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { ElevationSensor } from "../shared/models/sensors/elevation.sensor";
 
 enum ScaleMode {
   TIME,
@@ -36,6 +37,8 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     "cadence",
     "grade_adjusted_speed"
   ];
+
+  private static readonly AREA_FILL_SENSOR_NAME: string[] = [ElevationSensor.NAME];
 
   private static readonly DEBUG_STREAMS: (keyof Streams)[] = ["grade_smooth", "watts_calc"];
 
@@ -178,13 +181,20 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   private addTracesFromAvailableSensors(): void {
     // For every available sensors on current activity
     for (const [index, sensor] of this.availableSensors.entries()) {
+      const hasAreaFill = ActivityGraphChartComponent.AREA_FILL_SENSOR_NAME.indexOf(sensor.name) !== -1;
+
       // create trace on scatter chart
-      const addedTrace = this.chart.addTrace(index + 1, sensor, {
-        color: sensor.color,
-        shape: "spline",
-        width: 1.25,
-        simplify: true
-      });
+      const addedTrace = this.chart.addTrace(
+        index + 1,
+        sensor,
+        {
+          color: sensor.color,
+          shape: "spline",
+          width: 1.25,
+          simplify: true
+        },
+        hasAreaFill ? sensor.areaColor : null
+      );
 
       // Automatically hide traces when DEFAULT_SENSOR_COUNT_DISPLAYED are displayed
       addedTrace.visible = index < ActivityGraphChartComponent.DEFAULT_SENSOR_COUNT_DISPLAYED ? true : "legendonly";

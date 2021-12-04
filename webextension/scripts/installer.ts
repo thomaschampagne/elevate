@@ -1047,6 +1047,7 @@ class Installer {
       autoDetectedType: false,
       manual: null,
       notes: null,
+      flags: [],
       extras: {}
     };
 
@@ -1081,7 +1082,7 @@ class Installer {
         pss: legacyActivity?.extendedStats?.powerData?.powerStressScore || null,
         pssPerHour: legacyActivity?.extendedStats?.powerData?.powerStressScorePerHour || null
       },
-      runPerfIndex: legacyActivity?.extendedStats?.runningPerformanceIndex || null,
+      runningRating: legacyActivity?.extendedStats?.runningPerformanceIndex || null,
       swolf: {
         25: legacyActivity?.extendedStats?.swimSwolf || null,
         50: null

@@ -138,6 +138,7 @@ describe("File activities integration tests", () => {
     // Then
     promise.then(() => {
       const activity = extractResultActivity();
+      expect(activity.stats.scores.runPerfIndex).toBeCloseTo(63);
       done();
     });
   });*/
@@ -557,7 +558,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.caloriesPerHour, 787);
 
           // Scores
-          SpecsUtils.assertNearEqual(computedStats.scores.runPerfIndex, 72.5, 1);
+          SpecsUtils.assertNearEqual(computedStats.scores.runningRating, 72.5, 1);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.hrss, 51.3, 1);
 
           // Heart rate

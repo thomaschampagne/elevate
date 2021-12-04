@@ -108,10 +108,10 @@ export class RunningExtendedDataModifier extends AbstractExtendedDataModifier {
     if (
       this.userSettings.displayRunningPerformanceIndex &&
       this.activityInfo.isOwner &&
-      _.isNumber(this.stats.scores?.runPerfIndex)
+      _.isNumber(this.stats.scores?.runningRating)
     ) {
-      const runIndex = this.printNumber(this.stats.scores.runPerfIndex, 1);
-      this.insertContentAtGridPosition(1, 4, runIndex, "Running Index", "", "displayRunningPerformanceIndex");
+      const runIndex = this.printNumber(this.stats.scores.runningRating, 1);
+      this.insertContentAtGridPosition(1, 4, runIndex, "Running Rating", "", "displayRunningPerformanceIndex");
     }
   }
 

@@ -788,6 +788,13 @@ export namespace StatsDef {
       "75% quartile"
     );
 
+    export const stdDeviation = Stat.create<GradeStats>(
+      GradeSensor.DEFAULT,
+      "Std Deviation σ",
+      ["stats", "grade", "stdDev"],
+      "Standard deviation"
+    );
+
     export namespace Running {
       export const paceUp = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
@@ -977,13 +984,15 @@ export namespace StatsDef {
     export namespace Cycling {}
 
     export namespace Running {
-      export const performanceIndex = Stat.create<Scores>(
+      export const runningRating = Stat.create<Scores>(
         VoidSensor.DEFAULT,
-        "Perf. Index",
-        ["stats", "scores", "runPerfIndex"],
-        "Running Performance Index from Polar company.",
+        "Running Rating",
+        ["stats", "scores", "runningRating"],
+        '"Running Rating" is an equivalent of "Running Index" from Polar',
         1
-      );
+      )
+        .asForceDisplay()
+        .setMissingMessage("Activity don't match requirements to compute Running Rating");
     }
 
     export namespace Swimming {

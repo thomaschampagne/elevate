@@ -11,6 +11,7 @@ import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
 export abstract class MoveSensor extends Sensor {
   public defaultRoundDecimals = 1;
   public color = "#52bdff";
+  public areaColor = "#52bdff38";
   public streamKey: keyof Streams = "velocity_smooth";
   public peaksPath: [keyof ActivityStats, keyof Peaks] = ["speed", "peaks"];
 }

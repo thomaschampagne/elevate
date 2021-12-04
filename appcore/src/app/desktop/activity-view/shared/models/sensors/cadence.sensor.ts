@@ -12,6 +12,7 @@ export abstract class CadenceSensor extends Sensor {
 
   public name: string = CadenceSensor.NAME;
   public color = "#ff61dd";
+  public areaColor = "#FF61DD38";
   public streamKey: keyof Streams = "cadence";
 
   public peaksPath: [keyof ActivityStats, keyof Peaks] = ["cadence", "peaks"];

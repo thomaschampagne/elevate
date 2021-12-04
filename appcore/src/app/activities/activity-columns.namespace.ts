@@ -472,12 +472,12 @@ export namespace ActivityColumns {
       ).setDefault(true),
       new NumberColumn(
         Category.COMMON,
-        ["stats", "scores", "runPerfIndex"],
+        ["stats", "scores", "runningRating"],
         null,
-        "Run Perf. Index",
+        "Running Rating",
         Print.number,
         1
-      ).setDescription("Running Performance Index from Polar company."),
+      ).setDescription('"Running Rating" is an equivalent of "Running Index" from Polar'),
       new NumberColumn(Category.COMMON, ["stats", "calories"], null, "Calories", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "caloriesPerHour"], null, "Calories / Hour", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "moveRatio"], null, "Move Ratio", Print.number, 2),
@@ -1095,6 +1095,12 @@ export namespace ActivityColumns {
         1
       ),
       new NumberColumn(Category.GRADE, ["stats", "grade", "upperQ"], Definition.GRADE_UNITS, "75% Grade"),
+      new NumberColumn(
+        Category.GRADE,
+        ["stats", "grade", "stdDev"],
+        Definition.GRADE_UNITS,
+        "Standard Deviation Grade"
+      ),
 
       /**
        * Others

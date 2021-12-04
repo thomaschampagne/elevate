@@ -4,6 +4,7 @@ import _ from "lodash";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { Constant } from "@elevate/shared/constants/constant";
+import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
 
 export class ActivityFlagsProcessor {
   // Speed
@@ -24,8 +25,8 @@ export class ActivityFlagsProcessor {
     [ElevateSport.Swim, 5 / Constant.MPS_KPH_FACTOR] // Kph to mps
   ]);
 
-  // Heart-rate
-  private static readonly HR_AVG_THRESHOLD = 195;
+  // Elevation
+  private static readonly MAX_ASCENT_SPEED = ActivityComputer.MAX_ASCENT_SPEED;
 
   // Power
   private static readonly POWER_AVG_KG_THRESHOLD = 7;
@@ -44,7 +45,7 @@ export class ActivityFlagsProcessor {
       return null;
     }
 
-    return _.union(this.verifyRawStreams(activity.type, streams), this.verifyStats(activity));
+    return _.uniq(_.union(this.verifyRawStreams(activity.type, streams), this.verifyStats(activity)));
   }
 
   /**
@@ -75,7 +76,7 @@ export class ActivityFlagsProcessor {
     }
     return _.union(
       this.verifyTime(activity.stats),
-      this.verifyAverages(activity.type, activity.stats),
+      this.verifyAverages(activity.type, activity.stats, activity.athleteSnapshot.athleteSettings),
       this.verifyThresholds(activity.stats),
       this.verifyStressScores(activity.stats),
       this.verifyPace(activity.type, activity.stats)
@@ -119,7 +120,11 @@ export class ActivityFlagsProcessor {
     return flags;
   }
 
-  private static verifyAverages(sport: ElevateSport, stats: ActivityStats): ActivityFlag[] {
+  private static verifyAverages(
+    sport: ElevateSport,
+    stats: ActivityStats,
+    athleteSettings: AthleteSettings
+  ): ActivityFlag[] {
     const flags: ActivityFlag[] = [];
 
     // Speed
@@ -132,8 +137,13 @@ export class ActivityFlagsProcessor {
       flags.push(ActivityFlag.SPEED_AVG_ABNORMAL);
     }
 
+    // Ascent speed
+    if (Number.isFinite(stats?.elevation?.ascentSpeed) && stats?.elevation?.ascentSpeed > this.MAX_ASCENT_SPEED) {
+      flags.push(ActivityFlag.ASCENT_SPEED_ABNORMAL);
+    }
+
     // Heart rate
-    if (Number.isFinite(stats?.heartRate?.avg) && stats?.heartRate?.avg > this.HR_AVG_THRESHOLD) {
+    if (Number.isFinite(stats?.heartRate?.avg) && stats?.heartRate?.avg > athleteSettings.maxHr) {
       flags.push(ActivityFlag.HR_AVG_ABNORMAL);
     }
 

@@ -70,11 +70,10 @@ export class TimeInZonesChartComponent extends BaseChartComponent<BarsChart> imp
 
   public ngOnInit(): void {
     const barsData = this.chart.addBarsData(this.sensor.name, {
-      color: this.sensor.color,
-      opacity: 0.7,
+      color: this.sensor.areaColor,
       line: {
-        color: "black",
-        width: 1
+        color: this.sensor.color,
+        width: 1.25
       }
     });
 

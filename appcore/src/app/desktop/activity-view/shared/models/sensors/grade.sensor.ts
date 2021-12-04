@@ -11,6 +11,7 @@ export class GradeSensor extends Sensor {
 
   public streamKey: keyof Streams = "grade_smooth";
   public color = "#00efd3";
+  public areaColor = "#00efd338";
   public name: string = GradeSensor.NAME;
   public defaultRoundDecimals = 1;
 

@@ -11,6 +11,7 @@ export class HeartRateSensor extends Sensor {
 
   public streamKey: keyof Streams = "heartrate";
   public color = "#ff5f4b";
+  public areaColor = "#ff5f4b38";
   public name: string = HeartRateSensor.NAME;
   public defaultRoundDecimals = 0;
 

@@ -27,7 +27,8 @@ export class GradeStatsGroup extends StatsGroup {
     StatsDef.Grade.min,
     StatsDef.Grade.q25,
     StatsDef.Grade.q50,
-    StatsDef.Grade.q75
+    StatsDef.Grade.q75,
+    StatsDef.Grade.stdDeviation
   ]);
 }
 
@@ -59,7 +60,8 @@ export class RunningGradeStatsGroup extends GradeStatsGroup {
     StatsDef.Grade.min,
     StatsDef.Grade.q25,
     StatsDef.Grade.q50,
-    StatsDef.Grade.q75
+    StatsDef.Grade.q75,
+    StatsDef.Grade.stdDeviation
   ]);
 
   constructor(stats: Stat<any>[]) {

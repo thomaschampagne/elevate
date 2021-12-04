@@ -167,7 +167,7 @@ export class TrainingEffect {
 
 export class Scores {
   public stress: StressScores;
-  public runPerfIndex?: number;
+  public runningRating?: number;
   public swolf?: { 25?: number; 50?: number };
 }
 
@@ -274,6 +274,9 @@ export enum ActivityFlag {
   // Speed
   SPEED_AVG_ABNORMAL,
   SPEED_STD_DEV_ABNORMAL,
+
+  // Elevation
+  ASCENT_SPEED_ABNORMAL,
 
   // Pace
   PACE_AVG_FASTER_THAN_GAP,
@@ -425,12 +428,15 @@ export const ACTIVITY_FLAGS_DESC_MAP = new Map<ActivityFlag, string>([
   // Pace
   [ActivityFlag.PACE_AVG_FASTER_THAN_GAP, "average pace is faster than grade adjusted pace"],
 
+  // Elevation
+  [ActivityFlag.ASCENT_SPEED_ABNORMAL, "Abnormal ascent speed"],
+
   // Power
   [ActivityFlag.POWER_AVG_KG_ABNORMAL, "Abnormal average watts/kg"],
   [ActivityFlag.POWER_THRESHOLD_ABNORMAL, "Abnormal power behavior"],
 
   // Heart-rate
-  [ActivityFlag.HR_AVG_ABNORMAL, "Abnormal average heart rate"],
+  [ActivityFlag.HR_AVG_ABNORMAL, "Abnormal heart rate"],
 
   // Scores
   [ActivityFlag.SCORE_HRSS_PER_HOUR_ABNORMAL, "Abnormal Heart Rate Stress Score (HRSS)"],

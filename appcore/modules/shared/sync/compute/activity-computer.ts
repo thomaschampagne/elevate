@@ -99,6 +99,9 @@ export class ActivityComputer {
   private static readonly GRADE_FLAT_PROFILE_THRESHOLD: number = 60;
   private static readonly WEIGHTED_WATTS_TIME_BUFFER: number = 30; // Seconds
 
+  // Elevation
+  public static readonly MAX_ASCENT_SPEED = 2200;
+
   private readonly isMoving: (speed: number) => boolean;
   private readonly isActiveCadence: (cadence: number) => boolean;
 
@@ -211,19 +214,17 @@ export class ActivityComputer {
    * https://support.polar.com/en/support/tips/Running_Index_feature
    * https://www.polar.com/en/smart_coaching/features/running_index/chart
    */
-  public static runningPerformanceIndex(
+  public static runningRating(
     athleteSnapshot: AthleteSnapshot,
-    movingSeconds: number,
-    avgHr: number,
-    avgGap: number,
+    stats: ActivityStats,
     timeArray: number[],
     distanceArray: number[],
     velocityArray: number[]
   ): number {
     if (
-      !movingSeconds ||
-      !avgHr ||
-      !avgGap ||
+      !stats.movingTime ||
+      !stats?.heartRate?.avg ||
+      !stats?.pace?.gapAvg ||
       !athleteSnapshot?.athleteSettings?.maxHr ||
       _.isEmpty(timeArray) ||
       _.isEmpty(distanceArray) ||
@@ -231,7 +232,32 @@ export class ActivityComputer {
     ) {
       return null;
     }
+
+    // Verify running rating requirements
     const COOPER_KPH_THRESHOLD = 6;
+
+    // Verify legit ascent speed to get proper grade adjusted distance value
+    if (Number.isFinite(stats?.elevation?.ascentSpeed) && stats?.elevation?.ascentSpeed > this.MAX_ASCENT_SPEED) {
+      return null;
+    }
+
+    // Verify avg heart-rate against athlete current max hr. Should not be higher!
+    if (Number.isFinite(stats?.heartRate?.avg) && stats?.heartRate?.avg > athleteSnapshot.athleteSettings.maxHr) {
+      return null;
+    }
+
+    // Verify standard deviation. Missing variation means heart rate problem
+    if (Number.isFinite(stats?.heartRate?.stdDev) && stats?.heartRate?.stdDev === 0) {
+      return null;
+    }
+
+    // Ensure to have legit hr effort using HRR%
+    if (
+      (Number.isFinite(stats?.heartRate?.avgReserve) && stats.heartRate.avgReserve < 52) ||
+      stats.heartRate.avgReserve > 98
+    ) {
+      return null;
+    }
 
     // Verify that athlete ran at least 12 minutes over 6 kph. If not, no running performance index
     const bestCooperSpeed = ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 12) * Constant.MPS_KPH_FACTOR;
@@ -240,14 +266,14 @@ export class ActivityComputer {
     }
 
     // Compute the grade adjusted speed in meters per seconds
-    const gradeAdjustedMetersPerSec = Movement.paceToSpeed(avgGap) / Constant.MPS_KPH_FACTOR;
+    const gradeAdjustedMetersPerSec = Movement.paceToSpeed(stats.pace.gapAvg) / Constant.MPS_KPH_FACTOR;
 
     // Keep the greatest adjusted distance
-    const gradeAdjustedDistance = Math.max(gradeAdjustedMetersPerSec * movingSeconds, _.last(distanceArray));
+    const gradeAdjustedDistance = Math.max(gradeAdjustedMetersPerSec * stats.movingTime, _.last(distanceArray));
 
     // Now compute the running performance index
-    const distanceRate: number = (213.9 / (movingSeconds / 60)) * (gradeAdjustedDistance / 1000) ** 1.06 + 3.5;
-    const intensity: number = Math.min((avgHr / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3, 1);
+    const distanceRate: number = (213.9 / (stats.movingTime / 60)) * (gradeAdjustedDistance / 1000) ** 1.06 + 3.5;
+    const intensity: number = Math.min((stats.heartRate.avg / athleteSnapshot.athleteSettings.maxHr) * 1.45 - 0.3, 1);
     return _.round(distanceRate / intensity, ActivityComputer.RND) || null;
   }
 
@@ -943,18 +969,16 @@ export class ActivityComputer {
       ? _.round((scores.stress.pss / stats.movingTime) * Constant.SEC_HOUR_FACTOR, ActivityComputer.RND)
       : null;
 
-    // Running Index
-    scores.runPerfIndex =
+    // Running Rating
+    scores.runningRating =
       Activity.isRun(type) &&
       this.streams &&
       this.streams.time?.length &&
       this.streams.distance?.length &&
       this.streams.velocity_smooth?.length
-        ? ActivityComputer.runningPerformanceIndex(
+        ? ActivityComputer.runningRating(
             this.athleteSnapshot,
-            stats.movingTime,
-            stats.heartRate?.avg,
-            stats.pace?.gapAvg,
+            stats as ActivityStats,
             this.streams.time,
             this.streams.distance,
             this.streams.velocity_smooth

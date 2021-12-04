@@ -105,7 +105,7 @@ export class Upgrade_7_0_0_$13_alpha extends DesktopMigration {
         pss: (legacyActivity?.extendedStats?.powerData?.powerStressScore as number) || null,
         pssPerHour: (legacyActivity?.extendedStats?.powerData?.powerStressScorePerHour as number) || null
       },
-      runPerfIndex: (legacyActivity?.extendedStats?.runningPerformanceIndex as number) || null,
+      runningRating: (legacyActivity?.extendedStats?.runningPerformanceIndex as number) || null,
       swolf: {
         25: (legacyActivity?.extendedStats?.swimSwolf as number) || null,
         50: null

@@ -89,16 +89,21 @@ export class ScatterChart extends PlotChart {
     super(layout, config);
   }
 
-  public addTrace(traceIndex: number, sensor: Sensor, lineProperty: Partial<ScatterLine>): Partial<PlotData> {
+  public addTrace(
+    traceIndex: number,
+    sensor: Sensor,
+    lineProperty: Partial<ScatterLine>,
+    areaColor: string
+  ): Partial<PlotData> {
     // Create trace data
     const traceData = super.addPlotData("scatter", sensor.name);
 
     // Add trace specifics
     traceData.yaxis = `y${traceIndex}`;
     traceData.line = lineProperty;
-    if (sensor.areaColor) {
+    if (areaColor) {
       traceData.fill = "tozeroy";
-      traceData.fillcolor = sensor.areaColor;
+      traceData.fillcolor = areaColor;
     }
 
     // Return as pointer for external specific config
