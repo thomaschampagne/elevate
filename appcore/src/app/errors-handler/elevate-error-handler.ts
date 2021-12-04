@@ -29,7 +29,7 @@ export abstract class ElevateErrorHandler implements ErrorHandler {
   public handleError(error: Error): void {
     error = ElevateErrorHandler.provideErrorIfPromiseRejection(error);
 
-    this.loggerService.error(error);
+    this.loggerService.error(error.message || error);
 
     if (error) {
       let errorMessage: string;

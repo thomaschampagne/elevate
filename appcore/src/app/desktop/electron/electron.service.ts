@@ -15,7 +15,11 @@ export class ElectronService {
 
   public forwardHtmlLinkClicksToDefaultBrowser(): void {
     document.querySelector("body").addEventListener("click", (event: any) => {
-      if (event.target.tagName.toLowerCase() === "a" && !event.target.attributes.download) {
+      if (
+        event.target.tagName.toLowerCase() === "a" &&
+        event.target.href.startsWith("http") &&
+        !event.target.attributes.download
+      ) {
         event.preventDefault();
         this.openExternalUrl(event.target.href);
       }

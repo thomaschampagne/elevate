@@ -10,6 +10,7 @@ import { UserSettingsService } from "../../../shared/services/user-settings/user
 import { DesktopUserSettingsService } from "../../../shared/services/user-settings/desktop/desktop-user-settings.service";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { StyleOption } from "mapbox-gl-controls/lib/StylesControl/types";
+import { MapTokenService } from "../../mapbox/map-token.service";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
@@ -21,6 +22,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(UserSettingsService) private readonly userSettingsService: DesktopUserSettingsService,
     @Inject(ActivityViewService) private readonly activityViewService: ActivityViewService,
+    @Inject(MapTokenService) private readonly mapTokenService: MapTokenService,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.isMapReady = null;
@@ -86,9 +88,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
   }
 
   private getMapBoxToken(): Promise<string> {
-    return this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
-      return Promise.resolve(userSettings.mapToken);
-    });
+    return this.mapTokenService.get();
   }
 
   private configure(mapBoxToken: string): void {

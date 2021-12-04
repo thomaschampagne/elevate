@@ -18,9 +18,9 @@ import { sha256 } from "@elevate/shared/tools/hash";
 @Injectable()
 export class MachineService {
   private static readonly MACHINE_CHECKIN_ENDPOINT = `${environment.backendBaseUrl}/machine/checkIn`;
-
   private static readonly MACHINE_AUTH_ENDPOINT = `${environment.backendBaseUrl}/machine/auth`;
-  private static readonly INSIGHT_API_MATCH_REGEX = "/insights/.*";
+
+  private static readonly AUTHENTICATED_PATH_REGEX = "/insights/.*|/map/token";
   private static readonly HEADER_TOKEN_NAME = "X-Elevate-Token";
   private static readonly LS_TOKEN_KEY = "machineToken";
 
@@ -66,7 +66,7 @@ export class MachineService {
    * Authenticate request if required by target url pattern
    */
   public authenticateRequest(request: HttpRequest<any>): HttpRequest<any> {
-    if (!request.url.match(MachineService.INSIGHT_API_MATCH_REGEX)) {
+    if (!request.url.match(MachineService.AUTHENTICATED_PATH_REGEX)) {
       return request;
     }
 
