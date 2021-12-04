@@ -26,7 +26,11 @@ export class ActivityFlagsProcessor {
   ]);
 
   // Elevation
-  private static readonly MAX_ASCENT_SPEED = ActivityComputer.MAX_ASCENT_SPEED;
+  private static readonly MAX_ASCENT_SPEED_DEFAULT = 2200;
+  static readonly MAX_ASCENT_SPEED_MAP = new Map<ElevateSport, number>([
+    [ElevateSport.AlpineSki, 6000],
+    [ElevateSport.Snowboard, 6000]
+  ]);
 
   // Power
   private static readonly POWER_AVG_KG_THRESHOLD = 7;
@@ -138,7 +142,12 @@ export class ActivityFlagsProcessor {
     }
 
     // Ascent speed
-    if (Number.isFinite(stats?.elevation?.ascentSpeed) && stats?.elevation?.ascentSpeed > this.MAX_ASCENT_SPEED) {
+    const maxAscentSpeed = this.MAX_ASCENT_SPEED_MAP.get(sport) || this.MAX_ASCENT_SPEED_DEFAULT;
+    if (
+      Number.isFinite(maxAscentSpeed) &&
+      Number.isFinite(stats?.elevation?.ascentSpeed) &&
+      stats?.elevation?.ascentSpeed > maxAscentSpeed
+    ) {
       flags.push(ActivityFlag.ASCENT_SPEED_ABNORMAL);
     }
 

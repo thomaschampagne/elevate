@@ -100,7 +100,6 @@ export class ActivityComputer {
   private static readonly WEIGHTED_WATTS_TIME_BUFFER: number = 30; // Seconds
 
   // Elevation
-  public static readonly MAX_ASCENT_SPEED = 2200;
 
   private readonly isMoving: (speed: number) => boolean;
   private readonly isActiveCadence: (cadence: number) => boolean;
@@ -235,9 +234,10 @@ export class ActivityComputer {
 
     // Verify running rating requirements
     const COOPER_KPH_THRESHOLD = 6;
+    const MAX_ASCENT_SPEED = 2200;
 
     // Verify legit ascent speed to get proper grade adjusted distance value
-    if (Number.isFinite(stats?.elevation?.ascentSpeed) && stats?.elevation?.ascentSpeed > this.MAX_ASCENT_SPEED) {
+    if (Number.isFinite(stats?.elevation?.ascentSpeed) && stats?.elevation?.ascentSpeed > MAX_ASCENT_SPEED) {
       return null;
     }
 

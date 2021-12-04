@@ -111,18 +111,35 @@ describe("ActivityFlagsProcessor", () => {
       done();
     });
 
-    it("should return common avg flags (other)", done => {
+    it("should return common avg flags (Alpine Ski)", done => {
       // Given
       activity.stats = new ActivityStats();
-      activity.type = ElevateSport.Other;
-
+      activity.type = ElevateSport.AlpineSki;
       _.set<ActivityStats>(activity.stats, "heartRate.avg", 196);
+      _.set<ActivityStats>(activity.stats, "elevation.ascentSpeed", 5999);
 
       // When
       const flags: ActivityFlag[] = ActivityFlagsProcessor.verify(activity, streams);
 
       // Then
       expect(_.indexOf(flags, ActivityFlag.HR_AVG_ABNORMAL) !== -1).toBeTruthy();
+      expect(_.indexOf(flags, ActivityFlag.ASCENT_SPEED_ABNORMAL) === -1).toBeTruthy();
+      done();
+    });
+
+    it("should return common avg flags (other)", done => {
+      // Given
+      activity.stats = new ActivityStats();
+      activity.type = ElevateSport.Other;
+      _.set<ActivityStats>(activity.stats, "heartRate.avg", 196);
+      _.set<ActivityStats>(activity.stats, "elevation.ascentSpeed", 5999);
+
+      // When
+      const flags: ActivityFlag[] = ActivityFlagsProcessor.verify(activity, streams);
+
+      // Then
+      expect(_.indexOf(flags, ActivityFlag.HR_AVG_ABNORMAL) !== -1).toBeTruthy();
+      expect(_.indexOf(flags, ActivityFlag.ASCENT_SPEED_ABNORMAL) !== -1).toBeTruthy();
       done();
     });
   });

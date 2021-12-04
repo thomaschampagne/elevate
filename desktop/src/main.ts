@@ -157,8 +157,10 @@ class Main {
       }
     });
 
-    // Setup user agent fallback without Electron pattern
-    this.app.userAgentFallback = this.app.userAgentFallback.replace(" Electron/" + process.versions.electron, "");
+    // Setup user agent fallback without Electron pattern and app name
+    this.app.userAgentFallback = this.app.userAgentFallback
+      .replace(" Electron/" + process.versions.electron, "")
+      .replace(` ${pkg.name}/${pkg.version}`, "");
   }
 
   private minimizeApp(): void {
