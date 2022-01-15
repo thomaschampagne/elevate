@@ -1,16 +1,16 @@
-import { SplitCalculator } from "./split-calculator";
+import { TimeSplitCalculator } from "./time-split-calculator";
 import _ from "lodash";
 import { Peak } from "../../models/sync/activity.model";
 import { Constant } from "../../constants/constant";
 
-export class PeaksCalculator {
+export class TimePeaksCalculator {
   private static readonly MAX_HOURS: number = 4;
 
   /**
    * Compute peaks of data overtime up to MAX_HOURS (=2h by default)
    */
-  public static compute(time: number[], data: number[], upToHours: number = PeaksCalculator.MAX_HOURS): Peak[] {
-    const splitCalculator = new SplitCalculator(time, data, {
+  public static compute(time: number[], data: number[], upToHours: number = TimePeaksCalculator.MAX_HOURS): Peak[] {
+    const splitCalculator = new TimeSplitCalculator(time, data, {
       maxScaleGapToLerp: Constant.SPLITS_MAX_SECONDS_GAP_TO_LERP,
       maxScaleGapAllowed: 60 * 60 * Constant.SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS
     });
@@ -31,6 +31,6 @@ export class PeaksCalculator {
     const maxTime = Math.min(time[time.length - 1], endSeconds);
     splitsRanges = [...splitsRanges.filter(t => t < maxTime), maxTime];
 
-    return splitCalculator.getBestSplitRanges(splitsRanges);
+    return splitCalculator.computeTimeBestSplitRanges(splitsRanges);
   }
 }

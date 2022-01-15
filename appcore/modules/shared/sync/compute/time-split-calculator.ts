@@ -1,33 +1,33 @@
 import _ from "lodash";
 import { WarningException } from "../../exceptions/warning.exception";
 
-export interface SplitCalculatorOptions {
+export interface TimeSplitCalculatorOptions {
   // Maximal scale gap under which data is interpolated
   maxScaleGapToLerp?: number;
   maxScaleGapAllowed?: number;
 }
 
-export class SplitCalculator {
+export class TimeSplitCalculator {
   private static readonly MAX_SCALE_GAP_TO_LERP = 60;
   private static readonly MAX_SCALE_GAP_ALLOWED = 60 * 60;
-  public scrScale: number[];
-  public scale: number[];
+  public scrTimeScale: number[];
+  public timeScale: number[];
   public data: number[];
 
-  constructor(srcScale: number[], srcData: number[], public options: SplitCalculatorOptions = {}) {
-    this.scrScale = srcScale;
-    this.scale = _.cloneDeep(this.scrScale);
+  constructor(scrTimeScale: number[], srcData: number[], public options: TimeSplitCalculatorOptions = {}) {
+    this.scrTimeScale = scrTimeScale;
+    this.timeScale = _.cloneDeep(this.scrTimeScale);
     this.data = _.cloneDeep(srcData);
-    this.options.maxScaleGapToLerp = this.options.maxScaleGapToLerp || SplitCalculator.MAX_SCALE_GAP_TO_LERP;
-    this.options.maxScaleGapAllowed = this.options.maxScaleGapAllowed || SplitCalculator.MAX_SCALE_GAP_ALLOWED;
-    this.normalize();
+    this.options.maxScaleGapToLerp = this.options.maxScaleGapToLerp || TimeSplitCalculator.MAX_SCALE_GAP_TO_LERP;
+    this.options.maxScaleGapAllowed = this.options.maxScaleGapAllowed || TimeSplitCalculator.MAX_SCALE_GAP_ALLOWED;
+    this.normalizeTime();
   }
 
-  public normalize(): void {
+  public normalizeTime(): void {
     const normalizedScale: number[] = [];
     const interpolatedData: number[] = [];
 
-    _.forEach(this.scale, (scaleValue: number, index: number, scale: number[]) => {
+    _.forEach(this.timeScale, (scaleValue: number, index: number, scale: number[]) => {
       interpolatedData.push(_.isNumber(this.data[index]) ? this.data[index] : 0);
       normalizedScale.push(scaleValue);
 
@@ -78,14 +78,21 @@ export class SplitCalculator {
       }
     });
 
-    this.scale = normalizedScale;
+    this.timeScale = normalizedScale;
     this.data = interpolatedData;
   }
 
-  public getBestSplit(scaleRange: number, roundDecimals: number = 3): { value: number; start: number; end: number } {
-    if (scaleRange > this.scale.length) {
+  public computeTimeBestSplit(
+    scaleRange: number,
+    roundDecimals: number = 3
+  ): { value: number; start: number; end: number } {
+    if (scaleRange > this.timeScale.length) {
       throw new WarningException(
-        "Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + "."
+        "Requested scaleRange of " +
+          scaleRange +
+          " is greater than scale range length of " +
+          this.timeScale.length +
+          "."
       );
     }
 
@@ -102,7 +109,7 @@ export class SplitCalculator {
       start = index;
       end = index + scaleRange;
 
-      while (this.scale[scaleRange + index]) {
+      while (this.timeScale[scaleRange + index]) {
         currentMaxSum = currentMaxSum + this.data[scaleRange + index] - this.data[index];
         if (maxSumFound < currentMaxSum) {
           maxSumFound = currentMaxSum;
@@ -113,8 +120,8 @@ export class SplitCalculator {
       }
 
       // Convert start/end best split index from normalized scale to the source scale
-      start = this.scrScale.findIndex(value => value >= start);
-      end = this.scrScale.findIndex(value => value >= end);
+      start = this.scrTimeScale.findIndex(value => value >= start);
+      end = this.scrTimeScale.findIndex(value => value >= end);
     } else {
       maxSumFound = _.max(this.data);
     }
@@ -122,12 +129,12 @@ export class SplitCalculator {
     return { value: _.round(maxSumFound / scaleRange, roundDecimals), start: start, end: end };
   }
 
-  public getBestSplitRanges(ranges: number[]): { range: number; result: number; start: number; end: number }[] {
+  public computeTimeBestSplitRanges(ranges: number[]): { range: number; result: number; start: number; end: number }[] {
     const results: { range: number; result: number; start: number; end: number }[] = [];
 
     _.forEach(ranges, (range: number) => {
       try {
-        const bestSplit = this.getBestSplit(range);
+        const bestSplit = this.computeTimeBestSplit(range);
         results.push({
           range: range,
           result: bestSplit.value,

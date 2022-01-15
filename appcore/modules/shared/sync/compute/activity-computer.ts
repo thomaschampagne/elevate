@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { RunningPowerEstimator } from "./running-power-estimator";
-import { SplitCalculator } from "./split-calculator";
+import { TimeSplitCalculator } from "./time-split-calculator";
 import { CaloriesEstimator } from "./calories-estimator";
 import { ProcessStreamMode, StreamProcessor } from "./stream-processor";
 import { AthleteSnapshot } from "../../models/athlete/athlete-snapshot.model";
@@ -35,7 +35,7 @@ import { ZoneModel } from "../../models/zone.model";
 import { ElevateSport } from "../../enums/elevate-sport.enum";
 import { UserZonesModel } from "../../models/user-settings/user-zones.model";
 import { Streams } from "../../models/activity-data/streams.model";
-import { PeaksCalculator } from "./peaks-calculator";
+import { TimePeaksCalculator } from "./time-peaks-calculator";
 import { AthleteSettings } from "../../models/athlete/athlete-settings/athlete-settings.model";
 import { Movement } from "../../tools/movement";
 import { percentile } from "../../tools/percentile";
@@ -260,7 +260,8 @@ export class ActivityComputer {
     }
 
     // Verify that athlete ran at least 12 minutes over 6 kph. If not, no running performance index
-    const bestCooperSpeed = ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 12) * Constant.MPS_KPH_FACTOR;
+    const bestCooperSpeed =
+      ActivityComputer.computeTimeSplit(velocityArray, timeArray, 60 * 12) * Constant.MPS_KPH_FACTOR;
     if (bestCooperSpeed < COOPER_KPH_THRESHOLD) {
       return null;
     }
@@ -498,14 +499,14 @@ export class ActivityComputer {
     return { descentGain, descentTime };
   }
 
-  private static computeSplit(values: number[], timeScale: number[], rangeSeconds: number): number {
+  private static computeTimeSplit(values: number[], timeScale: number[], rangeSeconds: number): number {
     let bestSplitResult = null;
     try {
-      const splitCalculator = new SplitCalculator(timeScale, values, {
+      const timeSplitCalculator = new TimeSplitCalculator(timeScale, values, {
         maxScaleGapToLerp: Constant.SPLITS_MAX_SECONDS_GAP_TO_LERP,
         maxScaleGapAllowed: 60 * 60 * Constant.SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS
       });
-      const bestSplit = splitCalculator.getBestSplit(rangeSeconds);
+      const bestSplit = timeSplitCalculator.computeTimeBestSplit(rangeSeconds);
       bestSplitResult = _.round(bestSplit.value, ActivityComputer.RND);
     } catch (err) {
       if (!(err instanceof WarningException)) {
@@ -582,10 +583,10 @@ export class ActivityComputer {
     }
   }
 
-  private static computePeaks(values: number[], timeScale: number[]): Peak[] {
+  private static computeTimePeaks(values: number[], timeScale: number[]): Peak[] {
     let peaks: Peak[] = null;
     try {
-      peaks = PeaksCalculator.compute(timeScale, values);
+      peaks = TimePeaksCalculator.compute(timeScale, values);
     } catch (err) {
       if (!(err instanceof WarningException)) {
         throw err;
@@ -1049,7 +1050,7 @@ export class ActivityComputer {
     const standardDeviation = ActivityComputer.computeStandardDeviation(velocityKphArray, avgSpeed);
     const [q25, q50, q75] = ActivityComputer.quartiles(velocityKphArray);
     const best20min =
-      ActivityComputer.computeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR || null;
+      ActivityComputer.computeTimeSplit(velocityArray, timeArray, 60 * 20) * Constant.MPS_KPH_FACTOR || null;
 
     // Prepare stats results
     const speedStats: SpeedStats = {
@@ -1063,7 +1064,7 @@ export class ActivityComputer {
       zones: this.returnZones
         ? this.computeZones(velocityKphArray, timeArray, this.userSettings.zones, ZoneType.SPEED)
         : null,
-      peaks: this.returnPeaks ? ActivityComputer.computePeaks(velocityArray, timeArray) : null
+      peaks: this.returnPeaks ? ActivityComputer.computeTimePeaks(velocityArray, timeArray) : null
     };
 
     // Calculate pace data
@@ -1129,7 +1130,7 @@ export class ActivityComputer {
     const standardDeviation = ActivityComputer.computeStandardDeviation(powerArray, avgWatts);
     const [q25, q50, q75]: number[] = ActivityComputer.quartiles(powerArray);
 
-    const best20min = ActivityComputer.computeSplit(powerArray, timeArray, 60 * 20) || null;
+    const best20min = ActivityComputer.computeTimeSplit(powerArray, timeArray, 60 * 20) || null;
 
     return {
       avg: _.round(avgWatts, ActivityComputer.RND),
@@ -1149,7 +1150,7 @@ export class ActivityComputer {
         this.returnZones && powerZoneType
           ? this.computeZones(powerArray, timeArray, this.userSettings.zones, powerZoneType)
           : null,
-      peaks: this.returnPeaks ? ActivityComputer.computePeaks(powerArray, timeArray) : null
+      peaks: this.returnPeaks ? ActivityComputer.computeTimePeaks(powerArray, timeArray) : null
     };
   }
 
@@ -1199,8 +1200,8 @@ export class ActivityComputer {
 
     const [q25, q50, q75]: number[] = ActivityComputer.quartiles(heartRateArray);
     const standardDeviation = ActivityComputer.computeStandardDeviation(heartRateArray, avgHeartRate);
-    const best20min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 20) || null;
-    const best60min = ActivityComputer.computeSplit(heartRateArray, timeArray, 60 * 60) || null;
+    const best20min = ActivityComputer.computeTimeSplit(heartRateArray, timeArray, 60 * 20) || null;
+    const best60min = ActivityComputer.computeTimeSplit(heartRateArray, timeArray, 60 * 60) || null;
 
     return {
       avg: _.round(avgHeartRate),
@@ -1216,7 +1217,7 @@ export class ActivityComputer {
       zones: this.returnZones
         ? this.computeZones(heartRateArray, timeArray, this.userSettings.zones, ZoneType.HEART_RATE)
         : null,
-      peaks: this.returnPeaks ? ActivityComputer.computePeaks(heartRateArray, timeArray) : null
+      peaks: this.returnPeaks ? ActivityComputer.computeTimePeaks(heartRateArray, timeArray) : null
     };
   }
 
@@ -1274,7 +1275,7 @@ export class ActivityComputer {
       zones: this.returnZones
         ? this.computeZones(cadenceArray, timeArray, this.userSettings.zones, cadenceZoneType)
         : null,
-      peaks: this.returnPeaks ? ActivityComputer.computePeaks(cadenceArray, timeArray) : null
+      peaks: this.returnPeaks ? ActivityComputer.computeTimePeaks(cadenceArray, timeArray) : null
     };
   }
 
@@ -1419,7 +1420,7 @@ export class ActivityComputer {
       zones: this.returnZones
         ? this.computeZones(gradeArray, timeArray, this.userSettings.zones, ZoneType.GRADE)
         : null,
-      peaks: this.returnPeaks ? ActivityComputer.computePeaks(gradeArray, timeArray) : null
+      peaks: this.returnPeaks ? ActivityComputer.computeTimePeaks(gradeArray, timeArray) : null
     };
   }
 
