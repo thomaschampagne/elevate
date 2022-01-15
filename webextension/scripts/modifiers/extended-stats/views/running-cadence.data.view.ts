@@ -1,4 +1,3 @@
-// tslint:disable:forin
 import _ from "lodash";
 import { AbstractCadenceDataView } from "./abstract-cadence-data.view";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";

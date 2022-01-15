@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import _ from "lodash";
 import $ from "jquery";
 import { Helper } from "../../helper";

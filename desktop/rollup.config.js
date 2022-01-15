@@ -4,9 +4,10 @@ import resolve from "@rollup/plugin-node-resolve";
 import { terser } from "rollup-plugin-terser";
 import json from "@rollup/plugin-json";
 
+// eslint-disable-next-line no-undef
 const IS_ELECTRON_PROD = process.env.ELECTRON_ENV && process.env.ELECTRON_ENV === "prod";
 
-// tslint:disable-next-line:no-console
+// eslint-disable-next-line no-undef
 console.info('Building desktop bundle in "' + (IS_ELECTRON_PROD ? "production" : "development") + '" mode.');
 
 const plugins = [
@@ -23,6 +24,7 @@ const plugins = [
   IS_ELECTRON_PROD ? terser() : null
 ];
 
+// eslint-disable-next-line no-undef
 module.exports = [
   {
     input: "./src/main.ts",

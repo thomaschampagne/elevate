@@ -6,7 +6,7 @@ import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 interface IOldV6Database {
   athlete?: AthleteModel;
   athleteId?: number;
-  bestSplitsConfiguration?: {};
+  bestSplitsConfiguration?: any;
   syncDateTime?: number;
   syncedActivities?: any[];
   userSettings?: ExtensionUserSettings;
@@ -159,7 +159,7 @@ export class Migration7x0x0x0 {
     };
   }
 
-  private setLokiData(doc: any, index: number = 1): any {
+  private setLokiData(doc: any, index = 1): any {
     const time = Date.now();
     doc.meta = {
       revision: 1,

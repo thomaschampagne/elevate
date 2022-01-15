@@ -1,4 +1,3 @@
-// tslint:disable:variable-name
 import LZString from "lz-string";
 
 export class Streams {

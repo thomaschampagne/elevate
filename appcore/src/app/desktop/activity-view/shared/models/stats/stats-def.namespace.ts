@@ -1,4 +1,4 @@
-// tslint:disable:no-shadowed-variable
+/* eslint-disable @typescript-eslint/no-shadow */
 import { Stat } from "./stat.model";
 import { TimeSensor } from "../sensors/time.sensor";
 import { DistanceSensor, RunningDistanceSensor, SwimDistanceSensor } from "../sensors/distance.sensor";

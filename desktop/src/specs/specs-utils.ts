@@ -10,12 +10,7 @@ export class SpecsUtils {
 
   private static FAILED_ASSERTS: Error[] = [];
 
-  public static assertNearEqual(
-    actual: number,
-    expected: number,
-    decimals: number = 0,
-    tolerancePercentage: number = 1
-  ): void {
+  public static assertNearEqual(actual: number, expected: number, decimals = 0, tolerancePercentage = 1): void {
     if (actual === null || actual === undefined) {
       throw new Error("actual cannot be null or undefined");
     }
@@ -80,7 +75,7 @@ export class SpecsUtils {
   public static assertNearEqualTime(
     actualTime: number | string,
     expectedTime: number | string,
-    tolerancePercentage: number = 1,
+    tolerancePercentage = 1,
     roundTime = false
   ): void {
     if (actualTime === null || actualTime === undefined) {

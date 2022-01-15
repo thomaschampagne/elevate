@@ -38,14 +38,14 @@
             <!--is checkbox?-->
             <mat-slide-toggle
               (change)="onOptionChange(option)"
-              *ngIf="option.type == 'checkbox'"
+              *ngIf="option.type === 'checkbox'"
               [(ngModel)]="option.active">
             </mat-slide-toggle>
 
             <!--is list?-->
             <mat-select
               (selectionChange)="onOptionChange(option)"
-              *ngIf="option.type == 'list'"
+              *ngIf="option.type === 'list'"
               [(ngModel)]="option.active">
               <mat-option
                 *ngFor="let listItem of option.list"
@@ -55,7 +55,7 @@
             </mat-select>
 
             <!--is input?-->
-            <mat-form-field *ngIf="option.type == 'number'">
+            <mat-form-field *ngIf="option.type === 'number'">
               <input
                 (change)="onOptionChange(option)"
                 [(ngModel)]="option.value"
@@ -66,7 +66,7 @@
                 type="number"/>
             </mat-form-field>
 
-            <mat-form-field *ngIf="option.type == 'text'">
+            <mat-form-field *ngIf="option.type === 'text'">
               <input
                 (change)="onOptionChange(option)"
                 [(ngModel)]="option.value"

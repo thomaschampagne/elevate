@@ -64,7 +64,6 @@ describe("AthleteService", () => {
   });
 
   describe("should fetch", () => {
-
     it("should fetch empty 'dated athlete settings'", done => {
       // Given
       const existingPeriodAthleteSettings: DatedAthleteSettings[] = [];

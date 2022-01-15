@@ -72,7 +72,7 @@ export class StravaApiClient {
     url: string,
     onStravaConnectorInfoUpdate: (stravaConnectorInfo: StravaConnectorInfo) => void,
     onQuotaReachedRetry: (retryMillis: number) => void,
-    quotaReachedTries: number = 1
+    quotaReachedTries = 1
   ): Promise<T> {
     if (!_.isNumber(stravaConnectorInfo.clientId) || _.isEmpty(stravaConnectorInfo.clientSecret)) {
       return Promise.reject(ErrorSyncEvent.STRAVA_API_UNAUTHORIZED.create());

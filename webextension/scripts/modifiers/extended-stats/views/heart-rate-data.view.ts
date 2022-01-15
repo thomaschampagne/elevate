@@ -1,4 +1,3 @@
-// tslint:disable:forin
 import _ from "lodash";
 import { Helper } from "../../../helper";
 import { AbstractDataView } from "./abstract-data.view";

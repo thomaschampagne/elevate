@@ -1,5 +1,5 @@
-// tslint:disable:max-line-length
-// tslint:disable:no-empty-interface
+/* eslint-disable max-len */
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import _ from "lodash";
 import moment from "moment";
 import {

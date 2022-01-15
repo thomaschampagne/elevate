@@ -1,4 +1,3 @@
-// tslint:disable:variable-name
 export class StravaActivityModel {
   public id: number;
   public name: string;

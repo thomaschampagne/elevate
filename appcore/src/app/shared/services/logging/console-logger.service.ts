@@ -1,4 +1,4 @@
-/* tslint:disable:no-console */
+/* eslint-disable no-console */
 import { LoggerService } from "./logger.service";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../../environments/environment";

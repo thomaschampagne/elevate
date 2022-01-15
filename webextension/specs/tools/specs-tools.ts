@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-export let removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
+export const removeActivityFromArray = (activityId: number, fromArray: Array<any>): Array<any> => {
   const predicate = {
     id: activityId
   } as any;
@@ -8,7 +8,7 @@ export let removeActivityFromArray = (activityId: number, fromArray: Array<any>)
   return _.without(fromArray, _.find(fromArray, predicate));
 };
 
-export let editActivityFromArray = (
+export const editActivityFromArray = (
   activityId: number,
   fromArray: Array<any>,
   newName: string,

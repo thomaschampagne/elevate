@@ -209,7 +209,7 @@ export class StravaConnector extends BaseConnector {
 
   public syncPages(
     syncEvents$: Subject<SyncEvent>,
-    stravaPageId: number = 1,
+    stravaPageId = 1,
     perPage: number = StravaConnector.ACTIVITIES_PER_PAGES
   ): Promise<void> {
     // Check for stop request and stop sync

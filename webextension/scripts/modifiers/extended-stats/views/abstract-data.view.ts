@@ -1,4 +1,3 @@
-// tslint:disable:forin
 import Chart, { ChartPoint, LinearTickOptions } from "chart.js";
 import _ from "lodash";
 import { Helper } from "../../../helper";

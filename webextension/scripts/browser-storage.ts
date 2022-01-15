@@ -31,7 +31,7 @@ export class BrowserStorage extends LegacyBrowserStorage {
     return object;
   }
 
-  public get<T>(storageType: BrowserStorageType, colName: string, getFirstDocOnly: boolean = false): Promise<T> {
+  public get<T>(storageType: BrowserStorageType, colName: string, getFirstDocOnly = false): Promise<T> {
     this.verifyExtensionId();
 
     return new Promise<T>((resolve, reject) => {
@@ -130,7 +130,7 @@ export class BrowserStorage extends LegacyBrowserStorage {
     storageType: BrowserStorageType,
     key: string | string[],
     value: T[] | T,
-    getFirstDocOnly: boolean = false
+    getFirstDocOnly = false
   ): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const params: any = {

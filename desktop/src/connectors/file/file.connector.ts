@@ -1023,7 +1023,7 @@ export class FileConnector extends BaseConnector {
   public scanForActivities(
     directory: string,
     afterDate: Date = null,
-    recursive: boolean = false,
+    recursive = false,
     pathsList = []
   ): ActivityFile[] {
     const files = this.getFs().readdirSync(directory);
@@ -1071,7 +1071,7 @@ export class FileConnector extends BaseConnector {
     return stats.mtime > stats.birthtime ? stats.mtime : stats.birthtime;
   }
 
-  public inflateActivitiesFromArchive(archiveFilePath: string, deleteArchive: boolean = false): Promise<string[]> {
+  public inflateActivitiesFromArchive(archiveFilePath: string, deleteArchive = false): Promise<string[]> {
     const fileName = path.basename(archiveFilePath);
     const currentArchiveDir = path.dirname(archiveFilePath);
     const archiveFileNameFingerPrint = Hash.apply(fileName, Hash.SHA256, { divide: 6 });
@@ -1133,7 +1133,7 @@ export class FileConnector extends BaseConnector {
     sourceDir: string,
     deleteArchives: boolean,
     inflateNotifier: Subject<string> = new Subject<string>(),
-    recursive: boolean = false
+    recursive = false
   ): Promise<void> {
     const files = this.getFs().readdirSync(sourceDir);
 

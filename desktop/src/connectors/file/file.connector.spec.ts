@@ -1,4 +1,3 @@
-// tslint:disable:jsdoc-format
 import { FileConnector } from "./file.connector";
 import fs from "fs";
 import path from "path";

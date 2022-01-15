@@ -1,4 +1,3 @@
-// tslint:disable:variable-name
 import { BareActivity } from "./bare-activity.model";
 import { ZoneModel } from "../zone.model";
 import _ from "lodash";

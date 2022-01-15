@@ -1,4 +1,4 @@
-// tslint:disable:component-selector
+/* eslint-disable @angular-eslint/component-selector */
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
 import katex from "katex";
 

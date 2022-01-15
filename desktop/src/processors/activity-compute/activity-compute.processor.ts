@@ -49,10 +49,10 @@ export class ActivityComputeProcessor {
     userSettings: UserSettings.BaseUserSettings,
     streams: Streams,
     deflateStreams: boolean,
-    returnPeaks: boolean = true,
-    returnZones: boolean = false,
+    returnPeaks = true,
+    returnZones = false,
     bounds: number[] = null,
-    isOwner: boolean = true,
+    isOwner = true,
     activityEssentials: ActivityEssentials = null
   ): Promise<{ computedActivity: Activity; deflatedStreams: string | null }> {
     try {

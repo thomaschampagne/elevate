@@ -223,7 +223,7 @@ export class SegmentRecentEffortsHRATimeModifier extends AbstractModifier {
 
           if (showWatts) {
             // scan Y-axis (time) to check for the reasonable vertical range to use
-            const translateRegEx: RegExp = /translate\((.*),(.*)\)/;
+            const translateRegEx = /translate\((.*),(.*)\)/;
             const yAxis = chart.find(".y.axis"); // <g class="y axis" transform="translate(-27.45, 0)">
             const ticks = yAxis.find(".tick");
 
