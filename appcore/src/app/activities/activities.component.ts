@@ -15,7 +15,6 @@ import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dia
 import json2csv, { Parser as Json2CsvParser } from "json2csv";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppError } from "../shared/models/app-error.model";
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
@@ -71,8 +70,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public columnsCategories: ActivityColumns.Category[];
   public displayedColumns: string[];
   public isImperial: boolean;
-  public hasActivities: boolean;
-  public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+  public hasActivities: boolean; // Can be null: don't know yet true/false status on load
+  public hasEmptyResults: boolean; // Can be null: don't know yet true/false status on load
   public initialized: boolean;
   public isPerformanceDegraded: boolean;
   public historyChangesSub: Subscription;
@@ -95,6 +94,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.hasActivities = null; // Can be null: don't know yet true/false status
+    this.hasEmptyResults = null; // Can be null: don't know yet true/false status
     this.initialized = false;
     this.isPerformanceDegraded = false;
 
@@ -165,20 +165,13 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       .pipe(debounce(() => timer(ActivitiesComponent.ACTIVITY_SEARCH_DEBOUNCE_TIME)))
       .subscribe(() => this.onActivityPrefNameChange());
 
-    this.syncService
-      .getSyncState()
-      .then((syncState: SyncState) => {
-        this.isSynced = syncState >= SyncState.PARTIALLY_SYNCED;
-
-        if (!this.isSynced) {
-          this.initialized = true;
-        }
-
-        return this.isSynced
+    this.activityService
+      .count()
+      .then((count: number) => {
+        this.hasActivities = count > 0;
+        return this.hasActivities
           ? this.userSettingsService.fetch()
-          : Promise.reject(
-              new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString())
-            );
+          : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "No activities available"));
       })
       .then((userSettings: BaseUserSettings) => {
         this.isImperial = userSettings.systemUnit === MeasureSystem.IMPERIAL;
@@ -206,7 +199,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       })
       .catch(error => {
         if (error instanceof AppError && error.code === AppError.SYNC_NOT_SYNCED) {
-          // Do nothing
+          this.initialized = true;
         } else {
           throw error;
         }
@@ -294,7 +287,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
     this.activityService
       .find(query, sort)
       .then((activities: Activity[]) => {
-        this.hasActivities = activities.length > 0;
+        this.hasEmptyResults = activities.length === 0;
 
         // Apply paging
         this.dataSource.paginator.pageIndex = this.preferences.pageIndex;

@@ -1,12 +1,13 @@
-import { Component, Inject } from "@angular/core";
+import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { AppService } from "../shared/services/app-service/app.service";
+import { ActivityService } from "../shared/services/activity/activity.service";
+import { Subscription } from "rxjs";
 
 @Component({
-  selector: "app-sync-required",
+  selector: "app-activities-required",
   template: `
-    <mat-card *ngIf="isSynced === false">
+    <mat-card *ngIf="hasActivities === false">
       <mat-card-title>Missing activities</mat-card-title>
       <mat-card-content>
         <div>This feature requires activities and none has been found.</div>
@@ -28,19 +29,35 @@ import { AppService } from "../shared/services/app-service/app.service";
     `
   ]
 })
-export class SyncRequiredComponent {
-  public isSynced: boolean;
+export class ActivitiesRequiredComponent implements OnInit, OnDestroy {
+  public hasActivities: boolean;
+  private historyChangesSub: Subscription;
 
   constructor(
     @Inject(AppService) public readonly appService: AppService,
+    @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(SyncService) protected readonly syncService: SyncService<any>
   ) {
-    this.syncService.getSyncState().then((syncState: SyncState) => {
-      this.isSynced = syncState >= SyncState.PARTIALLY_SYNCED;
+    this.activityService.count().then((count: number) => {
+      this.hasActivities = count > 0;
+    });
+  }
+
+  public ngOnInit(): void {
+    this.historyChangesSub = this.appService.historyChanges$.subscribe({
+      next: () => {
+        this.activityService.count().then((count: number) => {
+          this.hasActivities = count > 0;
+        });
+      }
     });
   }
 
   public syncRedirect(): void {
     this.syncService.redirect();
+  }
+
+  public ngOnDestroy(): void {
+    this.historyChangesSub.unsubscribe();
   }
 }

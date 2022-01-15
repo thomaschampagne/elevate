@@ -75,7 +75,7 @@
           <mat-icon fontSet="material-icons-outlined">edit</mat-icon>
           Edit activity
         </button>
-        <button mat-menu-item (click)="onRecalculateActivity()">
+        <button mat-menu-item (click)="onRecalculateActivity()" *ngIf="!activity.manual">
           <mat-icon fontSet="material-icons-outlined">memory</mat-icon>
           Recalculate activity
         </button>

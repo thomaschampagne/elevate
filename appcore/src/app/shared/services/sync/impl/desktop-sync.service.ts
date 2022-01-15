@@ -484,17 +484,25 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   }
 
   public getSyncState(): Promise<SyncState> {
-    return Promise.all([this.getConnectorSyncDateTimeDesc(), this.activityService.count()]).then((result: any[]) => {
+    return Promise.all([
+      this.getConnectorSyncDateTimeDesc(),
+      this.activityService.count(),
+      this.activityService.countWithConnector()
+    ]).then((result: any[]) => {
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = result[0] as ConnectorSyncDateTime[];
       const activitiesCount: number = result[1] as number;
+      const activitiesCountWithConnector: number = result[2] as number;
 
       const hasASyncDateTime: boolean = connectorSyncDateTimes.length > 0;
       const hasActivities: boolean = activitiesCount > 0;
+      const hasActivitiesWithConnector: boolean = activitiesCountWithConnector > 0;
 
       let syncState: SyncState;
       if (!hasASyncDateTime && !hasActivities) {
         syncState = SyncState.NOT_SYNCED;
-      } else if (!hasASyncDateTime && hasActivities) {
+      } else if (!hasASyncDateTime && hasActivities && !hasActivitiesWithConnector) {
+        syncState = SyncState.NOT_SYNCED;
+      } else if (!hasASyncDateTime && hasActivities && hasActivitiesWithConnector) {
         syncState = SyncState.PARTIALLY_SYNCED;
       } else {
         syncState = SyncState.SYNCED;

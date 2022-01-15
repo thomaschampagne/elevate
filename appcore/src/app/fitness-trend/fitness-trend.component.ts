@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import _ from "lodash";
 import { DayFitnessTrendModel } from "./shared/models/day-fitness-trend.model";
 import { SyncService } from "../shared/services/sync/sync.service";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { FitnessService } from "./shared/services/fitness.service";
 import { PeriodModel } from "./shared/models/period.model";
 import moment from "moment";
@@ -18,6 +17,7 @@ import { FitnessTrendConfigDialogComponent } from "./fitness-trend-config-dialog
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { Subscription } from "rxjs";
 import { AppService } from "../shared/services/app-service/app.service";
+import { ActivityService } from "../shared/services/activity/activity.service";
 
 @Component({
   selector: "app-fitness-trend",
@@ -64,13 +64,13 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
   public isSwimEnabled: boolean;
   public isEBikeRidesEnabled: boolean;
   public skipActivityTypes: string[] = [];
-  public isSynced: boolean = null; // Can be null: don't know yet true/false status on load
+  public hasActivities: boolean = null; // Can be null: don't know yet true/false status on load
   public areActivitiesCompliant: boolean = null; // Can be null: don't know yet true/false status on load
-  public isReSyncRequired: boolean = null; // Can be null: don't know yet true/false status on load
   public historyChangesSub: Subscription;
 
   constructor(
     @Inject(AppService) private readonly appService: AppService,
+    @Inject(ActivityService) private readonly activityService: ActivityService,
     @Inject(SyncService) private readonly syncService: SyncService<any>,
     @Inject(FitnessService) private readonly fitnessService: FitnessService,
     @Inject(MatDialog) private readonly dialog: MatDialog,
@@ -206,15 +206,13 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
   }
 
   public initialize(): Promise<void> {
-    return this.syncService
-      .getSyncState()
-      .then((syncState: SyncState) => {
-        this.isSynced = syncState >= SyncState.PARTIALLY_SYNCED;
-        return this.isSynced
+    return this.activityService
+      .count()
+      .then((count: number) => {
+        this.hasActivities = count > 0;
+        return this.hasActivities
           ? Promise.resolve()
-          : Promise.reject(
-              new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString())
-            );
+          : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "No activities available"));
       })
       .then(() => {
         // Init fitness trend config
@@ -274,8 +272,6 @@ export class FitnessTrendComponent implements OnInit, OnDestroy {
             appError.code === AppError.FT_ALL_ACTIVITIES_FILTERED
           ) {
             this.areActivitiesCompliant = false;
-          } else if (appError.code === AppError.FT_NO_ACTIVITY_ATHLETE_MODEL) {
-            this.isReSyncRequired = true;
           } else {
             const message = appError.toString();
             this.snackBar.open(message, "Close");

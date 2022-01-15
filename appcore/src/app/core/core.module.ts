@@ -7,7 +7,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 import { MaterialModule } from "../shared/modules/material.module";
 import { KatexExpressionComponent } from "../shared/components/katex-expression/katex-expression.component";
 import { ClipboardModule } from "ngx-clipboard";
-import { SyncRequiredComponent } from "../sync-required/sync-required.component";
+import { ActivitiesRequiredComponent } from "../sync-required/activities-required.component";
 
 @NgModule({
   imports: [
@@ -28,8 +28,8 @@ import { SyncRequiredComponent } from "../sync-required/sync-required.component"
     NgPipesModule,
     ClipboardModule,
     KatexExpressionComponent,
-    SyncRequiredComponent
+    ActivitiesRequiredComponent
   ],
-  declarations: [KatexExpressionComponent, SyncRequiredComponent]
+  declarations: [KatexExpressionComponent, ActivitiesRequiredComponent]
 })
 export class CoreModule {}

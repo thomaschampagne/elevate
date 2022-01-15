@@ -25,6 +25,7 @@ import { SPLASH_SCREEN_COMPONENT } from "../app-load/splash-screen.component";
 import { DesktopElevateErrorHandler } from "../errors-handler/desktop-elevate-error-handler";
 import { DesktopHttpInterceptor } from "../desktop/desktop-http-interceptor";
 import { HTTP_INTERCEPTORS } from "@angular/common/http";
+import { DesktopManualActivityDialogComponent } from "../desktop/manual-activity/desktop-manual-activity-dialog.component";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],
@@ -37,7 +38,8 @@ import { HTTP_INTERCEPTORS } from "@angular/common/http";
     DesktopTopBarComponent,
     DesktopAppMoreMenuComponent,
     DesktopSyncMenuComponent,
-    DesktopErrorsSyncDetailsDialogComponent
+    DesktopErrorsSyncDetailsDialogComponent,
+    DesktopManualActivityDialogComponent
   ],
   providers: [
     { provide: ErrorHandler, useClass: DesktopElevateErrorHandler },

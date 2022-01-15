@@ -684,7 +684,6 @@ export class FileConnector extends BaseConnector {
     const endDate = new Date(sportsLibActivity.endDate);
 
     const bareActivity: BareActivity = new Activity() as BareActivity;
-    bareActivity.id = Hash.apply(startDate.toISOString());
     const elevateSportResult = this.convertToElevateSport(sportsLibActivity);
     bareActivity.type = elevateSportResult.type;
     bareActivity.name = sportsLibActivity.name

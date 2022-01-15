@@ -11,12 +11,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2015",
+    "target": "es2017",
     "importHelpers": true,
-    "typeRoots": [
-      "node_modules/@types",
-      "../desktop/node_modules/"
-    ],
     "lib": [
       "es2020",
       "dom"

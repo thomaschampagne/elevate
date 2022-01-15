@@ -8,7 +8,6 @@ import { ProgressType } from "./shared/enums/progress-type.enum";
 import { YearProgressStyleModel } from "./year-progress-graph/models/year-progress-style.model";
 import { YearProgressHelperDialogComponent } from "./year-progress-helper-dialog/year-progress-helper-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { SyncState } from "../shared/services/sync/sync-state.enum";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { ActivityService } from "../shared/services/activity/activity.service";
@@ -173,7 +172,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   public activities: Activity[]; // Stored synced activities
   public yearProgressStyleModel: YearProgressStyleModel;
   public momentWatched: Moment;
-  public hasActivityModels: boolean;
+  public hasActivities: boolean;
   public yearProgressPresetsCount: number;
   public isProgressionInitialized;
   public isGraphExpanded: boolean;
@@ -192,7 +191,7 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   ) {
     this.availableYears = [];
     this.availableActivityTypes = [];
-    this.hasActivityModels = null; // Can be null: don't know yet true/false status on loadRollingSumPreferences
+    this.hasActivities = null; // Can be null: don't know yet true/false status on loadRollingSumPreferences
     this.yearProgressPresetsCount = null;
     this.isProgressionInitialized = false;
     this.rollingPeriods = YearProgressComponent.ROLLING_PERIODS;
@@ -230,24 +229,20 @@ export class YearProgressComponent implements OnInit, OnDestroy {
   }
 
   public initialize(): void {
-    this.syncService
-      .getSyncState()
-      .then((syncState: SyncState) => {
-        if (syncState < SyncState.PARTIALLY_SYNCED) {
-          this.hasActivityModels = false;
-          return Promise.reject(
-            new AppError(AppError.SYNC_NOT_SYNCED, "Not synced. SyncState is: " + SyncState[syncState].toString())
-          );
-        }
+    this.activityService
+      .count()
+      .then((count: number) => {
+        this.hasActivities = count > 0;
 
-        return Promise.all([this.userSettingsService.fetch(), this.activityService.fetch()]);
+        return this.hasActivities
+          ? Promise.all([this.userSettingsService.fetch(), this.activityService.fetch()])
+          : Promise.reject(new AppError(AppError.SYNC_NOT_SYNCED, "No activities available"));
       })
       .then(
         (results: any[]) => {
           this.activities = _.last(results) as Activity[];
-          this.hasActivityModels = !_.isEmpty(this.activities);
 
-          if (this.hasActivityModels) {
+          if (this.hasActivities) {
             const userSettings = _.first(results) as BaseUserSettings;
             this.isMetric = userSettings.systemUnit === MeasureSystem.METRIC;
             this.setup();

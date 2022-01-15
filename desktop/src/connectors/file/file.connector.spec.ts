@@ -1060,7 +1060,6 @@ describe("FileConnector", () => {
         const bareActivity = fileConnector.createBareActivity(sportsLibActivity);
 
         // Then
-        expect(bareActivity.id).toEqual(expectedId);
         expect(bareActivity.type).toEqual(ElevateSport.Ride);
         expect(bareActivity.name).toEqual(expectedName);
         expect(bareActivity.startTime).toEqual(startISODate);

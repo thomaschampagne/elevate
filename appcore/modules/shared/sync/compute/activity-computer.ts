@@ -172,13 +172,13 @@ export class ActivityComputer {
     ).compute();
   }
 
-  private static trainingImpulse(seconds: number, hrrPercent: number, gender: Gender): number {
+  public static trainingImpulse(seconds: number, hrrPercent: number, gender: Gender): number {
     const factor = gender === Gender.MEN ? 1.92 : 1.67;
     const hrrRatio = hrrPercent / 100;
     return (seconds / 60) * hrrRatio * 0.64 * Math.exp(factor * hrrRatio);
   }
 
-  private static heartRateReserveRatio(hr: number, maxHr: number, restHr: number): number {
+  public static heartRateReserveRatio(hr: number, maxHr: number, restHr: number): number {
     return Math.max((hr - restHr) / (maxHr - restHr), 0);
   }
 

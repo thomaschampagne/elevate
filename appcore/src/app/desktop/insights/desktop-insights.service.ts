@@ -39,10 +39,12 @@ export class DesktopInsightsService extends MachineAuthenticatedService {
     this.runtimeInfoService.getMachineCredentials().then(machineCredentials => {
       const machineId = machineCredentials.id;
 
-      // Extract insight activities
+      // Extract insight activities (push non-manual activities only)
       const insightActivities: InsightActivity[] = [];
       activities.forEach(activity => {
-        insightActivities.push(new InsightActivity(machineId, activity));
+        if (!activity.manual) {
+          insightActivities.push(new InsightActivity(machineId, activity));
+        }
       });
 
       // Compress insight activities before sending

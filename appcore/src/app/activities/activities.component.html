@@ -3,9 +3,9 @@
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
-<app-sync-required></app-sync-required>
+<app-activities-required></app-activities-required>
 
-<mat-card [fxHide]="!isSynced">
+<mat-card [fxHide]="!hasActivities">
   <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
     <mat-form-field fxFlex="20">
       <input (keyup)="activityPrefNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill
@@ -105,7 +105,7 @@
     You may reduce the number of columns displayed to avoid degraded performance.
   </div>
 
-  <div [fxHide]="!hasActivities">
+  <div [fxHide]="!hasActivities || hasEmptyResults">
     <div class="table-container">
       <table [dataSource]="dataSource" mat-table matSort (matSortChange)="onSortEvent($event)">
         <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
@@ -162,7 +162,7 @@
       <i>Hint: Double-click on rows to open activities</i>
     </div>
   </div>
-  <div *ngIf="!hasActivities" class="no-activities-found">
+  <div *ngIf="hasEmptyResults" class="no-activities-found">
     <div>No activities are matching criteria.</div>
     <div>
       <button (click)="onResetPreferences()" color="primary" mat-stroked-button>

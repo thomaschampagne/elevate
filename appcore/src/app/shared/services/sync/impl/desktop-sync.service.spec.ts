@@ -1306,7 +1306,10 @@ describe("DesktopSyncService", () => {
         Promise.resolve(connectorSyncDateTimes)
       );
 
-      const activityServiceSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(Promise.resolve(1));
+      const countSpy = spyOn(desktopSyncService.activityService, "count").and.returnValue(Promise.resolve(1));
+      const countWithConnectorSpy = spyOn(desktopSyncService.activityService, "countWithConnector").and.returnValue(
+        Promise.resolve(1)
+      );
 
       // When
       const promise = desktopSyncService.getSyncState();
@@ -1316,7 +1319,8 @@ describe("DesktopSyncService", () => {
         syncState => {
           expect(syncState).toEqual(expectedState);
           expect(findSpy).toHaveBeenCalledTimes(1);
-          expect(activityServiceSpy).toHaveBeenCalledTimes(1);
+          expect(countSpy).toHaveBeenCalledTimes(1);
+          expect(countWithConnectorSpy).toHaveBeenCalledTimes(1);
           done();
         },
         () => {

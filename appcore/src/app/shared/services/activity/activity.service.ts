@@ -5,8 +5,12 @@ import { Subject } from "rxjs";
 import { LoggerService } from "../logging/logger.service";
 import { Inject } from "@angular/core";
 import { ActivityCountByType } from "../../models/activity/activity-count-by-type.model";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Activity, PaceStats, SpeedStats } from "@elevate/shared/models/sync/activity.model";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { Constant } from "@elevate/shared/constants/constant";
+import { Movement } from "@elevate/shared/tools/movement";
+import { sha256 } from "@elevate/shared/tools/hash";
+import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 
 export abstract class ActivityService {
   public athleteSettingsConsistency$: Subject<boolean>;
@@ -66,6 +70,10 @@ export abstract class ActivityService {
     return this.activityDao.update(activity);
   }
 
+  public insert(activity: Activity): Promise<Activity> {
+    return this.activityDao.insert(activity);
+  }
+
   public put(activity: Activity): Promise<Activity> {
     return this.activityDao.put(activity);
   }
@@ -76,6 +84,10 @@ export abstract class ActivityService {
 
   public count(): Promise<number> {
     return this.activityDao.count();
+  }
+
+  public countWithConnector(): Promise<number> {
+    return this.activityDao.count({ connector: { $ne: null } });
   }
 
   public countByType(): ActivityCountByType[] {
@@ -185,5 +197,120 @@ export abstract class ActivityService {
 
   public findActivitiesWithSettingsLacks(): Promise<Activity[]> {
     return this.activityDao.findActivitiesWithSettingsLacks();
+  }
+
+  public createManualEntry(
+    userSourceActivity: Activity,
+    userMeasureSystem: MeasureSystem,
+    startDate: Date,
+    duration: number
+  ): Promise<Activity> {
+    userSourceActivity = _.cloneDeep(userSourceActivity);
+
+    const today = new Date();
+    userSourceActivity.creationTime = today.toISOString();
+    userSourceActivity.lastEditTime = today.toISOString();
+
+    // Setup start time
+    userSourceActivity.startTime = startDate.toISOString();
+    userSourceActivity.startTimestamp = Math.floor(startDate.getTime() / 1000);
+
+    // Setup duration
+    userSourceActivity.stats.movingTime = duration;
+    userSourceActivity.stats.elapsedTime = duration;
+    userSourceActivity.stats.moveRatio = 1;
+
+    // Setup end time
+    const endDate = new Date((userSourceActivity.startTimestamp + duration) * 1000);
+    userSourceActivity.endTime = endDate.toISOString();
+    userSourceActivity.endTimestamp = Math.floor(endDate.getTime() / 1000);
+
+    return this.findByDatedSession(userSourceActivity.startTime, userSourceActivity.endTime)
+      .then(results => {
+        if (results.length > 0) {
+          return Promise.reject("One or several activities already exist at given time");
+        }
+
+        return this.athleteSnapshotResolver.update();
+      })
+      .then(() => {
+        userSourceActivity.athleteSnapshot = this.athleteSnapshotResolver.resolve(startDate);
+
+        // Setup elevation gain
+        if (Number.isFinite(userSourceActivity.stats.elevationGain)) {
+          userSourceActivity.stats.elevationGain =
+            userMeasureSystem === MeasureSystem.IMPERIAL
+              ? userSourceActivity.stats.elevationGain / Constant.METER_TO_FEET_FACTOR
+              : userSourceActivity.stats.elevationGain;
+
+          userSourceActivity.stats.elevation.ascent = userSourceActivity.stats.elevationGain;
+        }
+
+        // Try to compute avg speed/pace
+        if (userSourceActivity.stats?.distance > 0) {
+          // Convert distance according user measurement system
+          userSourceActivity.stats.distance =
+            userMeasureSystem === MeasureSystem.IMPERIAL
+              ? userSourceActivity.stats.distance / Constant.KM_TO_MILE_FACTOR
+              : userSourceActivity.stats.distance;
+
+          // Convert kilometers to meters
+          userSourceActivity.stats.distance = _.round(userSourceActivity.stats.distance * 1000);
+
+          userSourceActivity.stats.speed = {
+            avg: (userSourceActivity.stats.distance / userSourceActivity.stats.movingTime) * Constant.MPS_KPH_FACTOR
+          } as SpeedStats;
+          userSourceActivity.stats.pace = {
+            avg: Movement.speedToPace(userSourceActivity.stats.speed.avg)
+          } as PaceStats;
+        }
+
+        // Update stress scores per hour
+        if (Number.isFinite(userSourceActivity.stats.scores.stress.hrss)) {
+          userSourceActivity.stats.scores.stress.hrssPerHour =
+            (userSourceActivity.stats.scores.stress.hrss / userSourceActivity.stats.movingTime) *
+            Constant.SEC_HOUR_FACTOR;
+        }
+        if (Number.isFinite(userSourceActivity.stats.scores.stress.pss)) {
+          userSourceActivity.stats.scores.stress.pssPerHour =
+            (userSourceActivity.stats.scores.stress.pss / userSourceActivity.stats.movingTime) *
+            Constant.SEC_HOUR_FACTOR;
+        }
+        if (Number.isFinite(userSourceActivity.stats.scores.stress.rss)) {
+          userSourceActivity.stats.scores.stress.rssPerHour =
+            (userSourceActivity.stats.scores.stress.rss / userSourceActivity.stats.movingTime) *
+            Constant.SEC_HOUR_FACTOR;
+        }
+        if (Number.isFinite(userSourceActivity.stats.scores.stress.sss)) {
+          userSourceActivity.stats.scores.stress.sssPerHour =
+            (userSourceActivity.stats.scores.stress.sss / userSourceActivity.stats.movingTime) *
+            Constant.SEC_HOUR_FACTOR;
+        }
+
+        // Generate activity id
+        return sha256(
+          `${today.toISOString()}:${userSourceActivity.startTime}:${userSourceActivity.endTime}:${Math.random()}`,
+          true
+        );
+      })
+      .then(id => {
+        userSourceActivity.id = id;
+
+        // Generate activity hash
+        return sha256(
+          JSON.stringify({
+            type: userSourceActivity.type,
+            startTime: userSourceActivity.startTime,
+            endTime: userSourceActivity.endTime,
+            trainer: userSourceActivity.trainer,
+            distance: userSourceActivity.stats.distance
+          }),
+          true
+        );
+      })
+      .then(hash => {
+        userSourceActivity.hash = hash;
+        return this.insert(userSourceActivity);
+      });
   }
 }

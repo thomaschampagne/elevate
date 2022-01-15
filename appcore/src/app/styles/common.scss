@@ -57,3 +57,27 @@ $padding-large: 20px;
   padding-top: $padding-large;
   padding-bottom: $padding-large;
 }
+
+.pad-sml-t {
+  padding-top: $padding-sml;
+}
+
+.pad-std-t {
+  padding-top: $padding-std;
+}
+
+.pad-lrg-t {
+  padding-top: $padding-large;
+}
+
+.pad-sml-b {
+  padding-bottom: $padding-sml;
+}
+
+.pad-std-b {
+  padding-bottom: $padding-std;
+}
+
+.pad-lrg-b {
+  padding-bottom: $padding-large;
+}

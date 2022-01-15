@@ -1,16 +1,16 @@
 <!--Loading-->
-<div *ngIf="(isSynced !== false && areActivitiesCompliant === null && isReSyncRequired === null)">
+<div *ngIf="(hasActivities !== false && areActivitiesCompliant === null)">
   <mat-progress-bar mode="buffer"></mat-progress-bar>
 </div>
 
-<app-sync-required></app-sync-required>
+<app-activities-required></app-activities-required>
 
-<mat-card *ngIf="isSynced === false">
+<mat-card *ngIf="hasActivities === false">
   <app-fitness-trend-user-guide [readMore]="false"></app-fitness-trend-user-guide>
 </mat-card>
 
 <!--History not compliant with the feature-->
-<mat-card *ngIf="(areActivitiesCompliant === false && isSynced !== false)" class="no-data">
+<mat-card *ngIf="(areActivitiesCompliant === false && hasActivities !== false)" class="no-data">
   <mat-card-title>
     Unable to generate fitness trend 😢
   </mat-card-title>
@@ -43,47 +43,6 @@
       </button>
     </div>
 
-  </mat-card-content>
-</mat-card>
-
-<!--Re-sync required-->
-<mat-card *ngIf="(isReSyncRequired === true)" class="no-data">
-  <mat-card-title>
-    Your synced activities needs to be recalculated
-  </mat-card-title>
-  <mat-card-content>
-    <div>
-      Don't worry! This behavior can occur after a recent update of the plugin. Indeed Elevate needs your
-      activities to be recalculated for technical reasons. To recalculate your history, please
-      follow below steps:
-      <ul>
-        <li>
-          Perform a backup of your currently synced activities for security before. Just click
-          <mat-icon [style.vertical-align]="'bottom'" color="primary" fontSet="material-icons-outlined">sync
-          </mat-icon>
-          icon then
-          <i>
-            <mat-icon [style.vertical-align]="'bottom'" fontSet="material-icons-outlined">file_download
-            </mat-icon>
-            Backup activities</i>
-        </li>
-        <li>
-          Make sure you properly configured all your <a [routerLink]="'/athleteSettings'">dated
-          athlete settings</a>. Indeed if cycling, running or swim FTPs are not defined in athlete settings,
-          then stress scores that depend on these settings will not be calculated resulting in missing data
-          in fitness trend.
-        </li>
-        <li>
-          Clear and synchronize again your activities. Click
-          <mat-icon [style.vertical-align]="'bottom'" color="primary" fontSet="material-icons-outlined">sync
-          </mat-icon>
-          icon then
-          <i>
-            <mat-icon [style.vertical-align]="'bottom'" fontSet="material-icons-outlined">redo</mat-icon>
-            Clear and re-sync activities</i>
-        </li>
-      </ul>
-    </div>
   </mat-card-content>
 </mat-card>
 

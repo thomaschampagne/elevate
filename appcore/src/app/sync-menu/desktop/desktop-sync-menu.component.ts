@@ -18,6 +18,7 @@ import { DesktopRestoreDialogComponent } from "../../shared/dialogs/backups/desk
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
 import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
+import { DesktopManualActivityDialogComponent } from "../../desktop/manual-activity/desktop-manual-activity-dialog.component";
 
 @Component({
   selector: "app-desktop-sync-menu",
@@ -93,6 +94,12 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
           ? "Warning: 1 connector must be synced completely. Click to configure connectors."
           : null,
       action: () => this.goToConnectors()
+    });
+
+    this.syncMenuActions.push({
+      icon: "add",
+      text: "Manual entry",
+      action: () => this.onManualEntry()
     });
 
     this.syncMenuActions.push({
@@ -175,5 +182,12 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
       return;
     }
     this.router.navigate([AppRoutes.connectors]);
+  }
+
+  private onManualEntry(): void {
+    this.dialog.open(DesktopManualActivityDialogComponent, {
+      minWidth: DesktopManualActivityDialogComponent.MIN_WIDTH,
+      maxWidth: DesktopManualActivityDialogComponent.MAX_WIDTH
+    });
   }
 }

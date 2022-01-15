@@ -92,6 +92,14 @@ export class DesktopActivityService extends ActivityService {
         return this.streamsService.getInflatedById(activity.id);
       })
       .then(streams => {
+        // Do not recalculate manual activities
+        if (activity.manual) {
+          this.logger.info(`Manual activity '${activity.name}' will not be re-computed`);
+          // Update athlete snapshot for manual activities
+          activity.athleteSnapshot = athleteSnapshot;
+          return this.put(activity);
+        }
+
         return this.compute(activity, athleteSnapshot, streams, userSettings).then(computedActivity => {
           computedActivity.lastEditTime = new Date().toISOString();
           return this.put(computedActivity);
