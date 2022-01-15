@@ -1,7 +1,7 @@
-import { TimeSplitCalculator, TimeSplitCalculatorOptions } from "@elevate/shared/sync/compute/time-split-calculator";
-import FIXTURE from "./power_data_1480020375.json";
+import { LegacySplitCalculator, SplitCalculatorOptions } from "@elevate/shared/sync/compute/legacy-split-calculator";
+import FIXTURE from "./data_1480020375.json";
 
-describe("TimeSplitCalculator", () => {
+describe("LegacySplitCalculator", () => {
   let _POWER_TIME_DATA_: { time: number[]; watts: number[] };
 
   beforeEach(done => {
@@ -17,38 +17,38 @@ describe("TimeSplitCalculator", () => {
     const expectedInterpolatedData: number[] = [0, 10, 25, 40, 43.3333, 46.6666, 50];
 
     // When
-    const timeSplitCalculator = new TimeSplitCalculator(scale, data);
+    const splitCalculator = new LegacySplitCalculator(scale, data);
 
     // Then
-    expect(timeSplitCalculator.timeScale).toEqual(expectedNormalizedScale);
-    expect(timeSplitCalculator.data).toEqual(expectedInterpolatedData);
-    expect(timeSplitCalculator.timeScale.length).toEqual(timeSplitCalculator.data.length);
+    expect(splitCalculator.timeScale).toEqual(expectedNormalizedScale);
+    expect(splitCalculator.data).toEqual(expectedInterpolatedData);
+    expect(splitCalculator.timeScale.length).toEqual(splitCalculator.data.length);
 
     done();
   });
 
   it("should normalize data over scale under max scale linear interpolate gap", done => {
     // Given
-    const options: TimeSplitCalculatorOptions = { maxScaleGapToLerp: 5 };
+    const options: SplitCalculatorOptions = { maxScaleGapToLerp: 5 };
     const scale: number[] = [0, 1, 3, 5, /*      fill scale here     */ 11, 13, 14, 15];
     const data: number[] = [0, 10, 30, 50, /* skip interpolation here */ 110, 130, 140, 150];
     const expectedNormalizedScale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const expectedInterpolatedData = [0, 10, 20, 30, 40, 50, null, null, null, null, null, 110, 120, 130, 140, 150];
 
     // When
-    const timeSplitCalculator = new TimeSplitCalculator(scale, data, options);
+    const splitCalculator = new LegacySplitCalculator(scale, data, options);
 
     // Then
-    expect(timeSplitCalculator.timeScale).toEqual(expectedNormalizedScale);
-    expect(timeSplitCalculator.data).toEqual(expectedInterpolatedData);
-    expect(timeSplitCalculator.timeScale.length).toEqual(timeSplitCalculator.data.length);
+    expect(splitCalculator.timeScale).toEqual(expectedNormalizedScale);
+    expect(splitCalculator.data).toEqual(expectedInterpolatedData);
+    expect(splitCalculator.timeScale.length).toEqual(splitCalculator.data.length);
 
     done();
   });
 
   it("should NOT normalize scale having a gaps over maxScaleGapThreshold", done => {
     // Given
-    const options: TimeSplitCalculatorOptions = {
+    const options: SplitCalculatorOptions = {
       maxScaleGapAllowed: 60 * 60 * 8 // 8 hours
     };
 
@@ -58,8 +58,8 @@ describe("TimeSplitCalculator", () => {
 
     // When
     const call = () => {
-      const timeSplitCalculator = new TimeSplitCalculator(scale, data, options);
-      timeSplitCalculator.computeTimeBestSplit(scaleRange);
+      const splitCalculator = new LegacySplitCalculator(scale, data, options);
+      splitCalculator.compute(scaleRange);
     };
 
     // Then
@@ -76,8 +76,8 @@ describe("TimeSplitCalculator", () => {
 
     // When
     const call = () => {
-      const timeSplitCalculator = new TimeSplitCalculator(scale, data);
-      timeSplitCalculator.computeTimeBestSplit(scaleRange);
+      const splitCalculator = new LegacySplitCalculator(scale, data);
+      splitCalculator.compute(scaleRange);
     };
 
     // Then
@@ -93,8 +93,8 @@ describe("TimeSplitCalculator", () => {
     const scaleRange = 3;
 
     // When
-    const timeSplitCalculator = new TimeSplitCalculator(scale, data);
-    const bestSplit = timeSplitCalculator.computeTimeBestSplit(scaleRange);
+    const splitCalculator = new LegacySplitCalculator(scale, data);
+    const bestSplit = splitCalculator.compute(scaleRange);
 
     // Then
     expect(bestSplit.value).toEqual(50);
@@ -111,9 +111,9 @@ describe("TimeSplitCalculator", () => {
     const scaleRange = 100;
 
     // When
-    const timeSplitCalculator = new TimeSplitCalculator(scale, data);
+    const splitCalculator = new LegacySplitCalculator(scale, data);
     const call = () => {
-      timeSplitCalculator.computeTimeBestSplit(scaleRange);
+      splitCalculator.compute(scaleRange);
     };
 
     // Then
@@ -132,8 +132,8 @@ describe("TimeSplitCalculator", () => {
     const scaleRange = 20 * 60; // 20 minutes
 
     // When
-    const timeSplitCalculator = new TimeSplitCalculator(timeScale, wattsData);
-    const riderFTPBestSplit = timeSplitCalculator.computeTimeBestSplit(scaleRange);
+    const splitCalculator = new LegacySplitCalculator(timeScale, wattsData);
+    const riderFTPBestSplit = splitCalculator.compute(scaleRange);
 
     // Then
     expect(Math.floor(riderFTPBestSplit.value)).toEqual(expectedFTP);
@@ -149,8 +149,8 @@ describe("TimeSplitCalculator", () => {
     const scaleRanges: number[] = [60, 20 * 60]; // 20 minutes
 
     // When
-    const timeSplitCalculator = new TimeSplitCalculator(timeScale, wattsData);
-    const results = timeSplitCalculator.computeTimeBestSplitRanges(scaleRanges);
+    const splitCalculator = new LegacySplitCalculator(timeScale, wattsData);
+    const results = splitCalculator.computeRanges(scaleRanges);
 
     // Then
     expect(Math.floor(results[0].range)).toEqual(60);
@@ -160,23 +160,4 @@ describe("TimeSplitCalculator", () => {
 
     done();
   });
-
-  /*
-    TODO Support distance based splits in dedicated calculator
-   xit("should get speed split based on distance of activity 208748758", done => {
-    // Given
-    // TODO Use data from ./speed_data_208748758.json
-    const expectedSpeed = 28;
-    const distanceScale: number[] = _SPEED_DISTANCE_DATA_.distance;
-    const speedData: number[] = _SPEED_DISTANCE_DATA_.velocity_smooth;
-    const scaleRange = 50 * 1000; // 50k
-
-    // When
-    const splitCalculator = new SplitCalculator(distanceScale, speedData);
-    const speed = splitCalculator.getBestSplit(scaleRange);
-
-    // Then
-    expect(speed.value * Constant.MPS_KPH_FACTOR).toEqual(expectedSpeed);
-    done();
-  });*/
 });

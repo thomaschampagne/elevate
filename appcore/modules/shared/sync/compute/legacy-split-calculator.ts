@@ -1,25 +1,25 @@
 import _ from "lodash";
 import { WarningException } from "../../exceptions/warning.exception";
 
-export interface TimeSplitCalculatorOptions {
+export interface SplitCalculatorOptions {
   // Maximal scale gap under which data is interpolated
   maxScaleGapToLerp?: number;
   maxScaleGapAllowed?: number;
 }
 
-export class TimeSplitCalculator {
+export class LegacySplitCalculator {
   private static readonly MAX_SCALE_GAP_TO_LERP = 60;
   private static readonly MAX_SCALE_GAP_ALLOWED = 60 * 60;
   public scrTimeScale: number[];
   public timeScale: number[];
   public data: number[];
 
-  constructor(scrTimeScale: number[], srcData: number[], public options: TimeSplitCalculatorOptions = {}) {
+  constructor(scrTimeScale: number[], srcData: number[], public options: SplitCalculatorOptions = {}) {
     this.scrTimeScale = scrTimeScale;
     this.timeScale = _.cloneDeep(this.scrTimeScale);
     this.data = _.cloneDeep(srcData);
-    this.options.maxScaleGapToLerp = this.options.maxScaleGapToLerp || TimeSplitCalculator.MAX_SCALE_GAP_TO_LERP;
-    this.options.maxScaleGapAllowed = this.options.maxScaleGapAllowed || TimeSplitCalculator.MAX_SCALE_GAP_ALLOWED;
+    this.options.maxScaleGapToLerp = this.options.maxScaleGapToLerp || LegacySplitCalculator.MAX_SCALE_GAP_TO_LERP;
+    this.options.maxScaleGapAllowed = this.options.maxScaleGapAllowed || LegacySplitCalculator.MAX_SCALE_GAP_ALLOWED;
     this.normalizeTime();
   }
 
@@ -82,10 +82,7 @@ export class TimeSplitCalculator {
     this.data = interpolatedData;
   }
 
-  public computeTimeBestSplit(
-    scaleRange: number,
-    roundDecimals: number = 3
-  ): { value: number; start: number; end: number } {
+  public compute(scaleRange: number, roundDecimals: number = 3): { value: number; start: number; end: number } {
     if (scaleRange > this.timeScale.length) {
       throw new WarningException(
         "Requested scaleRange of " +
@@ -129,12 +126,12 @@ export class TimeSplitCalculator {
     return { value: _.round(maxSumFound / scaleRange, roundDecimals), start: start, end: end };
   }
 
-  public computeTimeBestSplitRanges(ranges: number[]): { range: number; result: number; start: number; end: number }[] {
+  public computeRanges(ranges: number[]): { range: number; result: number; start: number; end: number }[] {
     const results: { range: number; result: number; start: number; end: number }[] = [];
 
     _.forEach(ranges, (range: number) => {
       try {
-        const bestSplit = this.computeTimeBestSplit(range);
+        const bestSplit = this.compute(range);
         results.push({
           range: range,
           result: bestSplit.value,

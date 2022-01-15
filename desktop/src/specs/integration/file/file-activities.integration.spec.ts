@@ -181,7 +181,7 @@ describe("File activities integration tests", () => {
           // Speed
           SpecsUtils.assertNearEqual(computedStats.speed.avg, 26.4, 1);
           SpecsUtils.assertNearEqual(computedStats.speed.max, 67.8, 1);
-          SpecsUtils.assertNearEqual(computedStats.speed.best20min, 42);
+          SpecsUtils.assertNearEqual(computedStats.speed.best20min, 43);
           SpecsUtils.assertNearEqual(computedStats.speed.lowQ, 13.1, 1);
           SpecsUtils.assertNearEqual(computedStats.speed.median, 25.8, 1);
           SpecsUtils.assertNearEqual(computedStats.speed.upperQ, 35.1, 1);
@@ -204,7 +204,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.power.avgKg, 2.3, 2);
           SpecsUtils.assertNearEqual(computedStats.power.weighted, 197);
           SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.74, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.best20min, 265);
+          SpecsUtils.assertNearEqual(computedStats.power.best20min, 260);
           SpecsUtils.assertNearEqual(computedStats.power.lowQ, 131);
           SpecsUtils.assertNearEqual(computedStats.power.median, 184);
           SpecsUtils.assertNearEqual(computedStats.power.upperQ, 214);

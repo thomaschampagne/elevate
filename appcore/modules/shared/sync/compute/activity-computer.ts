@@ -1,6 +1,5 @@
 import _ from "lodash";
 import { RunningPowerEstimator } from "./running-power-estimator";
-import { TimeSplitCalculator } from "./time-split-calculator";
 import { CaloriesEstimator } from "./calories-estimator";
 import { ProcessStreamMode, StreamProcessor } from "./stream-processor";
 import { AthleteSnapshot } from "../../models/athlete/athlete-snapshot.model";
@@ -41,6 +40,7 @@ import { Movement } from "../../tools/movement";
 import { percentile } from "../../tools/percentile";
 import { UserSettings } from "../../models/user-settings/user-settings.namespace";
 import { ElevateException } from "../../exceptions/elevate.exception";
+import { SplitCalculator } from "./split-calculator";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 export class ActivityComputer {
@@ -502,12 +502,9 @@ export class ActivityComputer {
   private static computeTimeSplit(values: number[], timeScale: number[], rangeSeconds: number): number {
     let bestSplitResult = null;
     try {
-      const timeSplitCalculator = new TimeSplitCalculator(timeScale, values, {
-        maxScaleGapToLerp: Constant.SPLITS_MAX_SECONDS_GAP_TO_LERP,
-        maxScaleGapAllowed: 60 * 60 * Constant.SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS
-      });
-      const bestSplit = timeSplitCalculator.computeTimeBestSplit(rangeSeconds);
-      bestSplitResult = _.round(bestSplit.value, ActivityComputer.RND);
+      const splitCalculator = new SplitCalculator(timeScale, values);
+      const result = splitCalculator.compute(rangeSeconds);
+      return _.round(result.value, ActivityComputer.RND);
     } catch (err) {
       if (!(err instanceof WarningException)) {
         throw err;
