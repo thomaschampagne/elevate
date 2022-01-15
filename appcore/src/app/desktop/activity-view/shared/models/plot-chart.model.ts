@@ -27,6 +27,7 @@ export abstract class PlotChart {
   private static readonly DEFAULT_LAYOUT: Partial<Layout> = {
     font: { size: 11, family: "Roboto" },
     title: {},
+    hovermode: "x",
     xaxis: {},
     yaxis: {},
     paper_bgcolor: "transparent",

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { ActivityViewComponent } from "./activity-view.component";
-import Plotly from "plotly.js-basic-dist";
+import PlotlyJS from "plotly.js-basic-dist-min";
 import { PlotlyModule } from "angular-plotly.js";
 import { ActivityViewRoutingModule } from "./activity-view-routing.module";
 import { CoreModule } from "../../core/core.module";
@@ -20,7 +20,7 @@ import { ActivitySensorsService } from "./shared/activity-sensors.service";
 import { ActivityEditDialogComponent } from "./activity-edit/activity-edit-dialog.component";
 import { ActivityViewMapComponent } from "./activity-view-map/activity-view-map.component";
 
-PlotlyModule.plotlyjs = Plotly;
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   imports: [CoreModule, ActivityViewRoutingModule, PlotlyModule],
