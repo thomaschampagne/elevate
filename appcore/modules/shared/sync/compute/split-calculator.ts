@@ -15,12 +15,13 @@ export class SplitCalculator {
     let start = 0;
     let end = 0;
 
-    for (let currIdx = 0; currIdx < this.scale.length; currIdx++) {
+    for (let currIdx = 0; currIdx < this.scale.length; ) {
       // Increase range until target range is reached
       rangeDiff = this.scale[currIdx] - this.scale[winStartIdx];
 
       // Continue if not
       if (rangeDiff < targetRange) {
+        currIdx++;
         continue;
       }
 

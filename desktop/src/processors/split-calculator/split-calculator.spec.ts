@@ -24,7 +24,7 @@ describe("SplitCalculator", () => {
 
   it("should get speed split based on distance of activity 208748758", done => {
     // Given
-    const expectedSpeed = 28.5;
+    const expectedSpeed = 31;
     const distanceScale: number[] = ACTIVITY_DATA_01.distance;
     const speedData: number[] = ACTIVITY_DATA_01.velocity_smooth;
     const range = 50 * 1000; // 50k
@@ -35,6 +35,8 @@ describe("SplitCalculator", () => {
 
     // Then
     expect(result.value * Constant.MPS_KPH_FACTOR).toBeCloseTo(expectedSpeed, 1);
+    const distanceFromIndexes = distanceScale[result.end] - distanceScale[result.start];
+    expect(distanceFromIndexes).toBeCloseTo(50004, 0);
     done();
   });
 

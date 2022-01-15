@@ -33,6 +33,7 @@ import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { Time } from "@elevate/shared/tools/time";
+import { Constant } from "@elevate/shared/constants/constant";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
@@ -338,6 +339,13 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
           dialogTemplate += `<div><strong>Map Δ Distance:</strong> ${mapDeltaDistance}m</div>`;
           dialogTemplate += `<div><strong>Map Δ Elevation:</strong> ${mapDeltaElevation}m</div>`;
           dialogTemplate += `<div><strong>Grade:</strong> Map ${mapGrade}%; Stream: ${processedGradeMean}%</div>`;
+        }
+
+        // Speed related debug
+        if (this.streams.velocity_smooth?.length) {
+          const selectedSpeedStream = this.streams.velocity_smooth.slice(selectedBounds[0], selectedBounds[1] + 1);
+          const selectedSpeedMean = _.round(_.mean(selectedSpeedStream) * Constant.MPS_KPH_FACTOR, 2);
+          dialogTemplate += `<div><strong>Avg Speed:</strong> ${selectedSpeedMean}</div>`;
         }
 
         // Estimated watts VS real watts debug
