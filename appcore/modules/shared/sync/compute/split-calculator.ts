@@ -10,10 +10,14 @@ export interface SplitCalculatorOptions {
 export class SplitCalculator {
   private static readonly MAX_SCALE_GAP_TO_LERP = 60;
   private static readonly MAX_SCALE_GAP_ALLOWED = 60 * 60;
+  public scrScale: number[];
+  public scale: number[];
+  public data: number[];
 
-  constructor(public scale: number[], public data: number[], public options: SplitCalculatorOptions = {}) {
-    this.scale = _.cloneDeep(scale);
-    this.data = _.cloneDeep(data);
+  constructor(srcScale: number[], srcData: number[], public options: SplitCalculatorOptions = {}) {
+    this.scrScale = srcScale;
+    this.scale = _.cloneDeep(this.scrScale);
+    this.data = _.cloneDeep(srcData);
     this.options.maxScaleGapToLerp = this.options.maxScaleGapToLerp || SplitCalculator.MAX_SCALE_GAP_TO_LERP;
     this.options.maxScaleGapAllowed = this.options.maxScaleGapAllowed || SplitCalculator.MAX_SCALE_GAP_ALLOWED;
     this.normalize();
@@ -37,7 +41,7 @@ export class SplitCalculator {
         }
 
         if (this.options.maxScaleGapAllowed && nextScaleDiff > this.options.maxScaleGapAllowed) {
-          throw new WarningException("Scale has a too importants gap. Cannot normalize scale");
+          throw new WarningException("Scale has a too important gap. Cannot normalize scale");
         }
 
         // If we step over 1 seconds and stay under min scale gap, then we can perform interpolation of values between
@@ -78,7 +82,7 @@ export class SplitCalculator {
     this.data = interpolatedData;
   }
 
-  public getBestSplit(scaleRange: number, roundDecimals: number = 3): number {
+  public getBestSplit(scaleRange: number, roundDecimals: number = 3): { value: number; start: number; end: number } {
     if (scaleRange > this.scale.length) {
       throw new WarningException(
         "Requested scaleRange of " + scaleRange + " is greater than scale range length of " + this.scale.length + "."
@@ -88,33 +92,47 @@ export class SplitCalculator {
     let maxSumFound: number;
     let currentMaxSum: number;
 
+    let start = null;
+    let end = null;
+
     if (scaleRange > 1) {
       let index = 0;
       currentMaxSum = _.sum(this.data.slice(index, scaleRange));
       maxSumFound = currentMaxSum;
+      start = index;
+      end = index + scaleRange;
 
       while (this.scale[scaleRange + index]) {
         currentMaxSum = currentMaxSum + this.data[scaleRange + index] - this.data[index];
         if (maxSumFound < currentMaxSum) {
           maxSumFound = currentMaxSum;
+          start = index;
+          end = index + scaleRange;
         }
         index++;
       }
+
+      // Convert start/end best split index from normalized scale to the source scale
+      start = this.scrScale.findIndex(value => value >= start);
+      end = this.scrScale.findIndex(value => value >= end);
     } else {
       maxSumFound = _.max(this.data);
     }
 
-    return _.round(maxSumFound / scaleRange, roundDecimals);
+    return { value: _.round(maxSumFound / scaleRange, roundDecimals), start: start, end: end };
   }
 
-  public getBestSplitRanges(ranges: number[]): { range: number; result: number }[] {
-    const results: { range: number; result: number }[] = [];
+  public getBestSplitRanges(ranges: number[]): { range: number; result: number; start: number; end: number }[] {
+    const results: { range: number; result: number; start: number; end: number }[] = [];
 
     _.forEach(ranges, (range: number) => {
       try {
+        const bestSplit = this.getBestSplit(range);
         results.push({
           range: range,
-          result: this.getBestSplit(range)
+          result: bestSplit.value,
+          start: bestSplit.start,
+          end: bestSplit.end
         });
       } catch (err) {
         const isWarnError = err instanceof WarningException;

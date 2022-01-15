@@ -505,7 +505,8 @@ export class ActivityComputer {
         maxScaleGapToLerp: Constant.SPLITS_MAX_SECONDS_GAP_TO_LERP,
         maxScaleGapAllowed: 60 * 60 * Constant.SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS
       });
-      bestSplitResult = _.round(splitCalculator.getBestSplit(rangeSeconds), ActivityComputer.RND);
+      const bestSplit = splitCalculator.getBestSplit(rangeSeconds);
+      bestSplitResult = _.round(bestSplit.value, ActivityComputer.RND);
     } catch (err) {
       if (!(err instanceof WarningException)) {
         throw err;

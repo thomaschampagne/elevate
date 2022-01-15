@@ -8,6 +8,7 @@
                  [data]="chart.data"
                  [layout]="chart.layout"
                  [config]="chart.config"
+                 (plotlyClick)="onGraphClick($event)"
                  [useResizeHandler]="chart.useResizeHandler"></plotly-plot>
   </div>
 </div>

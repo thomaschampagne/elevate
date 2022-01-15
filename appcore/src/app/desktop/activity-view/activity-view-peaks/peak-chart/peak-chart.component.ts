@@ -2,7 +2,7 @@ import { Component, Inject, Input, OnInit } from "@angular/core";
 import { LogChart } from "../../shared/models/plot-chart.model";
 import { Sensor } from "../../shared/models/sensors/sensor.model";
 import { BaseChartComponent } from "../../shared/base-chart.component";
-import { Datum, Layout } from "plotly.js";
+import { Datum, Layout, PlotMouseEvent } from "plotly.js";
 import _ from "lodash";
 import moment from "moment";
 import { AppService } from "../../../../shared/services/app-service/app.service";
@@ -11,6 +11,7 @@ import { PaceSensor } from "../../shared/models/sensors/move.sensor";
 import { GradeSensor } from "../../shared/models/sensors/grade.sensor";
 import { Peak } from "@elevate/shared/models/sync/activity.model";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
+import { ActivityViewService } from "../../shared/activity-view.service";
 
 @Component({
   selector: "app-peak-chart",
@@ -87,6 +88,7 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
 
   constructor(
     @Inject(AppService) protected readonly appService: AppService,
+    @Inject(ActivityViewService) private readonly activityViewService: ActivityViewService,
     @Inject(PlotlyService) protected readonly plotlyService: PlotlyService
   ) {
     super(appService, plotlyService);
@@ -153,5 +155,13 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
         (trace.y as number[]).push(yValue);
       }
     });
+  }
+
+  public onGraphClick(plotMouseEvent: PlotMouseEvent): void {
+    const clickedPeak = this.peaks.find(peak => peak.range === plotMouseEvent.points[0].x);
+
+    if (clickedPeak && clickedPeak.end - clickedPeak.start > 1) {
+      this.activityViewService.selectedGraphBounds$.next([clickedPeak.start, clickedPeak.end]);
+    }
   }
 }

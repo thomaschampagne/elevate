@@ -27,7 +27,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
   ) {
     this.isMapReady = null;
   }
-
+  private static readonly SELECTED_PATH_NAME = "selectedPath";
   private static readonly STYLES: StyleOption[] = [
     {
       label: "Outdoor",
@@ -146,7 +146,10 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
     });
 
     // Reset map fit to bound on double click
-    this.map.on("dblclick", () => this.fitBoundsToActivity());
+    this.map.on("dblclick", () => {
+      this.fitBoundsToActivity();
+      this.removePath(ActivityViewMapComponent.SELECTED_PATH_NAME);
+    });
 
     // Handle map error
     this.map.on("error", event => {
@@ -282,12 +285,11 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
   }
 
   private handleSelectedGraphBounds(): void {
-    const pathName = "selectedPath";
     this.selectedGraphBoundsSubscription = this.activityViewService.selectedGraphBounds$.subscribe(selectedBounds => {
       // Do we have bounds selected?
       if (selectedBounds?.length === 2) {
         // Remove any existing path if exists
-        this.removePath(pathName);
+        this.removePath(ActivityViewMapComponent.SELECTED_PATH_NAME);
 
         // Get activity path bounds from selected indexes
         const boundedLngLat = this.lngLat.slice(selectedBounds[0], selectedBounds[1]);
@@ -296,13 +298,17 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
         const pathBounds = ActivityViewMapComponent.getActivityBounds(boundedLngLat);
 
         // Draw selected bound path
-        this.drawPath(pathName, ActivityViewMapComponent.SELECTED_PATH_COLOR, boundedLngLat);
+        this.drawPath(
+          ActivityViewMapComponent.SELECTED_PATH_NAME,
+          ActivityViewMapComponent.SELECTED_PATH_COLOR,
+          boundedLngLat
+        );
 
         // And fit map to him
         this.map.fitBounds(pathBounds, ActivityViewMapComponent.FIT_OPTIONS);
       } else {
         // No bounds selected, remove any existing path if exists
-        this.removePath(pathName);
+        this.removePath(ActivityViewMapComponent.SELECTED_PATH_NAME);
 
         // And fit map to activity
         this.fitBoundsToActivity();

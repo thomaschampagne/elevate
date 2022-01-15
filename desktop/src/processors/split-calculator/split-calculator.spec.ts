@@ -63,7 +63,7 @@ describe("SplitCalculator", () => {
     };
 
     // Then
-    expect(call).toThrow(new Error("Scale has a too importants gap. Cannot normalize scale"));
+    expect(call).toThrow(new Error("Scale has a too important gap. Cannot normalize scale"));
 
     done();
   });
@@ -97,7 +97,9 @@ describe("SplitCalculator", () => {
     const bestSplit = splitCalculator.getBestSplit(scaleRange);
 
     // Then
-    expect(bestSplit).toEqual(50);
+    expect(bestSplit.value).toEqual(50);
+    expect(bestSplit.start).toEqual(2);
+    expect(bestSplit.end).toEqual(3);
 
     done();
   });
@@ -131,11 +133,10 @@ describe("SplitCalculator", () => {
 
     // When
     const splitCalculator = new SplitCalculator(timeScale, wattsData);
-    const riderFTP = splitCalculator.getBestSplit(scaleRange);
+    const riderFTPBestSplit = splitCalculator.getBestSplit(scaleRange);
 
     // Then
-    expect(Math.floor(riderFTP)).toEqual(expectedFTP);
-
+    expect(Math.floor(riderFTPBestSplit.value)).toEqual(expectedFTP);
     done();
   });
 

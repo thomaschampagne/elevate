@@ -241,6 +241,8 @@ export enum SlopeProfile {
 export interface Peak {
   range: number;
   result: number;
+  start: number;
+  end: number;
 }
 
 export interface Peaks {
