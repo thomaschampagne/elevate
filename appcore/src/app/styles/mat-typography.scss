@@ -1,4 +1,4 @@
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 
 $base-style-config: mat-typography-config(); // Create a config with the default typography levels.
 $app-style-config: mat-typography-config(// Define a typography config that will override the base typo

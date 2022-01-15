@@ -1,4 +1,4 @@
-@import "~@angular/material/theming";
+@import "@angular/material/theming";
 
 @mixin native-web-elements($theme) {
   $accent: map-get($theme, accent);

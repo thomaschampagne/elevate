@@ -8,15 +8,23 @@ import { ReportComponent } from "../../../report/report.component";
 import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { HelpComponent } from "../../../help/help.component";
 import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.component";
+import { ActivityViewModule } from "../../../desktop/activity-view/activity-view.module";
+import { FitnessTrendModule } from "../../../fitness-trend/fitness-trend.module";
+import { AthleteSettingsModule } from "../../../athlete-settings/athlete-settings.module";
+import { YearProgressModule } from "../../../year-progress/year-progress.module";
+import { ReleasesNotesModule } from "../../../releases-notes/releases-notes.module";
+import { ConnectorsModule } from "../../../connectors/connectors.module";
+import { DashboardModule } from "../../../desktop/dashboard/dashboard.module";
+import { GoalsModule } from "../../../desktop/goals/goals.module";
 
 const routes: Routes = [
   {
     path: AppRoutes.goals,
-    loadChildren: () => import("../../../desktop/goals/goals.module").then(module => module.GoalsModule)
+    loadChildren: () => GoalsModule
   },
   {
     path: AppRoutes.dashboard,
-    loadChildren: () => import("../../../desktop/dashboard/dashboard.module").then(module => module.DashboardModule)
+    loadChildren: () => DashboardModule
   },
   {
     path: AppRoutes.activities,
@@ -24,16 +32,15 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.activity,
-    loadChildren: () =>
-      import("../../../desktop/activity-view/activity-view.module").then(module => module.ActivityViewModule)
+    loadChildren: () => ActivityViewModule
   },
   {
     path: AppRoutes.fitnessTrend,
-    loadChildren: () => import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule)
+    loadChildren: () => FitnessTrendModule
   },
   {
     path: AppRoutes.yearProgressions,
-    loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
+    loadChildren: () => YearProgressModule
   },
   {
     path: AppRoutes.globalSettings,
@@ -41,8 +48,7 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.athleteSettings,
-    loadChildren: () =>
-      import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
+    loadChildren: () => AthleteSettingsModule
   },
   {
     path: AppRoutes.zonesSettings,
@@ -54,7 +60,7 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.connectors,
-    loadChildren: () => import("../../../connectors/connectors.module").then(module => module.ConnectorsModule)
+    loadChildren: () => ConnectorsModule
   },
   {
     path: AppRoutes.donate,
@@ -62,8 +68,7 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.releasesNotes,
-    loadChildren: () =>
-      import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
+    loadChildren: () => ReleasesNotesModule
   },
   {
     path: AppRoutes.report,

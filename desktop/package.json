@@ -28,7 +28,7 @@
     "build:package:linux:dev": "npm run build:package:linux -- -- -c.extraMetadata.name=elevate-training-dev -c.appId=elevate-training-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
     "build:package:mac:dev": "npm run build:package:mac -- -- -c.extraMetadata.name=elevate-training-dev -c.appId=elevate-training-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
     "open:package-folder": "node -e \"require('open-in-explorer')('package');\"",
-    "start": "cross-env NG_PERSISTENT_BUILD_CACHE=1 npm run watch",
+    "start": "npm run watch",
     "test": "npm run build:metadata && node ./node_modules/jest/bin/jest.js --silent --coverage",
     "type:check": "tsc --noEmit --project tsconfig.json",
     "lint": "eslint --ext ts ./src --fix",
