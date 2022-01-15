@@ -1,4 +1,4 @@
-<mat-table [dataSource]="dataSource" matSort>
+<mat-table [dataSource]="dataSource">
   <ng-container *ngFor="let columnDef of displayedColumnDefs" [matColumnDef]="columnDef">
     <mat-header-cell *matHeaderCellDef>
       {{ printColumn(columnDef) }}

@@ -11,7 +11,6 @@ import { ActivityViewIntervalsComponent } from "./activity-view-intervals/activi
 import { ActivityViewBestSplitsComponent } from "./activity-view-best-splits/activity-view-best-splits.component";
 import { TimeInZonesChartComponent } from "./activity-view-time-in-zones/time-in-zones-chart/time-in-zones-chart.component";
 import { PeakChartComponent } from "./activity-view-peaks/peak-chart/peak-chart.component";
-import { IntervalChartComponent } from "./activity-view-intervals/interval-chart/interval-chart.component";
 import { TimeInZonesService } from "./activity-view-time-in-zones/services/time-in-zones.service";
 import { ActivityViewService } from "./shared/activity-view.service";
 import { ActivityViewSummaryStatsComponent } from "./activity-view-summary-stats/activity-view-summary-stats.component";
@@ -35,7 +34,6 @@ PlotlyModule.plotlyjs = Plotly;
     ActivityViewBestSplitsComponent,
     TimeInZonesChartComponent,
     PeakChartComponent,
-    IntervalChartComponent,
     ActivityViewSummaryStatsComponent,
     ActivityViewStatsComponent,
     ActivityEditDialogComponent

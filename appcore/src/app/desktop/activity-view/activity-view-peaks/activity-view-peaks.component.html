@@ -5,10 +5,9 @@
                     [measureSystem]="measureSystem"></app-peak-chart>
   </mat-grid-tile>
 </mat-grid-list>
-<div fxLayout="row" fxLayoutAlign="center center" class="mat-caption">
-  <i>Hint: Click peaks on graphs to map display them when GPS data is available</i>
+<div *ngIf="peaksResults?.length" fxLayout="row" fxLayoutAlign="center center" class="mat-caption">
+  <i>Hint: Click on graphs to display peaks on map when GPS data is available</i>
 </div>
-
 <div *ngIf="!peaksResults?.length" class="no-peaks-data">
   <i>Peaks data is unavailable on this activity.</i>
 </div>

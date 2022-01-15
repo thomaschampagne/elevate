@@ -42,7 +42,8 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
   ];
 
   public static readonly MAP_HEIGHT_PX = 375;
-  private static readonly FIT_OPTIONS: FitBoundsOptions = { padding: 20 };
+  private static readonly ACTIVITY_PATH_FIT_OPTIONS: FitBoundsOptions = { padding: 20 };
+  private static readonly SELECTED_PATH_FIT_OPTIONS: FitBoundsOptions = { padding: 100 };
   private static readonly ACTIVITY_PATH_COLOR: string = "#f1083a";
   private static readonly SELECTED_PATH_COLOR: string = "#1e1e1e";
 
@@ -111,7 +112,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
       optimizeForTerrain: true,
       container: "map", // container ID
       bounds: this.activityBounds,
-      fitBoundsOptions: ActivityViewMapComponent.FIT_OPTIONS,
+      fitBoundsOptions: ActivityViewMapComponent.ACTIVITY_PATH_FIT_OPTIONS,
       antialias: false,
       zoom: 13, // starting zoom,
       maxZoom: 17,
@@ -305,7 +306,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
         );
 
         // And fit map to him
-        this.map.fitBounds(pathBounds, ActivityViewMapComponent.FIT_OPTIONS);
+        this.map.fitBounds(pathBounds, ActivityViewMapComponent.SELECTED_PATH_FIT_OPTIONS);
       } else {
         // No bounds selected, remove any existing path if exists
         this.removePath(ActivityViewMapComponent.SELECTED_PATH_NAME);
@@ -317,7 +318,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
   }
 
   private fitBoundsToActivity(): void {
-    this.map.fitBounds(this.activityBounds, ActivityViewMapComponent.FIT_OPTIONS);
+    this.map.fitBounds(this.activityBounds, ActivityViewMapComponent.ACTIVITY_PATH_FIT_OPTIONS);
   }
 
   public ngOnDestroy(): void {

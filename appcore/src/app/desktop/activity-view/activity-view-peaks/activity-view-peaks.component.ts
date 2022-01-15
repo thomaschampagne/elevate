@@ -3,13 +3,13 @@ import _ from "lodash";
 import { Sensor } from "../shared/models/sensors/sensor.model";
 import { PeakChartComponent } from "./peak-chart/peak-chart.component";
 import { ActivitySensorsService } from "../shared/activity-sensors.service";
-import { Activity, ActivityStats, Peaks } from "@elevate/shared/models/sync/activity.model";
+import { Activity, Peak } from "@elevate/shared/models/sync/activity.model";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 
 interface PeaksResult {
   sensor: Sensor;
-  peaks: Peaks[];
+  peaks: Peak[];
 }
 
 @Component({
@@ -32,9 +32,6 @@ export class ActivityViewPeaksComponent implements OnInit {
   public activity: Activity;
 
   @Input()
-  public stats: ActivityStats;
-
-  @Input()
   public measureSystem: MeasureSystem;
 
   constructor(@Inject(ActivitySensorsService) private readonly activitySensorsService: ActivitySensorsService) {
@@ -51,7 +48,7 @@ export class ActivityViewPeaksComponent implements OnInit {
     // Looping on each sensor definitions to get peaks if available
     sensors.forEach(sensor => {
       if (sensor.peaksPath) {
-        const peaks: Peaks[] = _.get(this.stats, sensor.peaksPath);
+        const peaks: Peak[] = _.get(this.activity.stats, sensor.peaksPath);
         if (peaks) {
           this.peaksResults.push({ sensor: sensor, peaks: peaks });
         }

@@ -108,7 +108,7 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
         shape: "spline",
         width: 1.25
       },
-      this.sensor.areaColor
+      null
     );
 
     // Getting the unit (with measure system specific support)

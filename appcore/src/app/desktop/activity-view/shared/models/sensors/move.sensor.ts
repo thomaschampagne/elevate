@@ -68,15 +68,11 @@ export class PaceSensor extends MoveSensor {
 
   public zoneType: ZoneType = ZoneType.PACE;
 
-  public fromStreamConvert(
-    streamMeterPerSec: number,
-    measureSystem: MeasureSystem,
-    lastConvertedValue: number
-  ): number {
+  public fromStreamConvert(streamMeterPerSec: number, measureSystem: MeasureSystem): number {
     const paceAsSecondsPerKm = Movement.speedToPace(streamMeterPerSec * Constant.MPS_KPH_FACTOR);
     // Test value validity
     if (paceAsSecondsPerKm === null) {
-      return lastConvertedValue;
+      return null;
     } else {
       // Valid. Now convert it along measurement system
       return measureSystem === MeasureSystem.IMPERIAL
@@ -131,16 +127,12 @@ export class SwimmingPaceSensor extends PaceSensor {
     [MeasureSystem.IMPERIAL, { short: "/hy", full: "Time / hundred yards" }]
   ]);
 
-  public fromStreamConvert(
-    streamMeterPerSec: number,
-    measureSystem: MeasureSystem,
-    lastConvertedValue: number
-  ): number {
+  public fromStreamConvert(streamMeterPerSec: number, measureSystem: MeasureSystem): number {
     // Convert to s/100m
     const secondsPer100m = Movement.speedToSwimPace(streamMeterPerSec * Constant.MPS_KPH_FACTOR);
 
     if (!Number.isFinite(secondsPer100m)) {
-      return lastConvertedValue;
+      return null;
     } else {
       return measureSystem === MeasureSystem.IMPERIAL ? secondsPer100m * Constant.METER_TO_YARD_FACTOR : secondsPer100m;
     }

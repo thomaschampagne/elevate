@@ -13,7 +13,7 @@ export abstract class Sensor extends BaseSensor implements PlottableSensor {
   public abstract color: string;
   public abstract areaColor: string;
 
-  public fromStreamConvert(streamValue: number, measureSystem: MeasureSystem, lastConvertedValue?: number): number {
+  public fromStreamConvert(streamValue: number, measureSystem: MeasureSystem): number {
     return streamValue;
   }
 

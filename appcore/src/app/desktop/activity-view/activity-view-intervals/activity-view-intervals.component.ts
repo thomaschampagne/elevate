@@ -140,7 +140,7 @@ export class ActivityViewIntervalsComponent implements OnInit {
     this.displayTitlesMap = this.DISPLAY_TITLES_SPORT_MAP(this.activity.type);
     this.columnDefs = this.findColumnDefs();
     this.displayedColumnDefs = this.getDisplayedColumnsDefs();
-    this.dataSource = new MatTableDataSource<Lap>();
+    this.dataSource = new MatTableDataSource();
     this.dataSource.data = this.laps;
   }
 

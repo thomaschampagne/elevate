@@ -13,7 +13,7 @@ export const environment = {
   // Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
   minBackupVersion: "7.0.0-13.alpha",
   showDebugRibbon: true,
-  showActivityDebugData: true,
+  showActivityDebugData: false,
   showRouteUrl: true,
   bypassProfileRestoreChecks: false,
   backendBaseUrl: "https://peak-dev-elevate.koyeb.app/api"

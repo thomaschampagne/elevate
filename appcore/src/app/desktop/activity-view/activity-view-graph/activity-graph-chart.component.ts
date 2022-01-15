@@ -212,8 +212,6 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
       return;
     }
 
-    let lastConvertedYValue = null;
-
     scaleStream.forEach((scaleValue: number, index: number) => {
       // Set x value along scale mode type
       let xValue: Datum | number;
@@ -236,10 +234,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
 
         // Foreach sensor add y axis value
         const sensorStream = this.streams[sensor.streamKey] as number[];
-        const yValue = sensor.fromStreamConvert(sensorStream[index], this.measureSystem, lastConvertedYValue);
-
-        // Track last value to use it in case of invalid number (NaN, Infinity) in chart
-        lastConvertedYValue = yValue;
+        const yValue = sensor.fromStreamConvert(sensorStream[index], this.measureSystem);
 
         // Test y-axis type
         const sensorLayoutSpecifics = ActivityGraphChartComponent.PER_SENSOR_LAYOUT_SPECIFICS.get(sensor.name);

@@ -134,8 +134,7 @@
       <mat-tab label="Peaks" *ngIf="activity?.stats">
         <ng-template matTabContent>
           <app-activity-view-peaks [measureSystem]="userSettings.systemUnit"
-                                   [activity]="activity"
-                                   [stats]="activity.stats">
+                                   [activity]="activity">
           </app-activity-view-peaks>
         </ng-template>
       </mat-tab>
