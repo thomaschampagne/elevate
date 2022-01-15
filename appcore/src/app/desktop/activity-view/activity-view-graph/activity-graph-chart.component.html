@@ -8,6 +8,7 @@
                [useResizeHandler]="chart.useResizeHandler"
                (plotlyClick)="onGraphClick($event)"
                (relayout)="onReLayout($event)"
+               (legendClick)="onLegendClick()"
                (hover)="onHover($event)"
                (unhover)="onUnHover()">
   </plotly-plot>

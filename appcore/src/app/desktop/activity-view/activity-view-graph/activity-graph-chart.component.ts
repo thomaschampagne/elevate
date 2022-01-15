@@ -146,7 +146,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     this.populateTracesDataOnScaledStream(this.getActiveScaleStream());
 
     // Y/X Axis configuration
-    this.specificAxisConfiguration();
+    this.configureAxis();
   }
 
   private getActiveScaleStream(): number[] {
@@ -255,7 +255,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   /**
    * Configure X-axis and all multi Y-axis (position l/R, color, etc...) on a given chart, activity sensors & scale mode
    */
-  private specificAxisConfiguration(): void {
+  private configureAxis(): void {
     // Calculate the left/right graph margin and yAxis step padding for multi yAxis placement purpose
     const { domainMarginLeft, domainMarginRight, yAxisPadding } = this.calculateMultiYAxisPosition(
       this.availableSensors
@@ -458,7 +458,7 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
   public onReLayout(plotReLayoutEvent: PlotRelayoutEvent): void {
     // Reconfigure axis when chart resized (e.g. by window resize)
     if (plotReLayoutEvent.autosize) {
-      this.specificAxisConfiguration();
+      this.configureAxis();
       return;
     }
 
@@ -490,6 +490,11 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
 
     // Notify bounds selected on zoom
     this.activityViewService.selectedGraphBounds$.next(zoomIndexes);
+  }
+
+  public onLegendClick(): void {
+    // Ensure axis stay configured when toggle scatters from legend clicks
+    this.configureAxis();
   }
 
   public forceResetZoom(): void {
