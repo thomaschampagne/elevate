@@ -1,5 +1,5 @@
 import { AppService } from "../app-service";
-import { catchError, filter, timeout } from "rxjs/operators";
+import { filter } from "rxjs/operators";
 import { ConnectorConfig } from "./connector-config.model";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import { Logger } from "../logger";
@@ -12,13 +12,12 @@ import fs from "fs";
 import normalizeUrl from "normalize-url";
 import { Environment } from "../environments/environment.interface";
 import { HttpClient } from "../clients/http.client";
-import { of, ReplaySubject, Subject } from "rxjs";
+import { ReplaySubject, Subject } from "rxjs";
 import pDefer, { DeferredPromise } from "p-defer";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
-import { StoppedSyncEvent } from "@elevate/shared/sync/events/stopped-sync.event";
 import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
 import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
@@ -38,8 +37,6 @@ export abstract class BaseConnector {
   ) {
     this.connectorErrorsReasonsIds = [];
   }
-
-  private static readonly WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT: number = 3000;
 
   public type: ConnectorType;
   public enabled: boolean;
@@ -74,16 +71,6 @@ export abstract class BaseConnector {
     if (this.isSyncing) {
       const stopSubscription = this.syncEvents$
         .pipe(filter(syncEvent => syncEvent.type === SyncEventType.STOPPED))
-        .pipe(
-          timeout(BaseConnector.WAIT_FOR_SYNC_STOP_EVENT_TIMEOUT),
-          catchError(() => {
-            // Timeout for waiting a stop event reached, we have to emulated it...
-            this.logger.warn("Request timed out after waiting for stop event from connector. Emulating one");
-            this.isSyncing = false;
-            this.syncEvents$.next(new StoppedSyncEvent(this.type));
-            return of(null);
-          })
-        )
         .subscribe(() => {
           stopSubscription.unsubscribe();
           this.stopRequested = false;

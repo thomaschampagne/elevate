@@ -173,7 +173,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
         // Display message about the sync time when fully syncing without existing activities (= first sync)
         if (!mostRecentActivity && !fastSync) {
-          this.snackBar.open("This 1st synchronization may take a while, you may leave app in background.", "Ok");
+          this.snackBar.open("This 1st synchronization may take a while, please wait...", "Ok");
         }
 
         let startSyncParamPromise: Promise<{
