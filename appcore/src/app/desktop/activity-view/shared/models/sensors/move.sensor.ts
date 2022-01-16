@@ -43,7 +43,7 @@ export class SpeedSensor extends MoveSensor {
       : zoneBoundValue;
   }
 
-  public fromStatsConvert(
+  public formatFromStat(
     statValue: number | string,
     measureSystem: MeasureSystem,
     roundDecimals: number = this.defaultRoundDecimals
@@ -91,7 +91,7 @@ export class PaceSensor extends MoveSensor {
     return Time.secToMilitary(zoneBoundValue, true);
   }
 
-  public fromStatsConvert(
+  public formatFromStat(
     statValue: number | string,
     measureSystem: MeasureSystem,
     roundDecimals: number = this.defaultRoundDecimals
@@ -138,7 +138,7 @@ export class SwimmingPaceSensor extends PaceSensor {
     }
   }
 
-  public fromStatsConvert(
+  public formatFromStat(
     statValue: number | string,
     measureSystem: MeasureSystem,
     roundDecimals: number = this.defaultRoundDecimals

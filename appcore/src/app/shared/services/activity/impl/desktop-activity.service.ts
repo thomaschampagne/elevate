@@ -16,6 +16,8 @@ import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { Channel } from "@elevate/shared/electron/channels.enum";
+import { SplitRequest } from "@elevate/shared/models/splits/split-request.model";
+import { SplitResponse } from "@elevate/shared/models/splits/split-response.model";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 export class ActivityRecalculateNotification {
@@ -77,6 +79,11 @@ export class DesktopActivityService extends ActivityService {
     );
 
     return this.ipcTunnelService.send<IpcMessage, Activity>(computeActivityMessage);
+  }
+
+  public computeSplit(splitRequest: SplitRequest): Promise<SplitResponse> {
+    const computeSplitMessage = new IpcMessage(Channel.computeSplits, splitRequest);
+    return this.ipcTunnelService.send<IpcMessage, SplitResponse>(computeSplitMessage);
   }
 
   public recalculateSingle(activity: Activity, userSettings: UserSettings.DesktopUserSettings): Promise<Activity> {

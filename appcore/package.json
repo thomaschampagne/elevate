@@ -97,7 +97,7 @@
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~7.0.0",
     "jest": "^27.3.1",
-    "jest-preset-angular": "^10.1.0",
+    "jest-preset-angular": "^11.0.1",
     "protractor": "~7.0.0",
     "ts-node": "^10.2.0",
     "eslint-config-prettier": "^7.2.0",

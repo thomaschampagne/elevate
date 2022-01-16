@@ -13,7 +13,7 @@ import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @singleton()
 export class IpcComputeActivityListener implements IpcListener {
-  constructor(@inject(WorkerService) protected readonly workerService: WorkerService) {}
+  constructor(@inject(WorkerService) private readonly workerService: WorkerService) {}
 
   public startListening(ipcTunnelService: IpcTunnelService): void {
     // Compute activity

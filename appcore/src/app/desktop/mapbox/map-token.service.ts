@@ -47,7 +47,7 @@ export class MapTokenService extends MachineAuthenticatedService {
             this.logger.debug("Use fallback map token");
 
             // Get a random fallback token
-            const fallbackTokenIndex = _.random(0, MapTokenService.FALLBACK_TOKENS.length);
+            const fallbackTokenIndex = _.random(0, MapTokenService.FALLBACK_TOKENS.length - 1);
 
             // Decode and return token
             const fallbackToken = atob(MapTokenService.FALLBACK_TOKENS[fallbackTokenIndex]);

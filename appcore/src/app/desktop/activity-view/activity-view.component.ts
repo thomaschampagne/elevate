@@ -223,7 +223,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
       const runningFtp = this.activity.athleteSnapshot.athleteSettings.runningFtp;
       snapshotFormatted += ` - Threshold ${
         runningFtp
-          ? PaceSensor.DEFAULT.fromStatsConvert(runningFtp, this.userSettings.systemUnit) +
+          ? PaceSensor.DEFAULT.formatFromStat(runningFtp, this.userSettings.systemUnit) +
             PaceSensor.DEFAULT.getDisplayUnit(systemUnit)
           : "Missing"
       }`;
@@ -233,7 +233,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
       const swimFtpMeterPerMin = this.activity.athleteSnapshot.athleteSettings.swimFtp;
       snapshotFormatted += ` - Threshold ${
         swimFtpMeterPerMin
-          ? SwimmingPaceSensor.DEFAULT.fromStatsConvert(
+          ? SwimmingPaceSensor.DEFAULT.formatFromStat(
               (1 / (swimFtpMeterPerMin / 60)) * 1000, // Convert m/min to s/km
               this.userSettings.systemUnit
             ) + SwimmingPaceSensor.DEFAULT.getDisplayUnit(systemUnit)

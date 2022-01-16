@@ -21,7 +21,7 @@ export abstract class PowerSensor extends Sensor {
 
   public peaksPath: [keyof ActivityStats, keyof Peaks] = ["power", "peaks"];
 
-  public fromStatsConvert(watts: number, measureSystem: MeasureSystem, roundDecimals: number): number | string {
+  public formatFromStat(watts: number, measureSystem: MeasureSystem, roundDecimals: number): number | string {
     return _.round(watts, roundDecimals);
   }
 

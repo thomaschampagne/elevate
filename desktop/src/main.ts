@@ -38,6 +38,7 @@ import { UserScreen } from "./tools/user-screen";
 import { platform } from "os";
 import { RuntimeInfoProviderToken } from "./runtime-info/runtime-info.provider";
 import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
+import { IpcComputeSplitsListener } from "./listeners/ipc-compute-splits.listener";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 
@@ -53,6 +54,7 @@ class Main {
     @inject(IpcMainTunnelService) private readonly ipcTunnelService: IpcTunnelService,
     @inject(IpcSyncMessageListener) private readonly ipcSyncMessageListener: IpcSyncMessageListener,
     @inject(IpcComputeActivityListener) private readonly ipcComputeActivityListener: IpcComputeActivityListener,
+    @inject(IpcComputeSplitsListener) private readonly ipcComputeSplitsListener: IpcComputeSplitsListener,
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
     @inject(IpcSharedStorageListener) private readonly ipcSharedStorageListener: IpcSharedStorageListener,
@@ -426,6 +428,9 @@ class Main {
 
     // Listen for activity compute request
     this.ipcComputeActivityListener.startListening(this.ipcTunnelService);
+
+    // Listen for splits compute request
+    this.ipcComputeSplitsListener.startListening(this.ipcTunnelService);
 
     // Listen for strava account linking
     this.ipcStravaLinkListener.startListening(this.ipcTunnelService);

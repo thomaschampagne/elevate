@@ -35,7 +35,7 @@ export class ElevationSensor extends Sensor {
       : zoneBoundValue;
   }
 
-  public fromStatsConvert(meters: number, measureSystem: MeasureSystem, roundDecimals: number): number | string {
+  public formatFromStat(meters: number, measureSystem: MeasureSystem, roundDecimals: number): number | string {
     const converted = meters * (measureSystem === MeasureSystem.IMPERIAL ? Constant.METER_TO_FEET_FACTOR : 1);
     return Number.isFinite(roundDecimals) ? _.round(converted, roundDecimals) : converted;
   }

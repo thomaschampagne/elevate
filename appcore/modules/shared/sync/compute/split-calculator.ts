@@ -42,7 +42,7 @@ export class SplitCalculator {
       winStartIdx++;
     }
 
-    maxAvg = Number.isFinite(maxAvg) ? maxAvg : null;
+    maxAvg = Number.isFinite(maxAvg) ? _.round(maxAvg, 3) : null;
 
     return { value: maxAvg, start: start, end: end };
   }

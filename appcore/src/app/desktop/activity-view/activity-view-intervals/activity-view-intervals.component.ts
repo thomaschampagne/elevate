@@ -177,29 +177,27 @@ export class ActivityViewIntervalsComponent implements OnInit {
 
   private printDistance(sport: ElevateSport, measureSystem: MeasureSystem, distance: number): string {
     const distanceSensor = this.DISTANCE_SENSOR_MAP.get(sport) || DistanceSensor.DEFAULT;
-    return `${distanceSensor.fromStatsConvert(distance, measureSystem)} ${distanceSensor.getDisplayUnit(
-      measureSystem
-    )}`;
+    return `${distanceSensor.formatFromStat(distance, measureSystem)} ${distanceSensor.getDisplayUnit(measureSystem)}`;
   }
 
   private printPace(sport: ElevateSport, measureSystem: MeasureSystem, pace: number): string {
     const paceSensor = Activity.isSwim(sport) ? SwimmingPaceSensor.DEFAULT : PaceSensor.DEFAULT;
-    return `${paceSensor.fromStatsConvert(pace, measureSystem)} ${paceSensor.getDisplayUnit(measureSystem)}`;
+    return `${paceSensor.formatFromStat(pace, measureSystem)} ${paceSensor.getDisplayUnit(measureSystem)}`;
   }
 
   private printSpeed(measureSystem: MeasureSystem, speed: number): string {
     const speedSensor = SpeedSensor.DEFAULT;
-    return `${speedSensor.fromStatsConvert(speed, measureSystem)} ${speedSensor.getDisplayUnit(measureSystem)}`;
+    return `${speedSensor.formatFromStat(speed, measureSystem)} ${speedSensor.getDisplayUnit(measureSystem)}`;
   }
 
   private printCadence(sport: ElevateSport, measureSystem: MeasureSystem, cadence: number): string {
     const cadenceSensor = this.CADENCE_SENSOR_MAP.get(sport) || CyclingCadenceSensor.DEFAULT;
-    return `${cadenceSensor.fromStatsConvert(cadence, measureSystem)} ${cadenceSensor.getDisplayUnit(measureSystem)}`;
+    return `${cadenceSensor.formatFromStat(cadence, measureSystem)} ${cadenceSensor.getDisplayUnit(measureSystem)}`;
   }
 
   private printHeartRate(measureSystem: MeasureSystem, hr: number): string {
     const heartRateSensor = HeartRateSensor.DEFAULT;
-    return `${heartRateSensor.fromStatsConvert(hr, measureSystem)} ${heartRateSensor.getDisplayUnit(measureSystem)}`;
+    return `${heartRateSensor.formatFromStat(hr, measureSystem)} ${heartRateSensor.getDisplayUnit(measureSystem)}`;
   }
 
   private printPower(watts: number) {

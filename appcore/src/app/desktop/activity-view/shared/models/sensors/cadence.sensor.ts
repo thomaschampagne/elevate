@@ -45,7 +45,11 @@ export class RunningCadenceSensor extends CadenceSensor {
     return cadence * 2;
   }
 
-  public fromStatsConvert(cadence: number, measureSystem: MeasureSystem, roundDecimals: number): number | string {
+  public formatFromStat(
+    cadence: number,
+    measureSystem: MeasureSystem,
+    roundDecimals: number = this.defaultRoundDecimals
+  ): number | string {
     const runningCadence = cadence * 2;
     return Number.isFinite(roundDecimals) ? _.round(runningCadence, roundDecimals) : runningCadence;
   }

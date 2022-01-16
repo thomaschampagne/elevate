@@ -1,5 +1,8 @@
 import "jest-preset-angular/setup-jest";
 
+/**
+ * Common
+ */
 // Css
 Object.defineProperty(window, "CSS", { value: null });
 
@@ -43,6 +46,9 @@ Object.defineProperty(document.body.style, "transform", {
   }
 });
 
+/**
+ * Desktop
+ */
 // Electron
 Object.defineProperty(window, "require", {
   value: () => (module: string) => {
@@ -50,3 +56,7 @@ Object.defineProperty(window, "require", {
     return {};
   }
 });
+
+// Mapbox and controls lib
+jest.mock("mapbox-gl/dist/mapbox-gl", () => () => {});
+jest.mock("mapbox-gl-controls/lib", () => {});

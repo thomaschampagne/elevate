@@ -204,7 +204,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.power.avgKg, 2.3, 2);
           SpecsUtils.assertNearEqual(computedStats.power.weighted, 197);
           SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.74, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.best20min, 260);
+          SpecsUtils.assertNearEqual(computedStats.power.best20min, 264);
           SpecsUtils.assertNearEqual(computedStats.power.lowQ, 131);
           SpecsUtils.assertNearEqual(computedStats.power.median, 184);
           SpecsUtils.assertNearEqual(computedStats.power.upperQ, 214);

@@ -1,7 +1,7 @@
 import { SplitCalculator } from "@elevate/shared/sync/compute/split-calculator";
 import { Constant } from "@elevate/shared/constants/constant";
-import ACTIVITY_DATA_01 from "./data_208748758.json";
-import ACTIVITY_DATA_02 from "./data_1480020375.json";
+import ACTIVITY_DATA_01 from "./fixtures/data_208748758.json";
+import ACTIVITY_DATA_02 from "./fixtures/data_1480020375.json";
 
 describe("SplitCalculator", () => {
   it("should get best split with scale of 5", done => {

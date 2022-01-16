@@ -11,6 +11,7 @@ import { DesktopUserSettingsService } from "../../../shared/services/user-settin
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { StyleOption } from "mapbox-gl-controls/lib/StylesControl/types";
 import { MapTokenService } from "../../mapbox/map-token.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 @Component({
@@ -23,6 +24,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
     @Inject(UserSettingsService) private readonly userSettingsService: DesktopUserSettingsService,
     @Inject(ActivityViewService) private readonly activityViewService: ActivityViewService,
     @Inject(MapTokenService) private readonly mapTokenService: MapTokenService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
     @Inject(LoggerService) private readonly logger: LoggerService
   ) {
     this.isMapReady = null;
@@ -289,6 +291,15 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
     this.selectedGraphBoundsSubscription = this.activityViewService.selectedGraphBounds$.subscribe(selectedBounds => {
       // Do we have bounds selected?
       if (selectedBounds?.length === 2) {
+        if (
+          !Number.isFinite(selectedBounds[0]) ||
+          !Number.isFinite(selectedBounds[1]) ||
+          selectedBounds[1] - selectedBounds[0] <= 1
+        ) {
+          this.snackBar.open("Section is too short or is empty: can't display it on map.", "Ok", { duration: 4000 });
+          return;
+        }
+
         // Remove any existing path if exists
         this.removePath(ActivityViewMapComponent.SELECTED_PATH_NAME);
 

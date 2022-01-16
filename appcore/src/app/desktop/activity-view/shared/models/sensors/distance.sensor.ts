@@ -16,7 +16,7 @@ export class DistanceSensor extends BaseSensor {
     [MeasureSystem.IMPERIAL, { short: "mi", full: "Miles" }]
   ]);
 
-  public fromStatsConvert(
+  public formatFromStat(
     distanceMeters: number,
     measureSystem: MeasureSystem,
     roundDecimals: number = this.defaultRoundDecimals
@@ -44,7 +44,7 @@ export class SwimDistanceSensor extends DistanceSensor {
     [MeasureSystem.IMPERIAL, { short: "yd", full: "Yards" }]
   ]);
 
-  public fromStatsConvert(
+  public formatFromStat(
     distanceMeters: number,
     measureSystem: MeasureSystem,
     roundDecimals: number = this.defaultRoundDecimals

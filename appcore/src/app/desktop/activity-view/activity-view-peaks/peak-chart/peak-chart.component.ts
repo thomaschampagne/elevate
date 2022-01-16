@@ -160,7 +160,7 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
   public onGraphClick(plotMouseEvent: PlotMouseEvent): void {
     const clickedPeak = this.peaks.find(peak => peak.range === plotMouseEvent.points[0].x);
 
-    if (clickedPeak && clickedPeak.end - clickedPeak.start > 1) {
+    if (clickedPeak) {
       this.activityViewService.selectedGraphBounds$.next([clickedPeak.start, clickedPeak.end]);
     }
   }

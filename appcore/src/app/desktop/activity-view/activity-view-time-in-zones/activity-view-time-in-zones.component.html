@@ -1,4 +1,4 @@
-<mat-grid-list cols="2" [rowHeight]="getGridRowHeight()">
+<mat-grid-list *ngIf="sensorTimeInZones?.length" cols="2" [rowHeight]="getGridRowHeight()">
   <mat-grid-tile fxFlex="100" *ngFor="let result of sensorTimeInZones;">
     <app-time-in-zones-chart fxFlex="100"
                              [sensor]="result.sensor"
@@ -6,3 +6,6 @@
                              [measureSystem]="measureSystem"></app-time-in-zones-chart>
   </mat-grid-tile>
 </mat-grid-list>
+<div *ngIf="!sensorTimeInZones?.length" class="centered-text pad-lrg-bt">
+  <i>Time in zone data is unavailable on this activity.</i>
+</div>

@@ -11,7 +11,7 @@ export class TimeSensor extends BaseSensor {
 
   public displayUnit: { short: string; full: string } | Map<MeasureSystem, { short: string; full: string }> = null;
 
-  public fromStatsConvert(statValue: number | string): number | string {
+  public formatFromStat(statValue: number | string): number | string {
     return Time.secToMilitary(statValue as number, true);
   }
 }

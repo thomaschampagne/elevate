@@ -1,5 +1,5 @@
 import { LegacySplitCalculator, SplitCalculatorOptions } from "@elevate/shared/sync/compute/legacy-split-calculator";
-import FIXTURE from "./data_1480020375.json";
+import FIXTURE from "./fixtures/data_1480020375.json";
 
 describe("LegacySplitCalculator", () => {
   let _POWER_TIME_DATA_: { time: number[]; watts: number[] };

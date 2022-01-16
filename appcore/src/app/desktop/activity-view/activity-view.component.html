@@ -1,7 +1,9 @@
 <mat-card *ngIf="activity">
-  <div class="warn-note flags" *ngIf="displayFlags && activity.flags?.length" fxLayout="row" fxLayoutAlign="space-between center">
+  <div class="warn-note flags" *ngIf="displayFlags && activity.flags?.length" fxLayout="row"
+       fxLayoutAlign="space-between center">
     <div>
-      <strong>Issue(s) have been detected on this activity:</strong>&nbsp;&nbsp;<span *ngFor="let flag of activity.flags;">{{ getFlagReason(flag) }};&nbsp;&nbsp;</span>
+      <strong>Issue(s) have been detected on this activity:</strong>&nbsp;&nbsp;<span
+      *ngFor="let flag of activity.flags;">{{ getFlagReason(flag) }};&nbsp;&nbsp;</span>
     </div>
     <div>
       <button mat-button (click)="onClearFlags()">
@@ -156,7 +158,9 @@
 
       <mat-tab label="Best Splits" *ngIf="streams">
         <ng-template matTabContent>
-          <app-activity-view-best-splits></app-activity-view-best-splits>
+          <app-activity-view-best-splits [activity]="activity"
+                                         [measureSystem]="userSettings.systemUnit"
+                                         [streams]="streams"></app-activity-view-best-splits>
         </ng-template>
       </mat-tab>
     </mat-tab-group>

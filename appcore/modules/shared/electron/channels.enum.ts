@@ -30,6 +30,7 @@ export enum Channel {
 
   // Activity
   computeActivity = "computeActivity",
+  computeSplits = "computeSplits",
   findActivity = "findActivity",
   findStreams = "findStreams",
 

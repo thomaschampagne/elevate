@@ -1,3 +1,59 @@
-<div style="padding: 40px; text-align: center;">
-  Coming during beta
+<div *ngIf="dataStreams?.length">
+  <mat-table [dataSource]="dataSource">
+    <ng-container *ngFor="let columnDef of columnDefs" [matColumnDef]="columnDef">
+      <mat-header-cell *matHeaderCellDef>
+        {{ printTitle(columnDef) }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let splitResponse">
+        <ng-container [ngSwitch]="columnDef">
+          <ng-container *ngSwitchCase="'range'">
+            {{ printRangeValue(splitResponse.type, splitResponse.range) }}
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <button mat-button color="primary" matTooltip="View on Map"
+                    (click)="onSplitClick(splitResponse, columnDef)">
+              {{ printSplitValue(splitResponse, columnDef) }}
+            </button>
+          </ng-container>
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="columnDefs"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnDefs;"></mat-row>
+  </mat-table>
+
+  <div fxLayout="row" fxLayoutAlign="center center" class="pad-lrg-t">
+    <form #splitDistForm="ngForm" *ngIf="maxDistance">
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-form-field fxFlex="45">
+          <mat-label *ngIf="measureSystem === MeasureSystem.METRIC">Distance in kilometers</mat-label>
+          <mat-label *ngIf="measureSystem === MeasureSystem.IMPERIAL">Distance in miles</mat-label>
+          <input matInput [(ngModel)]="this.userDefinedSplit.distance" min="0.1" name="distance" type="number">
+        </mat-form-field>
+        <span fxFlex="2"></span>
+        <button (click)="onAddDistanceSplit()" color="primary" mat-stroked-button
+                [disabled]="splitDistForm.invalid || !this.userDefinedSplit.distance">
+          Add
+        </button>
+      </div>
+    </form>
+    <form #splitTimeForm="ngForm">
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <mat-form-field fxFlex="45">
+          <mat-label>Time as hh:mm:ss</mat-label>
+          <input matInput [(ngModel)]="this.userDefinedSplit.time" name="time" type="text"
+                 pattern="^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$">
+        </mat-form-field>
+        <span fxFlex="1"></span>
+        <button (click)="onAddTimeSplit()" color="primary" mat-stroked-button
+                [disabled]="splitTimeForm.invalid || this.userDefinedSplit.time === ''">
+          Add
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div *ngIf="!dataStreams?.length" class="centered-text pad-lrg-bt">
+  <i>Best split data is unavailable on this activity.</i>
 </div>

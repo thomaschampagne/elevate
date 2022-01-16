@@ -21,7 +21,7 @@ export abstract class BaseSensor {
     return unit;
   }
 
-  public fromStatsConvert(
+  public formatFromStat(
     statValue: number | string,
     measureSystem: MeasureSystem,
     roundDecimals: number = this.defaultRoundDecimals

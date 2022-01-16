@@ -29,33 +29,33 @@ export class StatDisplay {
       color = stat.baseSensor.color;
     }
 
-    let convertedValue: number | string;
+    let targetValue: number | string;
     let isValueMissing = false;
 
     if (Number.isFinite(statValue)) {
       statValue = (statValue as number) * stat.factor;
-      convertedValue = stat.baseSensor.fromStatsConvert(
+      targetValue = stat.baseSensor.formatFromStat(
         statValue,
         measureSystem,
         stat.roundDecimals || stat.baseSensor.defaultRoundDecimals
       );
     } else if (typeof statValue === "string") {
-      convertedValue = statValue;
+      targetValue = statValue;
     } else {
-      convertedValue = StatDisplay.MISSING_VALUE_DISPLAY;
+      targetValue = StatDisplay.MISSING_VALUE_DISPLAY;
       isValueMissing = true;
     }
 
     let details = null;
     if (stat.details) {
-      details = typeof stat.details === "function" ? stat.details(convertedValue) : stat.details;
+      details = typeof stat.details === "function" ? stat.details(targetValue) : stat.details;
     }
 
     return {
       name: stat.name,
       details: details,
       unit: unit,
-      value: convertedValue,
+      value: targetValue,
       description: isValueMissing && stat.missingMessage ? `${stat.missingMessage}` : stat.description,
       color: color,
       forceDisplay: stat.forceDisplay
