@@ -24,16 +24,15 @@ export class PeakChartComponent extends BaseChartComponent<LogChart> implements 
     2,
     5,
     10,
+    20,
+    30,
     60,
     2 * 60,
     5 * 60,
     10 * 60,
     20 * 60,
     30 * 60,
-    60 * 60,
-    2 * 60 * 60,
-    3 * 60 * 60,
-    4 * 60 * 60
+    60 * 60
   ];
 
   public static readonly CHART_LAYOUT_SPECIFICS: Partial<Layout> = {

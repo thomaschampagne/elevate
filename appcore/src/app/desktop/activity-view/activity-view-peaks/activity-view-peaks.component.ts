@@ -22,8 +22,7 @@ export class ActivityViewPeaksComponent implements OnInit {
     "watts",
     "heartrate",
     "velocity_smooth",
-    "cadence",
-    "grade_smooth"
+    "cadence"
   ];
 
   public peaksResults: PeaksResult[];

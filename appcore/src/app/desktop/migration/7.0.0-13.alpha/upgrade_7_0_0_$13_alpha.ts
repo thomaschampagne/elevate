@@ -231,8 +231,7 @@ export class Upgrade_7_0_0_$13_alpha extends DesktopMigration {
       },
 
       slopeProfile: (legacyActivity?.extendedStats?.gradeData?.gradeProfile as any) || null,
-      zones: legacyActivity?.extendedStats?.gradeData?.gradeZones || null,
-      peaks: legacyActivity?.extendedStats?.gradeData?.peaks || null
+      zones: legacyActivity?.extendedStats?.gradeData?.gradeZones || null
     };
 
     // Handle elevation

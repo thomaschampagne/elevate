@@ -15,7 +15,6 @@ import { StreamsService } from "../../streams/streams.service";
 import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
-import { ElectronService } from "../../../../desktop/electron/electron.service";
 import { Router } from "@angular/router";
 import { AppRoutes } from "../../../models/app-routes";
 import { DesktopMigrationService } from "../../../../desktop/migration/desktop-migration.service";
@@ -41,6 +40,7 @@ import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
 import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
 import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 @Injectable()
@@ -83,7 +83,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
-    @Inject(ElectronService) public readonly electronService: ElectronService,
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
     @Inject(Router) public readonly router: Router
   ) {
     super(
@@ -170,6 +170,11 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
         // Get timestamp on which we have to sync
         const syncFromDateTime = connectorSyncFromDateTime && fastSync ? connectorSyncFromDateTime : null;
+
+        // Display message about the sync time when fully syncing without existing activities (= first sync)
+        if (!mostRecentActivity && !fastSync) {
+          this.snackBar.open("This 1st synchronization may take a while, you may leave app in background.", "Ok");
+        }
 
         let startSyncParamPromise: Promise<{
           connectorType: ConnectorType;

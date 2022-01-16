@@ -148,7 +148,6 @@ export class StravaConnector extends BaseConnector {
     @inject(Logger) protected readonly logger: Logger
   ) {
     super(appService, environment, ipcSyncMessageSender, workerService, httpClient, logger);
-    // @ts-ignore
     this.type = ConnectorType.STRAVA;
     this.enabled = StravaConnector.ENABLED;
   }

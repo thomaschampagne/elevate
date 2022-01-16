@@ -245,6 +245,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
   }
 
   public onRecalculateActivity(): void {
+    this.snackBar.open("Recalculation in progress...");
     this.activityService.recalculateSingle(this.activity, this.userSettings).then(() => {
       this.reloadActivityView().then(() => {
         this.snackBar.open("Activity has been recalculated", "Ok", { duration: 5000 });

@@ -1414,10 +1414,7 @@ export class ActivityComputer {
       slopeDistance: slopeDistance,
       slopeCadence: slopeCadence,
       slopeProfile: slopeProfile,
-      zones: this.returnZones
-        ? this.computeZones(gradeArray, timeArray, this.userSettings.zones, ZoneType.GRADE)
-        : null,
-      peaks: this.returnPeaks ? ActivityComputer.computeTimePeaks(gradeArray, timeArray) : null
+      zones: this.returnZones ? this.computeZones(gradeArray, timeArray, this.userSettings.zones, ZoneType.GRADE) : null
     };
   }
 

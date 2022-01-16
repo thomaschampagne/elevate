@@ -101,7 +101,7 @@ export class CadenceStats implements Peaks {
   public peaks: Peak[];
 }
 
-export class GradeStats implements Peaks {
+export class GradeStats {
   public avg: number;
   public max: number;
   public min: number;
@@ -115,7 +115,6 @@ export class GradeStats implements Peaks {
   public slopeCadence: SlopeStats;
   public slopeProfile: SlopeProfile;
   public zones: ZoneModel[];
-  public peaks: Peak[];
 }
 
 export class ElevationStats {
