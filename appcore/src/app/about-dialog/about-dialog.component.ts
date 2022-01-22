@@ -1,5 +1,4 @@
 import { Component, Inject, OnInit, VERSION as angularCoreVersion } from "@angular/core";
-import { AppUsageDetails } from "../shared/models/app-usage-details.model";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { environment } from "../../environments/environment";
 import { DataStore } from "../shared/data-store/data-store";

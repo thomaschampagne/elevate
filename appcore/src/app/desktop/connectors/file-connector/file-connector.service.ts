@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
-import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { SyncService } from "../../shared/services/sync/sync.service";
+import { DesktopSyncService } from "../../../shared/services/sync/impl/desktop-sync.service";
+import { SyncService } from "../../../shared/services/sync/sync.service";
 import { ConnectorService } from "../connector.service";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 

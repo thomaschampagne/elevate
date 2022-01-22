@@ -1,11 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
-import { SyncService } from "../../shared/services/sync/sync.service";
-import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
+import { SyncService } from "../../../shared/services/sync/sync.service";
+import { DesktopSyncService } from "../../../shared/services/sync/impl/desktop-sync.service";
 import {
   OPEN_RESOURCE_RESOLVER,
   OpenResourceResolver
-} from "../../shared/services/links-opener/open-resource-resolver";
+} from "../../../shared/services/links-opener/open-resource-resolver";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 

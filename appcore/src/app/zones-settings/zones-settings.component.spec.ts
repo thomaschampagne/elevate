@@ -9,6 +9,7 @@ import { TargetModule } from "../shared/modules/target/desktop-target.module";
 import { IpcRendererTunnelServiceMock } from "../desktop/ipc/ipc-renderer-tunnel-service.mock";
 import { IPC_TUNNEL_SERVICE } from "../desktop/ipc/ipc-tunnel-service.token";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { ZonesSettingsModule } from "./zones-settings.module";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("ZonesSettingsComponent", () => {
@@ -17,7 +18,7 @@ describe("ZonesSettingsComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetModule, ZonesSettingsModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
         { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }

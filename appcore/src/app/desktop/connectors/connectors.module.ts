@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { CoreModule } from "../core/core.module";
+import { CoreModule } from "../../core/core.module";
 import { RouterModule, Routes } from "@angular/router";
 import { ConnectorsComponent } from "./connectors.component";
 import { StravaConnectorComponent } from "./strava-connector/strava-connector.component";

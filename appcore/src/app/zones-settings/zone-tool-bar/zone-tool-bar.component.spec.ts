@@ -12,6 +12,7 @@ import { IpcRendererTunnelServiceMock } from "../../desktop/ipc/ipc-renderer-tun
 import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
+import { ZonesSettingsModule } from "../zones-settings.module";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("ZoneToolBarComponent", () => {
@@ -42,7 +43,7 @@ describe("ZoneToolBarComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetModule, ZonesSettingsModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
         { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }

@@ -12,6 +12,7 @@ import { TargetModule } from "../../shared/modules/target/desktop-target.module"
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { ZoneType } from "@elevate/shared/enums/zone-type.enum";
 import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
+import { ZonesSettingsModule } from "../zones-settings.module";
 import DesktopUserSettings = UserSettings.DesktopUserSettings;
 
 describe("ZonesImportExportDialogComponent", () => {
@@ -37,7 +38,7 @@ describe("ZonesImportExportDialogComponent", () => {
     );
 
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetModule, ZonesSettingsModule],
       declarations: [],
       providers: [
         {

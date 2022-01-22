@@ -7,6 +7,7 @@ import { DataStore } from "../shared/data-store/data-store";
 import { TestingDataStore } from "../shared/data-store/testing-datastore.service";
 import { IPC_TUNNEL_SERVICE } from "../desktop/ipc/ipc-tunnel-service.token";
 import { IpcRendererTunnelServiceMock } from "../desktop/ipc/ipc-renderer-tunnel-service.mock";
+import { ReportModule } from "./report.module";
 
 describe("ReportComponent", () => {
   let component: ReportComponent;
@@ -14,7 +15,7 @@ describe("ReportComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetModule, ReportModule],
       providers: [
         { provide: DataStore, useClass: TestingDataStore },
         { provide: IPC_TUNNEL_SERVICE, useClass: IpcRendererTunnelServiceMock }

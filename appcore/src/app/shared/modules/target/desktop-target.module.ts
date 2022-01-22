@@ -7,7 +7,6 @@ import { ConnectorSyncDateTimeDao } from "../../dao/sync/connector-sync-date-tim
 import { PropertiesDao } from "../../dao/properties/properties.dao";
 import { StravaConnectorInfoService } from "../../services/strava-connector-info/strava-connector-info.service";
 import { StravaConnectorInfoDao } from "../../dao/strava-connector-info/strava-connector-info.dao";
-import { StravaConnectorService } from "../../../connectors/strava-connector/strava-connector.service";
 import { FileConnectorInfoService } from "../../services/file-connector-info/file-connector-info.service";
 import { DataStore } from "../../data-store/data-store";
 import { DesktopDataStore } from "../../data-store/impl/desktop-data-store.service";
@@ -21,8 +20,6 @@ import { OPEN_RESOURCE_RESOLVER } from "../../services/links-opener/open-resourc
 import { DesktopOpenResourceResolver } from "../../services/links-opener/impl/desktop-open-resource-resolver.service";
 import { SyncService } from "../../services/sync/sync.service";
 import { CoreModule } from "../../../core/core.module";
-import { ConnectorsModule } from "../../../connectors/connectors.module";
-import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
 import { DesktopBackupDialogComponent } from "../../dialogs/backups/desktop/desktop-backup-dialog.component";
 import { DesktopRoutingModule } from "../routing/desktop-routing.module";
 import { UserSettingsService } from "../../services/user-settings/user-settings.service";
@@ -42,9 +39,9 @@ import { RuntimeInfoService } from "../../../desktop/machine/runtime-info.servic
 import { MapTokenService } from "../../../desktop/mapbox/map-token.service";
 
 @NgModule({
-  imports: [CoreModule, DesktopRoutingModule, ConnectorsModule],
-  exports: [CoreModule, DesktopRoutingModule, ConnectorsModule],
-  declarations: [DesktopAdvancedMenuComponent, DesktopBackupDialogComponent, DesktopRestoreDialogComponent],
+  imports: [CoreModule, DesktopRoutingModule],
+  exports: [CoreModule, DesktopRoutingModule],
+  declarations: [DesktopBackupDialogComponent, DesktopRestoreDialogComponent],
   providers: [
     ElectronService,
     IpcStorageService,
@@ -55,7 +52,6 @@ import { MapTokenService } from "../../../desktop/mapbox/map-token.service";
     DesktopSyncService,
     DesktopBackupService,
     StravaConnectorInfoService,
-    StravaConnectorService,
     ConnectorSyncDateTimeDao,
     PropertiesDao,
     StravaConnectorInfoDao,

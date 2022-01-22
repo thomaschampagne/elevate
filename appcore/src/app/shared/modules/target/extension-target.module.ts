@@ -1,6 +1,5 @@
 import { NgModule } from "@angular/core";
 import { CoreModule } from "../../../core/core.module";
-import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
 import { DataStore } from "../../data-store/data-store";
 import { ExtensionDataStore } from "../../data-store/impl/extension-data-store.service";
 import { ActivityService } from "../../services/activity/activity.service";
@@ -24,7 +23,7 @@ import { ExtensionWindowService } from "../../services/window/extension-window.s
 @NgModule({
   imports: [CoreModule, ExtensionRoutingModule],
   exports: [CoreModule, ExtensionRoutingModule],
-  declarations: [ExtensionAdvancedMenuComponent, ExtensionRestoreBackupDialogComponent],
+  declarations: [ExtensionRestoreBackupDialogComponent],
   providers: [
     SyncDateTimeDao,
     ExtensionSyncService,

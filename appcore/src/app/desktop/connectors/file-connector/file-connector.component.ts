@@ -1,18 +1,18 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
 import { ConnectorsComponent } from "../connectors.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ElectronService } from "../../desktop/electron/electron.service";
-import { FileConnectorInfoService } from "../../shared/services/file-connector-info/file-connector-info.service";
-import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
+import { ElectronService } from "../../electron/electron.service";
+import { FileConnectorInfoService } from "../../../shared/services/file-connector-info/file-connector-info.service";
+import { DesktopSyncService } from "../../../shared/services/sync/impl/desktop-sync.service";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import {
   OPEN_RESOURCE_RESOLVER,
   OpenResourceResolver
-} from "../../shared/services/links-opener/open-resource-resolver";
+} from "../../../shared/services/links-opener/open-resource-resolver";
 import { Subscription } from "rxjs";
-import { SyncService } from "../../shared/services/sync/sync.service";
-import { AppService } from "../../shared/services/app-service/app.service";
+import { SyncService } from "../../../shared/services/sync/sync.service";
+import { AppService } from "../../../shared/services/app-service/app.service";
 import { FileConnectorService } from "./file-connector.service";
 import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";

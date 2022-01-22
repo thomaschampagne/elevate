@@ -1,18 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppRoutes } from "../../models/app-routes";
-import { ActivitiesComponent } from "../../../activities/activities.component";
-import { GlobalSettingsComponent } from "../../../global-settings/global-settings.component";
-import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.component";
-import { DonateComponent } from "../../../donate/donate.component";
-import { ReportComponent } from "../../../report/report.component";
-import { HelpComponent } from "../../../help/help.component";
-import { ExtensionAdvancedMenuComponent } from "../../../advanced-menu/extension/extension-advanced-menu.component";
 
 const routes: Routes = [
   {
     path: AppRoutes.activities,
-    component: ActivitiesComponent
+    loadChildren: () => import("../../../activities/activities.module").then(module => module.ActivitiesModule)
   },
   {
     path: AppRoutes.fitnessTrend,
@@ -24,7 +17,8 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.globalSettings,
-    component: GlobalSettingsComponent
+    loadChildren: () =>
+      import("../../../global-settings/global-settings.module").then(module => module.GlobalSettingsModule)
   },
   {
     path: AppRoutes.athleteSettings,
@@ -33,15 +27,12 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.zonesSettings,
-    component: ZonesSettingsComponent
-  },
-  {
-    path: AppRoutes.zonesSettings + "/:zoneValue",
-    component: ZonesSettingsComponent
+    loadChildren: () =>
+      import("../../../zones-settings/zones-settings.module").then(module => module.ZonesSettingsModule)
   },
   {
     path: AppRoutes.donate,
-    component: DonateComponent
+    loadChildren: () => import("../../../donate/donate.module").then(module => module.DonateModule)
   },
   {
     path: AppRoutes.releasesNotes,
@@ -50,15 +41,18 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.report,
-    component: ReportComponent
+    loadChildren: () => import("../../../report/report.module").then(module => module.ReportModule)
   },
   {
     path: AppRoutes.advancedMenu,
-    component: ExtensionAdvancedMenuComponent
+    loadChildren: () =>
+      import("../../../advanced-menu/extension/extension-advanced-menu.module").then(
+        module => module.ExtensionAdvancedMenuModule
+      )
   },
   {
     path: AppRoutes.help,
-    component: HelpComponent
+    loadChildren: () => import("../../../help/help.module").then(module => module.HelpModule)
   },
   {
     path: "",

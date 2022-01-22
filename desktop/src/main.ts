@@ -42,8 +42,6 @@ import { ConnectorSyncService } from "./connectors/connector-sync.service";
 import { platform } from "os";
 import { Constant } from "@elevate/shared/constants/constant";
 import Menu = Electron.Menu;
-import MenuItemConstructorOptions = Electron.MenuItemConstructorOptions;
-import MenuItem = Electron.MenuItem;
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 
@@ -502,7 +500,7 @@ class Main {
     this.updateHandler.startListening(this.ipcTunnelService);
   }
 
-  private getMenuTemplate(): (MenuItemConstructorOptions | MenuItem)[] {
+  private getMenuTemplate(): any[] {
     const isMacOs = this.appService.isMacOS();
     return [
       ...(isMacOs

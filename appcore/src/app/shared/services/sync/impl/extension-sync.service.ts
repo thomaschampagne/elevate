@@ -170,6 +170,12 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
   }
 
   public restore(extensionBackupModel: ExtensionBackupModel): Promise<void> {
+    if (_.isEmpty(extensionBackupModel.pluginVersion)) {
+      return Promise.reject(
+        "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync."
+      );
+    }
+
     if (!DataStore.isBackupCompatible(extensionBackupModel.pluginVersion)) {
       return Promise.reject(
         `Imported backup version ${extensionBackupModel.pluginVersion} is not compatible with current installed version.`
@@ -179,12 +185,6 @@ export class ExtensionSyncService extends SyncService<SyncDateTime> {
     if (_.isEmpty(extensionBackupModel.activities)) {
       return Promise.reject(
         "Activities are not defined or empty in provided backup file. Try to perform a clean full re-sync."
-      );
-    }
-
-    if (_.isEmpty(extensionBackupModel.pluginVersion)) {
-      return Promise.reject(
-        "Plugin version is not defined in provided backup file. Try to perform a clean full re-sync."
       );
     }
 

@@ -8,6 +8,7 @@ import { CoreModule } from "../../core/core.module";
 import { DataStore } from "../../shared/data-store/data-store";
 import { TestingDataStore } from "../../shared/data-store/testing-datastore.service";
 import { TargetModule } from "../../shared/modules/target/desktop-target.module";
+import { ZonesSettingsModule } from "../zones-settings.module";
 
 describe("ZoneComponent", () => {
   let component: ZoneComponent;
@@ -18,7 +19,7 @@ describe("ZoneComponent", () => {
 
   beforeEach(done => {
     TestBed.configureTestingModule({
-      imports: [CoreModule, SharedModule, TargetModule],
+      imports: [CoreModule, SharedModule, TargetModule, ZonesSettingsModule],
       providers: [{ provide: DataStore, useClass: TestingDataStore }]
     }).compileComponents();
 

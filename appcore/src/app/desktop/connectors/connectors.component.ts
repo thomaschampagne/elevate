@@ -1,12 +1,15 @@
 import { Component, Inject, OnInit } from "@angular/core";
-import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
-import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm-dialog.component";
+import { ConfirmDialogDataModel } from "../../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
+import { ConfirmDialogComponent } from "../../shared/dialogs/confirm-dialog/confirm-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
-import { DesktopSyncService } from "../shared/services/sync/impl/desktop-sync.service";
+import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
 import { Router } from "@angular/router";
 import moment from "moment";
-import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import { SyncService } from "../shared/services/sync/sync.service";
+import {
+  OPEN_RESOURCE_RESOLVER,
+  OpenResourceResolver
+} from "../../shared/services/links-opener/open-resource-resolver";
+import { SyncService } from "../../shared/services/sync/sync.service";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 import { ConnectorSyncDateTime } from "@elevate/shared/models/sync/connector-sync-date-time.model";
 

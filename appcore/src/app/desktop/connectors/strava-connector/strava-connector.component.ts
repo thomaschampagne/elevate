@@ -1,11 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { LoggerService } from "../../shared/services/logging/logger.service";
+import { LoggerService } from "../../../shared/services/logging/logger.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { ConnectorsComponent } from "../connectors.component";
 import { StravaConnectorService } from "./strava-connector.service";
 import moment from "moment";
-import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { ElectronService } from "../../desktop/electron/electron.service";
+import { DesktopSyncService } from "../../../shared/services/sync/impl/desktop-sync.service";
+import { ElectronService } from "../../electron/electron.service";
 import { adjectives, animals, colors, names, uniqueNamesGenerator } from "unique-names-generator";
 import _ from "lodash";
 import { MatDialog } from "@angular/material/dialog";
@@ -13,15 +13,15 @@ import { Router } from "@angular/router";
 import {
   OPEN_RESOURCE_RESOLVER,
   OpenResourceResolver
-} from "../../shared/services/links-opener/open-resource-resolver";
+} from "../../../shared/services/links-opener/open-resource-resolver";
 import { IClipboardResponse } from "ngx-clipboard";
 import jdenticon from "jdenticon/standalone";
 import { StatusCodes } from "http-status-codes";
 import { Subscription } from "rxjs";
-import { SyncService } from "../../shared/services/sync/sync.service";
-import { AppService } from "../../shared/services/app-service/app.service";
-import { AppRoutes } from "../../shared/models/app-routes";
-import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
+import { SyncService } from "../../../shared/services/sync/sync.service";
+import { AppService } from "../../../shared/services/app-service/app.service";
+import { AppRoutes } from "../../../shared/models/app-routes";
+import { StravaConnectorInfoService } from "../../../shared/services/strava-connector-info/strava-connector-info.service";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 

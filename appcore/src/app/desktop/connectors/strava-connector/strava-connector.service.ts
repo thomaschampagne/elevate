@@ -1,9 +1,9 @@
 import { Inject, Injectable } from "@angular/core";
-import { DesktopSyncService } from "../../shared/services/sync/impl/desktop-sync.service";
-import { StravaConnectorInfoService } from "../../shared/services/strava-connector-info/strava-connector-info.service";
-import { SyncService } from "../../shared/services/sync/sync.service";
+import { DesktopSyncService } from "../../../shared/services/sync/impl/desktop-sync.service";
+import { StravaConnectorInfoService } from "../../../shared/services/strava-connector-info/strava-connector-info.service";
+import { SyncService } from "../../../shared/services/sync/sync.service";
 import { ConnectorService } from "../connector.service";
-import { IPC_TUNNEL_SERVICE } from "../../desktop/ipc/ipc-tunnel-service.token";
+import { IPC_TUNNEL_SERVICE } from "../../ipc/ipc-tunnel-service.token";
 import { IpcTunnelService } from "@elevate/shared/electron/ipc-tunnel";
 import { IpcMessage } from "@elevate/shared/electron/ipc-message";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";

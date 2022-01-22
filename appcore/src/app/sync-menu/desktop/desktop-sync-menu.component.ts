@@ -9,7 +9,6 @@ import { AppRoutes } from "../../shared/models/app-routes";
 import { ElectronService } from "../../desktop/electron/electron.service";
 import { SyncService } from "../../shared/services/sync/sync.service";
 import { AppService } from "../../shared/services/app-service/app.service";
-import { ConnectorService } from "../../connectors/connector.service";
 import { DesktopActivityService } from "../../shared/services/activity/impl/desktop-activity.service";
 import { ActivityService } from "../../shared/services/activity/activity.service";
 import { DesktopAppService } from "../../shared/services/app-service/desktop/desktop-app.service";
@@ -75,13 +74,13 @@ export class DesktopSyncMenuComponent extends SyncMenuComponent implements OnIni
     if (this.syncState === SyncState.SYNCED) {
       this.syncMenuActions.push({
         icon: "update",
-        text: `Sync new ${ConnectorService.printType(this.mostRecentConnectorSyncedType)} activities`,
+        text: `Sync new ${this.mostRecentConnectorSyncedType.toLowerCase()} activities`,
         action: () => this.onSync(true)
       });
 
       this.syncMenuActions.push({
         icon: "sync",
-        text: `Sync all ${ConnectorService.printType(this.mostRecentConnectorSyncedType)} activities`,
+        text: `Sync all ${this.mostRecentConnectorSyncedType.toLowerCase()} activities`,
         action: () => this.onSync(false)
       });
     }

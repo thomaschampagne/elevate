@@ -1,86 +1,75 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { AppRoutes } from "../../models/app-routes";
-import { ActivitiesComponent } from "../../../activities/activities.component";
-import { GlobalSettingsComponent } from "../../../global-settings/global-settings.component";
-import { DonateComponent } from "../../../donate/donate.component";
-import { ReportComponent } from "../../../report/report.component";
-import { DesktopAdvancedMenuComponent } from "../../../advanced-menu/desktop/desktop-advanced-menu.component";
-import { HelpComponent } from "../../../help/help.component";
-import { ZonesSettingsComponent } from "../../../zones-settings/zones-settings.component";
-import { ActivityViewModule } from "../../../desktop/activity-view/activity-view.module";
-import { FitnessTrendModule } from "../../../fitness-trend/fitness-trend.module";
-import { AthleteSettingsModule } from "../../../athlete-settings/athlete-settings.module";
-import { YearProgressModule } from "../../../year-progress/year-progress.module";
-import { ReleasesNotesModule } from "../../../releases-notes/releases-notes.module";
-import { ConnectorsModule } from "../../../connectors/connectors.module";
-import { DashboardModule } from "../../../desktop/dashboard/dashboard.module";
-import { GoalsModule } from "../../../desktop/goals/goals.module";
 
 const routes: Routes = [
   {
     path: AppRoutes.goals,
-    loadChildren: () => GoalsModule
+    loadChildren: () => import("../../../desktop/goals/goals.module").then(module => module.GoalsModule)
   },
   {
     path: AppRoutes.dashboard,
-    loadChildren: () => DashboardModule
+    loadChildren: () => import("../../../desktop/dashboard/dashboard.module").then(module => module.DashboardModule)
   },
   {
     path: AppRoutes.activities,
-    component: ActivitiesComponent
+    loadChildren: () => import("../../../activities/activities.module").then(module => module.ActivitiesModule)
   },
   {
     path: AppRoutes.activity,
-    loadChildren: () => ActivityViewModule
+    loadChildren: () =>
+      import("../../../desktop/activity-view/activity-view.module").then(module => module.ActivityViewModule)
   },
   {
     path: AppRoutes.fitnessTrend,
-    loadChildren: () => FitnessTrendModule
+    loadChildren: () => import("../../../fitness-trend/fitness-trend.module").then(module => module.FitnessTrendModule)
   },
   {
     path: AppRoutes.yearProgressions,
-    loadChildren: () => YearProgressModule
+    loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
   },
   {
     path: AppRoutes.globalSettings,
-    component: GlobalSettingsComponent
+    loadChildren: () =>
+      import("../../../global-settings/global-settings.module").then(module => module.GlobalSettingsModule)
   },
   {
     path: AppRoutes.athleteSettings,
-    loadChildren: () => AthleteSettingsModule
+    loadChildren: () =>
+      import("../../../athlete-settings/athlete-settings.module").then(module => module.AthleteSettingsModule)
   },
   {
     path: AppRoutes.zonesSettings,
-    component: ZonesSettingsComponent
-  },
-  {
-    path: AppRoutes.zonesSettings + "/:zoneValue",
-    component: ZonesSettingsComponent
+    loadChildren: () =>
+      import("../../../zones-settings/zones-settings.module").then(module => module.ZonesSettingsModule)
   },
   {
     path: AppRoutes.connectors,
-    loadChildren: () => ConnectorsModule
+    loadChildren: () => import("../../../desktop/connectors/connectors.module").then(module => module.ConnectorsModule)
   },
   {
     path: AppRoutes.donate,
-    component: DonateComponent
+    loadChildren: () => import("../../../donate/donate.module").then(module => module.DonateModule)
   },
   {
     path: AppRoutes.releasesNotes,
-    loadChildren: () => ReleasesNotesModule
+    loadChildren: () =>
+      import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
   },
   {
     path: AppRoutes.report,
-    component: ReportComponent
+    loadChildren: () => import("../../../report/report.module").then(module => module.ReportModule)
   },
   {
     path: AppRoutes.advancedMenu,
-    component: DesktopAdvancedMenuComponent
+    loadChildren: () =>
+      import("../../../advanced-menu/desktop/desktop-advanced-menu.module").then(
+        module => module.DesktopAdvancedMenuModule
+      )
   },
   {
     path: AppRoutes.help,
-    component: HelpComponent
+    loadChildren: () => import("../../../help/help.module").then(module => module.HelpModule)
   },
   {
     path: "",
