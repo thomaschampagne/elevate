@@ -700,10 +700,10 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          SpecsUtils.assertEqualTime(computedStats.pace.avg, "07:49");
-          SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "05:31");
+          SpecsUtils.assertEqualTime(computedStats.pace.avg, "07:53");
+          SpecsUtils.assertEqualTime(computedStats.pace.gapAvg, "05:42");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(computedStats.pace.avg);
-          SpecsUtils.assertEqualTime(computedStats.movingTime, "04:48:43");
+          SpecsUtils.assertEqualTime(computedStats.movingTime, "04:51:33");
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "05:13:11");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 2578);
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 2578);
@@ -711,7 +711,7 @@ describe("File activities integration tests", () => {
           const activity = extractResultActivity();
           SpecsUtils.assertNearEqual(activity.srcStats.elevationGain, 2578);
           SpecsUtils.assertEqualTime(activity.srcStats.pace.avg, "07:38");
-          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:41");
+          SpecsUtils.assertEqualTime(activity.srcStats.pace.gapAvg, "05:46");
           SpecsUtils.assertEqualTime(activity.srcStats.movingTime, "04:39:07");
           SpecsUtils.assertEqualTime(activity.srcStats.elapsedTime, "05:13:10");
           expect(computedStats.pace.gapAvg).toBeLessThanOrEqual(activity.srcStats.pace.avg);
@@ -790,8 +790,8 @@ describe("File activities integration tests", () => {
         // Then
         promise.then(() => {
           const computedStats = extractComputedActivityStats();
-          expect(computedStats.power.work).toEqual(695);
-          expect(computedStats.cadence.cycles).toEqual(4235);
+          expect(computedStats.power.work).toEqual(726);
+          expect(computedStats.cadence.cycles).toEqual(4424);
 
           const activity = extractResultActivity();
           expect(activity.hasPowerMeter).toBeTruthy();
