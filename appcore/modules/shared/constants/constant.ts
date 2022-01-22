@@ -7,8 +7,6 @@ export class Constant {
   public static readonly KM_TO_MILE_FACTOR: number = 0.621371;
   public static readonly METER_TO_FEET_FACTOR: number = 3.28084;
   public static readonly METER_TO_YARD_FACTOR: number = 1.09361;
-  public static readonly SPLITS_MAX_HOURS_ALLOWED_GAP_HOURS: number = 48;
-  public static readonly SPLITS_MAX_SECONDS_GAP_TO_LERP: number = 60;
 
   /**
    * For appcore only
@@ -20,5 +18,6 @@ export class Constant {
    * For extension only
    */
   public static readonly LANDING_PAGE_URL: string = "https://thomaschampagne.github.io/elevate/";
+  public static readonly DOC_PAGE_URL: string = "https://thomaschampagne.github.io/elevate-docs/";
   public static readonly APP_ROOT_URL: string = "/app/index.html";
 }

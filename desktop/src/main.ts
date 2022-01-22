@@ -35,11 +35,15 @@ import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
 import { IpcMessage } from "@elevate/shared/electron/ipc-message";
 import { Platform } from "@elevate/shared/enums/platform.enum";
 import { UserScreen } from "./tools/user-screen";
-import { platform } from "os";
 import { RuntimeInfoProviderToken } from "./runtime-info/runtime-info.provider";
 import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
 import { IpcComputeSplitsListener } from "./listeners/ipc-compute-splits.listener";
 import { ConnectorSyncService } from "./connectors/connector-sync.service";
+import { platform } from "os";
+import { Constant } from "@elevate/shared/constants/constant";
+import Menu = Electron.Menu;
+import MenuItemConstructorOptions = Electron.MenuItemConstructorOptions;
+import MenuItem = Electron.MenuItem;
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 
@@ -134,6 +138,9 @@ class Main {
     }
 
     this.logger.info("App running into: " + this.app.getAppPath());
+
+    // Setup bar menu
+    Menu.setApplicationMenu(Menu.buildFromTemplate(this.getMenuTemplate()));
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
@@ -493,6 +500,58 @@ class Main {
 
     // Listen for check remote update requests
     this.updateHandler.startListening(this.ipcTunnelService);
+  }
+
+  private getMenuTemplate(): (MenuItemConstructorOptions | MenuItem)[] {
+    const isMacOs = this.appService.isMacOS();
+    return [
+      ...(isMacOs
+        ? [
+            {
+              label: this.app.name,
+              submenu: [
+                { role: "about" },
+                { type: "separator" },
+                { role: "services" },
+                { type: "separator" },
+                { role: "hide" },
+                { role: "hideOthers" },
+                { role: "unhide" },
+                { type: "separator" },
+                { role: "quit" }
+              ]
+            }
+          ]
+        : []),
+      {
+        label: "File",
+        submenu: [isMacOs ? { role: "close" } : { role: "quit" }]
+      },
+      {
+        label: "View",
+        submenu: [{ role: "togglefullscreen" }]
+      },
+      {
+        label: "Window",
+        submenu: [
+          { role: "minimize" },
+          ...(isMacOs
+            ? [{ type: "separator" }, { role: "front" }, { type: "separator" }, { role: "window" }]
+            : [{ role: "close" }])
+        ]
+      },
+      {
+        role: "help",
+        submenu: [
+          {
+            label: "Documentation",
+            click: async () => {
+              await shell.openExternal(Constant.DOC_PAGE_URL);
+            }
+          }
+        ]
+      }
+    ];
   }
 }
 
