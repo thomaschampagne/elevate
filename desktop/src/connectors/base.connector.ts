@@ -24,6 +24,7 @@ import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
 import { BareActivity } from "@elevate/shared/models/sync/bare-activity.model";
+import { GenericSyncEvent } from "@elevate/shared/sync/events/generic-sync.event";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 export abstract class BaseConnector {
@@ -67,6 +68,8 @@ export abstract class BaseConnector {
   public stop(): Promise<void> {
     this.stopRequested = true;
     const stopPromise: DeferredPromise<void> = pDefer();
+
+    this.syncEvents$.next(new GenericSyncEvent(this.type, `Stop requested. Finishing current activity computation...`));
 
     if (this.isSyncing) {
       const stopSubscription = this.syncEvents$

@@ -10,9 +10,12 @@ export class HttpClient {
   private static RESOLVE_PROXY_TEST_URL = "https://no.where";
   private static DIRECT_PROXY_TEST_URL = "DIRECT";
 
+  public isConfigured: boolean;
   private axios: AxiosInstance;
 
-  constructor(@inject(Logger) private readonly logger: Logger) {}
+  constructor(@inject(Logger) private readonly logger: Logger) {
+    this.isConfigured = false;
+  }
 
   private createHttpClient(proxyConfig?: { host: string; port: number }): void {
     // Create axios with proxy config
@@ -40,6 +43,8 @@ export class HttpClient {
   }
 
   public configure(rootBrowserWindow: Electron.BrowserWindow): Promise<void> {
+    this.logger.debug(`Configure http client`);
+
     return this.resolveProxy(rootBrowserWindow).then(httpProxy => {
       let proxyConfig: { host: string; port: number } = null;
       if (httpProxy) {
@@ -53,6 +58,7 @@ export class HttpClient {
         this.logger.info("No proxy detected");
       }
       this.createHttpClient(proxyConfig);
+      this.isConfigured = true;
       return Promise.resolve();
     });
   }

@@ -39,6 +39,7 @@ import { platform } from "os";
 import { RuntimeInfoProviderToken } from "./runtime-info/runtime-info.provider";
 import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
 import { IpcComputeSplitsListener } from "./listeners/ipc-compute-splits.listener";
+import { ConnectorSyncService } from "./connectors/connector-sync.service";
 
 const IS_ELECTRON_DEV = !app.isPackaged;
 
@@ -58,6 +59,7 @@ class Main {
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
     @inject(IpcSharedStorageListener) private readonly ipcSharedStorageListener: IpcSharedStorageListener,
+    @inject(ConnectorSyncService) private readonly connectorSyncService: ConnectorSyncService,
     @inject(IpcStorageService) private readonly ipcStorage: IpcStorageService,
     @inject(HttpClient) private readonly httpClient: HttpClient,
     @inject(Logger) private readonly logger: Logger
@@ -108,7 +110,14 @@ class Main {
         }
       });
 
-      this.startElevate();
+      // Print user runtime info in logs on first launch
+      this.appService.printRuntimeInfo();
+
+      // Creating application window
+      this.createAppWindow();
+
+      // Listen events from ipc main
+      this.setupListeners();
     }
   }
 
@@ -142,7 +151,7 @@ class Main {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (!this.mainWindow) {
-        this.createMainBrowserWindow();
+        this.createAppWindow();
       }
     });
 
@@ -201,11 +210,11 @@ class Main {
       return;
     }
 
-    // On OS X it is common for this.applications and their menu bar
+    // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
-    // if (process.platform !== Platform.MACOS) {
-    this.app.quit();
-    // }
+    if (process.platform !== Platform.MACOS) {
+      this.app.quit();
+    }
   }
 
   private restartApp(): void {
@@ -351,17 +360,61 @@ class Main {
     });
   }
 
-  private startElevate(): void {
-    // Print user runtime info in logs
-    this.appService.printRuntimeInfo();
+  private createAppWindow(): void {
+    const url = new URL(`file:${path.join(__dirname, "app", "index.html")}`);
 
     // Create the browser window.
-    this.createMainBrowserWindow();
+    const workAreaSize: Electron.Size = Main.computeAppTargetSize();
+    const windowOptions: Electron.BrowserWindowConstructorOptions = {
+      title: "Elevate Sports App",
+      width: workAreaSize.width,
+      height: workAreaSize.height,
+      center: true,
+      frame: platform() === Platform.MACOS,
+      trafficLightPosition: { x: 15, y: 10 },
+      titleBarStyle: "hidden",
+      autoHideMenuBar: true,
+      webPreferences: {
+        webgl: true,
+        contextIsolation: true,
+        nodeIntegration: false,
+        preload: path.join(__dirname, "pre-loader.js")
+      }
+    };
 
-    // Configure tunnel service to receive and send message from Renderer
-    (this.ipcTunnelService as IpcMainTunnelService).configure(this.ipcMain, this.mainWindow);
+    this.mainWindow = new BrowserWindow(windowOptions);
 
-    this.setupListeners();
+    // Emitted when user close the window
+    this.mainWindow.on("close", event => {
+      // If a sync is running when user close the window, we have to stop the sync before.
+      if (this.connectorSyncService.currentConnector?.isSyncing) {
+        this.logger.info("A sync is running, stopping the sync before closing window");
+
+        // Don't emit the close window event to stop sync
+        event.preventDefault();
+
+        // Stop sync
+        this.connectorSyncService.currentConnector
+          .stop()
+          .then(() => {
+            this.logger.info("Sync has been stopped, we can close the window");
+            this.mainWindow.close();
+          })
+          .catch(error => {
+            this.logger.error(`Unable to stop sync before window close: ${error.message | error}`);
+          });
+      } else {
+        this.logger.info("Allow closing window, no sync running.");
+      }
+    });
+
+    // Emitted when the window is closed.
+    this.mainWindow.on("closed", () => {
+      // Dereference the window object, usually you would store window
+      // in an array if your app supports multi windows, this is the time
+      // when you should delete the corresponding element.
+      this.mainWindow = null;
+    });
 
     // Emit window events
     this.mainWindow.on("maximize", () => {
@@ -380,18 +433,15 @@ class Main {
       this.ipcTunnelService.fwd(new IpcMessage(Channel.isFullscreen, false));
     });
 
-    // Emitted when the window is closed.
-    this.mainWindow.on("closed", () => {
-      // Dereference the window object, usually you would store window
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      this.mainWindow = null;
-    });
+    // Configure tunnel service to receive and send message from Renderer
+    (this.ipcTunnelService as IpcMainTunnelService).configure(this.ipcMain, this.mainWindow);
 
     // Load app
-    const url = new URL(`file:${path.join(__dirname, "app", "index.html")}`);
-    this.httpClient
-      .configure(this.mainWindow) // Detect a proxy on the system at first
+    const configureHttpClient = this.httpClient.isConfigured
+      ? Promise.resolve()
+      : this.httpClient.configure(this.mainWindow); // Detect a proxy on the system at first
+
+    configureHttpClient
       .then(() => this.mainWindow.loadURL(url.href)) // Then load the page
       .then(() => {
         this.mainWindow.show();
@@ -400,31 +450,7 @@ class Main {
         if (IS_ELECTRON_DEV) {
           this.mainWindow.webContents.openDevTools();
         }
-
-        this.logger.info("App is ready");
       });
-  }
-
-  private createMainBrowserWindow(): void {
-    const workAreaSize: Electron.Size = Main.computeAppTargetSize();
-    const windowOptions: Electron.BrowserWindowConstructorOptions = {
-      title: "App",
-      width: workAreaSize.width,
-      height: workAreaSize.height,
-      center: true,
-      frame: platform() === Platform.MACOS,
-      trafficLightPosition: { x: 15, y: 10 },
-      titleBarStyle: "hidden",
-      autoHideMenuBar: true,
-      webPreferences: {
-        webgl: true,
-        contextIsolation: true,
-        nodeIntegration: false,
-        preload: path.join(__dirname, "pre-loader.js")
-      }
-    };
-
-    this.mainWindow = new BrowserWindow(windowOptions);
   }
 
   private setupListeners(): void {
