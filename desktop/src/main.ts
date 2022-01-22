@@ -179,6 +179,10 @@ class Main {
     this.mainWindow.maximize();
   }
 
+  private unMaximizeApp(): void {
+    this.mainWindow.unmaximize();
+  }
+
   private restoreApp(): void {
     this.mainWindow.restore();
   }
@@ -243,6 +247,10 @@ class Main {
 
     this.ipcTunnelService.on<void, void>(Channel.maximizeApp, () => {
       return this.maximizeApp();
+    });
+
+    this.ipcTunnelService.on<void, void>(Channel.unMaximizeApp, () => {
+      return this.unMaximizeApp();
     });
 
     this.ipcTunnelService.on<void, void>(Channel.restoreApp, () => {

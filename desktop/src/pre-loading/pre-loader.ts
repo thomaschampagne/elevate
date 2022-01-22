@@ -6,6 +6,7 @@ const api: BridgeApi = {
   // App actions
   minimizeApp: () => ipcRenderer.invoke(Channel.minimizeApp),
   maximizeApp: () => ipcRenderer.invoke(Channel.maximizeApp),
+  unMaximizeApp: () => ipcRenderer.invoke(Channel.unMaximizeApp),
   restoreApp: () => ipcRenderer.invoke(Channel.restoreApp),
   enableFullscreen: () => ipcRenderer.invoke(Channel.enableFullscreen),
   disableFullscreen: () => ipcRenderer.invoke(Channel.disableFullscreen),

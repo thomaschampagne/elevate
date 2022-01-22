@@ -6,6 +6,7 @@ export enum Channel {
   isMaximized = "isMaximized",
   minimizeApp = "minimizeApp",
   maximizeApp = "maximizeApp",
+  unMaximizeApp = "unMaximizeApp",
   restoreApp = "restoreApp",
   restartApp = "restartApp",
   closeApp = "closeApp",

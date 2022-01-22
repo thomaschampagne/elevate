@@ -10,7 +10,10 @@ import { Platform } from "@elevate/shared/enums/platform.enum";
   selector: "app-desktop-top-bar",
   template: `
     <div *ngIf="!isFullScreen" class="top-bar-wrapper top-bar-h">
-      <div class="top-bar-draggable top-bar-h"></div>
+      <div
+        class="top-bar-draggable top-bar-h"
+        (dblclick)="isMaximized ? onUnMaximiseAppClicked() : onMaximizeAppClicked()"
+      ></div>
       <div class="top-bar-traffic-light-zone"><!-- Empty div used for flex space between behavior --></div>
       <span class="top-bar-title mat-caption">Elevate Training App <span class="alpha-tag">alpha</span></span>
       <div class="top-bar-traffic-light-zone">
@@ -21,7 +24,7 @@ import { Platform } from "@elevate/shared/enums/platform.enum";
           <button *ngIf="!isMaximized" mat-icon-button (click)="onMaximizeAppClicked()">
             <mat-icon fontSet="material-icons-outlined" inline="true">fullscreen</mat-icon>
           </button>
-          <button *ngIf="isMaximized" mat-icon-button (click)="onRestoreAppClicked()">
+          <button *ngIf="isMaximized" mat-icon-button (click)="onUnMaximiseAppClicked()">
             <mat-icon fontSet="material-icons-outlined" inline="true">fullscreen_exit</mat-icon>
           </button>
           <button mat-icon-button (click)="onCloseAppClicked()">
@@ -131,8 +134,8 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
     this.electronService.maximizeApp();
   }
 
-  public onRestoreAppClicked() {
-    this.electronService.restoreApp();
+  public onUnMaximiseAppClicked() {
+    this.electronService.unMaximizeApp();
   }
 
   public onCloseAppClicked() {

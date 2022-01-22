@@ -83,6 +83,10 @@ export class ElectronService {
     this.api.maximizeApp().then(() => this.logger.debug("Maximize handled"));
   }
 
+  public unMaximizeApp(): void {
+    this.api.unMaximizeApp().then(() => this.logger.debug("Un-maximize handled"));
+  }
+
   public restoreApp(): void {
     this.api.restoreApp().then(() => this.logger.debug("Restore handled"));
   }

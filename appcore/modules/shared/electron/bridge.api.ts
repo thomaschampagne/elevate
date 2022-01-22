@@ -5,6 +5,7 @@ export interface BridgeApi {
   // App actions
   minimizeApp: () => Promise<void>;
   maximizeApp: () => Promise<void>;
+  unMaximizeApp: () => Promise<void>;
   restoreApp: () => Promise<void>;
   enableFullscreen: () => Promise<void>;
   disableFullscreen: () => Promise<void>;
