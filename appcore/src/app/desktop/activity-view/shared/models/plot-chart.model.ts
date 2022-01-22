@@ -97,7 +97,7 @@ export class ScatterChart extends PlotChart {
     areaColor: string
   ): Partial<PlotData> {
     // Create trace data
-    const traceData = super.addPlotData("scatter", sensor.name);
+    const traceData = super.addPlotData("scattergl", sensor.name);
 
     // Add trace specifics
     traceData.yaxis = `y${traceIndex}`;
