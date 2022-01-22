@@ -192,6 +192,10 @@ class Main {
     this.mainWindow.unmaximize();
   }
 
+  private isMaximized(): boolean {
+    return this.mainWindow.isMaximized();
+  }
+
   private restoreApp(): void {
     this.mainWindow.restore();
   }
@@ -202,6 +206,10 @@ class Main {
 
   private disableFullscreen(): void {
     return this.mainWindow.setFullScreen(false);
+  }
+
+  private isFullScreen(): boolean {
+    return this.mainWindow.isFullScreen();
   }
 
   private closeApp(force: boolean): void {
@@ -262,6 +270,10 @@ class Main {
       return this.unMaximizeApp();
     });
 
+    this.ipcTunnelService.on<void, boolean>(Channel.isMaximized, () => {
+      return this.isMaximized();
+    });
+
     this.ipcTunnelService.on<void, void>(Channel.restoreApp, () => {
       return this.restoreApp();
     });
@@ -272,6 +284,10 @@ class Main {
 
     this.ipcTunnelService.on<void, void>(Channel.disableFullscreen, () => {
       return this.disableFullscreen();
+    });
+
+    this.ipcTunnelService.on<void, boolean>(Channel.isFullscreen, () => {
+      return this.isFullScreen();
     });
 
     this.ipcTunnelService.on<boolean, void>(Channel.closeApp, force => {

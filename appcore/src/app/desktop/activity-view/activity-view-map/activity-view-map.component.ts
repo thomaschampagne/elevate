@@ -296,7 +296,7 @@ export class ActivityViewMapComponent implements OnInit, OnDestroy {
           !Number.isFinite(selectedBounds[1]) ||
           selectedBounds[1] - selectedBounds[0] <= 1
         ) {
-          this.snackBar.open("Section is too short or is empty: can't display it on map.", "Ok", { duration: 4000 });
+          this.snackBar.open("Section is too short to be displayed on map.", "Ok", { duration: 4000 });
           return;
         }
 

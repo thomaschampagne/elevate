@@ -102,8 +102,15 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
     @Inject(ChangeDetectorRef) private readonly changeDetectorRef: ChangeDetectorRef
   ) {
     super();
-    this.isFullScreen = false;
-    this.isMaximized = false;
+
+    this.electronService.isFullscreen().then(isFullScreen => {
+      this.isFullScreen = isFullScreen;
+    });
+
+    this.electronService.isMaximized().then(isMaximized => {
+      this.isMaximized = isMaximized;
+    });
+
     this.isMacOs = this.electronService.getPlatform() === Platform.MACOS;
   }
 

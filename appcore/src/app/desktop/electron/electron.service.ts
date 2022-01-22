@@ -87,6 +87,10 @@ export class ElectronService {
     this.api.unMaximizeApp().then(() => this.logger.debug("Un-maximize handled"));
   }
 
+  public isMaximized(): Promise<boolean> {
+    return this.api.isMaximized();
+  }
+
   public restoreApp(): void {
     this.api.restoreApp().then(() => this.logger.debug("Restore handled"));
   }
@@ -97,6 +101,10 @@ export class ElectronService {
 
   public disableFullscreen(): Promise<void> {
     return this.api.disableFullscreen().then(() => this.logger.debug("Fullscreen disabled"));
+  }
+
+  public isFullscreen(): Promise<boolean> {
+    return this.api.isFullscreen();
   }
 
   public closeApp(force: boolean = false): void {
