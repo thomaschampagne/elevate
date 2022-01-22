@@ -249,7 +249,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       0,
       3,
-      this.heartRateStats.lowQ,
+      this.printNumber(this.heartRateStats.lowQ),
       "25% Quartile HeartRate",
       "bpm",
       "displayAdvancedHrData"
@@ -257,7 +257,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       1,
       3,
-      this.heartRateStats.median,
+      this.printNumber(this.heartRateStats.median),
       "50% Quartile HeartRate",
       "bpm",
       "displayAdvancedHrData"
@@ -265,7 +265,7 @@ export class HeartRateDataView extends AbstractDataView {
     this.insertContentAtGridPosition(
       2,
       3,
-      this.heartRateStats.upperQ,
+      this.printNumber(this.heartRateStats.upperQ),
       "75% Quartile HeartRate",
       "bpm",
       "displayAdvancedHrData"
