@@ -1,6 +1,6 @@
 {
-  "name": "elevate-training",
-  "version": "7.0.0-13.alpha",
+  "name": "elevate-sports-app",
+  "version": "7.0.0-beta.0",
   "description": "Wrap the needed tools required to cook Elevate desktop and web extension",
   "maintainers": [
     {

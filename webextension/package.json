@@ -1,7 +1,7 @@
 {
-  "name": "elevate-training",
-  "version": "7.0.0-13.alpha",
-  "description": "Chrome Opera extension adding features for Strava website with new performances data and improved ergonomics. Made with AngularJs, UnderscoreJs and Bootstrap",
+  "name": "elevate-sports-app",
+  "version": "7.0.0-beta.0",
+  "description": "Chrome based extension adding features for Strava website with new performances data and improved ergonomics.",
   "maintainers": [
     {
       "name": "Thomas Champagne",
@@ -28,7 +28,7 @@
     "extension-res-copy:manifest": "node ../node_modules/cpy-cli/cli.js ./manifest.json ./dist/",
     "extension-res-copy:install-guide": "node ../node_modules/cpy-cli/cli.js ./INSTALL.txt ./dist/",
     "package": "npm-run-all clean build@prod archive",
-    "start": "cross-env NG_PERSISTENT_BUILD_CACHE=1 npm run watch",
+    "start": "npm run watch",
     "test": "node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
     "test:ui-browser": "npm run test -- --browsers Chrome",
     "lint": "eslint --ext ts . --fix",

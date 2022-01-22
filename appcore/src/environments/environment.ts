@@ -11,7 +11,7 @@ export const environment = {
   production: false,
   logLevel: LoggerService.LEVEL_DEBUG,
   // Backup version threshold at which a "greater or equal" imported backup version is compatible with current code.
-  minBackupVersion: "7.0.0-0.alpha",
+  minBackupVersion: "7.0.0-0",
   showDebugRibbon: false,
   showActivityDebugData: false,
   showRouteUrl: false,

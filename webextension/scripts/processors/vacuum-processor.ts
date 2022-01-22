@@ -137,10 +137,20 @@ export class VacuumProcessor {
       let cache: any = localStorage.getItem(VacuumProcessor.cachePrefix + activityInfo.id);
 
       if (cache) {
-        cache = JSON.parse(LZString.decompressFromBase64(cache));
-        callback(cache.activityEssentials, cache.stream, cache.athleteWeight, cache.athleteGender, cache.hasPowerMeter);
-        console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
-        return;
+        try {
+          cache = JSON.parse(LZString.decompressFromBase64(cache));
+          callback(
+            cache.activityEssentials,
+            cache.stream,
+            cache.athleteWeight,
+            cache.athleteGender,
+            cache.hasPowerMeter
+          );
+          console.log("Using stream cache for activity '" + activityInfo.name + "' (id:" + activityInfo.id + ")");
+          return;
+        } catch (e) {
+          console.error("Unable to parse existing stream cache");
+        }
       }
     }
 

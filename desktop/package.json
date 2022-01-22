@@ -1,7 +1,7 @@
 {
-  "name": "elevate-training",
+  "name": "elevate-sports-app",
   "description": "Elevate your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-  "version": "7.0.0-13.alpha",
+  "version": "7.0.0-beta.0",
   "scripts": {
     "assert-app-exists": "node -e \"if ((require('fs').existsSync('./dist/app/')) === false) {console.log('Please run & wait for \\'npm start\\' task before.\\n\\n\\n\\n');process.exit(1);}\";",
     "build:metadata": "node -e \"require('fs').writeFileSync('build_metadata.json', JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}));\"",
@@ -24,9 +24,9 @@
     "build:package:win": "npm run build:prod && npm run package:win",
     "build:package:linux": "npm run build:prod && npm run package:linux",
     "build:package:mac": "npm run build:prod && npm run package:mac",
-    "build:package:win:dev": "npm run build:package:win -- -- -c.extraMetadata.name=elevate-training-dev -c.appId=elevate-training-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
-    "build:package:linux:dev": "npm run build:package:linux -- -- -c.extraMetadata.name=elevate-training-dev -c.appId=elevate-training-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
-    "build:package:mac:dev": "npm run build:package:mac -- -- -c.extraMetadata.name=elevate-training-dev -c.appId=elevate-training-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
+    "build:package:win:dev": "npm run build:package:win -- -- -c.extraMetadata.name=elevate-sports-app-dev -c.appId=elevate-sports-app-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
+    "build:package:linux:dev": "npm run build:package:linux -- -- -c.extraMetadata.name=elevate-sports-app-dev -c.appId=elevate-sports-app-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
+    "build:package:mac:dev": "npm run build:package:mac -- -- -c.extraMetadata.name=elevate-sports-app-dev -c.appId=elevate-sports-app-dev -c.productName=\"Elevate Dev\" -c.directories.buildResources=build-dev && npm run open:package-folder",
     "open:package-folder": "node -e \"require('open-in-explorer')('package');\"",
     "start": "npm run watch",
     "test": "npm run build:metadata && node ./node_modules/jest/bin/jest.js --silent --coverage",
@@ -111,7 +111,7 @@
     "typescript": "^4.5.4"
   },
   "build": {
-    "appId": "com.elevate.app",
+    "appId": "com.elevate.sports.app",
     "productName": "Elevate",
     "directories": {
       "output": "./package/"

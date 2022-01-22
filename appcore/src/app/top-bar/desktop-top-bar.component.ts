@@ -15,7 +15,7 @@ import { Platform } from "@elevate/shared/enums/platform.enum";
         (dblclick)="isMaximized ? onUnMaximiseAppClicked() : onMaximizeAppClicked()"
       ></div>
       <div class="top-bar-traffic-light-zone"><!-- Empty div used for flex space between behavior --></div>
-      <span class="top-bar-title mat-caption">Elevate Training App <span class="alpha-tag">alpha</span></span>
+      <span class="top-bar-title mat-caption">Elevate Sports App <span class="version-tag">beta</span></span>
       <div class="top-bar-traffic-light-zone">
         <ng-container *ngIf="!isMacOs">
           <button mat-icon-button (click)="onMinimizeAppClicked()">
@@ -77,7 +77,7 @@ import { Platform } from "@elevate/shared/enums/platform.enum";
         background-color: #ff4643;
       }
 
-      .alpha-tag {
+      .version-tag {
         background: white;
         color: black;
         border-radius: 4px;

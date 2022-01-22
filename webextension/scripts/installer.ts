@@ -734,6 +734,7 @@ class Installer {
     if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-0")) {
       console.log("Migrate to 7.0.0-0");
 
+      // Convert old database structure to new one
       return new Promise<void>((resolve, reject) => {
         chrome.storage.local.get(null, (oldDatabase: any) => {
           const error = chrome.runtime.lastError;
@@ -761,190 +762,162 @@ class Installer {
             }
           }
         });
-      });
+      })
+        .then(() => {
+          // Add new fields to athlete model
+          return new Promise<void>(resolve => {
+            chrome.storage.local.get(null, result => {
+              if (result && result.athlete && result.athlete.data && result.athlete.data[0]) {
+                const athlete = result.athlete.data[0];
+                if (athlete) {
+                  athlete.firstName = null;
+                  athlete.lastName = null;
+                  athlete.birthYear = null;
+                  athlete.practiceLevel = null;
+                  athlete.sports = [];
+
+                  result.athlete.data[0] = athlete;
+
+                  // Update
+                  chrome.storage.local.set(result, () => resolve());
+                } else {
+                  resolve();
+                }
+              } else {
+                resolve();
+              }
+            });
+          });
+        })
+        .then(() => {
+          // Move/replace cadence percentage fields & calories.
+          return new Promise<void>(resolve => {
+            chrome.storage.local.get(null, result => {
+              if (
+                result &&
+                result.syncedActivities &&
+                result.syncedActivities.data &&
+                result.syncedActivities.data.length > 0
+              ) {
+                for (const activity of result.syncedActivities.data) {
+                  if (Number.isFinite(activity.extendedStats?.cadenceData?.cadencePercentageMoving)) {
+                    activity.extendedStats.cadenceData.cadenceActivePercentage =
+                      activity.extendedStats.cadenceData.cadencePercentageMoving;
+                    delete activity.extendedStats.cadenceData.cadencePercentageMoving;
+                  }
+
+                  if (Number.isFinite(activity.extendedStats?.cadenceData?.cadenceTimeMoving)) {
+                    activity.extendedStats.cadenceData.cadenceActiveTime =
+                      activity.extendedStats.cadenceData.cadenceTimeMoving;
+                    delete activity.extendedStats.cadenceData.cadenceTimeMoving;
+                  }
+
+                  if (Number.isFinite(activity.extendedStats?.cadenceData?.averageCadenceMoving)) {
+                    activity.extendedStats.cadenceData.averageActiveCadence =
+                      activity.extendedStats.cadenceData.averageCadenceMoving;
+                    delete activity.extendedStats.cadenceData.averageCadenceMoving;
+                  }
+
+                  if (
+                    Number.isFinite(activity.calories) &&
+                    activity.calories > 0 &&
+                    Number.isFinite(activity.elapsed_time_raw) &&
+                    activity.elapsed_time_raw > 0 &&
+                    activity.extendedStats
+                  ) {
+                    activity.extendedStats.calories = activity.calories;
+                    activity.extendedStats.caloriesPerHour =
+                      (activity.extendedStats.calories / activity.elapsed_time_raw) * 3600;
+                    delete activity.calories;
+                  }
+                }
+
+                // Update
+                chrome.storage.local.set(result, () => resolve());
+              } else {
+                resolve();
+              }
+            });
+          });
+        })
+        .then(() => {
+          // Change grade data factors
+          return new Promise<void>(resolve => {
+            chrome.storage.local.get(null, result => {
+              if (
+                result &&
+                result.syncedActivities &&
+                result.syncedActivities.data &&
+                result.syncedActivities.data.length > 0
+              ) {
+                for (const activity of result.syncedActivities.data) {
+                  if (activity.extendedStats?.gradeData?.upFlatDownDistanceData) {
+                    if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.up)) {
+                      activity.extendedStats.gradeData.upFlatDownDistanceData.up =
+                        activity.extendedStats.gradeData.upFlatDownDistanceData.up * 1000;
+                    }
+
+                    if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.flat)) {
+                      activity.extendedStats.gradeData.upFlatDownDistanceData.flat =
+                        activity.extendedStats.gradeData.upFlatDownDistanceData.flat * 1000;
+                    }
+
+                    if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.down)) {
+                      activity.extendedStats.gradeData.upFlatDownDistanceData.down =
+                        activity.extendedStats.gradeData.upFlatDownDistanceData.down * 1000;
+                    }
+                  }
+                }
+                // Update
+                chrome.storage.local.set(result, () => resolve());
+              } else {
+                resolve();
+              }
+            });
+          });
+        })
+        .then(() => {
+          // Migrate to new activity model format
+          return new Promise<void>(resolve => {
+            chrome.storage.local.get(null, result => {
+              if (result?.syncedActivities) {
+                // Copy old collection to new one
+                result.activities = result.syncedActivities;
+                result.activities.name = "activities";
+
+                if (result.activities?.binaryIndices?.start_time) {
+                  result.activities.binaryIndices.startTime = result.activities.binaryIndices.start_time;
+                  result.activities.binaryIndices.startTime.name = "startTime";
+                  delete result.activities.binaryIndices.start_time;
+                }
+
+                // Test if old activities are available
+                if (result?.syncedActivities?.data?.length > 0) {
+                  if (result.activities.data.length) {
+                    // Migrate old activities to the new model
+                    result.activities.data = result.activities.data.map(oldActivity => {
+                      return this.convertLegacyActivityToNewModel(oldActivity);
+                    });
+                  }
+                }
+
+                // Delete old collection
+                delete result.syncedActivities;
+
+                // Clear old DB and save with new DB
+                chrome.storage.local.clear(() => {
+                  // Then update
+                  chrome.storage.local.set(result, () => resolve());
+                });
+              } else {
+                resolve();
+              }
+            });
+          });
+        });
     }
 
     console.log("Skip migrate to 7.0.0-0");
-    return Promise.resolve();
-  }
-
-  protected migrate_to_7_0_0_3(): Promise<void> {
-    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-3")) {
-      console.log("Migrate to 7.0.0-3");
-      return new Promise<void>(resolve => {
-        chrome.storage.local.get(null, result => {
-          if (result && result.athlete && result.athlete.data && result.athlete.data[0]) {
-            const athlete = result.athlete.data[0];
-            if (athlete) {
-              athlete.firstName = null;
-              athlete.lastName = null;
-              athlete.birthYear = null;
-              athlete.practiceLevel = null;
-              athlete.sports = [];
-
-              result.athlete.data[0] = athlete;
-
-              // Update
-              chrome.storage.local.set(result, resolve);
-            } else {
-              resolve();
-            }
-          } else {
-            resolve();
-          }
-        });
-      });
-    } else {
-      console.log("Skip migrate to 7.0.0-3");
-    }
-
-    return Promise.resolve();
-  }
-
-  protected migrate_to_7_0_0_4(): Promise<void> {
-    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-4")) {
-      console.log("Migrate to 7.0.0-4");
-      return new Promise<void>(resolve => {
-        chrome.storage.local.get(null, result => {
-          if (
-            result &&
-            result.syncedActivities &&
-            result.syncedActivities.data &&
-            result.syncedActivities.data.length > 0
-          ) {
-            for (const activity of result.syncedActivities.data) {
-              if (Number.isFinite(activity.extendedStats?.cadenceData?.cadencePercentageMoving)) {
-                activity.extendedStats.cadenceData.cadenceActivePercentage =
-                  activity.extendedStats.cadenceData.cadencePercentageMoving;
-                delete activity.extendedStats.cadenceData.cadencePercentageMoving;
-              }
-
-              if (Number.isFinite(activity.extendedStats?.cadenceData?.cadenceTimeMoving)) {
-                activity.extendedStats.cadenceData.cadenceActiveTime =
-                  activity.extendedStats.cadenceData.cadenceTimeMoving;
-                delete activity.extendedStats.cadenceData.cadenceTimeMoving;
-              }
-
-              if (Number.isFinite(activity.extendedStats?.cadenceData?.averageCadenceMoving)) {
-                activity.extendedStats.cadenceData.averageActiveCadence =
-                  activity.extendedStats.cadenceData.averageCadenceMoving;
-                delete activity.extendedStats.cadenceData.averageCadenceMoving;
-              }
-
-              if (
-                Number.isFinite(activity.calories) &&
-                activity.calories > 0 &&
-                Number.isFinite(activity.elapsed_time_raw) &&
-                activity.elapsed_time_raw > 0 &&
-                activity.extendedStats
-              ) {
-                activity.extendedStats.calories = activity.calories;
-                activity.extendedStats.caloriesPerHour =
-                  (activity.extendedStats.calories / activity.elapsed_time_raw) * 3600;
-                delete activity.calories;
-              }
-            }
-
-            // Update
-            chrome.storage.local.set(result, resolve);
-          } else {
-            resolve();
-          }
-        });
-      });
-    } else {
-      console.log("Skip migrate to 7.0.0-4");
-    }
-
-    return Promise.resolve();
-  }
-
-  protected migrate_to_7_0_0_5(): Promise<void> {
-    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-5")) {
-      console.log("Migrate to 7.0.0-5");
-      return new Promise<void>(resolve => {
-        chrome.storage.local.get(null, result => {
-          if (
-            result &&
-            result.syncedActivities &&
-            result.syncedActivities.data &&
-            result.syncedActivities.data.length > 0
-          ) {
-            for (const activity of result.syncedActivities.data) {
-              if (activity.extendedStats?.gradeData?.upFlatDownDistanceData) {
-                if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.up)) {
-                  activity.extendedStats.gradeData.upFlatDownDistanceData.up =
-                    activity.extendedStats.gradeData.upFlatDownDistanceData.up * 1000;
-                }
-
-                if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.flat)) {
-                  activity.extendedStats.gradeData.upFlatDownDistanceData.flat =
-                    activity.extendedStats.gradeData.upFlatDownDistanceData.flat * 1000;
-                }
-
-                if (Number.isFinite(activity.extendedStats.gradeData.upFlatDownDistanceData.down)) {
-                  activity.extendedStats.gradeData.upFlatDownDistanceData.down =
-                    activity.extendedStats.gradeData.upFlatDownDistanceData.down * 1000;
-                }
-              }
-            }
-            // Update
-            chrome.storage.local.set(result, resolve);
-          } else {
-            resolve();
-          }
-        });
-      });
-    } else {
-      console.log("Skip migrate to 7.0.0-5");
-    }
-
-    return Promise.resolve();
-  }
-
-  protected migrate_to_7_0_0_13(): Promise<void> {
-    if (this.isPreviousVersionLowerThanOrEqualsTo(this.previousVersion, "7.0.0-13")) {
-      console.log("Migrate to 7.0.0-13");
-      return new Promise<void>(resolve => {
-        chrome.storage.local.get(null, result => {
-          if (result?.syncedActivities) {
-            // Copy old collection to new one
-            result.activities = result.syncedActivities;
-            result.activities.name = "activities";
-
-            if (result.activities?.binaryIndices?.start_time) {
-              result.activities.binaryIndices.startTime = result.activities.binaryIndices.start_time;
-              result.activities.binaryIndices.startTime.name = "startTime";
-              delete result.activities.binaryIndices.start_time;
-            }
-
-            // Test if old activities are available
-            if (result?.syncedActivities?.data?.length > 0) {
-              if (result.activities.data.length) {
-                // Migrate old activities to the new model
-                result.activities.data = result.activities.data.map(oldActivity => {
-                  return this.convertLegacyActivityToNewModel(oldActivity);
-                });
-              }
-            }
-
-            // Delete old collection
-            delete result.syncedActivities;
-
-            // Clear old DB and save with new DB
-            chrome.storage.local.clear(() => {
-              // Then update
-              chrome.storage.local.set(result, resolve);
-            });
-          } else {
-            resolve();
-          }
-        });
-      });
-    } else {
-      console.log("Skip migrate to 7.0.0-13");
-    }
-
     return Promise.resolve();
   }
 
@@ -999,18 +972,6 @@ class Installer {
       })
       .then(() => {
         return this.migrate_to_7_0_0_0();
-      })
-      .then(() => {
-        return this.migrate_to_7_0_0_3();
-      })
-      .then(() => {
-        return this.migrate_to_7_0_0_4();
-      })
-      .then(() => {
-        return this.migrate_to_7_0_0_5();
-      })
-      .then(() => {
-        return this.migrate_to_7_0_0_13();
       })
       .catch(error => console.error(error));
   }
