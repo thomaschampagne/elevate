@@ -3,7 +3,7 @@ module.exports = {
   transform: {
     ".(ts|tsx)": "ts-jest"
   },
-  testTimeout: 20000,
+  testTimeout: 60000,
   transformIgnorePatterns: ["json"],
   globals: {
     "ts-jest": {
