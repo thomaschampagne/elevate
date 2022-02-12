@@ -4,7 +4,7 @@ import { AboutDialogComponent } from "../about-dialog/about-dialog.component";
 import { Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import { HelpComponent } from "../help/help.component";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 
 export const APP_MORE_MENU_COMPONENT = new InjectionToken<AppMoreMenuComponent>("APP_MORE_MENU_COMPONENT");
 
@@ -34,7 +34,7 @@ export abstract class AppMoreMenuComponent implements OnInit {
   }
 
   public onOnlineDoc(): void {
-    this.openResourceResolver.openLink(HelpComponent.ONLINE_DOC_ROOT_PATH);
+    this.openResourceResolver.openLink(AppPackage.getElevateDoc());
   }
 
   public onAdvanceMenu(): void {

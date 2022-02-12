@@ -40,7 +40,7 @@ import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
 import { IpcComputeSplitsListener } from "./listeners/ipc-compute-splits.listener";
 import { ConnectorSyncService } from "./connectors/connector-sync.service";
 import { platform } from "os";
-import { Constant } from "@elevate/shared/constants/constant";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 import Menu = Electron.Menu;
 
 const IS_ELECTRON_DEV = !app.isPackaged;
@@ -544,7 +544,7 @@ class Main {
           {
             label: "Documentation",
             click: async () => {
-              await shell.openExternal(Constant.DOC_PAGE_URL);
+              await shell.openExternal(AppPackage.getElevateDoc());
             }
           }
         ]

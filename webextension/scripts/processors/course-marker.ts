@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
-import { Constant } from "@elevate/shared/constants/constant";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 
 export interface ICourseBounds {
   start: number;
@@ -92,7 +92,7 @@ export class CourseMaker {
       "<author>\n" +
       "<name>Elevate</name>\n" +
       '<link href="' +
-      Constant.LANDING_PAGE_URL +
+      AppPackage.getElevateWebSite() +
       '"/>\n' +
       "</author>\n" +
       "</metadata>\n" +

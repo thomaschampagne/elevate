@@ -38,7 +38,7 @@ import { AppService } from "./shared/services/app-service/app.service";
 import { UPDATE_BAR_COMPONENT, UpdateBarComponent } from "./update-bar/update-bar.component";
 import { UpdateBarDirective } from "./update-bar/update-bar.directive";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "./shared/services/links-opener/open-resource-resolver";
-import { AppPackage } from "./app-package";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
 
 @Component({

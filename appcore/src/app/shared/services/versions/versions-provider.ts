@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { NewInstalledVersionNoticeDialogComponent } from "./new-installed-version-notice-dialog.component";
-import { AppPackage } from "../../../app-package";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
 import { WarningException } from "@elevate/shared/exceptions/warning.exception";
 import { Platform } from "@elevate/shared/enums/platform.enum";

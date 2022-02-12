@@ -4,6 +4,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
 import { ElectronService } from "../desktop/electron/electron.service";
 import { AppMoreMenuComponent } from "./app-more-menu.component";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 
 @Component({
   selector: "app-desktop-app-more-menu",
@@ -37,6 +38,11 @@ import { AppMoreMenuComponent } from "./app-more-menu.component";
         Restart App
       </button>
 
+      <button mat-menu-item (click)="onShowPrivacy()">
+        <mat-icon fontSet="material-icons-outlined">health_and_safety</mat-icon>
+        Privacy
+      </button>
+
       <button mat-menu-item (click)="onShowAbout()">
         <mat-icon fontSet="material-icons-outlined">info</mat-icon>
         About
@@ -56,5 +62,9 @@ export class DesktopAppMoreMenuComponent extends AppMoreMenuComponent {
 
   public onRestartApp(): void {
     this.electronService.restartApp();
+  }
+
+  public onShowPrivacy(): void {
+    this.openResourceResolver.openLink(AppPackage.getElevatePrivacy());
   }
 }

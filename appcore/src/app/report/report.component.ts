@@ -6,8 +6,7 @@ import { AppRoutes } from "../shared/models/app-routes";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services/links-opener/open-resource-resolver";
-import { HelpComponent } from "../help/help.component";
-import { AppPackage } from "../app-package";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 import { countdown } from "@elevate/shared/tools/countdown";
 import { Constant } from "@elevate/shared/constants/constant";
 
@@ -58,7 +57,7 @@ export class ReportComponent implements OnInit {
   }
 
   public onOpenOnlineDoc(): void {
-    this.openResourceResolver.openLink(HelpComponent.ONLINE_DOC_ROOT_PATH);
+    this.openResourceResolver.openLink(AppPackage.getElevateDoc());
   }
 
   public onReport(): void {

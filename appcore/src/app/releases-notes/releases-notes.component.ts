@@ -4,7 +4,7 @@ import { environment } from "../../environments/environment";
 import semver from "semver/preload";
 import { VersionsProvider } from "../shared/services/versions/versions-provider";
 import { ReleaseNoteService } from "./release-note.service";
-import { AppPackage } from "../app-package";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 
 interface ReleaseNote {
   version: string;

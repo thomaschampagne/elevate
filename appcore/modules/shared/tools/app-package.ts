@@ -1,4 +1,4 @@
-import packageInfo from "../../../package.json";
+import packageInfo from "../../../../package.json";
 
 export class AppPackage {
   public static getVersion(): string {
@@ -14,6 +14,14 @@ export class AppPackage {
   }
 
   public static getElevateWebSite(): string {
-    return `${this.getAuthorWebSite()}/elevate/`;
+    return `${this.getAuthorWebSite()}/elevate`;
+  }
+
+  public static getElevateDoc(): string {
+    return `${this.getAuthorWebSite()}/elevate-docs`;
+  }
+
+  public static getElevatePrivacy(): string {
+    return `${this.getElevateDoc()}/Privacy`;
   }
 }

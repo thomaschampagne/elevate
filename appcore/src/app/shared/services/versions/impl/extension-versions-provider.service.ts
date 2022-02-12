@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { VersionsProvider } from "../versions-provider";
 import { MatDialog } from "@angular/material/dialog";
 import _ from "lodash";
-import { AppPackage } from "../../../../app-package";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 import { GhRelease } from "@elevate/shared/models/updates/gh-release.model";
 import { Platform } from "@elevate/shared/enums/platform.enum";
 

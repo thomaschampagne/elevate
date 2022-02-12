@@ -17,7 +17,5 @@ export class Constant {
   /**
    * For extension only
    */
-  public static readonly LANDING_PAGE_URL: string = "https://thomaschampagne.github.io/elevate/";
-  public static readonly DOC_PAGE_URL: string = "https://thomaschampagne.github.io/elevate-docs/";
   public static readonly APP_ROOT_URL: string = "/app/index.html";
 }

@@ -18,6 +18,7 @@ import { Gender } from "@elevate/shared/models/athlete/gender.enum";
 import { DatedAthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/dated-athlete-settings.model";
 import { UserZonesModel } from "@elevate/shared/models/user-settings/user-zones.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { AppPackage } from "@elevate/shared/tools/app-package";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
@@ -60,7 +61,7 @@ class Installer {
   protected handleInstall() {
     chrome.tabs.create(
       {
-        url: Constant.LANDING_PAGE_URL
+        url: AppPackage.getElevateWebSite()
       },
       (tab: chrome.tabs.Tab) => {
         console.log("First install. Display website new tab:", tab);
