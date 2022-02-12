@@ -14,14 +14,14 @@ export class AppPackage {
   }
 
   public static getElevateWebSite(): string {
-    return `${this.getAuthorWebSite()}/elevate`;
+    return `${this.getAuthorWebSite()}/elevate/`;
   }
 
   public static getElevateDoc(): string {
-    return `${this.getAuthorWebSite()}/elevate-docs`;
+    return `${this.getAuthorWebSite()}/elevate-docs/`;
   }
 
   public static getElevatePrivacy(): string {
-    return `${this.getElevateDoc()}/Privacy`;
+    return `${this.getElevateDoc()}/Privacy/`;
   }
 }
