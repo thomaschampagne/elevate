@@ -71,4 +71,8 @@ export class ReportComponent implements OnInit {
   public onGoToGithubIssues(): void {
     this.openResourceResolver.openLink(this.getIssuesUrl());
   }
+
+  public onGoToDiscord(): void {
+    this.openResourceResolver.openLink("https://thomaschampagne.github.io/elevate/#/discord");
+  }
 }
