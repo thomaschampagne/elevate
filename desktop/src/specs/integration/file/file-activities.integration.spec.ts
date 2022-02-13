@@ -173,8 +173,8 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.scores.stress.trimpPerHour, 83);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.hrss, 267);
           SpecsUtils.assertNearEqual(computedStats.scores.stress.hrssPerHour, 51);
-          SpecsUtils.assertNearEqual(computedStats.scores.stress.pss, 472);
-          SpecsUtils.assertNearEqual(computedStats.scores.stress.pssPerHour, 88);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.pss, 527);
+          SpecsUtils.assertNearEqual(computedStats.scores.stress.pssPerHour, 98);
           expect(computedStats.scores.stress.sss).toBeNull();
           expect(computedStats.scores.stress.sssPerHour).toBeNull();
 
@@ -202,15 +202,15 @@ describe("File activities integration tests", () => {
           // Power
           SpecsUtils.assertNearEqual(computedStats.power.avg, 168);
           SpecsUtils.assertNearEqual(computedStats.power.avgKg, 2.3, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.weighted, 197);
-          SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.74, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.weighted, 208);
+          SpecsUtils.assertNearEqual(computedStats.power.weightedKg, 2.89, 2);
           SpecsUtils.assertNearEqual(computedStats.power.best20min, 264);
-          SpecsUtils.assertNearEqual(computedStats.power.lowQ, 131);
-          SpecsUtils.assertNearEqual(computedStats.power.median, 184);
-          SpecsUtils.assertNearEqual(computedStats.power.upperQ, 214);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 375);
-          SpecsUtils.assertNearEqual(computedStats.power.intensityFactor, 0.94, 2);
-          SpecsUtils.assertNearEqual(computedStats.power.variabilityIndex, 1.19, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.lowQ, 120);
+          SpecsUtils.assertNearEqual(computedStats.power.median, 193);
+          SpecsUtils.assertNearEqual(computedStats.power.upperQ, 227);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 641);
+          SpecsUtils.assertNearEqual(computedStats.power.intensityFactor, 0.99, 2);
+          SpecsUtils.assertNearEqual(computedStats.power.variabilityIndex, 1.26, 2);
 
           // Cadence
           SpecsUtils.assertNearEqual(computedStats.cadence.avg, 67);
@@ -308,7 +308,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.flat, 79);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.down, 89);
           SpecsUtils.assertNearEqual(computedStats.power.avg, 152);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 345);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 549);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.down, 40.4, 1);
           SpecsUtils.assertNearEqual(computedStats.grade.slopeSpeed.up, 17, 1);
 
@@ -424,7 +424,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertNearEqual(computedStats.elevation.descent, 1770);
           SpecsUtils.assertNearEqual(computedStats.calories, 2902);
           SpecsUtils.assertNearEqual(computedStats.power.avg, 142);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 292);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 612);
           SpecsUtils.assertNearEqual(computedStats.cadence.avg, 63);
           SpecsUtils.assertNearEqual(computedStats.cadence.avgActive, 75);
           SpecsUtils.assertNearEqual(computedStats.cadence.slope.up, 73);
@@ -458,7 +458,7 @@ describe("File activities integration tests", () => {
           SpecsUtils.assertEqualTime(computedStats.elapsedTime, "04:56:21");
           SpecsUtils.assertNearEqual(computedStats.elevationGain, 534);
           SpecsUtils.assertNearEqual(computedStats.power.avg, 139);
-          SpecsUtils.assertNearEqual(computedStats.power.max, 339);
+          SpecsUtils.assertNearEqual(computedStats.power.max, 830);
 
           const activity = extractResultActivity();
           expect(activity.srcStats.speed.avg).toBeCloseTo(28.6, 1);

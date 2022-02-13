@@ -263,15 +263,7 @@ export class StreamProcessor {
    */
   private static computeEstimatedPower(streams: Streams, params: StreamProcessorParams): Streams {
     if (!params.hasPowerMeter && streams.latlng?.length > 0) {
-      const estimatedPowerStream = this.estimatedPowerStream(streams, params);
-      if (estimatedPowerStream) {
-        streams.watts = estimatedPowerStream;
-        const EST_POWER_KALMAN_FACTORS = {
-          R: 0.1, // Quite reliable model
-          Q: 200 // Measure errors in watts on estimation
-        };
-        streams.watts = KalmanFilter.apply(streams.watts, EST_POWER_KALMAN_FACTORS);
-      }
+      streams.watts = this.estimatedPowerStream(streams, params);
     }
 
     // (Debug purpose) Generates estimated power stream even if real power data is available

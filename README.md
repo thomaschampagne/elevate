@@ -129,18 +129,18 @@ npm test
 
 First switch to desktop directory with `cd desktop/`
 
-    - Build `Windows` `x64` `.exe`:
-    ```bash
-    npm run build:publish:windows
-    ```
-    - Build `Linux` `x64` `.deb`:
-    ```bash
-    npm run build:publish:linux
-    ```
-    - Build `MacOS` `x64` `.dmg` :
-    ```bash
-    npm run build:publish:macos
-    ```
+- Build `Windows` `x64` `.exe`:
+  ```bash
+  npm run build:publish:windows
+  ```
+- Build `Linux` `x64` `.deb`:
+  ```bash
+  npm run build:publish:linux
+  ```
+- Build `MacOS` `x64` `.dmg` :
+  ```bash
+  npm run build:publish:macos
+  ```
 > Output installers will be located in `./desktop/package/`
 
 > The build targets are defined in `./desktop/package.json` (`build` key section). See [https://www.electron.build](https://www.electron.build) for more info.
