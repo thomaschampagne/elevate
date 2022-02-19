@@ -1,0 +1,87 @@
+<div class="centered-section">
+  <!--Gender-->
+  <mat-card *ngIf="(athleteModel && athleteModel.gender)" class="gender-card">
+    <mat-card-title>
+      About Me
+    </mat-card-title>
+    <mat-card-content>
+      <form *ngIf="athleteModel" #athleteForm="ngForm">
+        <div fxLayout="row" fxLayoutAlign="start-between start">
+          <mat-form-field fxFlex="11">
+            <mat-select [disabled]="appService.isSyncing"
+                        (selectionChange)="onAthleteChanged()"
+                        [(ngModel)]="athleteModel.gender"
+                        placeholder="Gender"
+                        aria-label="Gender"
+                        name="gender"
+                        required>
+              <mat-option
+                *ngFor="let gender of GENDERS;"
+                [value]="gender.type">
+                {{gender.display}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div fxFlex="1"></div>
+          <mat-form-field fxFlex="9">
+            <mat-label>Birth Date</mat-label>
+            <input matInput name="birthYear" [(ngModel)]="athleteModel.birthDate" (dateChange)="onAthleteChanged()"
+                   [matDatepicker]="picker" [max]="MAX_BIRTHDAY_DATE" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker [startView]="athleteModel.birthDate ? 'month' : 'year'"
+                            [startAt]="athleteModel.birthDate ? athleteModel.birthDate : DEFAULT_BIRTHDAY_START_DATE"></mat-datepicker>
+          </mat-form-field>
+          <div fxFlex="1"></div>
+          <mat-form-field fxFlex="20">
+            <mat-select (selectionChange)="onAthleteChanged()"
+                        [(ngModel)]="athleteModel.practiceLevel"
+                        placeholder="Practice Level"
+                        aria-label="Practice Level"
+                        name="practiceLevel"
+                        required>
+              <mat-option
+                *ngFor="let level of PRACTICE_LEVELS;"
+                [value]="level">
+                {{startCase(PracticeLevel[level].toLowerCase())}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start-between start">
+          <mat-form-field fxFlex="21">
+            <mat-label>First Name</mat-label>
+            <input matInput [(ngModel)]="athleteModel.firstName" (change)="onAthleteChanged()" name="firstName">
+          </mat-form-field>
+          <div fxFlex="1"></div>
+          <mat-form-field fxFlex="22">
+            <mat-label>Last Name</mat-label>
+            <input matInput [(ngModel)]="athleteModel.lastName" (change)="onAthleteChanged()" name="lastName">
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start-between start">
+          <mat-form-field fxFlex="44">
+            <mat-select multiple (selectionChange)="onAthleteChanged()"
+                        [(ngModel)]="athleteModel.sports"
+                        placeholder="Preferred Sports (up to {{MAX_SPORTS}})"
+                        aria-label="Preferred Sports (up to {{MAX_SPORTS}})"
+                        name="sports">
+              <mat-optgroup *ngFor="let sportCategory of sportsCategories;"
+                            [label]="sportCategory.label">
+                <mat-option
+                  *ngFor="let sportKey of sportCategory.sportKeys;"
+                  [value]="sportKey"
+                  [disabled]="athleteModel.sports.length >= MAX_SPORTS && athleteModel.sports.indexOf(sportKey) === -1">
+                  {{startCase(sportKey)}}
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!--Dated Athlete Settings manager component-->
+  <app-dated-athlete-settings-manager
+    (datedAthleteSettingsChange)="onDatedAthleteSettingsChanged()"></app-dated-athlete-settings-manager>
+</div>

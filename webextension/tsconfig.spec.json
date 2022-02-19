@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "extension.d.ts",
+    "specs/specs.d.ts"
+  ],
+  "include": [
+    "specs/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "outDir": "./"
+  }
+}

@@ -1,0 +1,38 @@
+# Templating
+*.css
+*.scss
+*.html
+*.svg
+
+# Generated data
+coverage
+dist
+node_modules
+
+# OS/IDE
+.vscode
+.idea
+.DS_Store
+
+# Others
+*.json
+*.md
+*.yml
+*.log
+*.pdn
+.editorconfig
+.gitignore
+.prettierignore
+LICENSE
+
+# Project specific
+*.gpx
+*.tcx
+*.fit
+*.7z
+*.zip
+*.tar
+*.tar.gz
+*.fake
+desktop-boot.js
+

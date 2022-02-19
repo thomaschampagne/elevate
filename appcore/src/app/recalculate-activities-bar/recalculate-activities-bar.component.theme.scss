@@ -1,0 +1,14 @@
+@import "@angular/material/theming";
+
+@mixin app-recalculate-activities-bar-theming($theme) {
+
+  $primary: map-get($theme, primary);
+  $background: map-get($theme, background);
+  $text-color: mat-color($background, background);
+
+  .app-recalculate-activities-bar {
+    color: $text-color;
+    background: mat-color($primary);
+  }
+
+}

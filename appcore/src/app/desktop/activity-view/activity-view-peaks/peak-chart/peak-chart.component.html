@@ -1,0 +1,15 @@
+<div>
+  <div class="mat-title">
+    {{sensor.name}} <span class="mat-caption">&nbsp;➔&nbsp;{{sensor.getDisplayUnit(measureSystem, false)}}</span>
+  </div>
+  <div>
+    <plotly-plot *ngIf="chart.data.length > 0"
+                 [divId]="chart.id"
+                 [data]="chart.data"
+                 [layout]="chart.layout"
+                 [config]="chart.config"
+                 (plotlyClick)="onGraphClick($event)"
+                 [useResizeHandler]="chart.useResizeHandler"></plotly-plot>
+  </div>
+</div>
+

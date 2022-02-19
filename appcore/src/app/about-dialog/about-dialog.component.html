@@ -1,0 +1,72 @@
+<div class="mat-h2">About</div>
+<mat-dialog-content class="mat-body-1">
+  <div *ngIf="installedVersion" class="space-under">
+    Version <strong>{{installedVersion}}</strong>&nbsp;/&nbsp;<span
+    class="mat-caption"
+    *ngIf="buildMetadata">Build {{buildMetadata.date + '.' + buildMetadata.commit.slice(0, 8)}}</span>
+  </div>
+  <mat-divider></mat-divider>
+  <ng-container *ngIf="(buildTarget === BuildTarget.EXTENSION)">
+    <div class="space-under">
+      Web extension made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
+    </div>
+    <div class="space-under">
+      Elevate is an open-source project under <a
+      href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
+      target="_blank">Mozilla Public License 2.0</a>.
+    </div>
+    <div class="space-under">
+      This extension is adds some features that riders and runners would like to see in their Strava
+      web. If these features could be added by default in Strava... It could be cool! Consider getting Strava Premium.
+      There are a ton of features that you will love. Remember, this extension has for ambition to enhance the
+      experience of all users (Free and Premium) and tends to keep users loyal in Strava.
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <ng-container *ngIf="(buildTarget === BuildTarget.DESKTOP)">
+    <div class="space-under">
+      Application made with ❤️ by <a href="https://twitter.com/champagnethomas" target="_blank">Thomas Champagne</a>.
+    </div>
+    <div class="space-under">
+      Elevate is an open-source project under <a
+      href="https://github.com/mozilla/foundation.mozilla.org/blob/master/LICENSE"
+      target="_blank">Mozilla Public License 2.0</a>.
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <ng-container>
+    <div fxLayout="row" fxLayoutAlign="start center" fxFill>
+      <div>Partners</div>
+      <div fxFlex="3"></div>
+      <div>
+        <mat-icon class="koyeb-icon clickable" svgIcon="koyeb" inline="true" (click)="openLink('https://www.koyeb.com')" matTooltip="French developer-friendly serverless platform"></mat-icon>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </ng-container>
+
+  <div class="links" fxLayout="row" fxLayoutAlign="center center">
+    <button (click)="openLink('https://twitter.com/champagnethomas')" mat-icon-button
+            matTooltip="Stay tuned for updates on twitter">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="twitter"></mat-icon>
+    </button>
+    <button (click)="openLink('https://thomaschampagne.github.io/elevate/#/discord')" mat-icon-button
+            matTooltip="Join discord">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="discord"></mat-icon>
+    </button>
+    <button (click)="openLink('https://github.com/thomaschampagne/elevate')" mat-icon-button
+            matTooltip="View source code on github">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="github"></mat-icon>
+    </button>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-evenly center">
+    <span>
+      <mat-icon fontSet="material-icons-outlined" [inline]="true">public</mat-icon>
+      <a class="mat-caption" href="https://thomaschampagne.github.io/elevate/" target="_blank"
+         style="margin-left: 2px;vertical-align: text-bottom;">thomaschampagne.github.io/elevate</a>
+    </span>
+  </div>
+</mat-dialog-content>
+

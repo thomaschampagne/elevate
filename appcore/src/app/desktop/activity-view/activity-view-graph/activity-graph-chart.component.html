@@ -1,0 +1,35 @@
+<div class="wrapper" fxFlexFill>
+  <plotly-plot class="graph-chart"
+               *ngIf="chart.data.length"
+               [divId]="chart.id"
+               [data]="chart.data"
+               [layout]="chart.layout"
+               [config]="chart.config"
+               [useResizeHandler]="chart.useResizeHandler"
+               (plotlyClick)="onGraphClick($event)"
+               (relayout)="onReLayout($event)"
+               (legendClick)="onLegendClick()"
+               (hover)="onHover($event)"
+               (unhover)="onUnHover()">
+  </plotly-plot>
+  <div fxFlexFill fxLayout="row" fxLayoutAlign="center start">
+    <button *ngIf="isZooming" mat-button color="primary" (click)="onUserResetZoom()">
+      <mat-icon [inline]="true" fontSet="material-icons-outlined">zoom_out</mat-icon>
+      Zoom out
+    </button>
+
+    <ng-container *ngIf="hasDistance">
+      <button mat-button *ngIf="scaleMode === ScaleMode.TIME && streams.distance?.length" color="primary"
+              (click)="onToggleScaleMode()">
+        <mat-icon [inline]="true" fontSet="material-icons-outlined">straighten</mat-icon>
+        Distance scale
+      </button>
+
+      <button mat-button *ngIf="scaleMode === ScaleMode.DISTANCE && streams.time?.length" color="primary"
+              (click)="onToggleScaleMode()">
+        <mat-icon [inline]="true" fontSet="material-icons-outlined">schedule</mat-icon>
+        Time scale
+      </button>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+#app-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+mat-sidenav {
+  width: 200px;
+}
+
+mat-sidenav mat-icon {
+  margin-right: 12px;
+}
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+#theme-toggle {
+  margin-left: 5px;
+}

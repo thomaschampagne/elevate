@@ -1,0 +1,14 @@
+<mat-grid-list *ngIf="peaksResults?.length" cols="2" [rowHeight]="getGridRowHeight()">
+  <mat-grid-tile fxFlex="100" *ngFor="let result of peaksResults;">
+    <app-peak-chart fxFlex="100" [sensor]="result.sensor"
+                    [peaks]="result.peaks"
+                    [measureSystem]="measureSystem"></app-peak-chart>
+  </mat-grid-tile>
+</mat-grid-list>
+<div *ngIf="peaksResults?.length" fxLayout="row" fxLayoutAlign="center center" class="mat-caption">
+  <i>Hint: Click on graphs to display peaks on map when GPS data is available</i>
+</div>
+<div *ngIf="!peaksResults?.length" class="centered-text pad-lrg-bt">
+  <i>Peaks data is unavailable on this activity.</i>
+</div>
+

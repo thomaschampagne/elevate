@@ -1,0 +1,228 @@
+<!--Loading-->
+<div *ngIf="(!isProgressionInitialized && hasActivities !== false)">
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+</div>
+
+<app-activities-required></app-activities-required>
+
+<mat-card *ngIf="hasActivities === false">
+  <app-year-progress-user-guide [readMore]="false"></app-year-progress-user-guide>
+</mat-card>
+
+<mat-card *ngIf="hasActivities">
+  <mat-card-content>
+    <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+      <div fxLayout="row" fxLayoutAlign="space-between start" fxFlexFill fxFlex="60" fxFlex.lt-lg="100">
+        <mat-form-field [fxFlex]="(progressConfig.mode === ProgressMode.ROLLING) ? '70px' : '95px'">
+          <mat-select (selectionChange)="onProgressModeChanged()"
+                      [(ngModel)]="progressConfig.mode"
+                      placeholder="Mode">
+            <mat-option *ngFor="let progressMode of progressModes" [value]="progressMode.value">
+              {{progressMode.label}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span fxFlex="0.5"></span>
+        <ng-container *ngIf="progressConfig.mode === ProgressMode.ROLLING">
+          <mat-form-field fxFlex="75px">
+            <mat-select (selectionChange)="onRollingPeriodChanged()"
+                        [(ngModel)]="selectedRollingPeriod"
+                        placeholder="Period"
+                        value="Months">
+              <mat-option *ngFor="let rollingPeriod of rollingPeriods"
+                          [value]="rollingPeriod">
+                {{rollingPeriod}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <span fxFlex="0.5"></span>
+          <mat-form-field fxFlex="50px">
+            <input
+              (change)="onPeriodMultiplierChanged()"
+              [(ngModel)]="periodMultiplier"
+              matInput
+              max="999"
+              min="1"
+              placeholder="Multiplier"
+              type="number" />
+          </mat-form-field>
+          <span fxFlex="0.5"></span>
+        </ng-container>
+        <mat-form-field fxFlex="80px">
+          <mat-select (selectionChange)="onSelectedProgressTypeChanged()"
+                      [(ngModel)]="selectedProgressType"
+                      placeholder="Progress Type">
+            <mat-option *ngFor="let progressType of progressTypes" [value]="progressType">
+              {{progressType.label}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span fxFlex="0.5"></span>
+        <mat-form-field fxFlex>
+          <mat-select (selectionChange)="onSelectedActivityTypesChanged()"
+                      [(ngModel)]="progressConfig.activityTypes"
+                      multiple
+                      placeholder="Activity Types">
+            <mat-option *ngFor="let type of availableActivityTypes"
+                        [disabled]="(progressConfig.activityTypes.length === 1 && type === progressConfig.activityTypes[0])"
+                        [value]="type">
+              {{startCase(type)}}
+            </mat-option>
+          </mat-select>
+          <button (click)="$event.stopPropagation(); onTickAllActivityTypes()" color="primary"
+                  mat-button mat-icon-button
+                  matSuffix
+                  matTooltip="Tick all activity types">
+            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
+          </button>
+          <button (click)="$event.stopPropagation(); onUnTickAllActivityTypes()" color="primary"
+                  mat-button mat-icon-button
+                  matSuffix
+                  matTooltip="Untick all activity types (most performed excluded)">
+            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <span fxFlex="0.5"></span>
+        <mat-slide-toggle
+          (change)="onIncludeCommuteRideToggle()"
+          [(ngModel)]="this.progressConfig.includeCommuteRide"
+          fxFlexAlign="center"
+          matTooltip="Include commute activities in your progression.">
+          <mat-icon fontSet="material-icons-outlined">work_outline</mat-icon>
+        </mat-slide-toggle>
+        <span fxFlex="0.5"></span>
+        <mat-slide-toggle
+          (change)="onIncludeIndoorRideToggle()"
+          [(ngModel)]="this.progressConfig.includeIndoorRide"
+          fxFlexAlign="center"
+          matTooltip="Include indoor activities in your progression.">
+          <mat-icon fontSet="material-icons-outlined">home</mat-icon>
+        </mat-slide-toggle>
+      </div>
+
+      <span fxFlex="1"></span>
+
+      <div fxLayout="row" fxLayoutAlign="space-between start" fxFlexFill fxFlex="39" fxFlex.lt-lg="100">
+        <mat-form-field fxFlex>
+          <mat-select (selectionChange)="onSelectedYearsChanged()"
+                      [(ngModel)]="selectedYears"
+                      multiple
+                      placeholder="Years">
+            <mat-option *ngFor="let year of availableYears"
+                        [disabled]="(selectedYears.length === 1 && year === selectedYears[0])"
+                        [value]="year">
+              {{year}}
+            </mat-option>
+          </mat-select>
+          <button (click)="$event.stopPropagation(); onTickAllYears()" color="primary" mat-button
+                  mat-icon-button matSuffix
+                  matTooltip="Tick all years">
+            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
+          </button>
+          <button (click)="$event.stopPropagation(); onUnTickAllYears()" color="primary" mat-button
+                  mat-icon-button
+                  matSuffix
+                  matTooltip="Untick all years (current year excluded)">
+            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <span fxFlex="1"></span>
+        <button (click)="onHelperClick()" color="primary" fxFlexAlign="center" mat-icon-button>
+          <mat-icon fontSet="material-icons-outlined">support</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <button (click)="onCreatePreset()" color="primary" mat-button
+              mat-stroked-button
+              matTooltip="Create a preset from current selection with or without target">
+        Create preset & target
+      </button>&nbsp;
+      <button (click)="onManagePresets()" *ngIf="(yearProgressPresetsCount > 0)" color="primary"
+              mat-button
+              mat-stroked-button
+              matTooltip="Load a preset previously saved with or without associated target">
+        Load presets & targets ({{yearProgressPresetsCount}})
+      </button>
+    </div>
+
+    <!--Graph Card + Table Card -->
+    <div [fxLayout]="(isGraphExpanded || mediaObserver.isActive('lt-lg')) ? 'column' : 'row'"
+         fxLayoutAlign="start start" class="graph-table-card">
+
+      <!--Graph -->
+      <div [fxFlex]="(isGraphExpanded) ? 100 : 60" fxFill>
+        <mat-card-title>
+          <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="space-between start">
+            <div>
+							<span *ngIf="progressConfig.mode === ProgressMode.YEAR_TO_DATE">
+							Total <strong>{{selectedProgressType.label.toLocaleLowerCase()}}</strong> since January 1st
+							</span>
+              <span *ngIf="progressConfig.mode === ProgressMode.ROLLING">
+							Total <strong>{{selectedProgressType.label.toLocaleLowerCase()}}</strong> maintained on <strong>{{(periodMultiplier === 1) ? "last rolling " + selectedRollingPeriod.toLocaleLowerCase().slice(0, -1) : (periodMultiplier + " last rolling " + selectedRollingPeriod.toLocaleLowerCase())}}</strong>
+							</span>
+              <span>{{(selectedProgressType.unit) ? " in " + selectedProgressType.unit : ""}}</span>
+              <span *ngIf="(targetValue !== null)"
+                    class="mat-body-1">&nbsp;➔&nbsp;Target {{targetValue}}{{(selectedProgressType.shortUnit) ? ' ' + selectedProgressType.shortUnit : ''}}</span>
+            </div>
+            <button (click)="onExpandGraphClicked()" class="expanded-button" fxHide.lt-lg mat-icon-button>
+              <mat-icon *ngIf="!isGraphExpanded" color="primary" fontSet="material-icons-outlined"
+                        matTooltip="Expand graph">
+                fullscreen
+              </mat-icon>
+              <mat-icon *ngIf="isGraphExpanded" color="primary" fontSet="material-icons-outlined"
+                        matTooltip="Shrink graph">
+                fullscreen_exit
+              </mat-icon>
+            </button>
+          </div>
+        </mat-card-title>
+        <app-year-progress-graph [isGraphExpanded]="isGraphExpanded"
+                                 [selectedProgressType]="selectedProgressType"
+                                 [selectedYears]="selectedYears"
+                                 [targetProgressModels]="targetProgressModels"
+                                 [yearProgressStyleModel]="yearProgressStyleModel"
+                                 [yearProgressions]="yearProgressions">
+        </app-year-progress-graph>
+      </div>
+
+      <span [fxHide]="isGraphExpanded" fxFlex="1"></span>
+
+      <!-- Table/Legend -->
+      <div fxFill fxFlex>
+        <mat-card-title>
+          <div class="mat-subheading-2" fxLayout="row" fxLayoutAlign="space-between start">
+						<span fxFlex="100">
+							<span *ngIf="progressConfig.mode === ProgressMode.ROLLING">
+								{{momentWatched.clone().subtract(progressConfig['rollingDays'], "days").format("MMMM Do")}}
+                <mat-icon [style.vertical-align]="'middle'" fontSet="material-icons-outlined"
+                          inline="true">arrow_forward</mat-icon>
+                {{momentWatched.format("MMMM Do")}}
+							</span>
+							<span *ngIf="progressConfig.mode === ProgressMode.YEAR_TO_DATE">
+								January 1st
+								<mat-icon [style.vertical-align]="'middle'" fontSet="material-icons-outlined"
+                          inline="true">arrow_forward</mat-icon>
+                {{momentWatched.format("MMMM Do")}}
+							</span>
+						</span>
+            <span fxFlex>
+							<button (click)="onShowOverview()" color="primary" mat-stroked-button>Overview</button>
+						</span>
+          </div>
+        </mat-card-title>
+        <app-year-progress-table
+          [momentWatched]="momentWatched"
+          [progressConfig]="progressConfig"
+          [selectedProgressType]="selectedProgressType"
+          [selectedYears]="selectedYears"
+          [targetProgressModels]="targetProgressModels"
+          [yearProgressStyleModel]="yearProgressStyleModel"
+          [yearProgressions]="yearProgressions">
+        </app-year-progress-table>
+      </div>
+    </div>
+
+  </mat-card-content>
+</mat-card>

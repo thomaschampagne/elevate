@@ -1,0 +1,173 @@
+<!--Loading-->
+<div *ngIf="!initialized">
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+</div>
+
+<app-activities-required></app-activities-required>
+
+<mat-card [fxHide]="!hasActivities">
+  <div class="mat-body-1" fxLayout="row" fxLayoutAlign="start center">
+    <mat-form-field fxFlex="20">
+      <input (keyup)="activityPrefNameUpdate($event.target.value)" [(ngModel)]="preferences.activityName" fxFill
+             matInput
+             [placeholder]="preferences.activityName ? 'Activity name' : 'Search by activity name'"
+             type="search"
+             matTooltip="Search by activity name.">
+      <button *ngIf="preferences.activityName"
+              (click)="preferences.activityName=''; activityPrefNameUpdate(preferences.activityName);" color="primary"
+              aria-label="Clear"
+              mat-icon-button matSuffix
+              matTooltip="Remove filter">
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+    </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex="20">
+      <mat-select multiple (selectionChange)="onActivityPrefSportsChange()"
+                  [(ngModel)]="preferences.sports"
+                  placeholder="Filter by sports"
+                  aria-label="Filter by sports"
+                  name="sports">
+        <mat-option
+          *ngFor="let sportKey of athleteSports;"
+          [value]="sportKey">
+          {{startCase(sportKey)}}
+        </mat-option>
+      </mat-select>
+      <button *ngIf="preferences.sports.length"
+              (click)="preferences.sports=[]; onActivityPrefSportsChange(); $event.stopPropagation();" color="primary"
+              aria-label="Clear"
+              mat-icon-button matSuffix
+              matTooltip="Remove filter">
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+    </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex="8">
+      <input (dateChange)="onDateToDateChange()"
+             [(ngModel)]="preferences.fromDate"
+             [matDatepicker]="datePickerFrom"
+             [max]="today"
+             matInput
+             placeholder="From">
+      <mat-datepicker-toggle [for]="datePickerFrom" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #datePickerFrom color="primary"></mat-datepicker>
+    </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex="8">
+      <input (dateChange)="onDateToDateChange()"
+             [(ngModel)]="preferences.toDate"
+             [matDatepicker]="datePickerTo"
+             [max]="today"
+             matInput
+             placeholder="To">
+      <mat-datepicker-toggle [for]="datePickerTo" matSuffix></mat-datepicker-toggle>
+      <mat-datepicker #datePickerTo></mat-datepicker>
+    </mat-form-field>
+    <span fxFlex="1"></span>
+    <mat-form-field fxFlex="">
+      <mat-select (selectionChange)="onSelectedColumns()"
+                  [(ngModel)]="selectedColumns"
+                  multiple placeholder="Columns displayed selection">
+        <mat-optgroup *ngFor="let columnCategory of columnsCategories;"
+                      [label]="columnCategory.label">
+          <mat-option *ngFor="let column of columnCategory.columns"
+                      [disabled]="(selectedColumns.length === 1 && column.id === selectedColumns[0].id)"
+                      [matTooltip]="(column.description ? column.description : '')"
+                      [value]="column">
+            {{column.header}}
+          </mat-option>
+        </mat-optgroup>
+      </mat-select>
+      <button matSuffix mat-icon-button
+              matTooltip="Tick all"
+              color="primary"
+              (click)="tickAll(); $event.stopPropagation();">
+        <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
+      </button>
+      <button matSuffix mat-icon-button
+              matTooltip="Un-tick all"
+              color="primary"
+              (click)="unTickAll(); $event.stopPropagation();">
+        <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
+      </button>
+      <button (click)="resetColumns(); $event.stopPropagation();" color="primary"
+              mat-icon-button
+              matSuffix
+              matTooltip="Reset to default">
+        <mat-icon fontSet="material-icons-outlined">settings_backup_restore</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="isPerformanceDegraded" fxLayout="row" fxLayoutAlign="center center" class="mat-caption warn-color">
+    <mat-icon color="warn" fontSet="material-icons-outlined" inline="true">warning</mat-icon>
+    You may reduce the number of columns displayed to avoid degraded performance.
+  </div>
+
+  <div [fxHide]="!hasActivities || hasEmptyResults">
+    <div class="table-container">
+      <table [dataSource]="dataSource" mat-table matSort (matSortChange)="onSortEvent($event)">
+        <ng-container *ngFor="let column of columns" [matColumnDef]="column.id">
+          <mat-header-cell *matHeaderCellDef [fxFlex]="column.width" mat-sort-header
+                           matTooltip="{{column.description}}">
+            {{column.header}}
+          </mat-header-cell>
+          <mat-cell *matCellDef="let activity" [fxFlex]="column.width"
+                    matTooltip="[{{activity.startTime | date}}] {{activity.name | shorten: 42: '...'}}"
+                    matTooltipPosition="left" (dblclick)="openActivity(activity.id)">
+            <ng-container *ngIf="column.type === ColumnType.DATE">
+              {{column.print(activity, column.path)}}
+            </ng-container>
+            <ng-container *ngIf="column.type === ColumnType.TEXT">
+              {{column.print(activity, column.path)}}
+            </ng-container>
+            <ng-container *ngIf="column.type === ColumnType.ACTIVITY_LINK">
+              <button (click)="openActivity(activity.id)" color="primary"
+                      mat-button>{{column.print(activity, column.path)}}</button>
+            </ng-container>
+            <ng-container *ngIf="column.type === ColumnType.NUMBER">
+              {{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.path)}}
+            </ng-container>
+            <ng-container *ngIf="column.type === ColumnType.ATHLETE_SETTINGS">
+              <button (click)="onViewAthleteSettings(activity)" *ngIf="activity.id" color="primary"
+                      mat-icon-button>
+                <mat-icon fontSet="material-icons-outlined">portrait</mat-icon>
+              </button>
+            </ng-container>
+            <ng-container *ngIf="column.type === ColumnType.ACTIVITY_DELETE">
+              <button (click)="onDeleteActivity(activity)" *ngIf="activity.id" color="primary"
+                      mat-icon-button>
+                <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+              </button>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </table>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <button (click)="onSpreadSheetExport()" color="primary" mat-stroked-button
+              matTooltip="Download spreadsheet export">
+        <mat-icon fontSet="material-icons-outlined">vertical_align_bottom</mat-icon>
+      </button>
+      <mat-paginator (page)="onPageEvent($event)"
+                     [pageSizeOptions]="[5, 10, 15, 30, 50]"
+                     [pageSize]="10" showFirstLastButtons>
+      </mat-paginator>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" class="mat-caption">
+      <i>Hint: Double-click on rows to open activities</i>
+    </div>
+  </div>
+  <div *ngIf="hasEmptyResults" class="no-activities-found">
+    <div>No activities are matching criteria.</div>
+    <div>
+      <button (click)="onResetPreferences()" color="primary" mat-stroked-button>
+        Reset filters
+      </button>
+    </div>
+  </div>
+</mat-card>

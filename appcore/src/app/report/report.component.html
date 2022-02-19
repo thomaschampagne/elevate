@@ -1,0 +1,35 @@
+<mat-card class="narrow-centered-section">
+  <mat-card-content>
+    <div class="mat-title">
+      ⚠️ Before creating any issues, you <strong>have to</strong>:
+    </div>
+    <div>
+      <ul>
+        <li>
+          <strong>Check</strong> if you can solve your issue in the <strong class="primary-color clickable"
+                                                                            (click)="onGoToHelp();">help</strong>
+          or <strong class="primary-color clickable" (click)="onOpenOnlineDoc();">online documentation</strong>
+          sections or in <strong class="primary-color clickable" (click)="onGoToDiscord();">Discord</strong> community.
+        </li>
+        <li>
+          <strong>Check</strong> if the issue or requests do not exists already in <strong
+          class="primary-color clickable" (click)="onGoToGithubIssues();">github issues list</strong>
+          ➔ <strong>Use the search input</strong>.
+        </li>
+      </ul>
+      <div class="unsuitable-issues-message accent-border">
+        Any unsuitable issues will not be handled! Since this project is developed on free time and has hundreds
+        of thousands users now, there's no room to handle duplicate or irrelevant issues...
+      </div>
+    </div>
+    <div>
+      <strong>Please be wise when opening an issue. Thank you for your understanding!</strong>
+    </div>
+    <div>
+      <button color="primary" mat-stroked-button (click)="onReport()" [disabled]="(allowReportCountdown$ | async) > 0">
+        Report <span *ngIf="(allowReportCountdown$ | async) > 0">({{allowReportCountdown$ | async | number:'2.0'}}
+        )</span>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

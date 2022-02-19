@@ -1,0 +1,14 @@
+<mat-grid-list [cols]="columnsCount" [rowHeight]="rowHeight">
+  <mat-grid-tile *ngFor="let stat of summaryStatDisplays;">
+    <div fxFill fxLayout="column" fxLayoutAlign="center center" [matTooltip]="stat.description" [class.help]="stat.description">
+      <div>
+        <span [ngClass.md]="'mat-headline'" [ngClass.lg]="'mat-display-1'" [ngClass.xl]="'mat-display-2'">{{stat.value}}</span><span *ngIf="stat.unit" class="mat-body-1"> {{stat.unit}}</span><span
+        *ngIf="stat.color" class="dot" [style.background-color]="stat.color"></span>
+      </div>
+      <div class="mat-body-1">
+        {{stat.name}}
+      </div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+

@@ -1,0 +1,43 @@
+<div *ngIf="(!isFaqLoaded)">
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+</div>
+
+<div class="centered-section" *ngIf="(isFaqLoaded === true)">
+  <div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
+    <mat-form-field fxFlex="50">
+      <input [(ngModel)]="keywords" matInput placeholder="Search for help with keywords..." type="search">
+      <button *ngIf="keywords" (click)="keywords=''" aria-label="keywords" mat-button mat-icon-button
+              matSuffix>
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+    </mat-form-field>
+    <button mat-icon-button color="primary" matTooltip="View documentation online" (click)="viewHelpOnline()">
+      <mat-icon fontSet="material-icons-outlined">assistant_photo</mat-icon>
+    </button>
+
+  </div>
+
+  <mat-accordion [multi]="true">
+    <mat-expansion-panel
+      *ngFor="let faqEntry of faqEntries | filterBy: ['question', 'answer']: keywords; count as size;"
+      [expanded]="size === 1">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="mat-h4" [innerHtml]="faqEntry.question"></mat-panel-title>
+      </mat-expansion-panel-header>
+      <p [innerHtml]="faqEntry.answer"></p>
+      <div class="view-online">
+        <button mat-button color="primary" (click)="viewFaqEntryOnline(faqEntry)">
+          <mat-icon fontSet="material-icons-outlined">assistant_photo</mat-icon>
+          View online
+        </button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="centered-text pad-std-bt">
+    <button mat-button color="primary" (click)="openLink('https://thomaschampagne.github.io/elevate/#/discord')">
+      <mat-icon fontSet="material-icons-outlined" svgIcon="discord"></mat-icon>
+      Join discord for community help
+    </button>
+  </div>
+</div>

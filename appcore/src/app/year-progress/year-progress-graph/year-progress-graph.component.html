@@ -1,0 +1,14 @@
+<div id="graphWrapper">
+  <div #yearProgressGraph id="yearProgressGraph" class="clickable"></div>
+</div>
+<div id="changeMomentWatched">
+  <div *ngIf="!isMomentWatchedToday">
+    <button (click)="onResetMomentWatched()" color="primary"
+            mat-stroked-button>
+      Reset on today
+    </button>
+  </div>
+  <div *ngIf="isMomentWatchedToday">
+    <i>Hint: You can lock the day watched by clicking the desired date in this graph.</i>
+  </div>
+</div>

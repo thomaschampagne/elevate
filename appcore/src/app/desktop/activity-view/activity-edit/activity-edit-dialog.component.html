@@ -1,0 +1,36 @@
+<div mat-dialog-title>Edit Activity</div>
+<form *ngIf="activity" #activityForm="ngForm">
+  <mat-dialog-content class="mat-body-1">
+
+    <mat-form-field fxFill>
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="activity.name" name="name" required>
+    </mat-form-field>
+    <mat-form-field fxFill>
+      <mat-select [(ngModel)]="activity.type"
+                  placeholder="Sport Type"
+                  aria-label="Sport Type"
+                  name="sports"
+                  required>
+
+        <mat-optgroup *ngFor="let sportCategory of elevateSportCategories;"
+                      [label]="sportCategory.label">
+
+          <mat-option *ngFor="let sport of sportCategory.sportKeys;" [value]="sport">{{startCase(sport)}}</mat-option>
+        </mat-optgroup>
+
+      </mat-select>
+    </mat-form-field>
+
+    <span class="mat-caption">Note: Only activity name and sport type are editable at the moment</span>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button (click)="onCancel()" color="primary" mat-stroked-button>
+      Cancel
+    </button>
+    <span fxFlex="1"></span>
+    <button (click)="onSave()" color="primary" mat-stroked-button [disabled]="activityForm.invalid">
+      <span>Save</span>
+    </button>
+  </mat-dialog-actions>
+</form>

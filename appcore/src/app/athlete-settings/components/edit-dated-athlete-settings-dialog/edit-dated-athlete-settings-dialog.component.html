@@ -1,0 +1,48 @@
+<mat-dialog-content>
+
+  <div class="actions" fxLayoutAlign="center center">
+    <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" color="primary"
+            fxFlex="50" mat-stroked-button>Add
+    </button>
+    <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" color="primary"
+            fxFlex="50" mat-stroked-button>Confirm changes
+    </button>
+    <span fxFlex="1"></span>
+    <button (click)="onCancel()" color="primary" fxFlex="50" mat-stroked-button>Cancel
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <mat-form-field fxFill>
+        <input (dateChange)="onDateChange()"
+               [(ngModel)]="sinceDate"
+               [disabled]="(datedAthleteSettings.isForever())"
+               [matDatepicker]="datePickerSince"
+               matInput
+               placeholder="{{(datedAthleteSettings.isForever()) ?  'Athlete settings since forever' : 'Athlete settings since'}}">
+        <mat-datepicker-toggle [for]="datePickerSince" matSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datePickerSince></mat-datepicker>
+      </mat-form-field>
+    </mat-card-content>
+
+  </mat-card>
+
+  <app-athlete-settings-form (athleteSettingsModelChange)="onAthleteSettingsModelChanged($event)"
+                             *ngIf="datedAthleteSettings"
+                             [athleteSettingsModel]="datedAthleteSettings"></app-athlete-settings-form>
+
+  <div class="actions" fxLayoutAlign="center center">
+    <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_ADD)" color="primary"
+            fxFlex="50" mat-stroked-button>Add
+    </button>
+    <button (click)="onConfirm()" *ngIf="(data.action === DatedAthleteSettingsAction.ACTION_EDIT)" color="primary"
+            fxFlex="50" mat-stroked-button>Confirm changes
+    </button>
+    <span fxFlex="1"></span>
+    <button (click)="onCancel()" color="primary" fxFlex="50" mat-stroked-button>Cancel
+    </button>
+  </div>
+
+</mat-dialog-content>
+

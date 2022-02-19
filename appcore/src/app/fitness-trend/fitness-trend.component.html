@@ -1,0 +1,105 @@
+<!--Loading-->
+<div *ngIf="(hasActivities !== false && areActivitiesCompliant === null)">
+  <mat-progress-bar mode="buffer"></mat-progress-bar>
+</div>
+
+<app-activities-required></app-activities-required>
+
+<mat-card *ngIf="hasActivities === false">
+  <app-fitness-trend-user-guide [readMore]="false"></app-fitness-trend-user-guide>
+</mat-card>
+
+<!--History not compliant with the feature-->
+<mat-card *ngIf="(areActivitiesCompliant === false && hasActivities !== false)" class="no-data">
+  <mat-card-title>
+    Unable to generate fitness trend 😢
+  </mat-card-title>
+  <mat-card-content>
+
+    <div>
+      Elevate can't generate your fitness trend using your synced activities and fitness trend configuration.
+      Please check that your synced activities have at least:
+      <ul>
+        <li>
+          A running or cycling activity recorded with or without sensors.
+        </li>
+        <li>
+          Or an activity recorded with a heart rate monitor (no matter the sport type).
+        </li>
+        <li>
+          Or a swimming activity having distance & time data.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <mat-icon [style.vertical-align]="'middle'" color="warn" fontSet="material-icons-outlined">warning
+      </mat-icon>
+      Your fitness trend configuration may also have exclusion patterns and date that are probably too
+      restrictive &nbsp;&nbsp;➔
+      <button (click)="onOpenFitnessTrendConfig()" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">settings</mat-icon>
+        Verify your fitness trend configuration
+      </button>
+    </div>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="(areActivitiesCompliant === true)">
+  <mat-card-content>
+    <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+      <app-fitness-trend-inputs (eBikeRidesToggleChange)="onEBikeRidesToggleChange($event)"
+                                (estimatedPowerStressScoreToggleChange)="onEstimatedPowerStressScoreToggleChange($event)"
+                                (estimatedRunningStressScoreToggleChange)="onEstimatedRunningStressScoreChange($event)"
+                                (openFitnessTrendConfigRequest)="onOpenFitnessTrendConfig()"
+                                (periodViewedChange)="onPeriodViewedChange($event)"
+                                (powerMeterToggleChange)="onPowerMeterToggleChange($event)"
+                                (swimToggleChange)="onSwimToggleChange($event)"
+                                (trainingZonesToggleChange)="onTrainingZonesToggleChange($event)"
+                                [dateMax]="dateMax"
+                                [dateMin]="dateMin"
+                                [fitnessTrendConfigModel]="fitnessTrendConfigModel"
+                                [isEBikeRidesEnabled]="isEBikeRidesEnabled"
+                                [isPowerMeterEnabled]="isPowerMeterEnabled"
+                                [isSwimEnabled]="isSwimEnabled"
+                                [isTrainingZonesEnabled]="isTrainingZonesEnabled"
+                                [lastFitnessActiveDate]="lastFitnessActiveDate"
+                                [lastPeriodViewed]="lastPeriodViewed"
+                                [lastPeriods]="lastPeriods"
+                                [periodViewed]="periodViewed"
+                                fxFill
+                                fxFlex="45"
+                                fxLayout="column"
+                                fxLayoutAlign="start start">
+      </app-fitness-trend-inputs>
+
+      <app-fitness-trend-legend [isTrainingZonesEnabled]="isTrainingZonesEnabled" class="mat-subheading-2" fxFill
+                                fxFlex="55" fxLayout="row"
+                                fxLayoutAlign="end end"></app-fitness-trend-legend>
+
+    </div>
+
+    <app-fitness-trend-graph [dateMax]="dateMax"
+                             [dateMin]="dateMin"
+                             [fitnessTrend]="fitnessTrend"
+                             [isTrainingZonesEnabled]="isTrainingZonesEnabled"
+                             [periodViewed]="periodViewed">
+    </app-fitness-trend-graph>
+
+  </mat-card-content>
+</mat-card>
+
+<mat-card [style.visibility]="((areActivitiesCompliant === true) ? 'visible' : 'hidden')">
+  <mat-card-title>
+    Fitness analysis table
+  </mat-card-title>
+  <mat-card-content>
+    <app-fitness-trend-table [fitnessTrendConfigModel]="fitnessTrendConfigModel"
+                             [fitnessTrend]="fitnessTrend"
+                             [isPowerMeterEnabled]="isPowerMeterEnabled"
+                             [isSwimEnabled]="isSwimEnabled"
+                             [isTrainingZonesEnabled]="isTrainingZonesEnabled">
+    </app-fitness-trend-table>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,166 @@
+<mat-table [dataSource]="dataSource">
+
+  <!--Date per years-->
+  <ng-container matColumnDef="year">
+    <mat-header-cell *matHeaderCellDef>Year</mat-header-cell>
+    <mat-cell *matCellDef="let progressionAtDay">
+      <strong [style.color]="progressionAtDay.color">{{progressionAtDay.year}}</strong>
+    </mat-cell>
+  </ng-container>
+
+  <!--Progress Type Value-->
+  <ng-container matColumnDef="progressTypeValue">
+    <mat-header-cell *matHeaderCellDef>
+			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' accomplished since beginning of the year.'"
+            class="headerTooltip">
+				{{selectedProgressType.label}}
+			</span>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let progressionAtDay">
+			<span [ngSwitch]="selectedProgressType.type">
+				<span *ngSwitchCase="ProgressType.TIME">
+					{{yearProgressService.readableTimeProgress(progressionAtDay.currentValue)}}
+				</span>
+				<span *ngSwitchDefault>
+					{{progressionAtDay.currentValue.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+				</span>
+			</span>
+
+    </mat-cell>
+  </ng-container>
+
+  <!--Progress Type Value-->
+  <ng-container matColumnDef="deltaPrevious">
+    <mat-header-cell *matHeaderCellDef>
+			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to last year.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to last year.'"
+            class="headerTooltip">
+				&Delta; Prev. Year
+			</span>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let progressionAtDay">
+
+      <!--Test ProgressType-->
+      <span *ngIf="progressionAtDay.deltaPreviousYear"
+            [ngClass]="progressionAtDay.deltaPreviousYear.class"
+            [ngSwitch]="selectedProgressType.type"
+            matTooltip="{{(progressionAtDay.deltaPreviousYear.date) ? 'Compared to ' + progressionAtDay.deltaPreviousYear.date: ''}}">
+        <!--Case when ProgressType is TIME-->
+        <span *ngSwitchCase="ProgressType.TIME">
+          <span *ngIf="(progressionAtDay.deltaPreviousYear.type !== DeltaType.NAN)">
+          {{progressionAtDay.deltaPreviousYear.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaPreviousYear.value)}}
+          </span>
+          <span *ngIf="(progressionAtDay.deltaPreviousYear.type === DeltaType.NAN)">
+          ∅
+          </span>
+        </span>
+
+        <!--Default Case-->
+        <span *ngSwitchDefault>
+          <span *ngIf="(progressionAtDay.deltaPreviousYear.type !== DeltaType.NAN)">
+            {{progressionAtDay.deltaPreviousYear.signSymbol + " " + progressionAtDay.deltaPreviousYear.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+          </span>
+          <span *ngIf="(progressionAtDay.deltaPreviousYear.type === DeltaType.NAN)">
+          ∅
+          </span>
+        </span>
+      </span>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="deltaCurrent">
+    <mat-header-cell *matHeaderCellDef>
+			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to the current year.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to this year.'"
+            class="headerTooltip">
+				&Delta; With {{currentYear}}
+			</span>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let progressionAtDay">
+
+      <!--Test ProgressType-->
+      <span *ngIf="progressionAtDay.deltaCurrentYear"
+            [ngClass]="progressionAtDay.deltaCurrentYear.class"
+            [ngSwitch]="selectedProgressType.type"
+            matTooltip="{{(progressionAtDay.deltaCurrentYear.date) ? 'Compared to ' + progressionAtDay.deltaCurrentYear.date: ''}}">
+
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaCurrentYear.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaCurrentYear.value)}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+        <!--Default Case-->
+                <span *ngSwitchDefault>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type !== DeltaType.NAN)">
+                        {{progressionAtDay.deltaCurrentYear.signSymbol + " " + progressionAtDay.deltaCurrentYear.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span *ngIf="(progressionAtDay.deltaCurrentYear.type === DeltaType.NAN)">
+                        ∅
+                    </span>
+                </span>
+
+            </span>
+
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="deltaTarget">
+    <mat-header-cell *matHeaderCellDef>
+			<span [matTooltip]="(progressConfig.mode === ProgressMode.ROLLING) ?
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta you were able to maintain during the last ' + progressConfig['rollingDays'] + ' rolling days & compared to target.' :
+			'As of ' + momentWatched.format('MMMM Do') + ', it represents the total ' + selectedProgressType.label.toLocaleLowerCase() + ' delta accomplished compared to target.'"
+            class="headerTooltip">
+				&Delta; With target
+			</span>
+    </mat-header-cell>
+    <mat-cell *matCellDef="let progressionAtDay">
+
+      <!--Test ProgressType-->
+      <span *ngIf="targetProgressModels && progressionAtDay.deltaTarget"
+            [ngClass]="progressionAtDay.deltaTarget.class"
+            [ngSwitch]="selectedProgressType.type"
+            matTooltip="Compared to current target">
+
+                <!--Case when ProgressType is TIME-->
+                <span *ngSwitchCase="ProgressType.TIME">
+                    <span
+                      *ngIf="((progressionAtDay.year < this.currentYear) || (progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() <= todayMoment.dayOfYear()))">
+                        {{progressionAtDay.deltaTarget.signSymbol + " " + readableTimeProgress(progressionAtDay.deltaTarget.value)}}
+                    </span>
+                    <span
+                      *ngIf="(progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() > todayMoment.dayOfYear())">
+                        ∅
+                    </span>
+                </span>
+
+        <!--Default Case-->
+                <span *ngSwitchDefault>
+                    <span
+                      *ngIf="((progressionAtDay.year < this.currentYear) || (progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() <= todayMoment.dayOfYear()))">
+                        {{progressionAtDay.deltaTarget.signSymbol + " " + progressionAtDay.deltaTarget.value.toLocaleString() + " " + progressionAtDay.progressTypeUnit}}
+                    </span>
+                    <span
+                      *ngIf="(progressionAtDay.year === this.currentYear && momentWatched.dayOfYear() > todayMoment.dayOfYear())">
+                        ∅
+                    </span>
+                </span>
+
+            </span>
+
+    </mat-cell>
+  </ng-container>
+
+  <!--Columns-->
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+</mat-table>

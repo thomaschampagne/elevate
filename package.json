@@ -1,65 +1,72 @@
 {
-	"name": "elevate",
-	"version": "6.17.0",
-	"description": "Wrap the needed tools required to cook the Elevate Web Plugin",
-	"scripts": {
-		"build": "npm-run-all clean res-copy:* build-project:core build-project:app",
-		"build:prod": "npm-run-all clean res-copy:* build-project:core@prod build-project:app@prod",
-		"build-project:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build",
-		"build-project:app@prod": "npm run build-project:app -- --prod",
-		"build-project:core": "cd ./plugin/core && node ./node_modules/webpack/bin/webpack.js --config ./core.webpack.config.js",
-		"build-project:core@prod": "npm run build-project:core -- --mode production",
-		"clean": "npm-run-all clean:*",
-		"clean:dist": "node ./node_modules/del-cli/cli.js ./dist/",
-		"clean:package": "node ./node_modules/del-cli/cli.js ./package/",
-		"audit:fix": "npm audit fix --force && cd ./plugin/app/ && npm audit fix --force && cd ../core/ && npm audit fix --force",
-		"package": "npm-run-all clean build:prod archive",
-		"postinstall": "cd ./plugin/core/ && npm install && cd ../app/ && npm install",
-		"res-copy:manifest": "node ./node_modules/cpy-cli/cli.js ./plugin/manifest.json ./dist/",
-		"res-copy:install-guide": "node ./node_modules/cpy-cli/cli.js ./plugin/INSTALL.txt ./dist/",
-		"test": "npm-run-all clean test:core test:app",
-		"test:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng test --watch=false",
-		"test:app:no-source-map": "npm run test:app -- --source-map=false",
-		"test:app-ui-browser": "npm run test:app -- --browsers Chrome",
-		"test:core": "cd ./plugin/core && node ./node_modules/karma/bin/karma start karma.conf.js --single-run",
-		"test:core-ui-browser": "npm run test:core -- --browsers Chrome",
-		"tslint-fix:core": "node ./plugin/core/node_modules/tslint/bin/tslint -c ./tslint.json ./plugin/core/**/*.ts ./plugin/shared/**/*.ts --fix",
-		"tslint-fix:app": "cd ./plugin/app/ && node ./node_modules/@angular/cli/bin/ng lint app --fix",
-		"start": "npm run watch",
-		"watch": "npm run clean && npm-run-all res-copy:* && npm-run-all --print-label --parallel watch:*",
-		"watch:app": "npm run build-project:app -- --watch",
-		"watch:core": "npm run build-project:core -- --watch",
-		"wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
-		"wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./plugin/core/node_modules/ ./plugin/app/node_modules/",
-		"wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./plugin/core/package-lock.json ./plugin/app/package-lock.json",
-		"archive": "node -e \"const bestzip = require('bestzip');const manifest = require('./dist/manifest.json');const fs = require('fs');const cwd = process.cwd() + '/dist/';const target = 'package/';const filename = 'v' + manifest.version_name.split(' ').join('_').toLowerCase() + '_' + (function now() {const pad = (num) => {return (num).toString().padStart(2, '0');}, d = new Date();return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '-' + pad(d.getHours()) + '-' + pad(d.getMinutes());}()) + '.zip';const output = '../' + target + filename;if (!fs.existsSync(target)) fs.mkdirSync(target);bestzip.nodeZip({source: '*', cwd: cwd, destination: output}).then(() => {console.log('Generated archive ' + filename);process.exit(0);}).catch((err) => {console.error(err.stack);process.exit(1);});\""
-	},
-	"config": {
-		"unsafe-perm": true
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/thomaschampagne/elevate"
-	},
-	"author": {
-		"name": "Thomas Champagne",
-		"email": "th.champagne@gmail.com",
-		"web": "https://thomaschampagne.github.io"
-	},
-	"contributors": [
-		{
-			"name": "Thomas Champagne",
-			"email": "th.champagne@gmail.com",
-			"web": "https://thomaschampagne.github.io"
-		}
-	],
-	"license": "MIT",
-	"readme": "README.md",
-	"devDependencies": {
-		"bestzip": "^2.1.7",
-		"cpy-cli": "^3.1.1",
-		"del-cli": "^1.1.0",
-		"npm-run-all": "^4.1.5",
-		"run-sequence": "^2.2.1"
-	}
+  "name": "elevate-sports-app",
+  "version": "7.0.0-beta.0",
+  "description": "Wrap the needed tools required to cook Elevate desktop and web extension",
+  "maintainers": [
+    {
+      "name": "Thomas Champagne",
+      "email": "th.champagne@gmail.com",
+      "web": "https://thomaschampagne.github.io"
+    }
+  ],
+  "keywords": [
+    "sports",
+    "training",
+    "cycling",
+    "running",
+    "trainingpeaks",
+    "strava",
+    "garmin",
+    "polar",
+    "wahoo"
+  ],
+  "scripts": {
+    "audit:fix": "npm audit fix && cd ./appcore/ && npm audit fix && cd ../desktop/ && npm audit fix && cd ../webextension/ && npm audit fix",
+    "clean": "node ./node_modules/del-cli/cli.js ./dist/ ./package/ && cd ./desktop/ && npm run clean && cd ../webextension/ && npm run clean",
+    "validate:desktop": "npm run type:check:desktop && npm run clean && cd ./appcore/ && npm test && cd ../desktop/ && npm test && npm run build:prod",
+    "postinstall": "cd webextension/ && npm install && cd ../appcore/ && npm install && cd ../desktop/ && npm install",
+    "prettier": "prettier --write .",
+    "upgrade:check": "ncu",
+    "upgrade:apply": "npm run upgrade:check -- -u",
+    "test": "npm run clean && cd ./desktop/ && npm test && cd ../appcore/ && npm test && cd ../webextension/ && npm test",
+    "type:check:desktop": "cd ./appcore/ && npm run type:check && cd ../desktop/ && npm run type:check",
+    "type:check:extension": "cd ./appcore/ && npm run type:check && cd ../webextension/ && npm run type:check",
+    "wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
+    "wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
+    "wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json",
+    "prepare": "husky install"
+  },
+  "config": {
+    "unsafe-perm": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thomaschampagne/elevate"
+  },
+  "author": {
+    "name": "Thomas Champagne",
+    "email": "th.champagne@gmail.com",
+    "web": "https://thomaschampagne.github.io"
+  },
+  "license": "MPL-2.0",
+  "readme": "README.md",
+  "engines": {
+    "node": ">=16"
+  },
+  "engineStrict": true,
+  "devDependencies": {
+    "cpy-cli": "^3.1.1",
+    "cross-env": "^7.0.3",
+    "del-cli": "^4.0.1",
+    "husky": "^7.0.4",
+    "npm-check-updates": "^12.2.1",
+    "prettier": "^2.5.1",
+    "pretty-quick": "^3.1.3",
+    "run-sequence": "^2.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
 }

@@ -1,0 +1,18 @@
+<div class="centered-section" fxLayout="column" fxLayoutAlign="space-between start">
+  <div class="connector-container" fxFill>
+    <div class="mat-headline">Officials</div>
+    <app-file-connector fxFill></app-file-connector>
+  </div>
+  <span fxFlex="55"></span>
+  <div class="connector-container" fxFill>
+    <div class="mat-headline">Third parties</div>
+    <app-strava-connector fxFill></app-strava-connector>
+<!--    <app-garmin-connect fxFill></app-garmin-connect>-->
+  </div>
+
+  <div fxFill class="connector-contact">
+    <button (click)="onOpenLink('https://twitter.com/champagnethomas')" color="primary"
+            mat-stroked-button>Add your connector
+    </button>
+  </div>
+</div>

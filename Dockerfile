@@ -4,5 +4,5 @@ WORKDIR /build
 ENV OUTDIR=/package
 COPY . .
 RUN npm install --unsafe-perm
-CMD npm run package && cp ./package/* ${OUTDIR}
+CMD npm run package:webextension && cp ./package/* ${OUTDIR}
 VOLUME ${OUTDIR}

@@ -1,0 +1,13 @@
+@import "@angular/material/theming";
+
+$config: mat-typography-config();
+
+@mixin app-update-bar-theming($theme) {
+
+  $primary: map-get($theme, warn);
+
+  .app-update-bar {
+    color: white;
+    background: mat-color($primary);
+  }
+}

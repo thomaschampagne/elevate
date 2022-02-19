@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="strava" style="enable-background:new 0 0 50 50;" version="1.1" viewBox="0 0 50 50" x="0px"
+     xml:space="preserve"
+     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+<style type="text/css">
+	.st0 {
+    clip-path: url(#SVGID_2_);
+  }
+</style>
+  <g id="Strava">
+	<g>
+		<defs>
+			<rect height="50" id="SVGID_1_" width="35.5" x="7.3"/>
+		</defs>
+    <clipPath id="SVGID_2_">
+			<use style="overflow:visible;" xlink:href="#SVGID_1_"/>
+		</clipPath>
+    <polygon class="st0" points="21.7,0 7.3,28.4 15.9,28.4 21.7,17 27.5,28.4 36.1,28.4 		"/>
+    <polygon class="st0" points="36.2,28.5 31.8,37.1 27.4,28.5 20.9,28.5 31.8,50 42.7,28.5 		"/>
+	</g>
+</g>
+</svg>

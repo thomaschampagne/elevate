@@ -1,0 +1,99 @@
+<mat-card>
+  <mat-card-title>
+    Files <span class="mat-body-1">(Gpx, Tcx & Fit formats)</span>
+  </mat-card-title>
+  <mat-card-subtitle *ngIf="fileConnectorInfo">
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}} </span>
+    <span *ngIf="!fileConnectorInfo.sourceDirectory">Not configured. </span>
+    <span
+      *ngIf="fileConnectorInfo.sourceDirectory">Configured&nbsp;➔&nbsp;<i>{{fileConnectorInfo.sourceDirectory | shorten: 90: '...'}}</i></span>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div>
+      <button [disabled]="appService.isSyncing"
+              (click)="sync(true)" *ngIf="syncDateTime && fileConnectorInfo.sourceDirectory" color="primary"
+              mat-stroked-button
+              matTooltip="Activity files added or modified after date '{{syncDateTime | date:'medium'}}' will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync new activities
+      </button>
+      <button [disabled]="appService.isSyncing" (click)="sync(false)"
+              *ngIf="fileConnectorInfo.sourceDirectory" color="primary"
+              mat-stroked-button
+              matTooltip="All activity files will be synced.">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync all activities
+      </button>
+      <button [disabled]="appService.isSyncing" (click)="showConfigure = !showConfigure"
+              *ngIf="!showConfigure" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        Configure
+      </button>
+    </div>
+    <div *ngIf="showConfigure && fileConnectorInfo" class="configureView" fxFill>
+      <div>
+        <mat-form-field fxFill>
+          <input [(ngModel)]="fileConnectorInfo.sourceDirectory" (click)="onUserDirectorySelection()" class="clickable"
+                 matInput
+                 placeholder="{{ (!fileConnectorInfo.sourceDirectory) ? 'Browse for a directory to scan...' : 'Scan directory' }}"
+                 type="text" readonly>
+          <button *ngIf="fileConnectorInfo.sourceDirectory" (click)="onUserDirectoryOpen()" color="primary"
+                  matTooltip="Open configured directory"
+                  mat-icon-button
+                  matSuffix>
+            <mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>
+          </button>
+          <button (click)="onUserDirectorySelection()" color="primary" mat-icon-button matTooltip="Browse directory"
+                  matSuffix>
+            <mat-icon fontSet="material-icons-outlined">folder_open</mat-icon>
+          </button>
+        </mat-form-field>
+        <div class="primary-note">
+          <strong>Hint:</strong> use the <strong>.fit</strong> format as much as possible to get the most of details of
+          your activities.
+        </div>
+        <div class="primary-note">
+          <strong>Hint:</strong> during <i>beta</i> testing phase, please keep your activity files safe in configured
+          folder. An beta update may ask you to wipe/rescan your activities from there.
+        </div>
+      </div>
+
+      <div *ngIf="fileConnectorInfo.sourceDirectory">
+        <div>
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.scanSubDirectories">
+            Scan subdirectories
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.extractArchiveFiles"
+                        matTooltip="Activities found in 'zip, 7z, tar, gz, bz2, zipx or xz' files will be extracted into the scan directory. Use case: Strava.com activities backup.">
+            Extract activity files from archives files (.zip, .tar, .gz, ...) *
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox (change)="saveChanges()"
+                        [(ngModel)]="fileConnectorInfo.deleteArchivesAfterExtract"
+                        [disabled]="!fileConnectorInfo.extractArchiveFiles"
+                        matTooltip="Once activities have been extracted from a 'zip, 7z, tar, gz, bz2, zipx or xz' file, the archive file will be removed from scan directory">
+            Delete archives files (.zip, .tar, .gz, ...) once activity files have been extracted (recommended) *
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox (change)="saveChanges()" [(ngModel)]="fileConnectorInfo.renameActivityFiles"
+                        matTooltip="Rename files to pattern 'Sport_YYYY-MM-DD_HH-mm-ss.extension' on first discovery only. Multiple activity file (e.g. Triathlon) will not be renamed. Format example: Ride_2021-09-23_13-46-47.fit">
+            Rename activity files to <i>Sport_YYYY-MM-DD_HH-mm-ss.extension</i> on first discovery
+          </mat-checkbox>
+        </div>
+        <!--        <div>
+                  <mat-checkbox (change)="saveChanges()"
+                                [(ngModel)]="fileConnectorInfo.detectSportTypeWhenUnknown">
+                    <strong>Experimental:</strong> Try to find out unknown activities types based on your others activities where type is known
+                  </mat-checkbox>
+                </div>-->
+        <div>
+          * Only when <u>syncing all activities</u>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

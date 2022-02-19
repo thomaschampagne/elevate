@@ -1,0 +1,74 @@
+<div class="mat-body-1" id="app-container">
+  <ng-container appTopBar></ng-container>
+  <mat-sidenav-container>
+    <mat-sidenav (closed)="onSideNavClosed()"
+                 (opened)="onSideNavOpened()"
+                 mode="side">
+      <mat-nav-list>
+        <mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
+                       routerLinkActive="{{item.routerLinkActive}}">
+          <mat-icon fontSet="material-icons-outlined">{{item.icon}}</mat-icon>
+          <span class="mat-body-1">{{item.name}}</span>
+        </mat-list-item>
+        <mat-list-item (click)="openResourceResolver.openLink('https://www.strava.com/dashboard')"
+                       *ngIf="(buildTarget === BuildTarget.EXTENSION)">
+          <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
+          <span class="mat-body-1">Strava Dashboard</span>
+        </mat-list-item>
+      </mat-nav-list>
+
+      <div id="logo" class="clickable" (click)="onOpenWebSite()"
+           matTooltip="Elevate v{{ versionsProvider.getPackageVersion() }}" matTooltipPosition="above"></div>
+
+    </mat-sidenav>
+
+    <mat-toolbar>
+
+      <button (click)="onSideNavToggle()" id="toolBarMenu" mat-icon-button>
+        <mat-icon fontSet="material-icons-outlined">menu</mat-icon>
+      </button>
+
+      <span>{{toolBarTitle}}</span>
+
+      <span class="toolbar-spacer"></span>
+
+      <ng-container appSyncMenu></ng-container>
+
+      <button (click)="onThemeToggle()" id="theme-toggle" mat-icon-button>
+        <mat-icon *ngIf="appService.currentTheme === Theme.LIGHT" fontSet="material-icons-outlined"
+                  style="transform: rotate(-35deg) scaleX(-1);">
+          brightness_3 <!--Moon icon rotate by -35deg-->
+        </mat-icon>
+        <mat-icon *ngIf="appService.currentTheme === Theme.DARK" fontSet="material-icons-outlined">wb_sunny</mat-icon>
+        <!--Sun icon-->
+      </button>
+
+      <ng-container appMoreMenu></ng-container>
+
+    </mat-toolbar>
+    <div>
+      <ng-container appUpdateBar></ng-container>
+      <ng-container appSyncBar></ng-container>
+      <ng-container appRecalculateActivitiesBar></ng-container>
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-container>
+  <div *ngIf="showDebugRibbon" class="primary-note">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div><strong>{{ currentRoute }}</strong></div>
+      <div>
+        <button (click)="appService.syncService.clearActivities()" mat-button>
+          Wipe Activities
+        </button>
+        <span fxFlex="1"></span>
+        <button onclick="window.location.reload()" mat-button>
+          Reload App
+        </button>
+        <span fxFlex="1"></span>
+        <button onclick="window.api.restartApp()" mat-button>
+          Restart App
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

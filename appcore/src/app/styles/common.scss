@@ -1,0 +1,83 @@
+@import "constant";
+
+html, body, mat-sidenav-container {
+  margin: 0;
+  width: auto;
+  height: 100%;
+}
+
+mat-card {
+  margin: $default-margin;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+/* SECTIONS */
+
+.centered-section {
+  margin-top: 35px;
+  margin-left: $centered-section-margin;
+  margin-right: $centered-section-margin;
+}
+
+.narrow-centered-section {
+  @extend .centered-section;
+  margin-left: $centered-section-margin * 1.75;
+  margin-right: $centered-section-margin * 1.75;
+}
+
+/* SIZES */
+.h-100 {
+  height: 100%;
+}
+
+/* TEXT */
+.centered-text {
+  text-align: center;
+}
+
+/* PADDING */
+$padding-sml: 5px;
+$padding-std: 10px;
+$padding-large: 20px;
+
+.pad-sml-bt {
+  padding-top: $padding-sml;
+  padding-bottom: $padding-sml;
+}
+
+.pad-std-bt {
+  padding-top: $padding-std;
+  padding-bottom: $padding-std;
+}
+
+.pad-lrg-bt {
+  padding-top: $padding-large;
+  padding-bottom: $padding-large;
+}
+
+.pad-sml-t {
+  padding-top: $padding-sml;
+}
+
+.pad-std-t {
+  padding-top: $padding-std;
+}
+
+.pad-lrg-t {
+  padding-top: $padding-large;
+}
+
+.pad-sml-b {
+  padding-bottom: $padding-sml;
+}
+
+.pad-std-b {
+  padding-bottom: $padding-std;
+}
+
+.pad-lrg-b {
+  padding-bottom: $padding-large;
+}

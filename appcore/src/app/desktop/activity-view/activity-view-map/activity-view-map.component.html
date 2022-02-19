@@ -1,0 +1,8 @@
+<div class="wrapper">
+  <div *ngIf="isMapReady === false" fxLayout="column" fxLayoutAlign="center center" class="h-100">
+    <div>Unable to load map data.</div>
+    <div>Make sure that a <a href [routerLink]="'/globalSettings'" [queryParams]="{searchText: 'personal mapbox token'}">personal mapbox token</a> setting is properly set or empty.</div>
+    <div>Or try to reload this activity later...</div>
+  </div>
+  <div id="map" *ngIf="isMapReady !== false"></div>
+</div>

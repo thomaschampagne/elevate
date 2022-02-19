@@ -1,0 +1,17 @@
+.headerTooltip {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: currentcolor;
+}
+
+.deltaPositive {
+  color: #21bb4a;
+}
+
+.deltaNegative {
+  color: #ff5b5b;
+}
+
+.deltaUnsigned, .deltaNaN {
+  color: #9B9B9B;
+}

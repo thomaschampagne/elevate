@@ -1,0 +1,114 @@
+{
+    "activity": {
+        "resource_state": 3,
+        "athlete": {
+            "id": 16523780,
+            "resource_state": 1
+        },
+        "name": "Missing kms from today's run",
+        "distance": 3500,
+        "moving_time": 1500,
+        "elapsed_time": 1500,
+        "total_elevation_gain": 16,
+        "type": "Run",
+        "workout_type": null,
+        "id": 5002496450,
+        "external_id": null,
+        "upload_id": null,
+        "start_date": "2021-03-24T11:00:00Z",
+        "start_date_local": "2021-03-24T05:00:00Z",
+        "timezone": "(GMT-07:00) America/Edmonton",
+        "utc_offset": -21600,
+        "start_latlng": [],
+        "end_latlng": [],
+        "location_city": null,
+        "location_state": null,
+        "location_country": "",
+        "start_latitude": null,
+        "start_longitude": null,
+        "achievement_count": 0,
+        "kudos_count": 10,
+        "comment_count": 0,
+        "athlete_count": 1,
+        "photo_count": 0,
+        "map": {
+            "id": "a5002496450",
+            "polyline": null,
+            "resource_state": 3
+        },
+        "trainer": false,
+        "commute": false,
+        "manual": true,
+        "private": false,
+        "visibility": "everyone",
+        "flagged": false,
+        "gear_id": null,
+        "from_accepted_tag": null,
+        "average_speed": 2.333,
+        "max_speed": 0,
+        "has_heartrate": false,
+        "heartrate_opt_out": false,
+        "display_hide_heartrate_option": false,
+        "pr_count": 0,
+        "total_photo_count": 0,
+        "has_kudoed": false,
+        "suffer_score": 12,
+        "description": "",
+        "calories": 391.3,
+        "perceived_exertion": 3,
+        "prefer_perceived_exertion": null,
+        "segment_efforts": [],
+        "best_efforts": [],
+        "photos": {
+            "primary": null,
+            "count": 0
+        },
+        "stats_visibility": [
+            {
+                "type": "heart_rate",
+                "visibility": "everyone"
+            },
+            {
+                "type": "pace",
+                "visibility": "everyone"
+            },
+            {
+                "type": "power",
+                "visibility": "everyone"
+            },
+            {
+                "type": "speed",
+                "visibility": "everyone"
+            },
+            {
+                "type": "calories",
+                "visibility": "everyone"
+            }
+        ],
+        "hide_from_home": false,
+        "embed_token": "c3973acca95074725417909767c65d00eb2e9b11",
+        "private_note": null,
+        "similar_activities": {
+            "effort_count": 0,
+            "average_speed": 0,
+            "min_average_speed": 0,
+            "mid_average_speed": 0,
+            "max_average_speed": 0,
+            "pr_rank": null,
+            "frequency_milestone": null,
+            "trend": {
+                "speeds": [],
+                "current_activity_index": null,
+                "min_speed": 0,
+                "mid_speed": 0,
+                "max_speed": 0,
+                "direction": 0
+            },
+            "resource_state": 2
+        },
+        "available_zones": [
+            "pace"
+        ]
+    },
+    "streams": null
+}
