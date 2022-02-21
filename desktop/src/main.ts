@@ -526,6 +526,29 @@ class Main {
         submenu: [isMacOs ? { role: "close" } : { role: "quit" }]
       },
       {
+        label: "Edit",
+        submenu: [
+          { role: "undo" },
+          { role: "redo" },
+          { type: "separator" },
+          { role: "cut" },
+          { role: "copy" },
+          { role: "paste" },
+          ...(isMacOs
+            ? [
+                { role: "pasteAndMatchStyle" },
+                { role: "delete" },
+                { role: "selectAll" },
+                { type: "separator" },
+                {
+                  label: "Speech",
+                  submenu: [{ role: "startSpeaking" }, { role: "stopSpeaking" }]
+                }
+              ]
+            : [{ role: "delete" }, { type: "separator" }, { role: "selectAll" }])
+        ]
+      },
+      {
         label: "View",
         submenu: [{ role: "togglefullscreen" }]
       },
