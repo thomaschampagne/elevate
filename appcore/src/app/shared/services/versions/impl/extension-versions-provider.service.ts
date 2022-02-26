@@ -9,7 +9,7 @@ import { Platform } from "@elevate/shared/enums/platform.enum";
 
 @Injectable()
 export class ExtensionVersionsProvider extends VersionsProvider {
-  private static readonly EXT_NAME: string = "crx";
+  private static readonly EXT_NAME: string = "zip";
 
   constructor(
     @Inject(HttpClient) public readonly httpClient: HttpClient,
