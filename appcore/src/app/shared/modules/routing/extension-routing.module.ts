@@ -4,6 +4,13 @@ import { AppRoutes } from "../../models/app-routes";
 
 const routes: Routes = [
   {
+    path: AppRoutes.downloadDesktopApp,
+    loadChildren: () =>
+      import("../../../extension/download-desktop-app/download-desktop-app.module").then(
+        module => module.DownloadDesktopAppModule
+      )
+  },
+  {
     path: AppRoutes.activities,
     loadChildren: () => import("../../../activities/activities.module").then(module => module.ActivitiesModule)
   },
