@@ -1,12 +1,11 @@
 import _ from "lodash";
-import { IncomingHttpHeaders } from "http";
 import { inject, singleton } from "tsyringe";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
 import { Logger } from "../logger";
 import { sleep } from "@elevate/shared/tools/sleep";
 import { fibonacci } from "@elevate/shared/tools/fibonacci";
 import { HttpClient } from "./http.client";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { StatusCodes } from "../enum/status-codes.enum";
 import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
@@ -35,7 +34,7 @@ export class StravaApiClient {
     this.nextCallWaitTime = 0;
   }
 
-  public static parseRateLimits(headers: IncomingHttpHeaders): {
+  public static parseRateLimits(headers: AxiosResponseHeaders): {
     instant: RateLimit;
     daily: RateLimit;
   } {
