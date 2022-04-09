@@ -981,8 +981,8 @@ class Installer {
    * Converts legacy activity model to new the one
    */
   private convertLegacyActivityToNewModel(legacyActivity: any): Activity {
-    const startTimestamp = Math.floor(new Date(legacyActivity?.start_time).getTime() / 1000);
-    const endTimestamp = startTimestamp + legacyActivity?.elapsed_time_raw;
+    const startTimestamp = Math.floor(new Date(legacyActivity?.start_time || 0).getTime() / 1000);
+    const endTimestamp = startTimestamp + (legacyActivity?.elapsed_time_raw || 0);
 
     const activity: Activity = {
       id: legacyActivity?.id,
@@ -993,7 +993,7 @@ class Installer {
       startTimestamp: startTimestamp,
       endTimestamp: endTimestamp,
       hasPowerMeter: legacyActivity?.hasPowerMeter,
-      trainer: legacyActivity?.trainer,
+      trainer: legacyActivity?.trainer || false,
       commute: legacyActivity?.commute || false,
       srcStats: {} as ActivityStats,
       stats: {} as ActivityStats,
@@ -1061,7 +1061,7 @@ class Installer {
       upperQ: legacyActivity?.extendedStats?.speedData?.upperQuartileSpeed || null,
       stdDev: legacyActivity?.extendedStats?.speedData?.standardDeviationSpeed || null,
       zones: legacyActivity?.extendedStats?.speedData?.speedZones || null,
-      peaks: legacyActivity?.extendedStats?.speedData?.peaks
+      peaks: legacyActivity?.extendedStats?.speedData?.peaks || null
     };
 
     // Handle pace
@@ -1125,10 +1125,10 @@ class Installer {
       median: legacyActivity?.extendedStats?.cadenceData?.medianCadence || null,
       upperQ: legacyActivity?.extendedStats?.cadenceData?.upperQuartileCadence || null,
       slope: {
-        up: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.up,
-        flat: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.flat,
-        down: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.down,
-        total: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.total
+        up: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.up || null,
+        flat: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.flat || null,
+        down: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.down || null,
+        total: legacyActivity?.extendedStats?.cadenceData?.upFlatDownCadencePaceData?.total || null
       },
       stdDev: legacyActivity?.extendedStats?.cadenceData?.standardDeviationCadence || null,
       zones: legacyActivity?.extendedStats?.cadenceData?.cadenceZones || null,
@@ -1145,28 +1145,28 @@ class Installer {
       upperQ: legacyActivity?.extendedStats?.gradeData?.upperQuartileGrade || null,
       stdDev: null,
       slopeTime: {
-        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.up,
-        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.flat,
-        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.down,
-        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.total
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.up || null,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.flat || null,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.down || null,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownInSeconds?.total || null
       },
       slopeSpeed: {
-        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.up,
-        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.flat,
-        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.down,
-        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.total
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.up || null,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.flat || null,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.down || null,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.total || null
       },
       slopeDistance: {
-        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.up,
-        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.flat,
-        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.down,
-        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.total
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.up || null,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.flat || null,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.down || null,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.total || null
       },
       slopeCadence: {
-        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.up,
-        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.flat,
-        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.down,
-        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.total
+        up: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.up || null,
+        flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.flat || null,
+        down: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.down || null,
+        total: legacyActivity?.extendedStats?.gradeData?.upFlatDownCadencePaceData?.total || null
       },
 
       slopeProfile: (legacyActivity?.extendedStats?.gradeData?.gradeProfile as any) || null,
