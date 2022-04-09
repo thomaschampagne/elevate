@@ -92,7 +92,7 @@
     "@typescript-eslint/eslint-plugin": "5.17.0",
     "@typescript-eslint/parser": "5.17.0",
     "chokidar": "^3.5.3",
-    "electron": "^18.0.3",
+    "electron": "^17.4.0",
     "eslint": "^8.12.0",
     "jasmine-core": "~4.0.1",
     "jasmine-spec-reporter": "~7.0.0",
