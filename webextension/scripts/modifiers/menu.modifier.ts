@@ -61,6 +61,12 @@ export class MenuModifier extends AbstractModifier {
     html +=
       "<li><a target='_blank' href='" +
       this.appResources.settingsLink +
+      "#/desktopAppBeta'><img style='vertical-align:middle' src='" +
+      this.appResources.systemUpdatesIcon +
+      "'/>&nbsp;&nbsp;&nbsp;<span style='color: #fc4c02;'>Download Desktop App (Beta)</span></a></li>";
+    html +=
+      "<li><a target='_blank' href='" +
+      this.appResources.settingsLink +
       "#/activities'><img style='vertical-align:middle' src='" +
       this.appResources.viewListIcon +
       "'/>&nbsp;&nbsp;&nbsp;<span>Activities</span></a></li>";

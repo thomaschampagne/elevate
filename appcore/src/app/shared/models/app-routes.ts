@@ -19,5 +19,5 @@ export class AppRoutes {
   public static readonly connectors: string = "connectors";
 
   // Extension
-  public static readonly downloadDesktopApp: string = "DesktopAppBeta";
+  public static readonly downloadDesktopApp: string = "desktopAppBeta";
 }
