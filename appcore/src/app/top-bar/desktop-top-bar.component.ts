@@ -88,7 +88,6 @@ import { Platform } from "@elevate/shared/enums/platform.enum";
   ]
 })
 export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
-  public currentVersion: string;
   public buildMetadata: { commit: string; date: string };
   public isFullScreen: boolean;
   public isMaximized: boolean;
@@ -124,8 +123,6 @@ export class DesktopTopBarComponent extends TopBarComponent implements OnInit {
       this.isFullScreen = isFullScreen;
       this.changeDetectorRef.detectChanges();
     });
-
-    this.currentVersion = this.versionsProvider.getPackageVersion();
 
     this.versionsProvider.getBuildMetadata().then((buildMetadata: { commit: string; date: string }) => {
       this.buildMetadata = buildMetadata;
