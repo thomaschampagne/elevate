@@ -1,8 +1,7 @@
 import _ from "lodash";
 import { RateLimit, StravaApiClient } from "./strava-api.client";
 import { container } from "tsyringe";
-import { IncomingHttpHeaders } from "http";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { StatusCodes } from "../enum/status-codes.enum";
 import { Gender } from "@elevate/shared/models/athlete/gender.enum";
 import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
@@ -295,7 +294,7 @@ describe("StravaApiClient", () => {
       dataResponse: object,
       statusCode: number = StatusCodes.OK,
       statusMessage: string = null,
-      headers: IncomingHttpHeaders = {}
+      headers: AxiosResponseHeaders = {}
     ): AxiosResponse => {
       headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
       headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";
@@ -312,7 +311,7 @@ describe("StravaApiClient", () => {
     const createErrorResponse = (
       statusCode: number,
       statusMessage: string = null,
-      headers: IncomingHttpHeaders = {}
+      headers: AxiosResponseHeaders = {}
     ): AxiosError => {
       const response = createResponse(null, statusCode, statusMessage, headers);
 

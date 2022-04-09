@@ -235,9 +235,7 @@ export class Elevate {
   public showPluginInstallOrUpgradeRibbon(): void {
     const ribbonHtml: string =
       '<div id="pluginInstallOrUpgrade" style="display: flex; justify-content: flex-start; position: fixed; z-index: 999; width: 100%; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;">' +
-      '<div style="margin-right: 10px; line-height: 20px; white-space: nowrap;"><strong>Elevate has been updated to version ' +
-      this.appResources.extVersion +
-      ".</strong></div>" +
+      '<div style="margin-right: 10px; line-height: 20px; white-space: nowrap;"><strong>Elevate has been updated.</strong></div>' +
       '<div style="margin-right: 10px; line-height: 20px;">' +
       "  <a href='#' class=\"pluginInstallOrUpgrade_details\" style='color:#FC4C02; font-size: 12px; font-weight: bold'>(View release note)</a>" +
       "</div>" +

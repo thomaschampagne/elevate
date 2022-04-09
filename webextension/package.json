@@ -1,6 +1,6 @@
 {
   "name": "elevate-sports-app",
-  "version": "7.0.0-beta.1",
+  "version": "7.0.0-beta.2",
   "description": "Chrome based extension adding features for Strava website with new performances data and improved ergonomics.",
   "maintainers": [
     {

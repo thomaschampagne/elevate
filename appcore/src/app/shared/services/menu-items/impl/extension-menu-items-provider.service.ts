@@ -6,6 +6,12 @@ import { AppRoutes } from "../../../models/app-routes";
 export class ExtensionMenuItemsProvider implements MenuItemsProvider {
   public readonly mainMenuItems: MenuItemModel[] = [
     {
+      icon: "get_app",
+      iconClass: "warn",
+      routerLink: AppRoutes.downloadDesktopApp,
+      routerLinkActive: true
+    },
+    {
       icon: "view_list",
       routerLink: AppRoutes.activities,
       routerLinkActive: true

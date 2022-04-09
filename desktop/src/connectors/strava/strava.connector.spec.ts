@@ -2,7 +2,6 @@ import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json
 import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
 import jsonFakeActivityFixture from "./fixtures/sample_activity.fixture.json";
 import _ from "lodash";
-import { IncomingHttpHeaders } from "http";
 import { StravaApiClient } from "../../clients/strava-api.client";
 import { StravaApiStreamType, StravaBareActivity, StravaConnector } from "./strava.connector";
 import { container } from "tsyringe";
@@ -11,7 +10,7 @@ import { Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 import { StravaConnectorConfig } from "../connector-config.model";
 import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { StatusCodes } from "../../enum/status-codes.enum";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
@@ -40,7 +39,7 @@ const createResponse = (
   dataResponse: object,
   statusCode: number = StatusCodes.OK,
   statusMessage: string = null,
-  headers: IncomingHttpHeaders = {}
+  headers: AxiosResponseHeaders = {}
 ): AxiosResponse => {
   headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
   headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";
@@ -57,7 +56,7 @@ const createResponse = (
 const createErrorResponse = (
   statusCode: number,
   statusMessage: string = null,
-  headers: IncomingHttpHeaders = {}
+  headers: AxiosResponseHeaders = {}
 ): AxiosError => {
   const response = createResponse(null, statusCode, statusMessage, headers);
 

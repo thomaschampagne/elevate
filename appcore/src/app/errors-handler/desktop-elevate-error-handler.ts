@@ -11,6 +11,8 @@ import { ConfirmDialogComponent } from "../shared/dialogs/confirm-dialog/confirm
 import { ConfirmDialogDataModel } from "../shared/dialogs/confirm-dialog/confirm-dialog-data.model";
 import { ElectronService } from "../desktop/electron/electron.service";
 import { RuntimeInfoService } from "../desktop/machine/runtime-info.service";
+import { RuntimeInfo } from "@elevate/shared/electron/runtime-info";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 
 @Injectable({
   providedIn: "root"
@@ -39,7 +41,7 @@ export class DesktopElevateErrorHandler extends ElevateErrorHandler {
       });
 
       Promise.all([this.runtimeInfoService.get(), this.athleteService.fetch()]).then(results => {
-        const [runtimeInfo, athlete] = results;
+        const [runtimeInfo, athlete] = results as [RuntimeInfo, AthleteModel];
 
         Sentry.setContext("athlete", {
           gender: athlete.gender,
