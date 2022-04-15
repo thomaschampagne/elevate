@@ -111,6 +111,7 @@ export class GradeStats {
   public stdDev: number;
   public slopeTime: SlopeStats;
   public slopeSpeed: SlopeStats;
+  public slopePace: SlopeStats;
   public slopeDistance: SlopeStats;
   public slopeCadence: SlopeStats;
   public slopeProfile: SlopeProfile;

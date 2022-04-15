@@ -798,21 +798,21 @@ export namespace StatsDef {
       export const paceUp = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
         "Climbing Pace",
-        ["stats", "grade", "slopeSpeed", "up"],
+        ["stats", "grade", "slopePace", "up"],
         `Climbing pace over ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
       );
 
       export const paceFlat = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
         "Flat Pace",
-        ["stats", "grade", "slopeSpeed", "flat"],
+        ["stats", "grade", "slopePace", "flat"],
         `Pace on flat between ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% and ${ActivityComputer.GRADE_CLIMBING_LIMIT}% grade`
       );
 
       export const paceDown = Stat.create<GradeStats>(
         PaceSensor.DEFAULT,
         "Downhill Pace",
-        ["stats", "grade", "slopeSpeed", "down"],
+        ["stats", "grade", "slopePace", "down"],
         `Pace in downhills under ${ActivityComputer.GRADE_DOWNHILL_LIMIT}% grade`
       );
 
