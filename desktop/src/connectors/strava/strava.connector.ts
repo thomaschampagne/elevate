@@ -474,8 +474,8 @@ export class StravaConnector extends BaseConnector {
         lap.maxHr = stravaLap.max_heartrate;
       }
 
-      if (stravaLap.average_watts) {
-        lap.avgWatts = stravaLap.average_watts;
+      if (stravaActivity.device_watts && stravaLap.average_watts) {
+        lap.avgWatts = _.round(stravaLap.average_watts);
       }
 
       if (lap.active && Activity.isSwim(sport) && lap.avgSpeed && lap.avgCadence) {
