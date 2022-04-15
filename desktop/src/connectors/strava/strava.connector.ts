@@ -453,13 +453,13 @@ export class StravaConnector extends BaseConnector {
       }
 
       if (stravaLap.average_speed) {
-        lap.avgSpeed = stravaLap.average_speed;
-        lap.avgPace = _.round(Movement.speedToPace(stravaLap.average_speed));
+        lap.avgSpeed = _.round(stravaLap.average_speed * Constant.MPS_KPH_FACTOR, ActivityComputer.RND);
+        lap.avgPace = _.round(Movement.speedToPace(lap.avgSpeed));
       }
 
       if (stravaLap.max_speed) {
-        lap.maxSpeed = stravaLap.max_speed;
-        lap.maxPace = _.round(Movement.speedToPace(stravaLap.max_speed));
+        lap.maxSpeed = _.round(stravaLap.max_speed * Constant.MPS_KPH_FACTOR, ActivityComputer.RND);
+        lap.maxPace = _.round(Movement.speedToPace(lap.maxSpeed));
       }
 
       if (stravaLap.average_cadence) {
