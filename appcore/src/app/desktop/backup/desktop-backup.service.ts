@@ -13,6 +13,8 @@ import { BackupMetadata } from "@elevate/shared/models/backup/backup-metadata.in
 import { RestoreEvent } from "@elevate/shared/models/backup/restore-event.int";
 import { BackupChunk } from "@elevate/shared/models/backup/backup-chunk.int";
 import { Channel } from "@elevate/shared/electron/channels.enum";
+import { VersionsProvider } from "../../shared/services/versions/versions-provider";
+import { DesktopVersionsProvider } from "../../shared/services/versions/impl/desktop-versions-provider.service";
 
 @Injectable()
 export class DesktopBackupService {
@@ -21,6 +23,7 @@ export class DesktopBackupService {
 
   constructor(
     @Inject(IPC_TUNNEL_SERVICE) public readonly ipcTunnelService: IpcTunnelService,
+    @Inject(VersionsProvider) public readonly versionsProvider: DesktopVersionsProvider,
     @Inject(LoggerService) protected readonly logger: LoggerService,
     @Inject(DataStore) public readonly desktopDataStore: DesktopDataStore<object>
   ) {}
@@ -222,7 +225,9 @@ export class DesktopBackupService {
               restoreProgress$.complete();
               channelSubscription.unsubscribe();
               this.logger.info(`Restored in ${Math.round(Date.now() - restoreStartTime)}ms`);
-              return Promise.resolve();
+
+              // Set "backup version" as existing version to apply required migrations between backup and current version installed
+              return this.versionsProvider.setExistingVersion(metadata.version);
             });
           }
         }

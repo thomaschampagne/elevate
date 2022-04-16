@@ -35,10 +35,7 @@ export class DesktopAppService extends AppService {
         if (requestedByVersion) {
           // Observe for recalculation done asked by an applied migration
           this.userSettingsService.fetch().then((userSettings: DesktopUserSettings) => {
-            const snackRef = this.snackBar.open(
-              "Last upgrade requires activities recalculation. Let it proceed.",
-              "Ok"
-            );
+            const snackRef = this.snackBar.open("Activities recalculation required. Let it proceed...", "Ok");
             this.activityService.recalculateAll(userSettings).then(() => {
               this.desktopMigrationService.clearRequiredRecalculation();
               snackRef.dismiss();

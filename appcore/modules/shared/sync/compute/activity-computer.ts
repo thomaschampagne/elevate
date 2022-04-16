@@ -1386,6 +1386,12 @@ export class ActivityComputer {
       down: _.round(_.mean(slopeProfileSpeeds.down), ActivityComputer.RND)
     };
 
+    const slopePace: SlopeStats = {
+      up: _.round(Movement.speedToPace(slopeSpeed.up)),
+      flat: _.round(Movement.speedToPace(slopeSpeed.flat)),
+      down: _.round(Movement.speedToPace(slopeSpeed.down))
+    };
+
     const slopeCadence: SlopeStats = {
       up: !_.isEmpty(slopeProfileCadences.up) ? _.round(_.mean(slopeProfileCadences.up), ActivityComputer.RND) : null,
       flat: !_.isEmpty(slopeProfileCadences.flat)
@@ -1411,6 +1417,7 @@ export class ActivityComputer {
       stdDev: _.round(standardDeviation, ActivityComputer.RND),
       slopeTime: slopeTime,
       slopeSpeed: slopeSpeed,
+      slopePace: slopePace,
       slopeDistance: slopeDistance,
       slopeCadence: slopeCadence,
       slopeProfile: slopeProfile,
