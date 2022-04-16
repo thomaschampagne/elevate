@@ -1156,6 +1156,24 @@ class Installer {
         down: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.down || null,
         total: legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.total || null
       },
+      slopePace: {
+        up:
+          legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.up > 0
+            ? Math.round(3600 / legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.up)
+            : null,
+        flat:
+          legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.flat > 0
+            ? Math.round(3600 / legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.flat)
+            : null,
+        down:
+          legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.down > 0
+            ? Math.round(3600 / legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.down)
+            : null,
+        total:
+          legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.total > 0
+            ? Math.round(3600 / legacyActivity?.extendedStats?.gradeData?.upFlatDownMoveData?.total)
+            : null
+      },
       slopeDistance: {
         up: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.up || null,
         flat: legacyActivity?.extendedStats?.gradeData?.upFlatDownDistanceData?.flat || null,
