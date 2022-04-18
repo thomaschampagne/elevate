@@ -1117,7 +1117,7 @@ export namespace ActivityColumns {
         Category.OTHERS,
         ["stats", "scores", "stress", "trainingEffect", "anaerobic"],
         null,
-        "Aerobic Train. Effect",
+        "Anaerobic Train. Effect",
         Print.number,
         1
       ).setDescription("Anaerobic Training Effect"),
