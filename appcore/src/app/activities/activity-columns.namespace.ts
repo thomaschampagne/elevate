@@ -776,19 +776,19 @@ export namespace ActivityColumns {
       new NumberColumn(Category.CADENCE, ["stats", "cadence", "upperQ"], Definition.CADENCE_UNITS, "75% Cadence"),
       new NumberColumn(
         Category.CADENCE,
-        ["stats", "cadence", "slopeCadence", "up"],
+        ["stats", "grade", "slopeCadence", "up"],
         Definition.CADENCE_UNITS,
         "Avg Climbing Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
-        ["stats", "cadence", "slopeCadence", "flat"],
+        ["stats", "grade", "slopeCadence", "flat"],
         Definition.CADENCE_UNITS,
         "Avg Flat Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
-        ["stats", "cadence", "slopeCadence", "down"],
+        ["stats", "grade", "slopeCadence", "down"],
         Definition.CADENCE_UNITS,
         "Avg Downhill Cadence"
       ),
