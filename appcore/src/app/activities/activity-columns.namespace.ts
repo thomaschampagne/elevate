@@ -749,11 +749,11 @@ export namespace ActivityColumns {
       new NumberColumn(
         Category.CADENCE,
         ["stats", "cadence", "activeRatio"],
-        "%",
+        null,
         "Active Cadence Ratio",
         Print.number,
         2
-      ).setDescription("Active cadence percentage when active"),
+      ).setDescription("Active cadence ratio"),
       new NumberColumn(Category.CADENCE, ["stats", "cadence", "max"], Definition.CADENCE_UNITS, "Max Cadence"),
       new NumberColumn(
         Category.CADENCE,
