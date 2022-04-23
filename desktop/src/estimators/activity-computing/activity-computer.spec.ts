@@ -1,7 +1,7 @@
 import { Time } from "@elevate/shared/tools/time";
 import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
-import { ActivityStats } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityStats } from "@elevate/shared/models/sync/activity.model";
 import { ActivityComputer } from "@elevate/shared/sync/compute/activity-computer";
 import { Gender } from "@elevate/shared/models/athlete/gender.enum";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
@@ -401,11 +401,13 @@ describe("ActivityComputer", () => {
 
     describe("No heartrate monitor", () => {
       describe("Cycling", () => {
-        it("should lack of cycling ftp settings WITH power stream", done => {
+        it("should lack of cycling ftp settings WITH power data", done => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = null;
-            streams.watts = [10, 10, 10];
+            activityStats.power = {
+              avg: 150
+            } as never;
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -414,8 +416,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               cyclingType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -424,11 +425,10 @@ describe("ActivityComputer", () => {
           done();
         });
 
-        it("should NOT lack of cycling ftp settings WITHOUT power stream", done => {
+        it("should NOT lack of cycling ftp settings WITHOUT power data", done => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = null;
-            streams.watts = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -437,8 +437,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               cyclingType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -447,11 +446,13 @@ describe("ActivityComputer", () => {
           done();
         });
 
-        it("should NOT lack of cycling ftp settings WITH power stream", done => {
+        it("should NOT lack of cycling ftp settings WITH power data", done => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = 150;
-            streams.watts = [10, 10, 10];
+            activityStats.power = {
+              avg: 150
+            } as never;
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -460,8 +461,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               cyclingType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -470,11 +470,10 @@ describe("ActivityComputer", () => {
           done();
         });
 
-        it("should NOT lack of cycling ftp settings WITHOUT power stream", done => {
+        it("should NOT lack of cycling ftp settings WITHOUT power data", done => {
           [ElevateSport.Ride, ElevateSport.VirtualRide].forEach(cyclingType => {
             // Given
             athleteSettingsModel.cyclingFtp = 150;
-            streams.watts = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -483,8 +482,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               cyclingType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -495,11 +493,13 @@ describe("ActivityComputer", () => {
       });
 
       describe("Running", () => {
-        it("should lack of running ftp settings WITH grade adj speed stream", done => {
+        it("should lack of running ftp settings WITH grade adj speed data", done => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = null;
-            streams.grade_adjusted_speed = [10, 10, 10];
+            activityStats.pace = {
+              gapAvg: 300
+            } as never;
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -508,8 +508,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               runningType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -518,11 +517,10 @@ describe("ActivityComputer", () => {
           done();
         });
 
-        it("should NOT lack of running ftp settings WITHOUT grade adj speed stream", done => {
+        it("should NOT lack of running ftp settings WITHOUT grade adj speed data", done => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = null;
-            streams.grade_adjusted_speed = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -531,8 +529,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               runningType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -541,11 +538,13 @@ describe("ActivityComputer", () => {
           done();
         });
 
-        it("should NOT lack of running ftp settings WITH grade adj speed stream", done => {
+        it("should NOT lack of running ftp settings WITH grade adj speed data", done => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = 150;
-            streams.grade_adjusted_speed = [10, 10, 10];
+            activityStats.pace = {
+              gapAvg: 300
+            } as never;
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -554,8 +553,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               runningType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -568,7 +566,6 @@ describe("ActivityComputer", () => {
           [ElevateSport.Run, ElevateSport.VirtualRun].forEach(runningType => {
             // Given
             athleteSettingsModel.runningFtp = 150;
-            streams.grade_adjusted_speed = [];
 
             // When
             const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
@@ -577,8 +574,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               runningType,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -601,8 +597,7 @@ describe("ActivityComputer", () => {
             elapsedTime,
             type,
             activityStats,
-            athleteSettingsModel,
-            streams
+            athleteSettingsModel
           );
 
           // Then
@@ -626,8 +621,7 @@ describe("ActivityComputer", () => {
             elapsedTime,
             type,
             activityStats,
-            athleteSettingsModel,
-            streams
+            athleteSettingsModel
           );
 
           // Then
@@ -646,8 +640,7 @@ describe("ActivityComputer", () => {
               elapsedTime,
               type,
               activityStats,
-              athleteSettingsModel,
-              streams
+              athleteSettingsModel
             );
 
             // Then
@@ -681,6 +674,18 @@ describe("ActivityComputer", () => {
             }
           } as ActivityStats;
 
+          if (Activity.isRide(type)) {
+            activityStats.power = {
+              avg: 150
+            } as never;
+          }
+
+          if (Activity.isRun(type)) {
+            activityStats.pace = {
+              gapAvg: 300
+            } as never;
+          }
+
           // When
           const settingsLack: boolean = ActivityComputer.hasAthleteSettingsLacks(
             distance,
@@ -688,8 +693,7 @@ describe("ActivityComputer", () => {
             elapsedTime,
             type,
             activityStats,
-            athleteSettingsModel,
-            streams
+            athleteSettingsModel
           );
 
           // Then

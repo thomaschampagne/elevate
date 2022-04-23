@@ -388,8 +388,7 @@ export class ActivityComputer {
     elapsedTime: number,
     sportType: ElevateSport,
     stats: ActivityStats,
-    athleteSetting: AthleteSettings,
-    streams: Streams
+    athleteSetting: AthleteSettings
   ): boolean {
     const isCycling = Activity.isRide(sportType);
     const isRunning = Activity.isRun(sportType);
@@ -404,19 +403,15 @@ export class ActivityComputer {
       return false;
     }
 
-    if (isCycling && streams && streams.watts && streams.watts.length > 0 && !(athleteSetting.cyclingFtp > 0)) {
+    if (isCycling && stats.power?.avg && !athleteSetting.cyclingFtp) {
       return true;
     }
 
-    if (
-      isRunning &&
-      streams?.grade_adjusted_speed?.length > 0 &&
-      (!(movingTime > 0) || !(athleteSetting.runningFtp > 0))
-    ) {
+    if (isRunning && stats.pace?.gapAvg && !athleteSetting.runningFtp) {
       return true;
     }
 
-    if (isSwimming && distance > 0 && movingTime > 0 && elapsedTime > 0 && !(athleteSetting.swimFtp > 0)) {
+    if (isSwimming && distance > 0 && movingTime > 0 && elapsedTime > 0 && !athleteSetting.swimFtp) {
       return true;
     }
 
