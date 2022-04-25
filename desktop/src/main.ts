@@ -38,7 +38,6 @@ import { UserScreen } from "./tools/user-screen";
 import { RuntimeInfoProviderToken } from "./runtime-info/runtime-info.provider";
 import { RuntimeInfoService } from "./runtime-info/runtime-Info.service";
 import { IpcComputeSplitsListener } from "./listeners/ipc-compute-splits.listener";
-import { ConnectorSyncService } from "./connectors/connector-sync.service";
 import { platform } from "os";
 import { AppPackage } from "@elevate/shared/tools/app-package";
 import Menu = Electron.Menu;
@@ -61,7 +60,6 @@ class Main {
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
     @inject(IpcSharedStorageListener) private readonly ipcSharedStorageListener: IpcSharedStorageListener,
-    @inject(ConnectorSyncService) private readonly connectorSyncService: ConnectorSyncService,
     @inject(IpcStorageService) private readonly ipcStorage: IpcStorageService,
     @inject(HttpClient) private readonly httpClient: HttpClient,
     @inject(Logger) private readonly logger: Logger
@@ -404,30 +402,6 @@ class Main {
     };
 
     this.mainWindow = new BrowserWindow(windowOptions);
-
-    // Emitted when user close the window
-    this.mainWindow.on("close", event => {
-      // If a sync is running when user close the window, we have to stop the sync before.
-      if (this.connectorSyncService.currentConnector?.isSyncing) {
-        this.logger.info("A sync is running, stopping the sync before closing window");
-
-        // Don't emit the close window event to stop sync
-        event.preventDefault();
-
-        // Stop sync
-        this.connectorSyncService.currentConnector
-          .stop()
-          .then(() => {
-            this.logger.info("Sync has been stopped, we can close the window");
-            this.mainWindow.close();
-          })
-          .catch(error => {
-            this.logger.error(`Unable to stop sync before window close: ${error.message | error}`);
-          });
-      } else {
-        this.logger.info("Allow closing window, no sync running.");
-      }
-    });
 
     // Emitted when the window is closed.
     this.mainWindow.on("closed", () => {
