@@ -5,7 +5,7 @@ import { AppRoutes } from "../../../models/app-routes";
 @Injectable()
 export class DesktopMenuItemsProvider implements MenuItemsProvider {
   public readonly mainMenuItems: MenuItemModel[] = [
-    {
+    /*    {
       icon: "space_dashboard",
       routerLink: AppRoutes.dashboard,
       routerLinkActive: true
@@ -14,7 +14,7 @@ export class DesktopMenuItemsProvider implements MenuItemsProvider {
       icon: "emoji_events",
       routerLink: AppRoutes.goals,
       routerLinkActive: true
-    },
+    },*/
     {
       icon: "summarize",
       routerLink: AppRoutes.activities,
