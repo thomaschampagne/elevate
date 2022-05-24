@@ -164,6 +164,7 @@ export class Elevate {
       this.handleAthleteUpdate();
       this.saveAthleteId();
       this.handleGoogleMapsComeBackModifier();
+      this.handleDesktopAppPromo();
     });
   }
 
@@ -381,6 +382,32 @@ export class Elevate {
       globalStyle +
       '"><strong>WARNING</strong> You are running a preview of <strong>Elevate</strong>, to remove it, open a new tab and type <strong>chrome://extensions</strong></div>';
     $("body").before(html);
+  }
+
+  public handleDesktopAppPromo(): void {
+    const html = `<div id="desktopAppPromo" style="display: flex; justify-content: flex-start; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; position: relative; z-index: 999; padding-top: 10px; padding-bottom: 10px;  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; border-bottom: 1px solid lightgray">
+                    <div style="margin-left: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-start;">
+                      <strong>"Elevate Desktop App" is now available as Beta: more features included within & still FREE!</strong>
+                    </div>
+                    <div style="margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;">
+                      <div class="btn btn-primary btn-xs" id="desktopAppPromo_goto" style="margin-right: 10px;">Download "Elevate Desktop App" for Free</div>
+                      <div class="btn btn-primary btn-xs" id="desktopAppPromo_close">Close</div>
+                    </div>
+                  </div>`;
+    if (!Cookies.get("elevate_desktop_promo_hidden")) {
+      $("body")
+        .before(html)
+        .each(() => {
+          $("#desktopAppPromo_goto").on("click", () => {
+            window.open(this.appResources.settingsLink + "#/desktopAppBeta", "_blank");
+          });
+
+          $("#desktopAppPromo_close").on("click", () => {
+            $("#desktopAppPromo").remove();
+            Cookies.set("elevate_desktop_promo_hidden", "true", { expires: 45 }); // Expire in 45 days
+          });
+        });
+    }
   }
 
   public handleMenu(): void {
