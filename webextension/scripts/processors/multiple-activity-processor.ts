@@ -125,8 +125,7 @@ export class MultipleActivityProcessor {
               activityComputed.stats.elapsedTime,
               activityComputed.type,
               activityComputed.stats,
-              activityComputed.athleteSnapshot.athleteSettings,
-              streamActivityModel.stream
+              activityComputed.athleteSnapshot.athleteSettings
             );
 
             const activityUnitForHashing = {

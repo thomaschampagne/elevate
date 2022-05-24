@@ -114,7 +114,7 @@ export class CyclingPowerDataView extends AbstractDataView {
         2,
         2,
         this.printNumber(this.power.best20min, 0),
-        "Best 20min Power <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+        "Best 20min Power",
         "W",
         "displayAdvancedPowerData"
       );

@@ -979,6 +979,12 @@ export class ActivityComputer {
           )
         : null;
 
+    // Power/HR
+    scores.powerHr =
+      stats?.power?.avg && stats?.heartRate?.avg
+        ? _.round(stats?.power?.avg / stats?.heartRate?.avg, ActivityComputer.RND)
+        : null;
+
     // Swim SWOLF
     if (Activity.isSwim(type) && stats?.speed?.avg && stats?.cadence?.avgActive) {
       const secondsPer100m = Movement.speedToSwimPace(stats.speed.avg);

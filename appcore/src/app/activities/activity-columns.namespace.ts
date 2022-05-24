@@ -478,6 +478,16 @@ export namespace ActivityColumns {
         Print.number,
         1
       ).setDescription('"Running Rating" is an equivalent of "Running Index" from Polar'),
+      new NumberColumn(
+        Category.COMMON,
+        ["stats", "scores", "powerHr"],
+        null,
+        "Power/Hr",
+        Print.number,
+        2
+      ).setDescription(
+        "Avg power over avg heart rate. A higher value means you produced more power for a given heart rate."
+      ),
       new NumberColumn(Category.COMMON, ["stats", "calories"], null, "Calories", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "caloriesPerHour"], null, "Calories / Hour", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "moveRatio"], null, "Move Ratio", Print.number, 2),

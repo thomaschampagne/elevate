@@ -240,7 +240,7 @@ export class HeartRateDataView extends AbstractDataView {
       1,
       2,
       this.printNumber(this.heartRateStats.best60min, 0),
-      "Best 60min Heart Rate <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+      "Best 60min Heart Rate",
       "bpm",
       "displayAdvancedHrData"
     );

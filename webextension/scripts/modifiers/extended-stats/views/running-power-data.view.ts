@@ -53,8 +53,7 @@ export class RunningPowerDataView extends AbstractDataView {
         1,
         0,
         printEstimatedTildWhenRealPower + this.printNumber(this.power.best20min, 0),
-        printEstimatedWordWhenRealPower +
-          " Best 20min Power <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+        printEstimatedWordWhenRealPower + " Best 20min Power",
         "W",
         "displayAdvancedPowerData"
       );

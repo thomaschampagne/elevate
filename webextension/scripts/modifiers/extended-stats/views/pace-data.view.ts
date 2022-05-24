@@ -60,7 +60,7 @@ export class PaceDataView extends AbstractDataView {
           0,
           0,
           Time.secToMilitary(this.pace.best20min / this.speedUnitsData.speedUnitFactor),
-          "Best 20min Pace <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+          "Best 20min Pace",
           this.units,
           "displayAdvancedSpeedData"
         );
@@ -72,7 +72,7 @@ export class PaceDataView extends AbstractDataView {
         1,
         0,
         this.printNumber(this.stressScores.rss, 0),
-        "<strong>R</strong>unning <strong>S</strong>tress <strong>S</strong>core <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+        "<strong>R</strong>unning <strong>S</strong>tress <strong>S</strong>core",
         "",
         "displayAdvancedSpeedData"
       );
@@ -80,7 +80,7 @@ export class PaceDataView extends AbstractDataView {
         2,
         0,
         this.printNumber(this.stressScores.rssPerHour, 1),
-        "RSS / Hour <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+        "RSS / Hour",
         "",
         "displayAdvancedSpeedData"
       );

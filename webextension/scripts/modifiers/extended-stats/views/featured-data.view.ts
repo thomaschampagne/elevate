@@ -38,7 +38,7 @@ export class FeaturedDataView extends AbstractDataView {
       (this.stats.grade && this.userSettings.displayAdvancedGradeData)
     ) {
       // Add a title
-      this.makeGrid(7, 1); // (col, row)
+      this.makeGrid(8, 1); // (col, row)
 
       this.insertDataIntoGrid();
 
@@ -132,6 +132,16 @@ export class FeaturedDataView extends AbstractDataView {
         "Slope Profile",
         "",
         "displayAdvancedGradeData"
+      );
+    }
+    if (this.stats?.scores?.powerHr && this.userSettings.displayAdvancedPowerData) {
+      this.insertContentAtGridPosition(
+        7,
+        0,
+        this.stats.scores.powerHr,
+        "Power / HR <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+        "",
+        "displayAdvancedPowerData"
       );
     }
 
