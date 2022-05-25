@@ -85,8 +85,7 @@ export class ActivityComputeProcessor {
         activity.stats.elapsedTime,
         activity.type,
         activity.stats,
-        activity.athleteSnapshot.athleteSettings,
-        streams
+        activity.athleteSnapshot.athleteSettings
       );
 
       // Compute activity hash

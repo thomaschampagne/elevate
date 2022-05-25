@@ -82,7 +82,7 @@ export class ActivitiesSettingsLacksDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) public activities: Activity[]) {}
 
   public ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<Activity>();
+    this.dataSource = new MatTableDataSource();
     this.dataSource.data = _.sortBy(this.activities, (activity: Activity) => {
       return activity.startTime;
     });

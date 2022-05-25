@@ -4,16 +4,12 @@
   </mat-card-title>
   <mat-card-content>
     <div class="pad-std-bt">
-      <strong>The desktop app is most advanced version of Elevate. Try it !</strong>
+      <strong>The desktop app includes more features than the web extension. Try it !</strong>
     </div>
     <div class="pad-std-bt" >
       <a matTooltip="Click to view screenshots..." matTooltipPosition="above" href="https://photos.app.goo.gl/BiFVBsqNW9VpV4tr9" target="_blank"><img  src="https://i.imgur.com/Tf1JXRDm.png"></a>
     </div>
-    <div class="pad-std-bt">
-      <button mat-flat-button color="primary" (click)="onDonateClicked()">
-        Support the project 😊 ❤️
-      </button>
-    </div>
+
     <div class="pad-std-bt">
       <button (click)="onWindowsDownload()" color="primary" mat-stroked-button>
         Download for Windows
@@ -22,6 +18,11 @@
     <div class="pad-std-bt">
       <button (click)="onMacDownload()" color="primary" mat-stroked-button>
         Download for macOS
+      </button>
+    </div>
+    <div class="pad-std-bt">
+      <button mat-flat-button color="primary" (click)="onDonateClicked()">
+        Support the project 😊 ❤️
       </button>
     </div>
   </mat-card-content>

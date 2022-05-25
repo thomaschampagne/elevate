@@ -478,6 +478,16 @@ export namespace ActivityColumns {
         Print.number,
         1
       ).setDescription('"Running Rating" is an equivalent of "Running Index" from Polar'),
+      new NumberColumn(
+        Category.COMMON,
+        ["stats", "scores", "powerHr"],
+        null,
+        "Power/Hr",
+        Print.number,
+        2
+      ).setDescription(
+        "Avg power over avg heart rate. A higher value means you produced more power for a given heart rate."
+      ),
       new NumberColumn(Category.COMMON, ["stats", "calories"], null, "Calories", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "caloriesPerHour"], null, "Calories / Hour", Print.number),
       new NumberColumn(Category.COMMON, ["stats", "moveRatio"], null, "Move Ratio", Print.number, 2),
@@ -749,11 +759,11 @@ export namespace ActivityColumns {
       new NumberColumn(
         Category.CADENCE,
         ["stats", "cadence", "activeRatio"],
-        "%",
+        null,
         "Active Cadence Ratio",
         Print.number,
         2
-      ).setDescription("Active cadence percentage when active"),
+      ).setDescription("Active cadence ratio"),
       new NumberColumn(Category.CADENCE, ["stats", "cadence", "max"], Definition.CADENCE_UNITS, "Max Cadence"),
       new NumberColumn(
         Category.CADENCE,
@@ -776,19 +786,19 @@ export namespace ActivityColumns {
       new NumberColumn(Category.CADENCE, ["stats", "cadence", "upperQ"], Definition.CADENCE_UNITS, "75% Cadence"),
       new NumberColumn(
         Category.CADENCE,
-        ["stats", "cadence", "slopeCadence", "up"],
+        ["stats", "grade", "slopeCadence", "up"],
         Definition.CADENCE_UNITS,
         "Avg Climbing Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
-        ["stats", "cadence", "slopeCadence", "flat"],
+        ["stats", "grade", "slopeCadence", "flat"],
         Definition.CADENCE_UNITS,
         "Avg Flat Cadence"
       ),
       new NumberColumn(
         Category.CADENCE,
-        ["stats", "cadence", "slopeCadence", "down"],
+        ["stats", "grade", "slopeCadence", "down"],
         Definition.CADENCE_UNITS,
         "Avg Downhill Cadence"
       ),
@@ -1117,7 +1127,7 @@ export namespace ActivityColumns {
         Category.OTHERS,
         ["stats", "scores", "stress", "trainingEffect", "anaerobic"],
         null,
-        "Aerobic Train. Effect",
+        "Anaerobic Train. Effect",
         Print.number,
         1
       ).setDescription("Anaerobic Training Effect"),

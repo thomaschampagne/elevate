@@ -43,7 +43,7 @@ export class SpeedDataView extends AbstractDataView {
         0,
         0,
         this.printNumber(this.speed.best20min * this.speedUnitsData.speedUnitFactor, 1),
-        "Best 20min Speed <sup style='color:#FC4C02; font-size:12px; position: initial;'>NEW</sup>",
+        "Best 20min Speed",
         this.speedUnitsData.speedUnitPerHour,
         "displayAdvancedSpeedData"
       );

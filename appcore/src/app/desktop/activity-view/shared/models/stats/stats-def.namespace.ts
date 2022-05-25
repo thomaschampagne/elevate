@@ -840,6 +840,14 @@ export namespace StatsDef {
   }
 
   export namespace Scores {
+    export const powerHr = Stat.create<Scores>(
+      VoidSensor.DEFAULT,
+      "Power/Hr",
+      ["stats", "scores", "powerHr"],
+      "Avg power over avg heart rate. A higher value means you produced more power for a given heart rate.",
+      2
+    ).asEmptyUnit();
+
     export namespace Stress {
       const trainingEffectLabel = (value: number) => {
         if (value <= 0.9) {

@@ -358,7 +358,7 @@ export class FileConnector extends BaseConnector {
                 return result.event.activities.reduce(
                   (previousActivityProcessed: Promise<void>, sportsLibActivity: ActivityJSONInterface) => {
                     return previousActivityProcessed.then(() => {
-                      // Is an transition activity (e.g. from swim to cycling for triathlon), then skip it
+                      // Is a transition activity (e.g. from swim to cycling for triathlon), then skip it
                       if (sportsLibActivity && sportsLibActivity.type === ActivityTypes.Transition) {
                         return Promise.resolve();
                       }
@@ -472,7 +472,7 @@ export class FileConnector extends BaseConnector {
                           } else {
                             if (_.isArray(localActivities) && localActivities.length === 1) {
                               // One activity found
-                              // Notify the new Activity
+                              // Notify the existing Activity
                               syncEvents$.next(
                                 new ActivitySyncEvent(ConnectorType.FILE, null, localActivities[0], false)
                               );
