@@ -407,7 +407,7 @@ export namespace StatsDef {
         ["stats", "cadence", "activeRatio"],
         "Pedaling VS Freewheel ratio",
         2
-      );
+      ).asEmptyUnit();
 
       export const avgClimb = Stat.create<CadenceStats>(CyclingCadenceSensor.DEFAULT, "Avg Climbing", [
         "stats",
