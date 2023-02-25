@@ -1,0 +1,81 @@
+<div class="centered-section">
+  <div class="search mat-subheading-2" fxLayout="row" fxLayoutAlign="center center">
+    <mat-form-field fxFlex="50">
+      <input [(ngModel)]="searchText" matInput placeholder="Search settings with keywords..." type="search">
+      <button (click)="searchText=''" *ngIf="searchText" aria-label="Clear" mat-button mat-icon-button
+              matSuffix>
+        <mat-icon fontSet="material-icons-outlined">close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!--List sections and options-->
+  <mat-card *ngFor="let section of sections;">
+    <mat-card-title>
+      {{section.title}}
+    </mat-card-title>
+    <mat-card-content>
+      <mat-list>
+        <ng-container *ngFor="let option of section.options | filterBy: ['title']: searchText">
+          <mat-list-item *ngIf="!option.hidden">
+          <span matLine>
+            <span [innerHTML]="domSanitizer.bypassSecurityTrustHtml(option.title)"></span>
+            <sup *ngIf="!option.disableHelper">
+              <button (click)="showOptionHelperDialog(option.key)" mat-icon-button>
+                <mat-icon fontSet="material-icons-outlined">info</mat-icon>
+              </button>
+            </sup>
+          </span>
+
+            <!-- Display new line only if option is not for 'All' -->
+            <p *ngIf="option.labels.indexOf('All') == -1" matLine>
+              <i *ngFor="let label of option.labels; let i = index;" class="tags">
+                {{label}}<span *ngIf="i < (option.labels.length - 1)">; </span>
+              </i>
+            </p>
+
+            <!--Display proper input method-->
+            <!--is checkbox?-->
+            <mat-slide-toggle
+              (change)="onOptionChange(option)"
+              *ngIf="option.type === 'checkbox'"
+              [(ngModel)]="option.active">
+            </mat-slide-toggle>
+
+            <!--is list?-->
+            <mat-select
+              (selectionChange)="onOptionChange(option)"
+              *ngIf="option.type === 'list'"
+              [(ngModel)]="option.active">
+              <mat-option
+                *ngFor="let listItem of option.list"
+                [value]="listItem">
+                {{listItem.name}}
+              </mat-option>
+            </mat-select>
+
+            <!--is input?-->
+            <mat-form-field *ngIf="option.type === 'number'">
+              <input
+                (change)="onOptionChange(option)"
+                [(ngModel)]="option.value"
+                matInput
+                max="{{option.max}}"
+                min="{{option.min}}"
+                step="{{option.step}}"
+                type="number"/>
+            </mat-form-field>
+
+            <mat-form-field *ngIf="option.type === 'text'">
+              <input
+                (change)="onOptionChange(option)"
+                [(ngModel)]="option.value"
+                matInput type="text"/>
+            </mat-form-field>
+
+          </mat-list-item>
+        </ng-container>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>

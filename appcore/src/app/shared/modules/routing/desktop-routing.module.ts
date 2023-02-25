@@ -29,6 +29,10 @@ const routes: Routes = [
     loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
   },
   {
+    path: AppRoutes.heatMap,
+    loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
+  },
+  {
     path: AppRoutes.globalSettings,
     loadChildren: () =>
       import("../../../global-settings/global-settings.module").then(module => module.GlobalSettingsModule)
