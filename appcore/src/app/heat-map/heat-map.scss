@@ -1,13 +1,12 @@
 @import "../styles/constant";
 
-.search {
-  margin: $default-margin;
-}
-
-.info, .tags {
-  color: $light-grey;
-}
-
-mat-select, mat-form-field {
-  width: 20%;
+#background-map {
+  background-color: white;
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  z-index: -1;
+  margin: 30px;
 }

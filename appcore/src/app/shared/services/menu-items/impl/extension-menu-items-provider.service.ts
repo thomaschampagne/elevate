@@ -27,11 +27,6 @@ export class ExtensionMenuItemsProvider implements MenuItemsProvider {
       routerLinkActive: true
     },
     {
-      icon: "map",
-      routerLink: AppRoutes.heatMap,
-      routerLinkActive: true
-    },
-    {
       icon: "settings",
       routerLink: AppRoutes.globalSettings,
       routerLinkActive: true

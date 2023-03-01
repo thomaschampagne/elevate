@@ -30,7 +30,7 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.heatMap,
-    loadChildren: () => import("../../../year-progress/year-progress.module").then(module => module.YearProgressModule)
+    loadChildren: () => import("../../../heat-map/heat-map.module").then(module => module.HeatMapModule)
   },
   {
     path: AppRoutes.globalSettings,
