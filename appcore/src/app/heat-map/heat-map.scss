@@ -2,11 +2,18 @@
 
 #background-map {
   background-color: white;
-  position: absolute;
-  top: 50px;
-  right: 10px;
-  bottom: 10px;
-  left: 10px;
-  z-index: -1;
-  margin: 30px;
+  position: relative;
+  height: inherit;
+  width: inherit;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#map-container {
+  position: relative;
+  height: 70vh;
+  display: block;
+  margin: 10px;
 }

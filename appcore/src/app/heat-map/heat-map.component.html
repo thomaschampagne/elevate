@@ -1,3 +1,46 @@
-<div class="centered-section">
+<mat-card>
+  <mat-card-content>
+    <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="start start">
+      <div fxLayout="row" fxLayoutAlign="space-between start" fxFlexFill fxFlex="60" fxFlex.lt-lg="100">
+        <mat-form-field fxFlex>
+          <mat-select (selectionChange)="onSelectedActivityTypesChanged()"
+                      [(ngModel)]="activityTypes"
+                      multiple
+                      placeholder="Activity Types">
+            <mat-option *ngFor="let type of availableActivityTypes"
+                        [disabled]="(activityTypes.length === 1 && type === activityTypes[0])"
+                        [value]="type">
+              {{startCase(type)}}
+            </mat-option>
+          </mat-select>
+          <button (click)="$event.stopPropagation(); onTickAllActivityTypes()" color="primary"
+                  mat-button mat-icon-button
+                  matSuffix
+                  matTooltip="Tick all activity types">
+            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
+          </button>
+          <button (click)="$event.stopPropagation(); onUnTickAllActivityTypes()" color="primary"
+                  mat-button mat-icon-button
+                  matSuffix
+                  matTooltip="Untick all activity types (most performed excluded)">
+            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
+          </button>
+        </mat-form-field>
+        <span fxFlex="0.5"></span>
+        <mat-slide-toggle
+          (change)="onIncludeCommuteRideToggle()"
+          [(ngModel)]="this.includeCommuteRide"
+          fxFlexAlign="center"
+          matTooltip="Include commute activities in your progression.">
+          <mat-icon fontSet="material-icons-outlined">work_outline</mat-icon>
+        </mat-slide-toggle>
+      </div>
+    </div>
+
+
+
+  </mat-card-content>
+</mat-card>
+<div id="map-container">
   <div id="background-map"></div>
 </div>
