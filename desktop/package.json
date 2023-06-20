@@ -77,7 +77,7 @@
     "reflect-metadata": "^0.1.13",
     "retry-axios": "^2.6.0",
     "rxjs": "^7.8.0",
-    "semver": "^7.3.6",
+    "semver": "^7.5.2",
     "serialize-error": "^9.1.1",
     "tsyringe": "^4.6.0"
   },
