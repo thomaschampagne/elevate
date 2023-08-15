@@ -47,8 +47,6 @@
     "jdenticon": "^3.1.1",
     "json2csv": "^5.0.7",
     "leaflet": "^1.9.3",
-    "leaflet-easybutton": "^2.4.0",
-    "leaflet-image": "^0.4.0",
     "leaflet-providers": "^1.13.0",
     "leaflet.fullscreen": "^2.4.0",
     "lodash": "^4.17.21",
