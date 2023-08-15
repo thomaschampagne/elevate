@@ -50,6 +50,7 @@
     "leaflet-easybutton": "^2.4.0",
     "leaflet-image": "^0.4.0",
     "leaflet-providers": "^1.13.0",
+    "leaflet.fullscreen": "^2.4.0",
     "lodash": "^4.17.21",
     "lokijs": "^1.5.12",
     "lz-string": "github:pieroxy/lz-string",

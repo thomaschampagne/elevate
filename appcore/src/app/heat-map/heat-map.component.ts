@@ -1,52 +1,33 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
+import {Component, Inject, OnDestroy, OnInit} from "@angular/core";
 import _ from "lodash";
-import { MatDialog } from "@angular/material/dialog";
-import { ActivatedRoute } from "@angular/router";
-import { Subscription, timer } from "rxjs";
-import { LoggerService } from "../shared/services/logging/logger.service";
-import { DomSanitizer } from "@angular/platform-browser";
+import {Subscription} from "rxjs";
+import {LoggerService} from "../shared/services/logging/logger.service";
 import leaflet from "leaflet";
-import leafletImage from "leaflet-image";
 import "leaflet-providers";
-import "leaflet-easybutton";
+import "leaflet.fullscreen";
 
-import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
-import { AppService } from "../shared/services/app-service/app.service";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
-import { WarningException } from "@elevate/shared/exceptions/warning.exception";
-import moment from "moment/moment";
-import { ProcessStreamMode } from "@elevate/shared/sync/compute/stream-processor";
-import { Streams } from "@elevate/shared/models/activity-data/streams.model";
-import { debounce } from "rxjs/operators";
-import { AppError } from "../shared/models/app-error.model";
-import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
-import { ActivityService } from "../shared/services/activity/activity.service";
-import { DesktopActivityService } from "../shared/services/activity/impl/desktop-activity.service";
-import DesktopUserSettings = UserSettings.DesktopUserSettings;
-import BaseUserSettings = UserSettings.BaseUserSettings;
-import { StreamsService } from "../shared/services/streams/streams.service";
+import {AppService} from "../shared/services/app-service/app.service";
+import {ProcessStreamMode} from "@elevate/shared/sync/compute/stream-processor";
+import {Streams} from "@elevate/shared/models/activity-data/streams.model";
+import {ActivityService} from "../shared/services/activity/activity.service";
+import {DesktopActivityService} from "../shared/services/activity/impl/desktop-activity.service";
+import {StreamsService} from "../shared/services/streams/streams.service";
 import {ElevateSport} from "@elevate/shared/enums/elevate-sport.enum";
-import {YearProgressTypeModel} from "../year-progress/shared/models/year-progress-type.model";
+import {Theme} from "../shared/enums/theme.enum";
 
 @Component({
   selector: "app-heat-map",
   templateUrl: "./heat-map.component.html",
   styleUrls: ["./heat-map.scss"]
 })
-export class HeatMapComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HeatMapComponent implements OnInit, OnDestroy {
   private options: any;
   private map: any;
   private mapTiles: any;
-  public isLoading: Boolean = true;
+  public isLoading: boolean = false;
   public availableActivityTypes: ElevateSport[];
-  public activityTypes: string | any[];
-  public includeCommuteRide: Boolean;
+  public activityTypes: any[];
   constructor(
-    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
-    @Inject(DomSanitizer) public readonly domSanitizer: DomSanitizer,
-    @Inject(ActivatedRoute) private readonly route: ActivatedRoute,
-    @Inject(MatDialog) private readonly dialog: MatDialog,
     @Inject(LoggerService) private readonly logger: LoggerService,
     @Inject(AppService) private readonly appService: AppService,
     @Inject(ActivityService) protected readonly activityService: DesktopActivityService,
@@ -55,7 +36,7 @@ export class HeatMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public historyChangesSub: Subscription;
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
     this.logger.debug("HeatMap component initialized");
 
     // Listen for sync done to reload component
@@ -63,95 +44,122 @@ export class HeatMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.ngOnDestroy();
       this.ngOnInit();
     });
+
+    // Initialze Activity Type selector
+    const activityCountByTypeModels = this.activityService.countByType();
+    this.availableActivityTypes = _.map(activityCountByTypeModels, "type");
+    this.activityTypes = this.availableActivityTypes;
+
+    // The map is different depending on the theme
+    if (this.appService.currentTheme === Theme.LIGHT) {
+      this.options = {
+        theme: "CartoDB.Positron",
+        lineOptions: {
+          color: "#e8340c",
+          weight: 1,
+          opacity: 0.5,
+          smoothFactor: 1,
+          overrideExisting: true,
+          detectColors: true
+        }
+      }
+    } else {
+      this.options = {
+        theme: "CartoDB.DarkMatter",
+        lineOptions: {
+          color: "#0CB1E8",
+          weight: 1,
+          opacity: 0.5,
+          smoothFactor: 1,
+          overrideExisting: true,
+          detectColors: true
+        }
+      }
+    }
+
+    this.map = leaflet.map("background-map", {
+      center: await this.findCenter(),
+      zoom: 8,
+      preferCanvas: true,
+    });
+
+    this.mapTiles = leaflet.tileLayer.provider(this.options.theme);
+    this.mapTiles.addTo(this.map, { detectRetina: true });
+
+    // Create a fullscreen button and add it to the map
+    leaflet.control.fullscreen({
+      position: 'topright',
+      title: 'Enter fullscreen mode',
+      titleCancel: 'Exit fullscreen mode',
+      forceSeparateButton: true,
+      content: '<div style="padding-top: 3px"><i class="material-icons">fullscreen</i></div>',
+     }).addTo(this.map);
   }
 
   public ngOnDestroy(): void {
     this.historyChangesSub.unsubscribe();
   }
 
-  private switchTheme(themeName): void {
-    if (this.mapTiles) {
-      this.mapTiles.removeFrom(this.map);
-    }
-
-    if (themeName !== "No map") {
-      this.mapTiles = leaflet.tileLayer.provider(themeName);
-      this.mapTiles.addTo(this.map, { detectRetina: true });
-    }
-  }
-
-  private async plotActivities(): Promise<void> {
-    const activities = await this.activityService.findSorted();
-    for (let i = 0; i < activities.length; i++) {
-      try {
-        const activity = activities[i];
-        const streams: Streams = await this.streamsService.getProcessedById(ProcessStreamMode.DISPLAY, activity.id, {
-          type: activity.type,
-          hasPowerMeter: activity.hasPowerMeter,
-          isSwimPool: activity.isSwimPool,
-          athleteSnapshot: activity.athleteSnapshot
-        });
-        leaflet.polyline(streams?.latlng, { color: "red" }).addTo(this.map);
-      } catch (err) {
-        //this.logger.error(err)
-        //this.logger.error("Impossible to load this activity !");
+  public async plotActivities(): Promise<void> {
+    // Plot all activities
+    // TODO: Solve the problem of freezing UI when loading all activities
+    this.isLoading = true;
+    if (this.activityTypes.length > 0) {
+      const activities = await this.activityService.findSorted();
+      for (const activity of activities) {
+        try {
+          if(_.includes(this.activityTypes, activity.type)) {
+            const streams: Streams = await this.streamsService.getProcessedById(ProcessStreamMode.DISPLAY, activity.id, {
+              type: activity.type,
+              hasPowerMeter: activity.hasPowerMeter,
+              isSwimPool: activity.isSwimPool,
+              athleteSnapshot: activity.athleteSnapshot
+            });
+            leaflet.polyline(streams?.latlng, this.options.lineOptions).addTo(this.map);
+          }
+        } catch (err) {
+          this.logger.error("Impossible to load this activity !", err);
+        }
       }
     }
     this.isLoading = false;
   }
 
-  public async ngAfterViewInit(): Promise<void> {
-    // Los Angeles is the center of the universe
-    const INIT_COORDS = [34.0522, -118.243];
-
-    const DEFAULT_OPTIONS = {
-      theme: "CartoDB.DarkMatter",
-      lineOptions: {
-        color: "#0CB1E8",
-        weight: 1,
-        opacity: 0.5,
-        smoothFactor: 1,
-        overrideExisting: true,
-        detectColors: true
-      },
-      markerOptions: {
-        color: "#00FF00",
-        weight: 3,
-        radius: 5,
-        opacity: 0.5
-      }
-    };
-
-    this.options = DEFAULT_OPTIONS;
-
-    this.map = leaflet.map("background-map", {
-      center: INIT_COORDS,
-      zoom: 10,
-      preferCanvas: true
-    });
-
-    this.switchTheme(this.options.theme);
-    this.plotActivities();
-  }
-
-  public async onSelectedActivityTypesChanged(): Promise<void> {
+  public async findCenter() : Promise<[number, number]> {
+    const coordinates = [];
     if (this.activityTypes.length > 0) {
-      return await this.plotActivities();
+      const activities = await this.activityService.findSorted();
+      for (let i = 0; i < activities.length; i++) {
+        try {
+          const activity = activities[i];
+
+          // We select only a few activities to find the center
+          if(_.includes(this.activityTypes, activity.type) && i%20==0) {
+            const streams: Streams = await this.streamsService.getProcessedById(ProcessStreamMode.DISPLAY, activity.id, {
+              type: activity.type,
+              hasPowerMeter: activity.hasPowerMeter,
+              isSwimPool: activity.isSwimPool,
+              athleteSnapshot: activity.athleteSnapshot
+            });
+            coordinates.push(streams?.latlng?.[0]);
+          }
+        } catch (err) {
+          this.logger.error("Impossible to load this activity !", err);
+        }
+      }
+
+      const averageLat = coordinates.reduce( ( p, c ) => p + c[0], 0 ) / coordinates.length;
+      const averageLong = coordinates.reduce( ( p, c ) => p + c[1], 0 ) / coordinates.length;
+      return [averageLat, averageLong];
     }
   }
 
   public async onTickAllActivityTypes(): Promise<void> {
     this.activityTypes = this.availableActivityTypes;
-    return await this.onSelectedActivityTypesChanged();
   }
 
   public async onUnTickAllActivityTypes(): Promise<void> {
     this.activityTypes = [_.first(this.availableActivityTypes)];
-    return await this.onSelectedActivityTypesChanged();
-  }
-
-  public async onIncludeCommuteRideToggle(): Promise<void> {
-    return await this.plotActivities();
   }
 
   public startCase(sport: string): string {
