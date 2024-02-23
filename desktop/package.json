@@ -60,7 +60,7 @@
     "@thomaschampagne/sports-lib": "^6.0.3",
     "@xmldom/xmldom": "^0.8.2",
     "7zip-bin": "^5.1.1",
-    "axios": "^0.26.1",
+    "axios": "^1.6.4",
     "electron-log": "^4.4.6",
     "electron-updater": "^4.6.5",
     "form-data": "^4.0.0",
