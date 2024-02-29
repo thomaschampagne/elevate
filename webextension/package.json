@@ -62,7 +62,7 @@
     "lz-string": "github:pieroxy/lz-string",
     "q": "^1.5.1",
     "qrcode": "^1.4.4",
-    "semver": "^7.3.4"
+    "semver": "^7.5.2"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.30",
