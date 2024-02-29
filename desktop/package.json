@@ -58,7 +58,7 @@
   "engineStrict": true,
   "dependencies": {
     "@thomaschampagne/sports-lib": "^6.0.3",
-    "@xmldom/xmldom": "^0.8.2",
+    "@xmldom/xmldom": "^0.8.6",
     "7zip-bin": "^5.1.1",
     "axios": "^0.26.1",
     "electron-log": "^4.4.6",
