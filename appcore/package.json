@@ -51,7 +51,7 @@
     "lz-string": "github:pieroxy/lz-string",
     "mapbox-gl": "^2.7.1",
     "mapbox-gl-controls": "^2.3.5",
-    "markdown-it": "^12.3.2",
+    "markdown-it": "^13.0.2",
     "metrics-graphics": "^2.15.6",
     "moment": "^2.29.1",
     "ngx-clipboard": "^15.1.0",
