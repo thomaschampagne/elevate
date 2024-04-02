@@ -785,7 +785,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
             switch (splitType) {
               case ActivityBestSplitsModifier.Units.Minutes:
                 if (splitLength * 60 > activityDurationInSeconds) {
-                  $.fancybox({
+                  window.$.fancybox({
                     autoScale: true,
                     transitionIn: "fade",
                     transitionOut: "fade",
@@ -801,7 +801,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
 
               case ActivityBestSplitsModifier.Units.Seconds:
                 if (splitLength > activityDurationInSeconds) {
-                  $.fancybox({
+                  window.$.fancybox({
                     autoScale: true,
                     transitionIn: "fade",
                     transitionOut: "fade",
@@ -823,7 +823,7 @@ export class ActivityBestSplitsModifier extends AbstractModifier {
                     ? ActivityBestSplitsModifier.Units.MilesToMetersFactor
                     : ActivityBestSplitsModifier.Units.KilometersToMetersFactor);
                 if (valueToCheck > activityDistanceInMeters) {
-                  $.fancybox({
+                  window.$.fancybox({
                     autoScale: true,
                     transitionIn: "fade",
                     transitionOut: "fade",

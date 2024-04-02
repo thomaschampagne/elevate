@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "watch",
+      "path": "webextension",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "extension watch"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "group": "build",
+      "path": "desktop",
+      "problemMatcher": [],
+      "label": "desktop watch",
+    }
+  ]
+}

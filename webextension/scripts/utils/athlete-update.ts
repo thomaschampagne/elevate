@@ -54,25 +54,4 @@ export class AthleteUpdate {
 
     return athleteUpdate;
   }
-
-  public static commit(athleteUpdate: AthleteUpdateModel): Q.IPromise<any> {
-    const deferred = Q.defer<SyncResultModel>();
-    const endPoint = DistributedEndpointsResolver.resolve(ExtensionEnv.endPoint) + "/api/athlete/update";
-
-    $.post({
-      url: endPoint,
-      data: JSON.stringify(athleteUpdate),
-      dataType: "json",
-      contentType: "application/json",
-      success: (response: any) => {
-        deferred.resolve(response);
-      },
-      error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-        console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
-        deferred.reject({ textStatus, errorThrown });
-      }
-    });
-
-    return deferred.promise;
-  }
 }

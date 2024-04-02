@@ -1,8 +1,21 @@
+import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
+import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { CoreMessages } from "@elevate/shared/models/core-messages";
+import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
+import { SyncResultModel } from "@elevate/shared/models/sync/sync-result.model";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
+import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
+import * as Cookies from "js-cookie";
 import _ from "lodash";
-import { Helper } from "./helper";
+import * as Q from "q";
 import { ExtensionEnv } from "../config/extension-env";
+import { BrowserStorage } from "./browser-storage";
+import "./follow";
+import { Helper } from "./helper";
 import { AppResourcesModel } from "./models/app-resources.model";
-import { AthleteUpdateModel } from "./models/athlete-update.model";
+import { BrowserStorageType } from "./models/browser-storage-type.enum";
+import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
 import { ActivitiesSyncModifier } from "./modifiers/activities-sync.modifier";
 import { ActivityBestSplitsModifier } from "./modifiers/activity-best-splits.modifier";
 import { ActivityBikeOdoModifier } from "./modifiers/activity-bike-odo.modifier";
@@ -13,44 +26,30 @@ import { AthleteStatsModifier } from "./modifiers/athlete-stats.modifier";
 import { DefaultLeaderBoardFilterModifier } from "./modifiers/default-leader-board-filter.modifier";
 import { AbstractExtendedDataModifier } from "./modifiers/extended-stats/abstract-extended-data.modifier";
 import { CyclingExtendedDataModifier } from "./modifiers/extended-stats/cycling-extended-data.modifier";
+import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
 import { RunningExtendedDataModifier } from "./modifiers/extended-stats/running-extended-data.modifier";
 import { GoogleMapsModifier } from "./modifiers/google-maps.modifier";
 import { HideFeedModifier } from "./modifiers/hide-feed.modifier";
 import { MenuModifier } from "./modifiers/menu.modifier";
 import { NearbySegmentsModifier } from "./modifiers/nearby-segments.modifier";
 import { RemoteLinksModifier } from "./modifiers/remote-links.modifier";
+import { RunningAnalysisGraph } from "./modifiers/running-analysis-graph.modifier";
 import {
   RunningCadenceModifier,
   RunningGradeAdjustedPaceModifier,
   RunningHeartRateModifier,
   RunningTemperatureModifier
 } from "./modifiers/running-data.modifier";
-import { RunningAnalysisGraph } from "./modifiers/running-analysis-graph.modifier";
 import { SegmentRankPercentageModifier } from "./modifiers/segment-rank-percentage.modifier";
 import { SegmentRecentEffortsHRATimeModifier } from "./modifiers/segment-recent-efforts-hratime.modifier";
 import { VirtualPartnerModifier } from "./modifiers/virtual-partner.modifier";
 import { WindyTyModifier } from "./modifiers/windyty.modifier";
+import { ActivitiesSynchronize } from "./processors/activities-synchronize";
 import { ActivityProcessor } from "./processors/activity-processor";
 import { ISegmentInfo, SegmentProcessor } from "./processors/segment-processor";
 import { VacuumProcessor } from "./processors/vacuum-processor";
-import { ActivitiesSynchronize } from "./processors/activities-synchronize";
-import * as Q from "q";
-import { AthleteUpdate } from "./utils/athlete-update";
-import "./follow";
-import * as Cookies from "js-cookie";
-import { ActivitiesChronologicalFeedModifier } from "./modifiers/activities-chronological-feed-modifier";
-import { BrowserStorageType } from "./models/browser-storage-type.enum";
-import { GenericExtendedDataModifier } from "./modifiers/extended-stats/generic-extended-data.modifier";
-import { BrowserStorage } from "./browser-storage";
-import { SyncDateTime } from "@elevate/shared/models/sync/sync-date-time.model";
-import { AthleteSnapshotResolver } from "@elevate/shared/resolvers/athlete-snapshot.resolver";
-import { CoreMessages } from "@elevate/shared/models/core-messages";
-import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
-import { SyncResultModel } from "@elevate/shared/models/sync/sync-result.model";
-import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
-import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity-info.model";
-import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
+import { follow } from "./follow";
 
 export class Elevate {
   public static instance: Elevate = null;
@@ -161,7 +160,6 @@ export class Elevate {
 
       // Must be done at the end
       this.handleTrackTodayIncomingConnection();
-      this.handleAthleteUpdate();
       this.saveAthleteId();
       this.handleGoogleMapsComeBackModifier();
       this.handleDesktopAppPromo();
@@ -1022,21 +1020,6 @@ export class Elevate {
 
       // Create cookie to avoid push during 1 day
       Cookies.set("elevate_daily_connection_done", "true", { expires: 1 });
-    } else {
-    }
-  }
-
-  public handleAthleteUpdate(): void {
-    if (!Cookies.get("elevate_athlete_update_done")) {
-      this.commitAthleteUpdate().then(
-        (response: any) => {
-          console.log("Updated", response);
-          Cookies.set("elevate_athlete_update_done", "true", { expires: 1 / 4 }); // Don't update for 6 hours
-        },
-        (err: any) => {
-          console.error(err);
-        }
-      );
     }
   }
 
@@ -1114,22 +1097,6 @@ export class Elevate {
       forceSync
     );
     activitiesSyncModifier.modify();
-  }
-
-  public commitAthleteUpdate(): Q.IPromise<any> {
-    const athleteModel = this.athleteModelResolver.getCurrent();
-
-    const athleteUpdate: AthleteUpdateModel = AthleteUpdate.create(
-      this.athleteId,
-      this.athleteName,
-      this.appResources.extVersion !== "0" ? this.appResources.extVersion : this.appResources.extVersionName,
-      this.isPremium,
-      this.isPro,
-      window.navigator.language,
-      athleteModel.athleteSettings.restHr,
-      athleteModel.athleteSettings.maxHr
-    );
-    return AthleteUpdate.commit(athleteUpdate);
   }
 
   protected handleRunningAnalysisGraph(): void {

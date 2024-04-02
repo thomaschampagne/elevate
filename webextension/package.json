@@ -66,7 +66,7 @@
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.30",
-    "@types/chrome": "0.0.129",
+    "@types/chrome": "0.0.263",
     "@types/file-saver": "^2.0.1",
     "@types/filesystem": "0.0.29",
     "@types/filewriter": "0.0.28",

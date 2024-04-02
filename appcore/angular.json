@@ -46,11 +46,17 @@
           },
           "configurations": {
             "extension": {
-              "optimization": false,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "none",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": false,
               "extractLicenses": false,
               "statsJson": false,
               "progress": true,

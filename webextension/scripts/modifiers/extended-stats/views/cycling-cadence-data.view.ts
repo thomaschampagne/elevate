@@ -30,7 +30,7 @@ export class CyclingCadenceDataView extends AbstractCadenceDataView {
       0,
       this.printNumber(this.cadence.activeRatio, 2),
       "Active Cadence",
-      null,
+      "",
       "displayCadenceData"
     );
     this.insertContentAtGridPosition(

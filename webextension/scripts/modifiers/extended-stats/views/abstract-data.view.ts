@@ -49,7 +49,7 @@ export abstract class AbstractDataView {
   }
 
   public printNumber(value: number, decimals?: number): string {
-    return _.isNumber(value) && !_.isNaN(value) && _.isFinite(value) ? value.toFixed(decimals ? decimals : 0) : "-";
+    return _.isNumber(value) && !_.isNaN(value) && _.isFinite(value) ? value?.toFixed(decimals || 0) : "-";
   }
 
   public setIsSegmentEffortView(bool: boolean): void {
@@ -131,15 +131,15 @@ export abstract class AbstractDataView {
         "Z" +
         (parseInt(zone, 10) + 1) +
         " " +
-        (zones[zone].from * ratio).toFixed(1).replace(".0", "") +
+        this.printNumber(zones[zone].from * ratio, 1).replace(".0", "") +
         " to " +
-        (zones[zone].to * ratio).toFixed(1).replace(".0", "") +
+        this.printNumber(zones[zone].to * ratio, 1).replace(".0", "") +
         " " +
         this.units;
       labelsData.push(label);
     }
 
-    const distributionArray = zones.map(z => Number((z.s / 60).toFixed(2)));
+    const distributionArray = zones.map(z => Number(this.printNumber(z.s / 60, 2)));
 
     this.graphData = {
       labels: labelsData,
@@ -232,7 +232,7 @@ export abstract class AbstractDataView {
           Time.secToMilitary(p.range) +
           "</td>" + // Time
           "<td>" +
-          p.result.toFixed(1) +
+          this.printNumber(p.result, 1) +
           "</td>" + // Value
           "</tr>"
         );
@@ -274,10 +274,10 @@ export abstract class AbstractDataView {
     for (zone in zones) {
       htmlTable += "<tr>"; // Zone
       htmlTable += "<td>Z" + zoneId + "</td>"; // Zone
-      htmlTable += "<td>" + (zones[zone].from * ratio).toFixed(1) + "</th>"; // %HRR
-      htmlTable += "<td>" + (zones[zone].to * ratio).toFixed(1) + "</th>"; // %HRR
+      htmlTable += "<td>" + this.printNumber(zones[zone].from * ratio, 1) + "</th>"; // %HRR
+      htmlTable += "<td>" + this.printNumber(zones[zone].to * ratio, 1) + "</th>"; // %HRR
       htmlTable += "<td>" + Time.secToMilitary(zones[zone].s) + "</td>"; // Time%
-      htmlTable += "<td>" + zones[zone].percent.toFixed(1) + "%</td>"; // % in zone
+      htmlTable += "<td>" + this.printNumber(zones[zone].percent, 1) + "%</td>"; // % in zone
       htmlTable += "</tr>";
       zoneId++;
     }
@@ -377,7 +377,10 @@ export abstract class AbstractDataView {
           mode: "nearest",
           callbacks: {
             label: item =>
-              Number(item.yLabel).toFixed(1) + this.units + " held during " + Time.secToMilitary(Number(item.xLabel))
+              this.printNumber(Number(item.yLabel), 1) +
+              this.units +
+              " held during " +
+              Time.secToMilitary(Number(item.xLabel))
           }
         },
         scales: {

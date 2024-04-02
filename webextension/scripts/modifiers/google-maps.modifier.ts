@@ -86,7 +86,7 @@ export class GoogleMapsModifier extends AbstractModifier {
   }
 
   protected showWaitLoadingMessage(): void {
-    $.fancybox(
+    window.$.fancybox(
       '<div style="text-align: center; padding-top: 15px;"><img src="' + this.appResources.loadingIcon + '"/></div>',
       {
         autoScale: true,
@@ -252,7 +252,7 @@ export class GoogleMapsModifier extends AbstractModifier {
       this.appResources.settingsLink +
       '#/globalSettings?searchText=Google%20Maps">Go to extension settings if you want to set specific layer OR disable google maps buttons</a></div>';
 
-    $.fancybox(html, {
+    window.$.fancybox(html, {
       autoScale: true,
       transitionIn: "fade",
       transitionOut: "fade"

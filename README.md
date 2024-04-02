@@ -1,5 +1,36 @@
 # Elevate
 
+<!-- toc -->
+- [Install](#install)
+  - [Desktop App](#desktop-app)
+    - [Download \& Install](#download--install)
+    - [Build from sources](#build-from-sources)
+  - [Web extension](#web-extension)
+    - [Download for _Chrome, Chromium, Edge (from 2020), Brave, Opera, Vivaldi, Yandex, ..._](#download-for-chrome-chromium-edge-from-2020-brave-opera-vivaldi-yandex-)
+    - [From the sources](#from-the-sources)
+- [Development](#development)
+  - [Global solution structure](#global-solution-structure)
+    - [App-core project](#app-core-project)
+    - [Desktop project](#desktop-project)
+    - [Web-extension project](#web-extension-project)
+  - [Environments setup](#environments-setup)
+    - [Install requirements](#install-requirements)
+    - [Clone the git-flow based project](#clone-the-git-flow-based-project)
+    - [Desktop development environment](#desktop-development-environment)
+    - [Web extension development environment](#web-extension-development-environment)
+  - [Build with docker](#build-with-docker)
+    - [Desktop app](#desktop-app-1)
+    - [Web extension](#web-extension-1)
+- [Appendix](#appendix)
+  - [Add a new desktop migration for a next release](#add-a-new-desktop-migration-for-a-next-release)
+  - [Sign application](#sign-application)
+    - [Self-sign with OpenSSL for windows build](#self-sign-with-openssl-for-windows-build)
+  - [Publish to github releases](#publish-to-github-releases)
+  - [Use custom browser for unit-testing (web-extension only)](#use-custom-browser-for-unit-testing-web-extension-only)
+  - [Desktop: Debug the calculated watts against real power](#desktop-debug-the-calculated-watts-against-real-power)
+
+<!-- tocstop -->
+
 ## Install
 
 ### Desktop App
