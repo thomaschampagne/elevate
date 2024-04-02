@@ -19,7 +19,7 @@
     "build:metadata": "node -e \"require('fs').writeFileSync('build_metadata.json', JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}));\"",
     "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --configuration=extension --outputPath=../webextension/dist/app/",
     "build:appcore@prod": "npm run build:appcore@dev -- --configuration=extension-prod",
-    "build:extension@dev": "node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",
+    "build:extension@dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",
     "build:extension@prod": "npm run build:extension@dev -- --mode production",
     "clean": "npm-run-all clean:*",
     "clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
