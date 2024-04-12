@@ -385,7 +385,7 @@ export class Elevate {
   public handleDesktopAppPromo(): void {
     const html = `<div id="desktopAppPromo" style="display: flex; justify-content: flex-start; background-color: rgba(0, 0, 0, 0.8); color: white; font-size: 12px; position: relative; z-index: 999; padding-top: 10px; padding-bottom: 10px;  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-align: center; border-bottom: 1px solid lightgray">
                     <div style="margin-left: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-start;">
-                      <strong>"Elevate Desktop App" is now available as Beta: more features included inside & still FREE!</strong>
+                      <strong>"Elevate Desktop App" is now available: more features included inside & still FREE!</strong>
                     </div>
                     <div style="margin-right: 10px; white-space: nowrap; flex: 1; display: flex; justify-content: flex-end;">
                       <div class="btn btn-primary btn-xs" id="desktopAppPromo_goto" style="margin-right: 10px;">Download "Elevate Desktop App" for Free</div>
@@ -397,7 +397,7 @@ export class Elevate {
         .before(html)
         .each(() => {
           $("#desktopAppPromo_goto").on("click", () => {
-            window.open(this.appResources.settingsLink + "#/desktopAppBeta", "_blank");
+            window.open(this.appResources.settingsLink + "#/desktopApp", "_blank");
           });
 
           $("#desktopAppPromo_close").on("click", () => {
