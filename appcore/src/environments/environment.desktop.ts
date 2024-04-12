@@ -16,5 +16,5 @@ export const environment = {
   showActivityDebugData: false,
   showRouteUrl: true,
   bypassProfileRestoreChecks: false,
-  backendBaseUrl: "https://peak-dev-elevate.koyeb.app/api"
+  backendBaseUrl: "http://localhost:8081"
 };

@@ -7,7 +7,7 @@
       "path": "webextension",
       "group": "build",
       "problemMatcher": [],
-      "label": "extension watch"
+      "label": "WebExt Watch"
     },
     {
       "type": "npm",
@@ -15,7 +15,14 @@
       "group": "build",
       "path": "desktop",
       "problemMatcher": [],
-      "label": "desktop watch",
+      "label": "Desktop Watch"
+    },
+    {
+      "type": "npm",
+      "script": "launch:dev:app",
+      "path": "desktop",
+      "problemMatcher": [],
+      "label": "Desktop Open Dev App",
     }
   ]
 }

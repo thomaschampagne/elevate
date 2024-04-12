@@ -4,7 +4,7 @@ const defaultBrowserKarmaConfig = {
   browsers: ["HeadlessChrome"],
   customLaunchers: {
     HeadlessChrome: {
-      base: "Chrome",
+      base: "Chromium",
       flags: [
         "--no-sandbox",
         // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md

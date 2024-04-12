@@ -1,9 +1,10 @@
 import { singleton } from "tsyringe";
-import logger, { ElectronLog } from "electron-log";
+import { MainLogger } from "electron-log";
+import logger from "electron-log/main";
 
 @singleton()
 export class Logger {
-  private readonly logger: ElectronLog;
+  private readonly logger: MainLogger;
 
   constructor() {
     this.logger = logger;
@@ -58,7 +59,7 @@ export class Logger {
     this.logger.log.apply(this, params);
   }
 
-  get base(): ElectronLog {
+  get base(): MainLogger {
     return this.logger;
   }
 }

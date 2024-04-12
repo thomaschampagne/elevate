@@ -41,7 +41,12 @@
               "pako",
               "semver",
               "file-saver",
-              "jdenticon"
+              "jdenticon",
+              "p-defer",
+              "plotly.js-basic-dist-min",
+              "json2csv",
+              "katex",
+              "moment"
             ]
           },
           "configurations": {
@@ -226,7 +231,6 @@
       }
     }
   },
-  "defaultProject": "app",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
@@ -238,6 +242,8 @@
   },
   "cli": {
     "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }
