@@ -7,7 +7,12 @@ import { CoreMessages } from "@elevate/shared/models/core-messages";
 
 class Boot {
   public static main(): void {
-    window.$ = jQuery;
+    if (!window.jQuery) {
+      console.warn("Missing jQuery, elevate will not run");
+      return;
+    }
+
+    window.$ = window.jQuery;
     window.fancybox = fancybox;
     window.fancybox(window.$);
 

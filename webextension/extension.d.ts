@@ -13,6 +13,7 @@ interface JQuery {
 }
 
 interface Window {
+  jQuery: any;
   $: any;
   fancybox: any;
   currentAthlete: any;
