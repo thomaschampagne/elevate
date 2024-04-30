@@ -320,9 +320,6 @@ export class StravaConnector extends BaseConnector {
 
                       syncEvents$.next(errorSyncEvent); // Notify error
 
-                      // Upload activity for debug purpose
-                      this.uploadStravaActivityInError(stravaActivity, streams, error.message);
-
                       return Promise.resolve(); // Continue to next activity
                     });
                 },
@@ -668,33 +665,6 @@ export class StravaConnector extends BaseConnector {
             this.type,
             `Strava wants you to slow down...🐌 Resuming sync in ${remainingSec} seconds...`
           )
-        );
-      }
-    });
-  }
-
-  public uploadStravaActivityInError(stravaActivity: StravaActivity, streams: Streams, reason: string): void {
-    // Prepare source stravaActivity and streams
-    const payload = {
-      activity: stravaActivity,
-      streams: streams
-    };
-
-    const targetTmpPath = `${os.tmpdir()}/strava_activity_${stravaActivity.id}.json`;
-
-    fs.writeFile(targetTmpPath, JSON.stringify(payload), { flag: "w+" }, err => {
-      if (err) {
-        this.logger.error(`Unable to write strava debug file to ${targetTmpPath}. Error: ${err.message}`);
-      } else {
-        this.logger.info(`Saved strava debug data to ${targetTmpPath}`);
-        this.uploadActivityInError(
-          ConnectorType.STRAVA,
-          stravaActivity.type,
-          "json",
-          "elevate",
-          reason,
-          targetTmpPath,
-          stravaActivity.id
         );
       }
     });
