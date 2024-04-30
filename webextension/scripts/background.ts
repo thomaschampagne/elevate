@@ -8,7 +8,7 @@ import { Constant } from "@elevate/shared/constants/constant";
 export class Background {
   public init(): void {
     this.listenForExternalMessages();
-    this.setBrowserActionBehaviour();
+    this.setBrowserActionBehavior();
   }
 
   /**
@@ -113,14 +113,11 @@ export class Background {
     });
   }
 
-  private setBrowserActionBehaviour(): void {
-    chrome.browserAction.onClicked.addListener(() => {
+  private setBrowserActionBehavior(): void {
+    chrome.action.onClicked.addListener(() => {
       chrome.tabs.create({
-        url: chrome.extension.getURL(Constant.APP_ROOT_URL)
+        url: chrome.runtime.getURL(Constant.APP_ROOT_URL)
       });
     });
   }
 }
-
-const background = new Background();
-background.init();

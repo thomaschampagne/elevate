@@ -3,12 +3,11 @@ const copy = require("copy-webpack-plugin");
 
 module.exports = (env, argv) => {
   return {
-    mode: "development",
+    mode: "production",
     entry: {
       content: path.join(__dirname, "./scripts/content.ts"),
       boot: path.join(__dirname, "./scripts/boot.ts"),
-      background: path.join(__dirname, "./scripts/background.ts"),
-      installer: path.join(__dirname, "./scripts/installer.ts")
+      service_worker: path.join(__dirname, "./scripts/service_worker.ts")
     },
     output: {
       path: path.join(__dirname, "dist", "extension"),
@@ -59,6 +58,9 @@ module.exports = (env, argv) => {
     ],
     performance: {
       hints: argv.mode === "production" ? false : "warning"
+    },
+    optimization: {
+      minimize: argv.mode === "production"
     }
   };
 };

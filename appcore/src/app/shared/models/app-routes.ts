@@ -1,5 +1,5 @@
 export class AppRoutes {
-  // Common
+  // Shared
   public static readonly activities: string = "activities";
   public static readonly fitnessTrend: string = "fitnessTrend";
   public static readonly yearProgressions: string = "yearProgressions";
@@ -19,5 +19,5 @@ export class AppRoutes {
   public static readonly connectors: string = "connectors";
 
   // Extension
-  public static readonly downloadDesktopApp: string = "desktopAppBeta";
+  public static readonly downloadDesktopApp: string = "desktopApp";
 }

@@ -41,16 +41,27 @@
               "pako",
               "semver",
               "file-saver",
-              "jdenticon"
+              "jdenticon",
+              "p-defer",
+              "plotly.js-basic-dist-min",
+              "json2csv",
+              "katex",
+              "moment"
             ]
           },
           "configurations": {
             "extension": {
-              "optimization": false,
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": true
+              },
               "outputHashing": "none",
               "sourceMap": true,
               "namedChunks": false,
-              "aot": false,
               "extractLicenses": false,
               "statsJson": false,
               "progress": true,
@@ -220,7 +231,6 @@
       }
     }
   },
-  "defaultProject": "app",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
@@ -232,6 +242,8 @@
   },
   "cli": {
     "analytics": false,
-    "defaultCollection": "@angular-eslint/schematics"
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
   }
 }

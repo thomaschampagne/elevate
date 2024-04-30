@@ -9,7 +9,7 @@ export class Loader {
     this.loadingFinished = loadingFinished;
 
     for (let i = 0; i < scripts.length; i++) {
-      this.writeScript(chrome.extension.getURL(scripts[i]));
+      this.writeScript(chrome.runtime.getURL(scripts[i]));
     }
   }
 
@@ -53,11 +53,5 @@ export class Loader {
       link.rel = "stylesheet";
       head.appendChild(link);
     }
-  }
-
-  public injectJS(codeString: string): void {
-    const inner: HTMLScriptElement = document.createElement("script");
-    inner.textContent = codeString;
-    (document.head || document.documentElement).appendChild(inner);
   }
 }

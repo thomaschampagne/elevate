@@ -1,0 +1,28 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "watch",
+      "path": "webextension",
+      "group": "build",
+      "problemMatcher": [],
+      "label": "WebExt Watch"
+    },
+    {
+      "type": "npm",
+      "script": "start",
+      "group": "build",
+      "path": "desktop",
+      "problemMatcher": [],
+      "label": "Desktop Watch"
+    },
+    {
+      "type": "npm",
+      "script": "launch:dev:app",
+      "path": "desktop",
+      "problemMatcher": [],
+      "label": "Desktop Open Dev App",
+    }
+  ]
+}

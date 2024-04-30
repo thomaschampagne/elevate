@@ -142,7 +142,7 @@ export class WindyTyModifier extends AbstractModifier {
 
     console.debug("Load wheather url: " + url);
 
-    $.fancybox({
+    window.$.fancybox({
       width: "100%",
       height: "100%",
       autoScale: true,

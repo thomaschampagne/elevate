@@ -195,7 +195,7 @@ describe("CourseMaker", () => {
     const courseName = "MyCourse";
 
     expect(() => {
-      courseMaker.create(-1, courseName, streams); // When
+      courseMaker.create(-1 as ExportTypes, courseName, streams); // When
     }).toThrowError("Export type do not exist"); // Then
 
     done();

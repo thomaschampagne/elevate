@@ -1,12 +1,12 @@
-import _ from "lodash";
-import { RateLimit, StravaApiClient } from "./strava-api.client";
-import { container } from "tsyringe";
-import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
-import { StatusCodes } from "../enum/status-codes.enum";
 import { Gender } from "@elevate/shared/models/athlete/gender.enum";
-import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
 import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
+import { AxiosError, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig } from "axios";
+import _ from "lodash";
+import { container } from "tsyringe";
+import { StatusCodes } from "../enum/status-codes.enum";
+import { RateLimit, StravaApiClient } from "./strava-api.client";
 
 describe("StravaApiClient", () => {
   let stravaApiClient: StravaApiClient;
@@ -294,7 +294,7 @@ describe("StravaApiClient", () => {
       dataResponse: object,
       statusCode: number = StatusCodes.OK,
       statusMessage: string = null,
-      headers: AxiosResponseHeaders = {}
+      headers: AxiosResponseHeaders = {} as AxiosResponseHeaders
     ): AxiosResponse => {
       headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
       headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";
@@ -304,14 +304,14 @@ describe("StravaApiClient", () => {
         status: statusCode,
         statusText: statusMessage,
         headers: headers,
-        config: {}
+        config: {} as InternalAxiosRequestConfig
       };
     };
 
     const createErrorResponse = (
       statusCode: number,
       statusMessage: string = null,
-      headers: AxiosResponseHeaders = {}
+      headers: AxiosResponseHeaders = {} as AxiosResponseHeaders
     ): AxiosError => {
       const response = createResponse(null, statusCode, statusMessage, headers);
 

@@ -42,7 +42,7 @@ export class MenuModifier extends AbstractModifier {
     const globalNav: JQuery = $(".global-nav");
     let html = "<li class='drop-down-menu nav-item'>";
 
-    const menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'"; // TODO Globalize colors;
+    const menuStyle = "style='font-size:20px; background-color: transparent; color: #fc4c02;'";
     const menuIcon: string = this.appResources.menuIconOrange;
 
     const styleSideRight =
@@ -58,12 +58,6 @@ export class MenuModifier extends AbstractModifier {
     html +=
       "<script>document.getElementById('drop-down-menu_img').onmousedown = function(event) { if (event.which == 3) { window.location.href = 'https://www.strava.com/athlete/training?utm_source=top-nav';}}</script>";
     html += "<ul class='options' style='width: 300px; max-height: 650px !important; overflow:hidden;'>";
-    html +=
-      "<li><a target='_blank' href='" +
-      this.appResources.settingsLink +
-      "#/desktopAppBeta'><img style='vertical-align:middle' src='" +
-      this.appResources.systemUpdatesIcon +
-      "'/>&nbsp;&nbsp;&nbsp;<span style='color: #fc4c02;'>Download Desktop App (Beta)</span></a></li>";
     html +=
       "<li><a target='_blank' href='" +
       this.appResources.settingsLink +
@@ -136,7 +130,9 @@ export class MenuModifier extends AbstractModifier {
     html +=
       "<li style='" +
       styleSideLeft +
-      "'><a style='font-style: italic;' href='https://github.com/thomaschampagne/elevate/wiki/Frequently-Asked-Questions' target='_blank'><img style='vertical-align:middle' src='" +
+      "'><a style='font-style: italic;' href='" +
+      this.appResources.settingsLink +
+      "#/help' target='_blank'><img style='vertical-align:middle' src='" +
       this.appResources.helpIcon +
       "'/>&nbsp;&nbsp;&nbsp;<span> FAQ</span></a></li>";
 
@@ -151,11 +147,15 @@ export class MenuModifier extends AbstractModifier {
     html +=
       "<li style='border-top: 1px solid #DDD;" +
       styleSideLeft +
-      "'><a target='_blank' href='" +
-      this.appResources.settingsLink +
-      "#/share'><img style='vertical-align:middle' src='" +
+      "'><a target='_blank' href='https://thomaschampagne.github.io/elevate/'><img style='vertical-align:middle' src='" +
       this.appResources.shareIcon +
       "'/>&nbsp;&nbsp;&nbsp;<span>Share</span></a></li>";
+    html +=
+      "<li style='border-top: 1px solid #DDD;'><a target='_blank' href='" +
+      this.appResources.settingsLink +
+      "#/desktopApp'><img style='vertical-align:middle' src='" +
+      this.appResources.systemUpdatesIcon +
+      "'/>&nbsp;&nbsp;&nbsp;<span style='color: #fc4c02;'>Download Desktop App</span></a></li>";
     html += "</ul>";
     html += "</li>";
     globalNav.children().first().before(html);

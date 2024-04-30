@@ -77,10 +77,6 @@ export class Content {
           userSettings: userSettings,
           appResources: this.appResources
         };
-
-        // Inject jQuery as $
-        Content.loader.injectJS("const $ = jQuery;");
-
         Content.loader.require(["extension/boot.bundle.js"], () => {
           this.emitStartCoreEvent(startCoreData);
         });
@@ -88,62 +84,69 @@ export class Content {
   }
 
   protected emitStartCoreEvent(startCoreData: StartCoreDataModel) {
-    const startCorePluginEvent: CustomEvent = new CustomEvent("Event");
-    startCorePluginEvent.initCustomEvent(CoreMessages.ON_START_CORE_EVENT, true, true, startCoreData);
+    const startCorePluginEvent: CustomEvent = new CustomEvent(CoreMessages.ON_START_CORE_EVENT, {
+      bubbles: true,
+      cancelable: true,
+      detail: startCoreData
+    });
     dispatchEvent(startCorePluginEvent);
   }
 }
 
+const getURL = (path: string): string => {
+  return `chrome-extension://${chrome.runtime.id}/${path}`.replace(/\/\//g, "/");
+};
+
 export const appResources: AppResourcesModel = {
-  settingsLink: chrome.extension.getURL("/app/index.html"),
-  logoElevate: chrome.extension.getURL("/extension/icons/logo_elevate_no_circle.svg"),
-  menuIconBlack: chrome.extension.getURL("/extension/icons/ic_menu_24px_black.svg"),
-  menuIconOrange: chrome.extension.getURL("/extension/icons/ic_menu_24px_orange.svg"),
-  remoteViewIcon: chrome.extension.getURL("/extension/icons/ic_open_in_new_24px.svg"),
-  pollIcon: chrome.extension.getURL("/extension/icons/ic_poll_24px.svg"),
-  helpIcon: chrome.extension.getURL("/extension/icons/ic_help_black_24px.svg"),
-  veloviewerIcon: chrome.extension.getURL("/extension/icons/veloviewer.ico"),
-  raceshapeIcon: chrome.extension.getURL("/extension/icons/raceshape.ico"),
-  veloviewerDashboardIcon: chrome.extension.getURL("/extension/icons/ic_dashboard_24px.svg"),
-  veloviewerChallengesIcon: chrome.extension.getURL("/extension/icons/ic_landscape_24px.svg"),
-  labIcon: chrome.extension.getURL("/extension/icons/lab.png"),
-  settingsIcon: chrome.extension.getURL("/extension/icons/ic_settings_24px.svg"),
-  heartIcon: chrome.extension.getURL("/extension/icons/ic_favorite_24px.svg"),
-  zonesIcon: chrome.extension.getURL("/extension/icons/ic_format_line_spacing_24px.svg"),
-  komMapIcon: chrome.extension.getURL("/extension/icons/ic_looks_one_24px.svg"),
-  heatmapIcon: chrome.extension.getURL("/extension/icons/ic_whatshot_24px.svg"),
-  bugIcon: chrome.extension.getURL("/extension/icons/ic_bug_report_24px.svg"),
-  rateIcon: chrome.extension.getURL("/extension/icons/ic_star_24px.svg"),
-  aboutIcon: chrome.extension.getURL("/extension/icons/ic_info_outline_24px.svg"),
-  peopleIcon: chrome.extension.getURL("/extension/icons/ic_supervisor_account_black_24px.svg"),
-  eyeIcon: chrome.extension.getURL("/extension/icons/ic_remove_red_eye_24px.svg"),
-  bikeIcon: chrome.extension.getURL("/extension/icons/ic_directions_bike_24px.svg"),
-  mapIcon: chrome.extension.getURL("/extension/icons/ic_map_24px.svg"),
-  wheatherIcon: chrome.extension.getURL("/extension/icons/ic_wb_sunny_24px.svg"),
-  twitterIcon: chrome.extension.getURL("/extension/icons/twitter.svg"),
-  systemUpdatesIcon: chrome.extension.getURL("/extension/icons/ic_system_update_24px.svg"),
-  fitnessCenterIcon: chrome.extension.getURL("/extension/icons/ic_fitness_center_black_24px.svg"),
-  timelineIcon: chrome.extension.getURL("/extension/icons/ic_timeline_black_24px.svg"),
-  viewListIcon: chrome.extension.getURL("/extension/icons/baseline-view_list-24px.svg"),
-  dateRange: chrome.extension.getURL("/extension/icons/ic_date_range_black_24px.svg"),
-  athleteIcon: chrome.extension.getURL("/extension/icons/ic_accessibility_black_24px.svg"),
-  donateIcon: chrome.extension.getURL("/extension/icons/ic_attach_money_24px.svg"),
-  shareIcon: chrome.extension.getURL("/extension/icons/ic_share_24px.svg"),
-  trackChangesIcon: chrome.extension.getURL("/extension/icons/ic_track_changes_24px.svg"),
-  trendingUpIcon: chrome.extension.getURL("/extension/icons/ic_trending_up_black_24px.svg"),
-  qrCodeIcon: chrome.extension.getURL("/extension/icons/qrcode.svg"),
-  lightbulbIcon: chrome.extension.getURL("/extension/icons/fa-lightbulb-o.png"),
-  heartBeatIcon: chrome.extension.getURL("/extension/icons/fa-heartbeat.png"),
-  areaChartIcon: chrome.extension.getURL("/extension/icons/fa-area-chart.png"),
-  tachometerIcon: chrome.extension.getURL("/extension/icons/fa-tachometer.png"),
-  boltIcon: chrome.extension.getURL("/extension/icons/fa-bolt.png"),
-  loadingIcon: chrome.extension.getURL("/extension/icons/loading.gif"),
-  circleNotchIcon: chrome.extension.getURL("/extension/icons/fa-circle-o-notch.png"),
-  lineChartIcon: chrome.extension.getURL("/extension/icons/fa-line-chart.png"),
-  logArrowUpIcon: chrome.extension.getURL("/extension/icons/fa-long-arrow-up.png"),
-  cogIcon: chrome.extension.getURL("/extension/icons/fa-cog.png"),
-  logoNoText: chrome.extension.getURL("/extension/icons/logo_no_text.svg"),
-  logoTextOnly: chrome.extension.getURL("/extension/icons/logo_text_only.svg"),
+  settingsLink: getURL("/app/index.html"),
+  logoElevate: getURL("/extension/icons/logo_elevate_no_circle.svg"),
+  menuIconBlack: getURL("/extension/icons/ic_menu_24px_black.svg"),
+  menuIconOrange: getURL("/extension/icons/ic_menu_24px_orange.svg"),
+  remoteViewIcon: getURL("/extension/icons/ic_open_in_new_24px.svg"),
+  pollIcon: getURL("/extension/icons/ic_poll_24px.svg"),
+  helpIcon: getURL("/extension/icons/ic_help_black_24px.svg"),
+  veloviewerIcon: getURL("/extension/icons/veloviewer.ico"),
+  raceshapeIcon: getURL("/extension/icons/raceshape.ico"),
+  veloviewerDashboardIcon: getURL("/extension/icons/ic_dashboard_24px.svg"),
+  veloviewerChallengesIcon: getURL("/extension/icons/ic_landscape_24px.svg"),
+  labIcon: getURL("/extension/icons/lab.png"),
+  settingsIcon: getURL("/extension/icons/ic_settings_24px.svg"),
+  heartIcon: getURL("/extension/icons/ic_favorite_24px.svg"),
+  zonesIcon: getURL("/extension/icons/ic_format_line_spacing_24px.svg"),
+  komMapIcon: getURL("/extension/icons/ic_looks_one_24px.svg"),
+  heatmapIcon: getURL("/extension/icons/ic_whatshot_24px.svg"),
+  bugIcon: getURL("/extension/icons/ic_bug_report_24px.svg"),
+  rateIcon: getURL("/extension/icons/ic_star_24px.svg"),
+  aboutIcon: getURL("/extension/icons/ic_info_outline_24px.svg"),
+  peopleIcon: getURL("/extension/icons/ic_supervisor_account_black_24px.svg"),
+  eyeIcon: getURL("/extension/icons/ic_remove_red_eye_24px.svg"),
+  bikeIcon: getURL("/extension/icons/ic_directions_bike_24px.svg"),
+  mapIcon: getURL("/extension/icons/ic_map_24px.svg"),
+  wheatherIcon: getURL("/extension/icons/ic_wb_sunny_24px.svg"),
+  twitterIcon: getURL("/extension/icons/twitter.svg"),
+  systemUpdatesIcon: getURL("/extension/icons/ic_system_update_24px.svg"),
+  fitnessCenterIcon: getURL("/extension/icons/ic_fitness_center_black_24px.svg"),
+  timelineIcon: getURL("/extension/icons/ic_timeline_black_24px.svg"),
+  viewListIcon: getURL("/extension/icons/baseline-view_list-24px.svg"),
+  dateRange: getURL("/extension/icons/ic_date_range_black_24px.svg"),
+  athleteIcon: getURL("/extension/icons/ic_accessibility_black_24px.svg"),
+  donateIcon: getURL("/extension/icons/ic_attach_money_24px.svg"),
+  shareIcon: getURL("/extension/icons/ic_share_24px.svg"),
+  trackChangesIcon: getURL("/extension/icons/ic_track_changes_24px.svg"),
+  trendingUpIcon: getURL("/extension/icons/ic_trending_up_black_24px.svg"),
+  qrCodeIcon: getURL("/extension/icons/qrcode.svg"),
+  lightbulbIcon: getURL("/extension/icons/fa-lightbulb-o.png"),
+  heartBeatIcon: getURL("/extension/icons/fa-heartbeat.png"),
+  areaChartIcon: getURL("/extension/icons/fa-area-chart.png"),
+  tachometerIcon: getURL("/extension/icons/fa-tachometer.png"),
+  boltIcon: getURL("/extension/icons/fa-bolt.png"),
+  loadingIcon: getURL("/extension/icons/loading.gif"),
+  circleNotchIcon: getURL("/extension/icons/fa-circle-o-notch.png"),
+  lineChartIcon: getURL("/extension/icons/fa-line-chart.png"),
+  logArrowUpIcon: getURL("/extension/icons/fa-long-arrow-up.png"),
+  cogIcon: getURL("/extension/icons/fa-cog.png"),
+  logoNoText: getURL("/extension/icons/logo_no_text.svg"),
+  logoTextOnly: getURL("/extension/icons/logo_text_only.svg"),
   extVersion: chrome.runtime.getManifest().version_name,
   extVersionName: chrome.runtime.getManifest().version_name,
   extensionId: chrome.runtime.id
