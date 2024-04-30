@@ -127,8 +127,6 @@ describe("StravaConnector", () => {
     // Skip sleep to 0ms
     spyOn(stravaConnector.stravaApiClient, "sleep").and.returnValue(Promise.resolve());
 
-    spyOn(stravaConnector, "uploadStravaActivityInError").and.stub();
-
     // Avoid worker use for activity computing
     computeActivitySpy = spyOn(stravaConnector, "computeActivity").and.callFake(
       (
@@ -247,7 +245,9 @@ describe("StravaConnector", () => {
 
       // Then
       syncEvent$.pipe(filter(evt => evt.type !== SyncEventType.GENERIC)).subscribe(
-        () => {},
+        () => {
+          // Nothing...
+        },
         error => {
           expect(error).toBeDefined();
           expect(syncPagesSpy).toBeCalledTimes(expectedSyncPagesCalls);

@@ -92,7 +92,6 @@ describe("Strava activities integration tests", () => {
 
     spyOn(stravaConnector.athleteSnapshotResolver, "resolve").and.returnValue(athleteSnapshotModel);
     spyOn(stravaConnector, "findLocalActivities").and.returnValue(Promise.resolve(null));
-    spyOn(stravaConnector, "uploadToConnectorDebug").and.stub();
 
     syncEventsSpy = spyOn(syncEvents$, "next").and.callThrough();
 

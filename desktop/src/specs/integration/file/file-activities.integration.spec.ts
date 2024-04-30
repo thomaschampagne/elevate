@@ -110,8 +110,6 @@ describe("File activities integration tests", () => {
       }
     );
 
-    spyOn(fileConnector, "uploadToConnectorDebug").and.stub();
-
     // Same for activity computing: avoid worker use
     spyOn(fileConnector, "computeActivity").and.callFake(
       (

@@ -124,8 +124,6 @@ describe("FileConnector", () => {
       return SportsLibProcessor.getEvent(activityFile.location.path);
     });
 
-    spyOn(fileConnector, "uploadToConnectorDebug").and.stub();
-
     // Same for activity computing: avoid worker use
     spyOn(fileConnector, "computeActivity").and.callFake(
       (
@@ -493,7 +491,9 @@ describe("FileConnector", () => {
 
       // Then
       syncEvent$.subscribe(
-        () => {},
+        () => {
+          // Nothing...
+        },
         error => {
           expect(error).toBeDefined();
           expect(syncEvents$NextSpy).toHaveBeenCalledWith(new StoppedSyncEvent(ConnectorType.FILE));
