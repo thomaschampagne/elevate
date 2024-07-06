@@ -1,18 +1,13 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Elevate for Strava",
   "short_name": "Elevate",
   "description": "Elevate your strava experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...",
-  "version": "7.0.0.5",
-  "version_name": "7.0.0-5",
+  "version": "7.1.0",
+  "version_name": "7.1.0",
   "background": {
-    "scripts": [
-      "extension/installer.bundle.js",
-      "extension/background.bundle.js"
-    ]
-  },
-  "browser_action": {
-    "default_title": "Open Elevate App"
+    "service_worker": "extension/service_worker.bundle.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -32,20 +27,31 @@
     "128": "extension/icons/128.png"
   },
   "options_page": "app/index.html",
-  "content_security_policy": "script-src 'self' 'unsafe-eval' ; object-src 'self'",
   "permissions": [
-    "*://www.strava.com/*",
-    "*://app.strava.com/*",
     "storage",
     "unlimitedStorage"
   ],
   "web_accessible_resources": [
-    "extension/*",
-    "app/*"
+    {
+      "resources": [
+        "extension/*",
+        "app/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ],
   "externally_connectable": {
     "matches": [
       "*://*.strava.com/*"
     ]
-  }
+  },
+  "action": {
+    "default_title": "Open Elevate App"
+  },
+  "host_permissions": [
+    "*://www.strava.com/*",
+    "*://app.strava.com/*"
+  ]
 }

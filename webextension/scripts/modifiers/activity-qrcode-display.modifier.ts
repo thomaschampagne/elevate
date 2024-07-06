@@ -27,7 +27,7 @@ export class ActivityQRCodeDisplayModifier extends AbstractModifier {
       .each(() => {
         // Once dom inserted
         $("#activityFlashCodeButton").click(() => {
-          $.fancybox(
+          window.$.fancybox(
             "<div align='center'><h2>#elevate Activity Flash code</h2><h3>Scan from your smart phone.</h3><p><canvas style='padding: 0px 60px 0px 60px;' id='qrcode'></canvas></p><h3>Save by right click on image then \"Save image as...\"</h3></div>"
           );
 

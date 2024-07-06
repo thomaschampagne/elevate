@@ -119,26 +119,6 @@ export class ActivitiesSyncModifier extends AbstractModifier {
       (error: any) => {
         console.error("Sync error", error);
 
-        const errorUpdate: any = {
-          stravaId: window.currentAthlete && window.currentAthlete.get("id") ? window.currentAthlete.get("id") : null,
-          error: { path: window.location.href, date: new Date(), content: error }
-        };
-
-        const endPoint = DistributedEndpointsResolver.resolve(ExtensionEnv.endPoint) + "/api/errorReport";
-
-        $.post({
-          url: endPoint,
-          data: JSON.stringify(errorUpdate),
-          dataType: "json",
-          contentType: "application/json",
-          success: (response: any) => {
-            console.log("Commited: ", response);
-          },
-          error: (jqXHR: JQueryXHR, textStatus: string, errorThrown: string) => {
-            console.warn("Endpoint <" + endPoint + "> not reachable", jqXHR);
-          }
-        });
-
         if (error) {
           // Too many request :/
           $("#syncStatusError").show();

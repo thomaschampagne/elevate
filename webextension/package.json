@@ -1,6 +1,6 @@
 {
   "name": "elevate-sports-app",
-  "version": "7.0.0-beta.5",
+  "version": "7.1.0",
   "description": "Chrome based extension adding features for Strava website with new performances data and improved ergonomics.",
   "maintainers": [
     {
@@ -17,9 +17,9 @@
     "archive": "node -e \"const bestzip = require('bestzip');const manifest = require('./dist/manifest.json');const fs = require('fs');const cwd = process.cwd() + '/dist/';const target = 'package/';const filename = `web-extension_v${manifest.version_name}.zip`;const output = '../' + target + filename;if (!fs.existsSync(target)) fs.mkdirSync(target);bestzip.nodeZip({ source: '*', cwd: cwd, destination: output }).then(() => {console.log('Generated archive ' + filename);process.exit(0);}).catch((err) => {console.error(err.stack);process.exit(1);});\"",
     "build@prod": "npm-run-all clean extension-res-copy:* build:extension@prod build:appcore@prod",
     "build:metadata": "node -e \"require('fs').writeFileSync('build_metadata.json', JSON.stringify({commit: require('child_process').execSync('git rev-parse HEAD').toString().trim(), date: new Date().toISOString()}));\"",
-    "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng --version && node ./node_modules/@angular/cli/bin/ng build --configuration=extension --outputPath=../webextension/dist/app/",
+    "build:appcore@dev": "npm run build:metadata && cd ../appcore/ && node ./node_modules/@angular/cli/bin/ng version && node ./node_modules/@angular/cli/bin/ng build --configuration=extension --output-path=../webextension/dist/app/",
     "build:appcore@prod": "npm run build:appcore@dev -- --configuration=extension-prod",
-    "build:extension@dev": "node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",
+    "build:extension@dev": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ./node_modules/webpack/bin/webpack.js --config ./extension.webpack.config.js",
     "build:extension@prod": "npm run build:extension@dev -- --mode production",
     "clean": "npm-run-all clean:*",
     "clean:dist": "node ../node_modules/del-cli/cli.js ./dist/",
@@ -59,14 +59,14 @@
     "jquery": "^3.5.1",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.20",
-    "lz-string": "github:pieroxy/lz-string",
+    "lz-string": "^1.5.0",
     "q": "^1.5.1",
     "qrcode": "^1.4.4",
     "semver": "^7.3.4"
   },
   "devDependencies": {
     "@types/chart.js": "^2.9.30",
-    "@types/chrome": "0.0.129",
+    "@types/chrome": "0.0.263",
     "@types/file-saver": "^2.0.1",
     "@types/filesystem": "0.0.29",
     "@types/filewriter": "0.0.28",

@@ -1,5 +1,4 @@
 declare const Strava: any;
-declare const follow: any; // variable for Google Analytics
 declare const d3: any;
 
 declare module "fancybox";
@@ -14,6 +13,9 @@ interface JQuery {
 }
 
 interface Window {
+  jQuery: any;
+  $: any;
+  fancybox: any;
   currentAthlete: any;
   pageView: any; // Allow access of window.pageView where page wiew
   googleMapsApiLoaded: () => void;

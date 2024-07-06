@@ -1,25 +1,24 @@
 <div class="mat-body-1" id="app-container">
   <ng-container appTopBar></ng-container>
   <mat-sidenav-container>
-    <mat-sidenav (closed)="onSideNavClosed()"
-                 (opened)="onSideNavOpened()"
-                 mode="side">
+    <mat-sidenav (closed)="onSideNavClosed()" (opened)="onSideNavOpened()" mode="side">
       <mat-nav-list>
-        <mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
-                       routerLinkActive="{{item.routerLinkActive}}">
-          <mat-icon *ngIf="item.iconClass" fontSet="material-icons-outlined" [color]="item.iconClass">{{item.icon}}</mat-icon>
-          <mat-icon *ngIf="!item.iconClass" fontSet="material-icons-outlined">{{item.icon}}</mat-icon>
-          <span class="mat-body-1">{{item.name}}</span>
-        </mat-list-item>
         <mat-list-item (click)="openResourceResolver.openLink('https://www.strava.com/dashboard')"
-                       *ngIf="(buildTarget === BuildTarget.EXTENSION)">
+          *ngIf="(buildTarget === BuildTarget.EXTENSION)">
           <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
           <span class="mat-body-1">Strava Dashboard</span>
+        </mat-list-item>
+        <mat-list-item *ngFor="let item of mainMenuItems" routerLink="/{{item.routerLink}}"
+          routerLinkActive="{{item.routerLinkActive}}">
+          <mat-icon *ngIf="item.iconClass" fontSet="material-icons-outlined"
+            [color]="item.iconClass">{{item.icon}}</mat-icon>
+          <mat-icon *ngIf="!item.iconClass" fontSet="material-icons-outlined">{{item.icon}}</mat-icon>
+          <span class="mat-body-1">{{item.name}}</span>
         </mat-list-item>
       </mat-nav-list>
 
       <div id="logo" class="clickable" (click)="onOpenWebSite()"
-           matTooltip="Elevate v{{ versionsProvider.getPackageVersion() }}" matTooltipPosition="above"></div>
+        matTooltip="Elevate v{{ versionsProvider.getPackageVersion() }}" matTooltipPosition="above"></div>
 
     </mat-sidenav>
 
@@ -37,7 +36,7 @@
 
       <button (click)="onThemeToggle()" id="theme-toggle" mat-icon-button>
         <mat-icon *ngIf="appService.currentTheme === Theme.LIGHT" fontSet="material-icons-outlined"
-                  style="transform: rotate(-35deg) scaleX(-1);">
+          style="transform: rotate(-35deg) scaleX(-1);">
           brightness_3 <!--Moon icon rotate by -35deg-->
         </mat-icon>
         <mat-icon *ngIf="appService.currentTheme === Theme.DARK" fontSet="material-icons-outlined">wb_sunny</mat-icon>

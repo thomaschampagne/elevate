@@ -1,32 +1,32 @@
-import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
-import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
-import jsonFakeActivityFixture from "./fixtures/sample_activity.fixture.json";
-import _ from "lodash";
-import { StravaApiClient } from "../../clients/strava-api.client";
-import { StravaApiStreamType, StravaBareActivity, StravaConnector } from "./strava.connector";
-import { container } from "tsyringe";
-import { AppService } from "../../app-service";
-import { Subject } from "rxjs";
-import { filter } from "rxjs/operators";
-import { StravaConnectorConfig } from "../connector-config.model";
-import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
-import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
-import { StatusCodes } from "../../enum/status-codes.enum";
-import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { BuildTarget } from "@elevate/shared/enums/build-target.enum";
-import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
-import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import { Streams } from "@elevate/shared/models/activity-data/streams.model";
-import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { AthleteSnapshot } from "@elevate/shared/models/athlete/athlete-snapshot.model";
+import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
+import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { StartedSyncEvent } from "@elevate/shared/sync/events/started-sync.event";
 import { StoppedSyncEvent } from "@elevate/shared/sync/events/stopped-sync.event";
 import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
-import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
-import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
-import { StartedSyncEvent } from "@elevate/shared/sync/events/started-sync.event";
-import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
+import { AxiosError, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig } from "axios";
+import _ from "lodash";
+import { Subject } from "rxjs";
+import { filter } from "rxjs/operators";
+import { container } from "tsyringe";
+import { AppService } from "../../app-service";
+import { StravaApiClient } from "../../clients/strava-api.client";
+import { StatusCodes } from "../../enum/status-codes.enum";
+import { ActivityComputeProcessor } from "../../processors/activity-compute/activity-compute.processor";
+import { StravaConnectorConfig } from "../connector-config.model";
+import jsonFakeActivitiesFixture from "./fixtures/sample_activities.fixture.json";
+import jsonFakeActivityFixture from "./fixtures/sample_activity.fixture.json";
+import jsonFakeStreamsFixture from "./fixtures/sample_streams.fixture.json";
+import { StravaApiStreamType, StravaBareActivity, StravaConnector } from "./strava.connector";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
 const getActivitiesFixture = (page: number, perPage: number, activities: Array<StravaBareActivity[]>) => {
@@ -39,7 +39,7 @@ const createResponse = (
   dataResponse: object,
   statusCode: number = StatusCodes.OK,
   statusMessage: string = null,
-  headers: AxiosResponseHeaders = {}
+  headers: AxiosResponseHeaders = {} as AxiosResponseHeaders
 ): AxiosResponse => {
   headers[StravaApiClient.STRAVA_RATELIMIT_LIMIT_HEADER] = "600,30000";
   headers[StravaApiClient.STRAVA_RATELIMIT_USAGE_HEADER] = "0,0";
@@ -49,14 +49,14 @@ const createResponse = (
     status: statusCode,
     statusText: statusMessage,
     headers: headers,
-    config: {}
+    config: {} as InternalAxiosRequestConfig
   };
 };
 
 const createErrorResponse = (
   statusCode: number,
   statusMessage: string = null,
-  headers: AxiosResponseHeaders = {}
+  headers: AxiosResponseHeaders = {} as AxiosResponseHeaders
 ): AxiosError => {
   const response = createResponse(null, statusCode, statusMessage, headers);
 
@@ -126,8 +126,6 @@ describe("StravaConnector", () => {
 
     // Skip sleep to 0ms
     spyOn(stravaConnector.stravaApiClient, "sleep").and.returnValue(Promise.resolve());
-
-    spyOn(stravaConnector, "uploadStravaActivityInError").and.stub();
 
     // Avoid worker use for activity computing
     computeActivitySpy = spyOn(stravaConnector, "computeActivity").and.callFake(
@@ -247,7 +245,9 @@ describe("StravaConnector", () => {
 
       // Then
       syncEvent$.pipe(filter(evt => evt.type !== SyncEventType.GENERIC)).subscribe(
-        () => {},
+        () => {
+          // Nothing...
+        },
         error => {
           expect(error).toBeDefined();
           expect(syncPagesSpy).toBeCalledTimes(expectedSyncPagesCalls);

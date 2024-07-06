@@ -16,8 +16,8 @@ import { ActivityInfoModel } from "@elevate/shared/models/activity-data/activity
 import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
 export abstract class AbstractExtendedDataModifier {
-  public static TYPE_ACTIVITY = 0;
-  public static TYPE_SEGMENT = 1;
+  public static readonly TYPE_ACTIVITY = 0;
+  public static readonly TYPE_SEGMENT = 1;
 
   protected activityProcessor: ActivityProcessor;
   protected activityType: string;
@@ -328,7 +328,7 @@ export abstract class AbstractExtendedDataModifier {
   }
 
   protected showResultsAndRefreshGraphs(): void {
-    $.fancybox({
+    window.$.fancybox({
       padding: 0,
       margin: 15,
       width: "100%",

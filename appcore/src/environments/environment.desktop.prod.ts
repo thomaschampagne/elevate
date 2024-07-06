@@ -16,5 +16,5 @@ export const environment = {
   showActivityDebugData: false,
   showRouteUrl: false,
   bypassProfileRestoreChecks: false,
-  backendBaseUrl: "https://peak-elevate.koyeb.app/api"
+  backendBaseUrl: "https://api.elevate.cloudns.ch"
 };

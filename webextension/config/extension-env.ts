@@ -4,5 +4,4 @@ export class ExtensionEnv {
   public static readonly simulateUpdate = false; // Must be false in release
   public static readonly debugMode = false; // Must be false in release
   public static readonly forceIsActivityOwner = false; // Must be false in release
-  public static readonly endPoint = "https://elevate-prod-${id}.herokuapp.com"; // Elevate endPoint for new features
 }

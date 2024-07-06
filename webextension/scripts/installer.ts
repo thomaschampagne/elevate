@@ -22,7 +22,7 @@ import { AppPackage } from "@elevate/shared/tools/app-package";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 import ExtensionUserSettings = UserSettings.ExtensionUserSettings;
 
-class Installer {
+export class Installer {
   public previousVersion: string;
   public currentVersion: string;
 
@@ -67,7 +67,7 @@ class Installer {
         console.log("First install. Display website new tab:", tab);
         chrome.tabs.create(
           {
-            url: chrome.extension.getURL(Constant.APP_ROOT_URL)
+            url: chrome.runtime.getURL(Constant.APP_ROOT_URL)
           },
           (tab: chrome.tabs.Tab) => {
             console.log("First install. Display settings:", tab);
@@ -1248,6 +1248,3 @@ class Installer {
     return activity;
   }
 }
-
-const installer = new Installer();
-installer.listen();

@@ -459,14 +459,6 @@ export class FileConnector extends BaseConnector {
                                   error
                                 );
 
-                                // Upload file for debug purpose
-                                this.uploadFileActivityInError(
-                                  activityInError.type,
-                                  activityFile,
-                                  "elevate",
-                                  `${error.message}`
-                                );
-
                                 return Promise.reject(errorSyncEvent);
                               });
                           } else {
@@ -539,11 +531,6 @@ export class FileConnector extends BaseConnector {
                   syncEvents$.next(
                     ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(ConnectorType.FILE, error.message || error)
                   );
-                }
-
-                // If error file not empty or not in duration exceed then upload it for debug purpose
-                if (error?.code !== EmptyEventLibError.CODE && error?.code !== DurationExceededEventLibError.CODE) {
-                  this.uploadFileActivityInError("Unknown", activityFile, "sports-lib", `${error.message}`);
                 }
 
                 return this.wait();
@@ -1200,32 +1187,11 @@ export class FileConnector extends BaseConnector {
       // If not send the files and track reason hash
       // Else don't upload and return device name
       if (this.unknownDevicesReasonsIds.indexOf(reasonHashId) === -1) {
-        this.uploadUnknownDeviceFileForDebug(activityFile, reason);
         this.unknownDevicesReasonsIds.push(reasonHashId);
       }
     }
 
     return deviceName;
-  }
-
-  protected uploadFileActivityInError(sport: string, activityFile: ActivityFile, source: string, reason: string): void {
-    this.uploadActivityInError(
-      ConnectorType.FILE,
-      sport,
-      activityFile.type.toLowerCase(),
-      source,
-      reason,
-      activityFile.location.path
-    );
-  }
-
-  protected uploadUnknownDeviceFileForDebug(activityFile: ActivityFile, reason: string): void {
-    this.uploadToConnectorDebug(
-      "file/unknownDevice",
-      activityFile.type.toLowerCase(),
-      reason,
-      activityFile.location.path
-    );
   }
 
   public wait(): Promise<void> {

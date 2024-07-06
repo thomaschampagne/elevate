@@ -103,17 +103,19 @@ export class ExtensionAdvancedMenuComponent extends AdvancedMenuComponent {
       data: data
     });
 
-    const afterClosedSubscription = dialogRef.afterClosed().subscribe((confirm: boolean) => {
+    const afterClosedSubscription = dialogRef.afterClosed().subscribe(async (confirm: boolean) => {
       if (confirm) {
-        Promise.all([
-          this.extensionUserSettingsService.resetGlobalSettings(),
-          this.extensionUserSettingsService.resetZonesSettings(),
-          this.athleteService.resetSettings(),
-          this.extensionUserSettingsService.clearLocalStorageOnNextLoad()
-        ]).then(() => {
+        try {
+          await this.extensionUserSettingsService.resetGlobalSettings();
+          await this.extensionUserSettingsService.resetZonesSettings();
+          await this.athleteService.resetSettings();
+          await this.extensionUserSettingsService.clearLocalStorageOnNextLoad();
           this.snackBar.open("Settings have been reset", "Close");
           afterClosedSubscription.unsubscribe();
-        });
+        } catch (error) {
+          console.error(error);
+          afterClosedSubscription.unsubscribe();
+        }
       }
     });
   }

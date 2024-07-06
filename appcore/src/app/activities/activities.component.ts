@@ -4,7 +4,7 @@ import { saveAs } from "file-saver";
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ActivityService } from "../shared/services/activity/activity.service";
 import { MatDialog } from "@angular/material/dialog";
-import { MatPaginator } from "@angular/material/paginator";
+import { MatPaginator, PageEvent } from "@angular/material/paginator";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -12,7 +12,6 @@ import { ActivityColumns } from "./activity-columns.namespace";
 import { UserSettingsService } from "../shared/services/user-settings/user-settings.service";
 import { GotItDialogComponent } from "../shared/dialogs/got-it-dialog/got-it-dialog.component";
 import { GotItDialogDataModel } from "../shared/dialogs/got-it-dialog/got-it-dialog-data.model";
-import json2csv, { Parser as Json2CsvParser } from "json2csv";
 import { LoggerService } from "../shared/services/logging/logger.service";
 import { SyncService } from "../shared/services/sync/sync.service";
 import { AppError } from "../shared/models/app-error.model";
@@ -24,15 +23,14 @@ import { OPEN_RESOURCE_RESOLVER, OpenResourceResolver } from "../shared/services
 import { AppService } from "../shared/services/app-service/app.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AppRoutes } from "../shared/models/app-routes";
-import { PageEvent } from "@angular/material/paginator/paginator";
 import { environment } from "../../environments/environment";
 import { ElevateSport } from "@elevate/shared/enums/elevate-sport.enum";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { Activity } from "@elevate/shared/models/sync/activity.model";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import NumberColumn = ActivityColumns.NumberColumn;
-import FieldInfo = json2csv.FieldInfo;
 import BaseUserSettings = UserSettings.BaseUserSettings;
+import { FieldInfo, Parser as Json2CsvParser } from "json2csv";
 
 class Preferences {
   constructor(

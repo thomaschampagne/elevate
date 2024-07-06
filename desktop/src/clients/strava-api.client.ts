@@ -1,17 +1,17 @@
+import { Gender } from "@elevate/shared/models/athlete/gender.enum";
+import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
+import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
+import { fibonacci } from "@elevate/shared/tools/fibonacci";
+import { sleep } from "@elevate/shared/tools/sleep";
+import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
 import _ from "lodash";
 import { inject, singleton } from "tsyringe";
 import { StravaAuthenticator } from "../connectors/strava/strava-authenticator";
-import { Logger } from "../logger";
-import { sleep } from "@elevate/shared/tools/sleep";
-import { fibonacci } from "@elevate/shared/tools/fibonacci";
-import { HttpClient } from "./http.client";
-import { AxiosError, AxiosResponse, AxiosResponseHeaders } from "axios";
 import { StatusCodes } from "../enum/status-codes.enum";
-import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
-import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
-import { Gender } from "@elevate/shared/models/athlete/gender.enum";
-import { StravaAccount } from "@elevate/shared/sync/strava/strava-account";
-import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
+import { Logger } from "../logger";
+import { HttpClient } from "./http.client";
 
 export interface RateLimit {
   usage: number;
@@ -91,7 +91,7 @@ export class StravaApiClient {
       })
       .then((response: AxiosResponse) => {
         // Update time to wait for the next call to avoid the rate limit threshold
-        const rateLimits = StravaApiClient.parseRateLimits(response.headers);
+        const rateLimits = StravaApiClient.parseRateLimits(response.headers as AxiosResponseHeaders);
         this.updateNextCallWaitTime(rateLimits.instant, StravaApiClient.QUARTER_HOUR_TIME_INTERVAL);
         this.logger.debug(
           `Waiting ${this.nextCallWaitTime} for next strava api call. Current Rate limits:`,
@@ -114,7 +114,7 @@ export class StravaApiClient {
               return Promise.reject(ErrorSyncEvent.STRAVA_API_FORBIDDEN.create());
 
             case StatusCodes.TOO_MANY_REQUESTS:
-              const parseRateLimits = StravaApiClient.parseRateLimits(error.response.headers);
+              const parseRateLimits = StravaApiClient.parseRateLimits(error.response.headers as AxiosResponseHeaders);
               const isInstantQuotaReached = parseRateLimits.instant.usage > parseRateLimits.instant.limit;
               const isDailyQuotaReached = parseRateLimits.daily.usage > parseRateLimits.daily.limit;
 

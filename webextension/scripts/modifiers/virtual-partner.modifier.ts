@@ -99,7 +99,7 @@ export class VirtualPartnerModifier extends AbstractModifier {
       effortId +
       '"></div>';
 
-    $.fancybox('<div width="250px" id="elevate_popup_download_course_' + effortId + '">' + message + "</div>", {
+    window.$.fancybox('<div width="250px" id="elevate_popup_download_course_' + effortId + '">' + message + "</div>", {
       afterShow: () => {
         _.forEach(exportsType, (type: ExportTypes) => {
           const exportTypeAsString: string = ExportTypes[type];
