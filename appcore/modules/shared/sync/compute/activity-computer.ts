@@ -979,6 +979,13 @@ export class ActivityComputer {
           )
         : null;
 
+
+    // Efficiency
+    scores.efficiency =
+      stats?.power?.weighted && stats?.heartRate?.avg
+        ? _.round(stats?.power?.weighted / stats?.heartRate?.avg, ActivityComputer.RND)
+        : null;
+
     // Power/HR
     scores.powerHr =
       stats?.power?.avg && stats?.heartRate?.avg

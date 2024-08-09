@@ -166,6 +166,7 @@ export class TrainingEffect {
 
 export class Scores {
   public stress: StressScores;
+  public efficiency?: number;
   public powerHr?: number;
   public runningRating?: number;
   public swolf?: { 25?: number; 50?: number };
