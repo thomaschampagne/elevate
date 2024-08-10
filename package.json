@@ -1,6 +1,6 @@
 {
   "name": "elevate-sports-app",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "description": "Wrap the needed tools required to cook Elevate desktop and web extension",
   "maintainers": [
     {
@@ -58,7 +58,7 @@
     "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.3",
     "del-cli": "^4.0.1",
-    "husky": "^7.0.4",
+    "lefthook": "^1.7.12",
     "npm-check-updates": "^12.2.1",
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.3",
