@@ -4,7 +4,7 @@ import { Injector } from "@angular/core";
 export class Upgrade_7_2_0 extends DesktopMigration {
   public version: string = "7.2.0";
 
-  public description: string = "Trigger recalculation for power/Hr new stats & settings lacks detection fix";
+  public description: string = "Trigger recalculation for efficiency new stats & settings lacks detection fix";
 
   public requiresRecalculation: boolean = true;
 
