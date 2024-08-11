@@ -840,6 +840,14 @@ export namespace StatsDef {
   }
 
   export namespace Scores {
+    export const efficiency = Stat.create<Scores>(
+      VoidSensor.DEFAULT,
+      "Efficiency Factor",
+      ["stats", "scores", "efficiency"],
+      'Efficiency Factor is your "Normalized Power® / Average Heart rate" ("Input Power / Output HR"). Higher value means better aerobic fit.',
+      2
+    ).asEmptyUnit();
+
     export const powerHr = Stat.create<Scores>(
       VoidSensor.DEFAULT,
       "Power/Hr",

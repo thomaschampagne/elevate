@@ -480,6 +480,16 @@ export namespace ActivityColumns {
       ).setDescription('"Running Rating" is an equivalent of "Running Index" from Polar'),
       new NumberColumn(
         Category.COMMON,
+        ["stats", "scores", "efficiency"],
+        null,
+        "Efficiency Factor",
+        Print.number,
+        2
+      ).setDescription(
+        'Efficiency Factor (EF) is your "Normalized Power® (Input)/ Average Heart rate (Output)". Higher value means better aerobic fit.'
+      ),
+      new NumberColumn(
+        Category.COMMON,
         ["stats", "scores", "powerHr"],
         null,
         "Power/Hr",

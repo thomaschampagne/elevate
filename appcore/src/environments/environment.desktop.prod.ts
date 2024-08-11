@@ -16,5 +16,5 @@ export const environment = {
   showActivityDebugData: false,
   showRouteUrl: false,
   bypassProfileRestoreChecks: false,
-  backendBaseUrl: "https://api.elevate.cloudns.ch"
+  backendBaseUrl: "https://api.elevate-app.duckdns.org"
 };

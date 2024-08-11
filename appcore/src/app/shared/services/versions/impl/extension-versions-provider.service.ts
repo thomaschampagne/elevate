@@ -61,7 +61,7 @@ export class ExtensionVersionsProvider extends VersionsProvider {
   }
 
   public getBuildMetadata(): Promise<{ commit: string; date: string }> {
-    const buildMetadata = require("../../../../../../../desktop/build_metadata.json");
+    const buildMetadata = require("../../../../../../../webextension/build_metadata.json");
     return Promise.resolve(buildMetadata);
   }
 
