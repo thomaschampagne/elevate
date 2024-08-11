@@ -485,7 +485,9 @@ export namespace ActivityColumns {
         "Efficiency Factor",
         Print.number,
         2
-      ).setDescription('Efficiency Factor (EF) is your "Normalized Power® (Input)/ Average Heart rate (Output)". Higher value means better aerobic fit.'),
+      ).setDescription(
+        'Efficiency Factor (EF) is your "Normalized Power® (Input)/ Average Heart rate (Output)". Higher value means better aerobic fit.'
+      ),
       new NumberColumn(
         Category.COMMON,
         ["stats", "scores", "powerHr"],

@@ -146,17 +146,10 @@ export class FeaturedDataView extends AbstractDataView {
     }
 
     if (this.stats?.scores?.powerHr && this.userSettings.displayAdvancedPowerData) {
-      this.insertContentAtGridPosition(
-        8,
-        0,
-        this.stats.scores.powerHr,
-        "Power / HR",
-        "",
-        "displayAdvancedPowerData"
-      );
+      this.insertContentAtGridPosition(8, 0, this.stats.scores.powerHr, "Power / HR", "", "displayAdvancedPowerData");
     }
 
-    // Remove empty case in grid. This avoid unwanted padding on feature view rendering
+    // Remove empty case in grid. This avoids unwanted padding on feature view rendering
     this.grid.find("td:empty").remove();
   }
 }

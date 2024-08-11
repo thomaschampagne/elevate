@@ -65,6 +65,10 @@ That's simply your _Average Power_ over your weight.
 
 That's simply your _Normalized Power®_ over your weight.  
 
+# Efficiency Factor (EF)
+---
+Efficiency Factor (EF) is your "Normalized Power® (Input)/ Average Heart rate (Output)". Higher value means better aerobic fit.
+
 # Quartiles and median
 ---
 
