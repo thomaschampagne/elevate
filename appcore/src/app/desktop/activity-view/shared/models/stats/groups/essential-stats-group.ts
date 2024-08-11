@@ -10,6 +10,7 @@ export abstract class EssentialStatsGroup extends StatsGroup {
     StatsDef.Generic.movingTime,
     StatsDef.Generic.elapsedTime,
     StatsDef.Generic.moveRatio,
+    StatsDef.Scores.efficiency,
     StatsDef.Scores.powerHr,
     StatsDef.Generic.calories,
     StatsDef.Generic.caloriesPerHour,

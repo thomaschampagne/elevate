@@ -166,10 +166,44 @@ export class CyclingExtendedDataModifier extends AbstractExtendedDataModifier {
 
       this.insertContentAtGridPosition(1, 6, powerStressScore, labelPSS, "", null);
     }
+
+    if (this.stats.scores.efficiency && this.userSettings.displayAdvancedPowerData) {
+      let label = "Efficiency Factor";
+      let efficiency = "-";
+      let efficiencyUnits = "";
+
+      if (_.isNumber(this.stats.scores.efficiency)) {
+        efficiency = this.printNumber(this.stats.scores.efficiency, 2);
+        efficiencyUnits = "";
+
+        if (!this.hasPowerMeter) {
+          efficiency = "<span style='font-size: 14px;'>~</span>" + efficiency;
+          label = "Estimated " + label;
+        }
+      }
+      this.insertContentAtGridPosition(0, 7, efficiency, label, efficiencyUnits, "displayAdvancedPowerData");
+    }
+
+    if (this.stats.power.intensityFactor && this.userSettings.displayAdvancedPowerData) {
+      let label = "Intensity Factor";
+      let intensityFactor = "-";
+      let intensityFactorUnits = "";
+
+      if (_.isNumber(this.stats.power.intensityFactor)) {
+        intensityFactor = this.printNumber(this.stats.power.intensityFactor, 2);
+        intensityFactorUnits = "";
+
+        if (!this.hasPowerMeter) {
+          intensityFactor = "<span style='font-size: 14px;'>~</span>" + intensityFactor;
+          label = "Estimated " + label;
+        }
+      }
+      this.insertContentAtGridPosition(1, 7, intensityFactor, label, intensityFactorUnits, "displayAdvancedPowerData");
+    }
   }
 
   protected placeSummaryPanel(panelAdded: () => void): void {
-    this.makeSummaryGrid(2, 7);
+    this.makeSummaryGrid(2, 8);
     super.placeSummaryPanel(panelAdded);
   }
 
