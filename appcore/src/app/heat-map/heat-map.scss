@@ -1,0 +1,21 @@
+@import "../styles/constant";
+@import "leaflet.fullscreen/Control.FullScreen.css";
+
+#background-map {
+  background-color: white;
+  position: relative;
+  height: inherit;
+  width: inherit;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+}
+
+#map-container {
+  position: relative;
+  height: 70vh;
+  display: block;
+  margin: 10px;
+}

@@ -1,0 +1,52 @@
+<mat-card>
+  <mat-card-content>
+    <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="space-between center">
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill fxFlex="60" fxFlex.lt-lg="100">
+        <mat-form-field fxFlex>
+          <mat-select [(ngModel)]="activityTypes"
+                      multiple
+                      placeholder="Activity Types">
+            <mat-option *ngFor="let type of availableActivityTypes"
+                        [disabled]="(activityTypes.length === 1 && type === activityTypes[0])"
+                        [value]="type">
+              {{startCase(type)}}
+            </mat-option>
+          </mat-select>
+          <button (click)="$event.stopPropagation(); onTickAllActivityTypes()" color="primary"
+                  mat-button mat-icon-button
+                  matSuffix
+                  matTooltip="Tick all activity types">
+            <mat-icon fontSet="material-icons-outlined">done_all</mat-icon>
+          </button>
+          <button (click)="$event.stopPropagation(); onUnTickAllActivityTypes()" color="primary"
+                  mat-button mat-icon-button
+                  matSuffix
+                  matTooltip="Untick all activity types (most performed excluded)">
+            <mat-icon fontSet="material-icons-outlined">clear</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <!-- Utilisation de *ngIf pour conditionnellement afficher le bouton ou la roue de chargement -->
+      <button mat-button
+              color="primary"
+              (click)="$event.stopPropagation(); plotActivities()"
+              mat-flat-button
+              *ngIf="!isLoading; else loadingSpinner"
+              matTooltip="The calculation time can take several tens of seconds.">
+        Compute Heatmap
+      </button>
+
+      <ng-template #loadingSpinner>
+        <button mat-button color="primary" mat-flat-button [disabled]="true">
+          <div fxLayout="row">
+            <mat-spinner diameter="20" style="margin: 8px 2px 0 0"></mat-spinner> Loading...
+          </div>
+        </button>
+      </ng-template>
+    </div>
+  </mat-card-content>
+</mat-card>
+<div id="map-container">
+  <div id="background-map"></div>
+</div>
+
