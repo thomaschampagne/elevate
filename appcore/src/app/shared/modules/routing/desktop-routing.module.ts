@@ -53,7 +53,7 @@ const routes: Routes = [
   },
   {
     path: AppRoutes.vert,
-    loadChildren: () => import("../../../donate/donate.module").then(module => module.DonateModule)
+    loadChildren: () => import("../../../vert/vert.module").then(module => module.VertModule)
   },
   {
     path: AppRoutes.releasesNotes,
