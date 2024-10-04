@@ -45,7 +45,7 @@ import { AppPackage } from "@elevate/shared/tools/app-package";
 
       <button mat-menu-item (click)="onShowAbout()">
         <mat-icon fontSet="material-icons-outlined">info</mat-icon>
-        About
+        About - Colins Elevate
       </button>
     </mat-menu>
   `

@@ -52,6 +52,10 @@ const routes: Routes = [
     loadChildren: () => import("../../../donate/donate.module").then(module => module.DonateModule)
   },
   {
+    path: AppRoutes.vert,
+    loadChildren: () => import("../../../donate/donate.module").then(module => module.DonateModule)
+  },
+  {
     path: AppRoutes.releasesNotes,
     loadChildren: () =>
       import("../../../releases-notes/releases-notes.module").then(module => module.ReleasesNotesModule)
