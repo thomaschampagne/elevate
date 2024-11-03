@@ -154,7 +154,7 @@ describe("ActivitiesSynchronize", () => {
           const activityComputed: Activity = new Activity();
           activityComputed.id = streamActivityModel.id;
           activityComputed.name = streamActivityModel.name;
-          activityComputed.type = streamActivityModel.type as ElevateSport;
+          activityComputed.type = streamActivityModel.sport_type as ElevateSport;
           activityComputed.startTimestamp = startTimestamp;
           activityComputed.endTimestamp = endTimestamp;
           activityComputed.startTime = streamActivityModel.start_time;
@@ -171,7 +171,7 @@ describe("ActivitiesSynchronize", () => {
           activityComputed.stats.elapsedTime = streamActivityModel.elapsed_time_raw;
           activityComputed.stats.distance = streamActivityModel.distance_raw;
           activityComputed.stats.moveRatio = activityComputed.stats.movingTime / activityComputed.stats.elapsedTime;
-          activityComputed.stats.calories = streamActivityModel.calories;
+          // activityComputed.stats.calories = streamActivityModel.calories;
           activityComputed.stats.caloriesPerHour =
             activityComputed.stats.calories !== null
               ? (activityComputed.stats.calories / activityComputed.stats.elapsedTime) * Constant.SEC_HOUR_FACTOR
@@ -276,7 +276,7 @@ describe("ActivitiesSynchronize", () => {
 
         const burnedRide: StravaActivityModel = _.find(rawStravaActivities, { id: 377239233 }); // Find in page 1
         expect(burnedRide.name).toEqual("Cramé !!");
-        expect(burnedRide.type).toEqual("Ride");
+        expect(burnedRide.sport_type).toEqual("Ride");
         expect(burnedRide.moving_time_raw).toEqual(4315);
 
         const fakeRide: StravaActivityModel = _.find(rawStravaActivities, { id: 9999999999 }); // Find in page 1
@@ -765,8 +765,8 @@ describe("ActivitiesSynchronize", () => {
         ).toBeTruthy(); // Page 7, "Rodage plaquettes"
 
         expect(_.find(rawPagesOfActivities[2].models, { id: 569640952 }).name).toEqual("Petit nez!");
-        expect(_.find(rawPagesOfActivities[6].models, { id: 372761597 }).type).toEqual("EBike");
-        expect(_.find(rawPagesOfActivities[0].models, { id: 707356065 }).type).not.toEqual("EBike");
+        expect(_.find(rawPagesOfActivities[6].models, { id: 372761597 }).sport_type).toEqual("EBike");
+        expect(_.find(rawPagesOfActivities[0].models, { id: 707356065 }).sport_type).not.toEqual("EBike");
 
         /**
          * Delete 5 on various pages

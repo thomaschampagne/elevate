@@ -4,7 +4,7 @@
       "id": 656401541,
       "name": "Easy XC MTB",
       "emoji_name": "Easy XC MTB",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -37,7 +37,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 525.85479921,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 652212776,
       "name": "Test Swim",
       "emoji_name": "Test Swim",
-      "type": "Swim",
+      "sport_type": "Swim",
       "display_type": "Swim",
       "activity_type_display_name": "Swim",
       "private": true,
@@ -83,7 +82,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 651874303,
       "name": "Course orientation. Win !!",
       "emoji_name": "Course orientation. Win !!",
-      "type": "Walk",
+      "sport_type": "Walk",
       "display_type": "Walk",
       "activity_type_display_name": "Walk",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 330.49624406399994,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 651564771,
       "name": "Lunch Walk",
       "emoji_name": "Lunch Walk",
-      "type": "Walk",
+      "sport_type": "Walk",
       "display_type": "Walk",
       "activity_type_display_name": "Walk",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 372.1897797120001,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 648202709,
       "name": "Morning Ride",
       "emoji_name": "Morning Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -221,7 +217,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 16.666525386,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 646390253,
       "name": "Test Trimp/h Connect IQ",
       "emoji_name": "Test Trimp/h Connect IQ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 779.942949345,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 644365059,
       "name": "Sortie avec vik",
       "emoji_name": "Sortie avec vik",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1147.01004663,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 642780978,
       "name": "Relax",
       "emoji_name": "Relax",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 648.05741884,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 641842346,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 947.7545135199999,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 639823327,
       "name": "Running avec Aur\u00e9lie ",
       "emoji_name": "Running avec Aur\u00e9lie ",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Run",
       "activity_type_display_name": "Run",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 888.5420582400001,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 636437864,
       "name": "Castor @ https://www.relive.cc/view/636437864",
       "emoji_name": "Castor @ https://www.relive.cc/view/636437864",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 3121.9670852,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 635350470,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 880.9498594,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 634869308,
       "name": "Morning Ride",
       "emoji_name": "Morning Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 328.17370853999995,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 633374437,
       "name": "Perreree avec Aur\u00e9lie ",
       "emoji_name": "Perreree avec Aur\u00e9lie ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 727.3076847855,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 632205691,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 856.3612951399999,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 628842674,
       "name": "4 Seigneurs \u0026 Balcons de Belledonne - https://www.relive.cc/view/628842674",
       "emoji_name": "4 Seigneurs \u0026 Balcons de Belledonne - https://www.relive.cc/view/628842674",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -727,7 +712,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 2565.4956504,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +724,7 @@
       "id": 626807611,
       "name": "Perreree avec Aur\u00e9lie",
       "emoji_name": "Perreree avec Aur\u00e9lie",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -773,7 +757,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 664.867490664,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +769,7 @@
       "id": 625798007,
       "name": ".",
       "emoji_name": ".",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -819,7 +802,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 778.7755075499999,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +814,7 @@
       "id": 624735627,
       "name": "Fish?!",
       "emoji_name": "Fish?!",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -865,7 +847,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 661.0300770050001,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +859,7 @@
       "id": 623709272,
       "name": "Venon par Perreree ",
       "emoji_name": "Venon par Perreree ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -911,7 +892,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 891.1616816750001,
       "feed_data": {
         "entries": []
       },

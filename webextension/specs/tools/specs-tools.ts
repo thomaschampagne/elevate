@@ -20,6 +20,6 @@ export const editActivityFromArray = (
 
   const a: any = _.find(fromArray, predicate);
   a.name = newName;
-  a.type = newType;
+  a.sport_type = newType;
   return fromArray;
 };

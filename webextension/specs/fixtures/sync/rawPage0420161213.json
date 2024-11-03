@@ -4,7 +4,7 @@
       "id": 560069623,
       "name": "Chamrousse 1750",
       "emoji_name": "Chamrousse 1750",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -37,7 +37,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1983.3313832150002,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 559166446,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -83,7 +82,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 883.7887107250001,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 558458998,
       "name": "Ptits balcons de Belledonne",
       "emoji_name": "Ptits balcons de Belledonne",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1343.262671775,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 556443499,
       "name": "75k @ 31.5 KPH // 181 BPM",
       "emoji_name": "75k @ 31.5 KPH // 181 BPM",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1891.9872593999999,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 555456547,
       "name": "80k. Climb Challenge Done.",
       "emoji_name": "80k. Climb Challenge Done.",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -221,7 +217,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 2033.1078621450001,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 553573871,
       "name": "Zwift Session",
       "emoji_name": "Zwift Session",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 599.426525475,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 552562511,
       "name": "Pererree 1.4",
       "emoji_name": "Pererree 1.4",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 873.6673305600001,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 551497751,
       "name": "Perreree 1.3",
       "emoji_name": "Perreree 1.3",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1031.47978101,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 549238663,
       "name": "120k with froozen feet \u0026 rain ! Strong race with a doe !",
       "emoji_name": "120k with froozen feet \u0026 rain ! Strong race with a doe !",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 2583.5442401399996,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 547228287,
       "name": "No punctures ! Woow !",
       "emoji_name": "No punctures ! Woow !",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1877.8029876,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 545304771,
       "name": "Roule et cr\u00e8ve ! All\u00e9 je change ce pneu de merde !",
       "emoji_name": "Roule et cr\u00e8ve ! All\u00e9 je change ce pneu de merde !",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 175.22342743999997,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 541369026,
       "name": "Chamrousse et Pschitt ! Putin de chambre \u00e0 valve courte ! Bien oui \u00e7a marche pas sur les Cosmics :/ Merci victor pour le sauvetage ;)",
       "emoji_name": "Chamrousse et Pschitt ! Putin de chambre \u00e0 valve courte ! Bien oui \u00e7a marche pas sur les Cosmics :/ Merci victor pour le sauvetage ;)",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1347.931685215,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 540223951,
       "name": "Pinet avec Vik",
       "emoji_name": "Pinet avec Vik",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1051.64121993,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 538490670,
       "name": "Perreree 1.2",
       "emoji_name": "Perreree 1.2",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 889.44487269,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 531863498,
       "name": "Perreree 1.1",
       "emoji_name": "Perreree 1.1",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 839.77991829,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 530939100,
       "name": "Perreree 1.0",
       "emoji_name": "Perreree 1.0",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -727,7 +712,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 890.72468084,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +724,7 @@
       "id": 527288373,
       "name": "78k",
       "emoji_name": "78k",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -773,7 +757,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1782.3066851799997,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +769,7 @@
       "id": 514962248,
       "name": "Get back on Aeroad CF",
       "emoji_name": "Get back on Aeroad CF",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -819,7 +802,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 834.445288875,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +814,7 @@
       "id": 500553714,
       "name": "Zwift -Skiing crash return",
       "emoji_name": "Zwift -Skiing crash return",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -865,7 +847,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 329.19999691000004,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +859,7 @@
       "id": 481714535,
       "name": "Petit Swisssssss ! Et bim une fesse en moins ! (Videos in description)",
       "emoji_name": "Petit Swisssssss ! Et bim une fesse en moins ! (Videos in description)",
-      "type": "AlpineSki",
+      "sport_type": "AlpineSki",
       "display_type": "Alpine Ski",
       "activity_type_display_name": "Alpine Ski",
       "private": false,
@@ -911,7 +892,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
