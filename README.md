@@ -1,4 +1,6 @@
 # Elevate
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthomaschampagne%2Felevate.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthomaschampagne%2Felevate?ref=badge_shield)
+
 
 <!-- toc -->
 - [Install](#install)
@@ -415,3 +417,7 @@ module.exports = {
 
 - Create a new local storage key named `DEBUG_EST_VS_REAL_WATTS` and set it to `true`
 - Reload application and go to activities performed with a real power meter (cycling or running)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fthomaschampagne%2Felevate.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fthomaschampagne%2Felevate?ref=badge_large)
