@@ -1,6 +1,6 @@
 {
   "name": "elevate-sports-app",
-  "version": "7.2.0",
+  "version": "7.2.1",
   "description": "Wrap the needed tools required to cook Elevate desktop and web extension",
   "maintainers": [
     {
@@ -34,7 +34,7 @@
     "wipe": "npm run clean && npm run wipe:package-locks && npm run wipe:node-modules",
     "wipe:node-modules": "node ./node_modules/del-cli/cli.js ./node_modules/ ./appcore/node_modules/ ./desktop/node_modules/ ./webextension/node_modules/",
     "wipe:package-locks": "node ./node_modules/del-cli/cli.js ./package-lock.json ./appcore/package-lock.json ./desktop/package-lock.json ./webextension/package-lock.json",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "config": {
     "unsafe-perm": true

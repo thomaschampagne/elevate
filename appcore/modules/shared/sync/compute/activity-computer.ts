@@ -979,7 +979,6 @@ export class ActivityComputer {
           )
         : null;
 
-
     // Efficiency
     scores.efficiency =
       stats?.power?.weighted && stats?.heartRate?.avg
