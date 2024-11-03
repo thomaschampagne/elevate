@@ -4,7 +4,7 @@
       "id": 431449241,
       "name": "Zwift - Watopia 11/12/2015",
       "emoji_name": "Zwift - Watopia 11/12/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -37,7 +37,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 378.89437616,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 431464624,
       "name": "Zwift - Watopia 11/12/2015 // Cut // Crashed app",
       "emoji_name": "Zwift - Watopia 11/12/2015 // Cut // Crashed app",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -83,7 +82,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 205.85531400000002,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 430765595,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 864.2161869299999,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 430204077,
       "name": "Zwift - Richmond, VA - FTP Test (shorter)",
       "emoji_name": "Zwift - Richmond, VA - FTP Test (shorter)",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 450.4447289600001,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 429628737,
       "name": "Zwift - Richmond, VA 11/09/2015",
       "emoji_name": "Zwift - Richmond, VA 11/09/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -221,7 +217,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 598.81470156,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 429009625,
       "name": "86k",
       "emoji_name": "86k",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1711.59159003,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 428142857,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 850.272513175,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 427606185,
       "name": "1st zwift ride",
       "emoji_name": "1st zwift ride",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 241.81931788,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 424565561,
       "name": "Chartreuse Rousse et Herbe fluo !!",
       "emoji_name": "Chartreuse Rousse et Herbe fluo !!",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1995.4309740800002,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 423706687,
       "name": "Couleurs d'Automne",
       "emoji_name": "Couleurs d'Automne",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1831.93190544,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 420778529,
       "name": "Morning Ride",
       "emoji_name": "Morning Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 193.535379065,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 420018674,
       "name": "Lunch Ride",
       "emoji_name": "Lunch Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 169.16904879999998,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 420020088,
       "name": "Lunch Ride",
       "emoji_name": "Lunch Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 199.9254575565,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 420019984,
       "name": "Morning Ride",
       "emoji_name": "Morning Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 43.6032808725,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 420019949,
       "name": "Morning Ride",
       "emoji_name": "Morning Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 191.92554674800002,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 417483106,
       "name": "Tafe",
       "emoji_name": "Tafe",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -727,7 +712,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 259.563098955,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +724,7 @@
       "id": 420019810,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -773,7 +757,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 76.197678375,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +769,7 @@
       "id": 420019708,
       "name": "Lunch Ride",
       "emoji_name": "Lunch Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -819,7 +802,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 256.733509935,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +814,7 @@
       "id": 420019631,
       "name": "Morning Ride",
       "emoji_name": "Morning Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -865,7 +847,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 102.91963569,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +859,7 @@
       "id": 406963466,
       "name": "Evening Run",
       "emoji_name": "Evening Run",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Workout",
       "activity_type_display_name": "Run",
       "private": false,
@@ -911,7 +892,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 499.0554129600001,
       "feed_data": {
         "entries": []
       },

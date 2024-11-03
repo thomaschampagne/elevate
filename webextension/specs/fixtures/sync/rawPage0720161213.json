@@ -4,7 +4,7 @@
       "id": 406217194,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -37,7 +37,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1106.41489917,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 403560066,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -83,7 +82,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 873.9592777,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 403560013,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 827.3318955,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 397193741,
       "name": "Canada diet week 01",
       "emoji_name": "Canada diet week 01",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 850.8935213450001,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 393874622,
       "name": "Tadoussac walk, QC, Canada",
       "emoji_name": "Tadoussac walk, QC, Canada",
-      "type": "Hike",
+      "sport_type": "Hike",
       "display_type": "Hike",
       "activity_type_display_name": "Hike",
       "private": false,
@@ -221,7 +217,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 255.15407793600005,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 393116784,
       "name": "Chicoutimi Run, QC, Canada",
       "emoji_name": "Chicoutimi Run, QC, Canada",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Workout",
       "activity_type_display_name": "Run",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 476.27322839999994,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 392354127,
       "name": "Val Jalbert walk, QC, Canada",
       "emoji_name": "Val Jalbert walk, QC, Canada",
-      "type": "Hike",
+      "sport_type": "Hike",
       "display_type": "Hike",
       "activity_type_display_name": "Hike",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 311.450229648,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 387847432,
       "name": "Ptite P\u00e9r\u00e9rr\u00e9e",
       "emoji_name": "Ptite P\u00e9r\u00e9rr\u00e9e",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 837.6778021,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 387059955,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 709.0235271,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 386268058,
       "name": "Empty",
       "emoji_name": "Empty",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 209.11589958,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 385490294,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1278.17165112,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 384884871,
       "name": "Test Cam | http://youtu.be/i2hHnrgTj_s + http://youtu.be/5D6ZcfpzO74",
       "emoji_name": "Test Cam | http://youtu.be/i2hHnrgTj_s + http://youtu.be/5D6ZcfpzO74",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 826.09327545,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 377946066,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 499.04194151999997,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 377239233,
       "name": "Cram\u00e9 !!",
       "emoji_name": "Cram\u00e9 !!",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 829.9940472,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 375518033,
       "name": "MTB Chamrousse - GoPro @ http://youtu.be/C05qJKfJjmQ",
       "emoji_name": "MTB Chamrousse - GoPro @ http://youtu.be/C05qJKfJjmQ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 2317.84751838,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 375518573,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -727,7 +712,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 431.79680508900003,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +724,7 @@
       "id": 372761597,
       "name": "Rodage plaquettes",
       "emoji_name": "Rodage plaquettes",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -773,7 +757,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 282.40540485,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +769,7 @@
       "id": 371317512,
       "name": "Fast Fast Fast \u0026 Pschitt",
       "emoji_name": "Fast Fast Fast \u0026 Pschitt",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -819,7 +802,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 997.8805605600002,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +814,7 @@
       "id": 368210547,
       "name": "Natation",
       "emoji_name": "Natation",
-      "type": "Swim",
+      "sport_type": "Swim",
       "display_type": "Swim",
       "activity_type_display_name": "Swim",
       "private": false,
@@ -865,7 +847,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +859,7 @@
       "id": 367463594,
       "name": "Venon",
       "emoji_name": "Venon",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -911,7 +892,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 956.592687015,
       "feed_data": {
         "entries": []
       },

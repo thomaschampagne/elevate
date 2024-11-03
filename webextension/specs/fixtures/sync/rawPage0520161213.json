@@ -4,7 +4,7 @@
       "id": 481131552,
       "name": "Porte du soleil - J1 (Std dh in desc)",
       "emoji_name": "Porte du soleil - J1 (Std dh in desc)",
-      "type": "AlpineSki",
+      "sport_type": "AlpineSki",
       "display_type": "Alpine Ski",
       "activity_type_display_name": "Alpine Ski",
       "private": false,
@@ -37,7 +37,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 476644193,
       "name": "7 Laux avec Natacha + Leslie - 120kph Hit @ youtu.be/Lc6SdTDiAj4",
       "emoji_name": "7 Laux avec Natacha + Leslie - 120kph Hit @ youtu.be/Lc6SdTDiAj4",
-      "type": "AlpineSki",
+      "sport_type": "AlpineSki",
       "display_type": "Alpine Ski",
       "activity_type_display_name": "Alpine Ski",
       "private": false,
@@ -83,7 +82,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 473894759,
       "name": "Zwift Watopia Easy Spin Flat",
       "emoji_name": "Zwift Watopia Easy Spin Flat",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 557.961169575,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 471564696,
       "name": "Right leg returns ! Snow Outside, Sweat Inside, Zwift crash :/",
       "emoji_name": "Right leg returns ! Snow Outside, Sweat Inside, Zwift crash :/",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 368.59069683999996,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 455024926,
       "name": "Muscle pain test comeback = fail",
       "emoji_name": "Muscle pain test comeback = fail",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -221,7 +217,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 112.45951548,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 443751030,
       "name": "Watopia PRs",
       "emoji_name": "Watopia PRs",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 711.8819411000001,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 442612867,
       "name": "Richmond Lap position @ 17%  :D",
       "emoji_name": "Richmond Lap position @ 17%  :D",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 747.548499775,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 442080924,
       "name": "Zwift - Richmond, VA 11/30/2015",
       "emoji_name": "Zwift - Richmond, VA 11/30/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 608.0242804399999,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 440095526,
       "name": "Wake up ride :) ! Missed Laurens Ten Dam peloton :/",
       "emoji_name": "Wake up ride :) ! Missed Laurens Ten Dam peloton :/",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 552.9596085,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 439266355,
       "name": "SZR Group Ride",
       "emoji_name": "SZR Group Ride",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 798.9726064,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 438630212,
       "name": "Zwift - Richmond, VA - The Gorby Partial... :/",
       "emoji_name": "Zwift - Richmond, VA - The Gorby Partial... :/",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 342.237654,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 437387542,
       "name": "Zwift - Richmond, VA 11/22/2015",
       "emoji_name": "Zwift - Richmond, VA 11/22/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 858.925069275,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 436621314,
       "name": "Zwift First 70k on Watopia",
       "emoji_name": "Zwift First 70k on Watopia",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1597.9361032499999,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 435594326,
       "name": "Zwift - Watopia - Jon's Short Mix",
       "emoji_name": "Zwift - Watopia - Jon's Short Mix",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 374.30105672499997,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 435053107,
       "name": "Zwift - Watopia 11/18/2015",
       "emoji_name": "Zwift - Watopia 11/18/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 611.5573720200001,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 434882524,
       "name": "Fast Hometrainer session",
       "emoji_name": "Fast Hometrainer session",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -720,14 +705,12 @@
       "elevation_gain": "0",
       "elevation_unit": "m",
       "elevation_gain_raw": 0,
-      "description": "200 calories burned",
       "activity_url": "https://www.strava.com/activities/434882524",
       "activity_url_for_twitter": "https://www.strava.com/activities/434882524?utm_content=2470979\u0026utm_medium=referral\u0026utm_source=twitter",
       "twitter_msg": "went for a 9.5 kilometer Ride.",
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +723,7 @@
       "id": 434544103,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -773,7 +756,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 235.709637024,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +768,7 @@
       "id": 433945020,
       "name": "Zwift - Richmond, VA 11/16/2015",
       "emoji_name": "Zwift - Richmond, VA 11/16/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -819,7 +801,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 655.13027862,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +813,7 @@
       "id": 432548748,
       "name": "Petit Pinet malgr\u00e9 la cr\u00e8ve :/",
       "emoji_name": "Petit Pinet malgr\u00e9 la cr\u00e8ve :/",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -865,7 +846,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1540.28403144,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +858,7 @@
       "id": 432040117,
       "name": "Zwift - Watopia 11/13/2015",
       "emoji_name": "Zwift - Watopia 11/13/2015",
-      "type": "VirtualRide",
+      "sport_type": "VirtualRide",
       "display_type": "Virtual Ride",
       "activity_type_display_name": "Virtual Ride",
       "private": false,
@@ -911,7 +891,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 640.62999798,
       "feed_data": {
         "entries": []
       },
