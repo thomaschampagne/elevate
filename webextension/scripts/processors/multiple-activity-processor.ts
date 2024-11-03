@@ -91,7 +91,7 @@ export class MultipleActivityProcessor {
             const activityComputed: Activity = new Activity();
             activityComputed.id = streamActivityModel.id;
             activityComputed.name = streamActivityModel.name;
-            activityComputed.type = streamActivityModel.type as ElevateSport;
+            activityComputed.type = streamActivityModel.sport_type as ElevateSport;
             activityComputed.startTimestamp = startTimestamp;
             activityComputed.endTimestamp = endTimestamp;
             activityComputed.startTime = streamActivityModel.start_time;
@@ -107,7 +107,7 @@ export class MultipleActivityProcessor {
             activityComputed.stats.elapsedTime = streamActivityModel.elapsed_time_raw;
             activityComputed.stats.distance = streamActivityModel.distance_raw;
             activityComputed.stats.moveRatio = activityComputed.stats.movingTime / activityComputed.stats.elapsedTime;
-            activityComputed.stats.calories = streamActivityModel.calories;
+            // activityComputed.stats.calories = streamActivityModel.calories;
             activityComputed.stats.caloriesPerHour =
               activityComputed.stats.calories !== null
                 ? (activityComputed.stats.calories / activityComputed.stats.elapsedTime) * Constant.SEC_HOUR_FACTOR
@@ -194,8 +194,8 @@ export class MultipleActivityProcessor {
     const activityEssentials: ActivityEssentials = this.provideActivityEssentials(activityWithStream);
 
     const threadMessage: ComputeActivityThreadMessageModel = {
-      activityType: activityWithStream.type as ElevateSport,
-      supportsGap: activityWithStream.type === "Run",
+      activityType: activityWithStream.sport_type as ElevateSport,
+      supportsGap: activityWithStream.sport_type === "Run",
       isTrainer: activityWithStream.trainer,
       appResources: this.appResources,
       userSettings: this.userSettings,

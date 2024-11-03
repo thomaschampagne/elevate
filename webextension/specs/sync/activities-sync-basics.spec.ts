@@ -22,7 +22,9 @@ describe("ActivitiesSynchronize", () => {
   });
 
   it("should remove activity from array properly ", done => {
-    let rawPageOfActivities: Array<Activity> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
+    let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(
+      require("../fixtures/sync/rawPage0120161213.json").models
+    );
     const sourceCount = rawPageOfActivities.length;
 
     rawPageOfActivities = removeActivityFromArray(722210052, rawPageOfActivities); // Remove Hike "Fort saint eynard"
@@ -34,16 +36,18 @@ describe("ActivitiesSynchronize", () => {
   });
 
   it("should edit activity from array properly ", done => {
-    let rawPageOfActivities: Array<Activity> = _.cloneDeep(require("../fixtures/sync/rawPage0120161213.json").models);
+    let rawPageOfActivities: Array<StravaActivityModel> = _.cloneDeep(
+      require("../fixtures/sync/rawPage0120161213.json").models
+    );
     const sourceCount = rawPageOfActivities.length;
 
     rawPageOfActivities = editActivityFromArray(722210052, rawPageOfActivities, "New_Name", "Ride"); // Edit Hike "Fort saint eynard"
 
     expect(rawPageOfActivities).not.toBeNull();
-    const foundBack: Activity = _.find(rawPageOfActivities, { id: 722210052 });
+    const foundBack: StravaActivityModel = _.find(rawPageOfActivities, { id: 722210052 });
     expect(foundBack).toBeDefined();
     expect(foundBack.name).toEqual("New_Name");
-    expect(foundBack.type).toEqual("Ride");
+    expect(foundBack.sport_type).toEqual("Ride");
     expect(rawPageOfActivities.length).toEqual(sourceCount);
     done();
   });

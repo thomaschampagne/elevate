@@ -4,7 +4,7 @@
       "id": 799672885,
       "name": "Running back... Hard !",
       "emoji_name": "Running back... Hard !",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Course",
       "activity_type_display_name": "Course \u00e0 pied",
       "private": true,
@@ -37,7 +37,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 357.37026476759996,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 727632286,
       "name": "Lunch Ride",
       "emoji_name": "Lunch Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -83,7 +82,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 536.3377348500001,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 723224273,
       "name": "Bon rythme ! 33 KPH !!",
       "emoji_name": "Bon rythme ! 33 KPH !!",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1444.437008,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 722210052,
       "name": "Fort saint eynard",
       "emoji_name": "Fort saint eynard",
-      "type": "Hike",
+      "sport_type": "Hike",
       "display_type": "Randonn\u00e9e",
       "activity_type_display_name": "Randonn\u00e9e",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 554.0288906520001,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 721113868,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -221,7 +217,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1640.73189945,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 718908064,
       "name": "P\u00e9dalage avec Madame Jeannie Longo",
       "emoji_name": "P\u00e9dalage avec Madame Jeannie Longo",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Entra\u00eenement",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1527.188968575,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 717815211,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 825.2350710999999,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 716901962,
       "name": "Evening Run",
       "emoji_name": "Evening Run",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Course",
       "activity_type_display_name": "Course \u00e0 pied",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 293.6017113336,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 708752345,
       "name": "Bastille",
       "emoji_name": "Bastille",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Entra\u00eenement",
       "activity_type_display_name": "Course \u00e0 pied",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 737.6812138152002,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 707356065,
       "name": "Je suis un gros lent !",
       "emoji_name": "Je suis un gros lent !",
-      "type": "Run",
+      "sport_type": "Run",
       "display_type": "Course",
       "activity_type_display_name": "Course \u00e0 pied",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 567.5991452064001,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 705118424,
       "name": "Baladinette",
       "emoji_name": "Baladinette",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 225.649691575,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 703993615,
       "name": "Reprise avec Florent et mon poignet en carton",
       "emoji_name": "Reprise avec Florent et mon poignet en carton",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 868.3757145000001,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 700301520,
       "name": "Baladinette",
       "emoji_name": "Baladinette",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 246.58627381200003,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 687620700,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": true,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 956.2066283,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 685081571,
       "name": "Test Ant+ app Android",
       "emoji_name": "Test Ant+ app Android",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": true,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 334.191030824,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 684099116,
       "name": "Balade",
       "emoji_name": "Balade",
-      "type": "Hike",
+      "sport_type": "Hike",
       "display_type": "Randonn\u00e9e",
       "activity_type_display_name": "Randonn\u00e9e",
       "private": false,
@@ -727,7 +712,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 271.63165968000004,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +724,7 @@
       "id": 675927371,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Entra\u00eenement",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -773,7 +757,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1104.862008565,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +769,7 @@
       "id": 666600070,
       "name": "Balcons de Belledonne avec Aur\u00e9lie. EZ !",
       "emoji_name": "Balcons de Belledonne avec Aur\u00e9lie. EZ !",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -819,7 +802,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1433.4474726674998,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +814,7 @@
       "id": 661113141,
       "name": "Reprise apr\u00e8s vacances",
       "emoji_name": "Reprise apr\u00e8s vacances",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Entra\u00eenement",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -865,7 +847,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 784.5615882,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +859,7 @@
       "id": 657225503,
       "name": "Hardtail Galibier Downhill",
       "emoji_name": "Hardtail Galibier Downhill",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Sortie \u00e0 v\u00e9lo",
       "activity_type_display_name": "Sortie \u00e0 v\u00e9lo",
       "private": false,
@@ -911,7 +892,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 206.4571485185,
       "feed_data": {
         "entries": []
       },

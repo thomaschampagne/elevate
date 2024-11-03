@@ -4,7 +4,7 @@
       "id": 621674333,
       "name": "Afternoon Hike",
       "emoji_name": "Afternoon Hike",
-      "type": "Hike",
+      "sport_type": "Hike",
       "display_type": "Hike",
       "activity_type_display_name": "Hike",
       "private": false,
@@ -37,7 +37,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 316.93608925920006,
       "feed_data": {
         "entries": []
       },
@@ -50,7 +49,7 @@
       "id": 619567232,
       "name": "Perreree ",
       "emoji_name": "Perreree ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -83,7 +82,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 803.10777568,
       "feed_data": {
         "entries": []
       },
@@ -96,7 +94,7 @@
       "id": 617435476,
       "name": "Perreree - Test garmin edge 1000",
       "emoji_name": "Perreree - Test garmin edge 1000",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -129,7 +127,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 743.857901065,
       "feed_data": {
         "entries": []
       },
@@ -142,7 +139,7 @@
       "id": 606986080,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -175,7 +172,6 @@
       "is_new": true,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 254.82177442000003,
       "feed_data": {
         "entries": []
       },
@@ -188,7 +184,7 @@
       "id": 604927518,
       "name": "Skateboard from work :)",
       "emoji_name": "Skateboard from work :)",
-      "type": "InlineSkate",
+      "sport_type": "InlineSkate",
       "display_type": "Inline Skate",
       "activity_type_display_name": "Inline Skate",
       "private": true,
@@ -221,7 +217,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": null,
       "feed_data": {
         "entries": []
       },
@@ -234,7 +229,7 @@
       "id": 602887149,
       "name": "Les gouttes de justesse ",
       "emoji_name": "Les gouttes de justesse ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -267,7 +262,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 910.5365962499999,
       "feed_data": {
         "entries": []
       },
@@ -280,7 +274,7 @@
       "id": 600329531,
       "name": "Sheep Ride",
       "emoji_name": "Sheep Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -313,7 +307,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 885.5051874399999,
       "feed_data": {
         "entries": []
       },
@@ -326,7 +319,7 @@
       "id": 597999523,
       "name": "4 Seigneurs x Vik + Murianette x Philippe",
       "emoji_name": "4 Seigneurs x Vik + Murianette x Philippe",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -359,7 +352,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 2425.26878594,
       "feed_data": {
         "entries": []
       },
@@ -372,7 +364,7 @@
       "id": 590729223,
       "name": "Vercors Loop v2",
       "emoji_name": "Vercors Loop v2",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -405,7 +397,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 3065.04674775,
       "feed_data": {
         "entries": []
       },
@@ -418,7 +409,7 @@
       "id": 589653480,
       "name": "Col de Palaquit \u0026 Venon. Snakes on road :|",
       "emoji_name": "Col de Palaquit \u0026 Venon. Snakes on road :|",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -451,7 +442,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 2363.4040534650003,
       "feed_data": {
         "entries": []
       },
@@ -464,7 +454,7 @@
       "id": 587738031,
       "name": "Evening Ride",
       "emoji_name": "Evening Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -497,7 +487,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 885.2925614000001,
       "feed_data": {
         "entries": []
       },
@@ -510,7 +499,7 @@
       "id": 586561709,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -543,7 +532,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 918.7275311999999,
       "feed_data": {
         "entries": []
       },
@@ -556,7 +544,7 @@
       "id": 579068180,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -589,7 +577,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 839.319807965,
       "feed_data": {
         "entries": []
       },
@@ -602,7 +589,7 @@
       "id": 577940202,
       "name": "Variante apr\u00e8s Revel",
       "emoji_name": "Variante apr\u00e8s Revel",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -635,7 +622,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1103.24115648,
       "feed_data": {
         "entries": []
       },
@@ -648,7 +634,7 @@
       "id": 576928985,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -681,7 +667,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 903.3583767749999,
       "feed_data": {
         "entries": []
       },
@@ -694,7 +679,7 @@
       "id": 569640952,
       "name": "Pinet",
       "emoji_name": "Pinet",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -727,7 +712,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1225.8160589999998,
       "feed_data": {
         "entries": []
       },
@@ -740,7 +724,7 @@
       "id": 568441857,
       "name": "Saint Mury",
       "emoji_name": "Saint Mury",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -773,7 +757,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1324.5440038299998,
       "feed_data": {
         "entries": []
       },
@@ -786,7 +769,7 @@
       "id": 567394271,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -819,7 +802,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 902.5986369600001,
       "feed_data": {
         "entries": []
       },
@@ -832,7 +814,7 @@
       "id": 566288762,
       "name": "Tranquille ",
       "emoji_name": "Tranquille ",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Ride",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -865,7 +847,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 465.007265625,
       "feed_data": {
         "entries": []
       },
@@ -878,7 +859,7 @@
       "id": 565218522,
       "name": "Afternoon Ride",
       "emoji_name": "Afternoon Ride",
-      "type": "Ride",
+      "sport_type": "Ride",
       "display_type": "Workout",
       "activity_type_display_name": "Ride",
       "private": false,
@@ -911,7 +892,6 @@
       "is_new": false,
       "is_changing_type": false,
       "suffer_score": null,
-      "calories": 1293.9527545600001,
       "feed_data": {
         "entries": []
       },

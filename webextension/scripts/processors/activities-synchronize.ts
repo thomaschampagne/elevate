@@ -123,11 +123,11 @@ export class ActivitiesSynchronize {
         if (foundActivity) {
           // Yes  => Check for an edit..
 
-          if (foundActivity.name !== rawActivity.name || foundActivity.type !== rawActivity.type) {
+          if (foundActivity.name !== rawActivity.name || foundActivity.type !== rawActivity.sport_type) {
             edited.push({
               id: foundActivity.id as number,
               name: rawActivity.name,
-              type: rawActivity.type as ElevateSport
+              type: rawActivity.sport_type as ElevateSport
             });
           }
         } else {
