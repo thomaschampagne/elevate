@@ -1,6 +1,22 @@
-# Elevate
+<h1 align="center">
+  <img src="./resources/elevate_logo.svg" alt="Markdownify" width="300">
+</h1>
+
+<h4 align="center">✨ A sport app to "Elevate" your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...</h4>
+
+<p align="center">
+  <a href="#screenshots">Screenshots</a> •
+  <a href="#desktop-app">Desktop App</a> •
+  <a href="#web-extension">Web Extension (For Strava)</a> •
+  <a href="#development">Development</a
+</p>
+
+<p align="center">
+  <img src="./.screenshots/fitness-chart.png" alt="fitness-chart" />
+</p>
 
 <!-- toc -->
+- [Screenshots And Features](#screenshots-and-features)
 - [Install](#install)
   - [Desktop App](#desktop-app)
     - [Download \& Install](#download--install)
@@ -8,6 +24,7 @@
   - [Web extension](#web-extension)
     - [Download for _Chrome, Chromium, Edge (from 2020), Brave, Opera, Vivaldi, Yandex, ..._](#download-for-chrome-chromium-edge-from-2020-brave-opera-vivaldi-yandex-)
     - [From the sources](#from-the-sources)
+- [Star History](#star-history)
 - [Development](#development)
   - [Global solution structure](#global-solution-structure)
     - [App-core project](#app-core-project)
@@ -31,6 +48,80 @@
 
 <!-- tocstop -->
 
+## Screenshots And Features
+
+<p align="center">
+  <img src="./.screenshots/fitness-chart.png" alt="fitness-chart" />
+  <br>
+  <em>Track your long-term fitness trend and performance improvements visually.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/activities.png" alt="activities" />
+  <br>
+  <em>Browse and filter your recorded rides with summary statistics for each activity.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/activity-main.png" alt="activity-main" />
+  <br>
+  <em>Review in-depth ride details including map and core metrics for every session.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/activity-stats.png" alt="activity-stats" />
+  <br>
+  <em>View essential ride stats including averages and highlight metrics for each activity.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/activity-peaks.png" alt="activity-peaks" />
+  <br>
+  <em>See peak values for power, heart rate, speed, and cadence across your ride.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/activity-zones.png" alt="activity-zones" />
+  <br>
+  <em>Explore how much time was spent in various heart rate, power, and cadence zones during a ride.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/activity-splits.png" alt="activity-splits" />
+  <br>
+  <em>Analyze best splits and key segment statistics like fastest speeds and highest cadence.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/year-progress-ytd.png" alt="year-progress-ytd" />
+  <br>
+  <em>Monitor your yearly progression with cumulative activity and training volume charts.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/year-progress-rolling-volume.png" alt="year-progress-rolling-volume" />
+  <br>
+  <em>Visualize rolling training volume and track period-over-period improvements.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/athlete-settings.png" alt="athlete-settings" />
+  <br>
+  <em>Adjust personal data, physical metrics, and measurement preferences over time.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/zones-settings-hr.png" alt="zones-settings-hr" />
+  <br>
+  <em>Customize your training zones for heart rate, power, and cadence.</em>
+</p>
+
+<p align="center">
+  <img src="./.screenshots/connectors.png" alt="connectors" />
+  <br>
+  <em>Manage integrations with external services and sync activities easily.</em>
+</p>
+
 ## Install
 
 ### Desktop App
@@ -49,11 +140,17 @@ Go to chapter [Environment setup](#environments-setup).
 
 #### Download for _Chrome, Chromium, Edge (from 2020), Brave, Opera, Vivaldi, Yandex, ..._
 
-Go to [https://thomaschampagne.github.io/elevate/](https://thomaschampagne.github.io/elevate/)
+Go to [Chrome Web Store](https://chromewebstore.google.com/detail/elevate-for-strava/dhiaggccakkgdfcadnklkbljcgicpckn)
 
 #### From the sources
 
 Go to chapter [Environment setup](#environments-setup).
+
+## Star History
+
+<p align="center">
+  <img src="https://api.star-history.com/svg?repos=thomaschampagne/elevate&type=Date)](https://www.star-history.com/#thomaschampagne/elevate&Date" alt="Star History" />
+</p>
 
 ## Development
 
