@@ -5,7 +5,7 @@
 <h4 align="center">✨ A sport app to "Elevate" your training experience and goals! Track your fitness and progressions over time. Analyse deeper your activities. And more...</h4>
 
 <p align="center">
-  <a href="#screenshots">Screenshots</a> •
+  <a href="#screenshots-and-features">Screenshots</a> •
   <a href="#desktop-app">Desktop App</a> •
   <a href="#web-extension">Web Extension (For Strava)</a> •
   <a href="#development">Development</a
