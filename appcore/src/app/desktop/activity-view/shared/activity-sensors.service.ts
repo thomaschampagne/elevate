@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Sensor } from "./models/sensors/sensor.model";
-import { ElevationSensor } from "./models/sensors/elevation.sensor";
+import { ElevationSensor, ElevationAscentSpeedSensor } from "./models/sensors/elevation.sensor";
 import { GradeAdjustedPaceSensor, PaceSensor, SpeedSensor, SwimmingPaceSensor } from "./models/sensors/move.sensor";
 import { HeartRateSensor } from "./models/sensors/heart-rate.sensor";
 import { CyclingPowerSensor, PowerEstDebugSensor, RunningPowerSensor } from "./models/sensors/power.sensor";
@@ -25,7 +25,12 @@ export class ActivitySensorsService {
   ]);
 
   private defaultSensors(): Sensor[] {
-    const sensors = [ElevationSensor.DEFAULT, SpeedSensor.DEFAULT, HeartRateSensor.DEFAULT];
+    const sensors = [
+      ElevationSensor.DEFAULT,
+      ElevationAscentSpeedSensor.DEFAULT,
+      SpeedSensor.DEFAULT,
+      HeartRateSensor.DEFAULT
+    ];
     if (environment.showActivityDebugData) {
       sensors.push(GradeSensor.DEFAULT);
     }
@@ -35,6 +40,7 @@ export class ActivitySensorsService {
   private cyclingSensors(activity: Activity): Sensor[] {
     const sensors = [
       ElevationSensor.DEFAULT,
+      ElevationAscentSpeedSensor.DEFAULT,
       SpeedSensor.DEFAULT,
       HeartRateSensor.DEFAULT,
       CyclingPowerSensor.getDefault(activity),
@@ -53,6 +59,7 @@ export class ActivitySensorsService {
   private byFootSensors(activity: Activity): Sensor[] {
     const sensors = [
       ElevationSensor.DEFAULT,
+      ElevationAscentSpeedSensor.DEFAULT,
       PaceSensor.DEFAULT,
       HeartRateSensor.DEFAULT,
       RunningPowerSensor.getDefault(activity),

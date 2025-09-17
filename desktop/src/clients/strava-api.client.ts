@@ -191,7 +191,7 @@ export class StravaApiClient {
   }
 
   public retryInMillis(tryCount: number): number {
-    return fibonacci(tryCount) * 60 * 1000; // Minutes => seconds => Millis
+    return StravaApiClient.QUARTER_HOUR_TIME_INTERVAL * 1000;
   }
 
   /**

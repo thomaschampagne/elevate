@@ -45,6 +45,7 @@ export class ElevationAscentSpeedSensor extends ElevationSensor {
   public static readonly NAME: string = "Ascent Speed";
   public static readonly DEFAULT: ElevationAscentSpeedSensor = new ElevationAscentSpeedSensor();
 
+  public streamKey: keyof Streams = "ascent_speed";
   public name: string = ElevationAscentSpeedSensor.NAME;
 
   public displayUnit: { short: string; full: string } | Map<MeasureSystem, { short: string; full: string }> = new Map<

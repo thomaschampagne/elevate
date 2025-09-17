@@ -15,6 +15,7 @@ export class Streams {
   public grade_smooth: number[];
   public grade_adjusted_speed: number[];
   public grade_adjusted_distance: number[];
+  public ascent_speed: number[];
   public temp: number[];
 
   public static deflate(streams: Streams): string {

@@ -4,7 +4,7 @@ module.exports = {
     ".(ts|tsx)": "ts-jest"
   },
   testTimeout: 60000,
-  transformIgnorePatterns: ["json"],
+  transformIgnorePatterns: ["json", "/node_modules/serialize-error"],
   globals: {
     "ts-jest": {
       tsconfig: "./tsconfig.json"
@@ -16,6 +16,7 @@ module.exports = {
   moduleFileExtensions: ["ts", "tsx", "js"],
 
   moduleNameMapper: {
-    "^@elevate/shared/(.*)$": "<rootDir>/../appcore/modules/shared/$1/"
+    "^@elevate/shared/(.*)$": "<rootDir>/../appcore/modules/shared/$1/",
+    axios: "axios/dist/node/axios.cjs"
   }
 };

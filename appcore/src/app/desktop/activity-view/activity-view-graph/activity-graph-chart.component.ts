@@ -16,7 +16,7 @@ import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { Constant } from "@elevate/shared/constants/constant";
 import { ElevateException } from "@elevate/shared/exceptions/elevate.exception";
 import { Activity } from "@elevate/shared/models/sync/activity.model";
-import { ElevationSensor } from "../shared/models/sensors/elevation.sensor";
+import { ElevationSensor, ElevationAscentSpeedSensor } from "../shared/models/sensors/elevation.sensor";
 
 enum ScaleMode {
   TIME,
@@ -35,7 +35,8 @@ export class ActivityGraphChartComponent extends BaseChartComponent<ScatterChart
     "heartrate",
     "watts",
     "cadence",
-    "grade_adjusted_speed"
+    "grade_adjusted_speed",
+    "ascent_speed"
   ];
 
   private static readonly AREA_FILL_SENSOR_NAME: string[] = [ElevationSensor.NAME];

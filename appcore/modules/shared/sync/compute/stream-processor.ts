@@ -60,6 +60,7 @@ export class StreamProcessor {
     streams = this.shapePower(streams, params); // Both real and estimated power
     streams = this.shapeHeartRate(streams);
     streams = this.shapeCadence(streams);
+    streams = this.computeAscentSpeed(streams);
     return streams;
   }
 
@@ -250,6 +251,32 @@ export class StreamProcessor {
         streams.grade_adjusted_speed.push(_.round(adjustedMps, 2));
       }
     }
+
+    return streams;
+  }
+
+  private static computeAscentSpeed(streams: Streams): Streams {
+    const AS_KALMAN_SMOOTHING = {
+      R: 0.001, // Grade model is stable
+      Q: 10 // Measures altitude errors expected
+    };
+
+    streams.ascent_speed = [];
+
+    var previous = null;
+    for (const [index, altitude] of streams.altitude.entries()) {
+      if (previous === null) {
+        previous = [index, altitude];
+      }
+      const ascent = altitude - previous[1];
+      const time = streams.time[index] - streams.time[previous[0]];
+      const ascentSpeed = (ascent * 3600) / time; // m/h
+      previous = [index, altitude];
+      streams.ascent_speed.push(_.round(ascentSpeed > 0 ? ascentSpeed : 0, 2));
+    }
+
+    // Fix potentials ascent errors and smooth out ascent speed signal
+    streams.ascent_speed = KalmanFilter.apply(streams.ascent_speed, AS_KALMAN_SMOOTHING);
 
     return streams;
   }

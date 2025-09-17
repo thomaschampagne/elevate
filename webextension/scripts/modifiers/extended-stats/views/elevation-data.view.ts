@@ -26,7 +26,7 @@ export class ElevationDataView extends AbstractDataView {
     );
 
     // Creates a grid
-    this.makeGrid(3, 2); // (col, row)
+    this.makeGrid(3, 3); // (col, row)
 
     this.insertDataIntoGrid();
     this.generateCanvasForGraph();
@@ -83,6 +83,14 @@ export class ElevationDataView extends AbstractDataView {
       this.printNumber(this.elevation.upperQ),
       "75% Quartile Elevation",
       "m",
+      "displayAdvancedElevationData"
+    );
+    this.insertContentAtGridPosition(
+      0,
+      2,
+      this.printNumber(this.elevation.ascentSpeed),
+      "Average Ascent Speed",
+      "Vm/h",
       "displayAdvancedElevationData"
     );
   }
