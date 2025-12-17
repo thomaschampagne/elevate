@@ -6,6 +6,7 @@ import { SwimFtpHelperComponent } from "./swim-ftp-helper/swim-ftp-helper.compon
 import { AthleteSettings } from "@elevate/shared/models/athlete/athlete-settings/athlete-settings.model";
 import { MeasureSystem } from "@elevate/shared/enums/measure-system.enum";
 import { Constant } from "@elevate/shared/constants/constant";
+import { UserSettingsService } from "../../../shared/services/user-settings/user-settings.service";
 
 @Component({
   selector: "app-athlete-settings-form",
@@ -40,11 +41,19 @@ export class AthleteSettingsFormComponent implements OnInit {
 
   public isSwimFtpCalculatorEnabled = false;
 
-  constructor(@Inject(MatSnackBar) private readonly snackBar: MatSnackBar) {}
+  public systemUnit: String;
+
+  constructor(
+    @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
+    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
+  ) { }
 
   public ngOnInit(): void {
     this.markCurrentSettingsAsCompliant();
     this.swimFtp100m = SwimFtpHelperComponent.convertSwimSpeedToPace(this.athleteSettingsModel.swimFtp);
+    this.userSettingsService.fetch().then(userSettings => {
+      this.systemUnit = userSettings.systemUnit;
+    });
   }
 
   public isPropertyCompliant(property: string, canBeNull?: boolean): boolean {
@@ -165,20 +174,19 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
   }
 
-  public convertToPace(systemUnit: string): string {
+  public convertToPace(systemUnit: String): String {
     let speedFactor: number;
-
     if (systemUnit === MeasureSystem.METRIC) {
-      speedFactor = 1;
+      this.systemUnit === MeasureSystem.METRIC ? speedFactor = 1 : speedFactor = Constant.KM_TO_MILE_FACTOR;
     } else if (systemUnit === MeasureSystem.IMPERIAL) {
-      speedFactor = Constant.KM_TO_MILE_FACTOR;
+      this.systemUnit === MeasureSystem.IMPERIAL ? speedFactor = 1 : speedFactor = 1 / Constant.KM_TO_MILE_FACTOR;
     } else {
       throw new Error("System unit unknown");
     }
 
     return _.isNumber(this.athleteSettingsModel.runningFtp) && this.athleteSettingsModel.runningFtp > 0
-      ? this.secondsToHHMMSS(this.athleteSettingsModel.runningFtp / speedFactor) +
-          (systemUnit === MeasureSystem.METRIC ? "/km" : "/mi")
+      ? this.secondsToHHMMSS(this.athleteSettingsModel.runningFtp * speedFactor) +
+      (systemUnit === MeasureSystem.METRIC ? "/km" : "/mi")
       : null;
   }
 
