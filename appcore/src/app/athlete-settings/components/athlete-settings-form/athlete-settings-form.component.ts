@@ -45,7 +45,7 @@ export class AthleteSettingsFormComponent implements OnInit {
 
   constructor(
     @Inject(MatSnackBar) private readonly snackBar: MatSnackBar,
-    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService,
+    @Inject(UserSettingsService) private readonly userSettingsService: UserSettingsService
   ) { }
 
   public ngOnInit(): void {
@@ -174,12 +174,12 @@ export class AthleteSettingsFormComponent implements OnInit {
     }
   }
 
-  public convertToPace(systemUnit: String): String {
+  public convertToPace(systemUnit: string): string {
     let speedFactor: number;
     if (systemUnit === MeasureSystem.METRIC) {
-      this.systemUnit === MeasureSystem.METRIC ? speedFactor = 1 : speedFactor = Constant.KM_TO_MILE_FACTOR;
+      this.systemUnit === MeasureSystem.METRIC ? (speedFactor = 1) : (speedFactor = Constant.KM_TO_MILE_FACTOR);
     } else if (systemUnit === MeasureSystem.IMPERIAL) {
-      this.systemUnit === MeasureSystem.IMPERIAL ? speedFactor = 1 : speedFactor = 1 / Constant.KM_TO_MILE_FACTOR;
+      this.systemUnit === MeasureSystem.IMPERIAL ? (speedFactor = 1) : (speedFactor = 1 / Constant.KM_TO_MILE_FACTOR);
     } else {
       throw new Error("System unit unknown");
     }
