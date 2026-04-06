@@ -41,11 +41,11 @@ import { IpcComputeSplitsListener } from "./listeners/ipc-compute-splits.listene
 import { platform } from "os";
 import { AppPackage } from "@elevate/shared/tools/app-package";
 import Menu = Electron.Menu;
-import dns from 'dns';
+import dns from "dns";
 // Force Node.js to prioritize IPv4 over IPv6 for all network requests.
 // This prevents ETIMEDOUT errors on ISPs with broken IPv6 routing to Strava/AWS.
 if (dns.setDefaultResultOrder) {
-  dns.setDefaultResultOrder('ipv4first');
+  dns.setDefaultResultOrder("ipv4first");
 }
 const IS_ELECTRON_DEV = !app.isPackaged;
 
