@@ -284,8 +284,14 @@ export namespace ActivityColumns {
       factor: number,
       isImperial: boolean,
       imperialFactor: number,
-      path?: StatPath
+      path?: StatPath,
+      enableBothLegsCadence: boolean = false,
+      showUnits: boolean = true
     ): string {
+      if (units && units instanceof CadenceUnits && Activity.isRun(activity.type) && enableBothLegsCadence) {
+        factor *= 2;
+      }
+
       const value = Print.getConvertValueAtPath(path, activity, precision, factor, isImperial, imperialFactor);
 
       if (units && units instanceof SystemUnits) {
@@ -304,7 +310,7 @@ export namespace ActivityColumns {
         }
       }
 
-      return _.isNumber(value) && !_.isNaN(value) ? (units ? value + " " + units : `${value}`) : Print.NO_DATA;
+      return _.isNumber(value) && !_.isNaN(value) ? (units && showUnits ? value + " " + units : `${value}`) : Print.NO_DATA;
     }
 
     public static pace(

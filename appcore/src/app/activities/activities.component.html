@@ -127,7 +127,7 @@
                       mat-button>{{column.print(activity, column.path)}}</button>
             </ng-container>
             <ng-container *ngIf="column.type === ColumnType.NUMBER">
-              {{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.path)}}
+              {{column.print(activity, column['units'], column['precision'], column['factor'], isImperial, column['imperialFactor'], column.path, enableBothLegsCadence)}}
             </ng-container>
             <ng-container *ngIf="column.type === ColumnType.ATHLETE_SETTINGS">
               <button (click)="onViewAthleteSettings(activity)" *ngIf="activity.id" color="primary"
