@@ -68,6 +68,7 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
   public columnsCategories: ActivityColumns.Category[];
   public displayedColumns: string[];
   public isImperial: boolean;
+  public enableBothLegsCadence: boolean;
   public hasActivities: boolean; // Can be null: don't know yet true/false status on load
   public hasEmptyResults: boolean; // Can be null: don't know yet true/false status on load
   public initialized: boolean;
@@ -173,6 +174,8 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       })
       .then((userSettings: BaseUserSettings) => {
         this.isImperial = userSettings.systemUnit === MeasureSystem.IMPERIAL;
+        this.enableBothLegsCadence = (userSettings as Partial<UserSettings.ExtensionUserSettings>)
+          .enableBothLegsCadence !== false;
       })
       .then(() => {
         // Filter displayed columns
@@ -239,6 +242,15 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
       if (column && column.id) {
         const valueAtPath = _.at(activity as any, column.id)[0];
         value = valueAtPath ? valueAtPath : 0;
+
+        if (
+          column instanceof ActivityColumns.NumberColumn &&
+          column.units instanceof ActivityColumns.CadenceUnits &&
+          Activity.isRun(activity.type) &&
+          this.enableBothLegsCadence
+        ) {
+          value *= 2;
+        }
       } else {
         this.logger.warn("Column path missing", JSON.stringify(column));
         value = 0;
@@ -551,7 +563,9 @@ export class ActivitiesComponent implements OnInit, OnDestroy {
                   numberColumn.factor,
                   this.isImperial,
                   numberColumn.imperialFactor,
-                  numberColumn.path
+                  numberColumn.path,
+                  this.enableBothLegsCadence,
+                  false
                 );
                 break;
 
