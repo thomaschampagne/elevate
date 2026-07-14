@@ -1,0 +1,100 @@
+<mat-card>
+  <mat-card-title>Garmin</mat-card-title>
+  <mat-card-subtitle>
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
+    <span *ngIf="!garminConnectorInfo || !garminConnectorInfo.garminAccount">Not configured. </span>
+    <span *ngIf="garminConnectorInfo && garminConnectorInfo.garminAccount">
+      Connected as {{garminConnectorInfo.username}}.
+    </span>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div *ngIf="garminConnectorInfo" class="connector">
+      <button [disabled]="appService.isSyncing" (click)="sync(true)"
+        *ngIf="syncDateTime && garminConnectorInfo.garminAccount"
+        color="primary"
+        mat-stroked-button
+        matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
+          <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+          Sync new Activities
+        </button>
+        <button [disabled]="appService.isSyncing" (click)="sync()"
+          *ngIf="garminConnectorInfo.garminAccount"
+          color="primary"
+          mat-stroked-button
+          matTooltip="All Garmin activities will be synced">
+            <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+            Sync all activities
+          </button>
+
+      <button [disabled]="appService.isSyncing" (click)="onConfigure()" *ngIf="!garminConnectorInfo?.garminAccount" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        Configure
+      </button>
+      <button [disabled]="appService.isSyncing" (click)="onDisconnect()"
+        *ngIf="garminConnectorInfo.garminAccount"
+        color="primary" mat-stroked-button>
+          <mat-icon fontSet="material-icons-outlined">power_off</mat-icon>
+          Disconnect
+        </button>
+        <div *ngIf="showConfigure" class="configureView">
+          <div class="mat-title">
+            Enter Garmin Username/Password below.
+          </div>
+          <div class="mat-subtitle">
+          <p class="mat-body-2">
+            Connect your Garmin account. Garmin doesn't offer a consent-screen<br>
+            style login for third-party apps, so we ask for your email/password<br>
+            once to establish a session - your password is never stored.
+          </p>
+          </div>
+          <div *ngIf="!isAuthenticating">
+            <mat-form-field fxFlex="50">
+              <input (change)="onUsernameChange()" [(ngModel)]="garminConnectorInfo.username" matInput min="0"
+                placeholder="Username"
+                type="text">
+            </mat-form-field>
+          </div>
+          <div *ngIf="!isAuthenticating">
+            <mat-form-field fxFlex="50">
+              <input (change)="onPasswordChange()" [(ngModel)]="passwordInput"
+                [type]="showSecret.checked ? 'text' : 'password'"
+                matInput placeholder="Password">
+              <button (click)="showSecret.checked = !showSecret.checked" mat-icon-button
+                matSuffix>
+                  <mat-icon
+                    fontSet="material-icons-outlined">{{showSecret.checked ? 'visibility_off': 'visibility'}}</mat-icon>
+                </button>
+                <mat-checkbox #showSecret fxHide></mat-checkbox>
+            </mat-form-field>
+          </div>
+          <div *ngIf="!isAuthenticating">
+            <button (click)="garminAuthentication()" *ngIf="!garminConnectorInfo.garminAccount"
+              [disabled]="(!garminConnectorInfo.username || !passwordInput)"
+              color="primary"
+              mat-stroked-button>
+                <mat-icon fontSet="material-icons-outlined">power</mat-icon>
+                <span>Login to Garmin</span>
+              </button>
+          </div>
+          <div *ngIf="awaitingMfaCode">
+            <div>
+              <mat-form-field fxFlex="50">
+                <input (change)="onSubmitMfaCode()" [(ngModel)]="mfaCode" matInput min="0"
+                  placeholder="MFA Code"
+                  type="text">
+              </mat-form-field>
+            </div>
+            <div>
+              <button (click)="onSubmitMfaCode()" *ngIf="awaitingMfaCode"
+                color="primary"
+                mat-stroked-button>
+                  <mat-icon fontSet="material-icons-outlined">verified</mat-icon>
+                  Submit Verification Code
+                </button>
+            </div>
+          </div>
+
+        </div>
+    </div>
+  </mat-card-content>
+</mat-card>

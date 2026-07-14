@@ -54,7 +54,8 @@ describe("DesktopSyncService", () => {
         const connectorType = ConnectorType.STRAVA;
         const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
           new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-          new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
+          new ConnectorSyncDateTime(ConnectorType.FILE, 22222),
+          new ConnectorSyncDateTime(ConnectorType.GARMIN, 33333)
         ];
 
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
@@ -236,7 +237,8 @@ describe("DesktopSyncService", () => {
         const connectorType = ConnectorType.FILE;
         const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
           new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-          new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
+          new ConnectorSyncDateTime(ConnectorType.FILE, 22222),
+          new ConnectorSyncDateTime(ConnectorType.GARMIN, 33333)
         ];
         const fetchAthleteModelSpy = spyOn(desktopSyncService.athleteService, "fetch").and.returnValue(
           Promise.resolve(AthleteModel.DEFAULT_MODEL)
@@ -1182,7 +1184,8 @@ describe("DesktopSyncService", () => {
       const expectedState = SyncState.SYNCED;
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222),
+        new ConnectorSyncDateTime(ConnectorType.GARMIN, 33333)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
@@ -1243,7 +1246,8 @@ describe("DesktopSyncService", () => {
       const expectedState = SyncState.SYNCED;
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222),
+        new ConnectorSyncDateTime(ConnectorType.GARMIN, 33333)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(
@@ -1335,7 +1339,8 @@ describe("DesktopSyncService", () => {
       // Given
       const connectorSyncDateTimes: ConnectorSyncDateTime[] = [
         new ConnectorSyncDateTime(ConnectorType.STRAVA, 11111),
-        new ConnectorSyncDateTime(ConnectorType.FILE, 22222)
+        new ConnectorSyncDateTime(ConnectorType.FILE, 22222),
+        new ConnectorSyncDateTime(ConnectorType.GARMIN, 33333)
       ];
 
       const findSpy = spyOn(desktopSyncService.connectorSyncDateTimeDao, "find").and.returnValue(

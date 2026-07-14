@@ -41,6 +41,8 @@ export class DesktopOpenResourceResolver extends OpenResourceResolver {
       if (activity) {
         if (sourceType === ConnectorType.STRAVA && activity.extras?.strava.activityId > 0) {
           this.openStravaActivity(activity.extras.strava.activityId);
+        } else if (sourceType === ConnectorType.GARMIN && activity.extras?.garmin.activityId > 0) {
+          this.openGarminActivity(activity.extras.garmin.activityId);
         } else if (sourceType === ConnectorType.FILE && activity.extras?.file?.path) {
           const itemPath = activity.extras.file.path;
           try {

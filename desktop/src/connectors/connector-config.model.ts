@@ -19,3 +19,7 @@ export interface StravaConnectorConfig extends ConnectorConfig {
 export interface FileConnectorConfig extends ConnectorConfig {
   info: FileConnectorInfo;
 }
+
+export interface GarminConnectorConfig extends ConnectorConfig {
+  info: GarminConnectorConfig;
+}

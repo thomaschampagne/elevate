@@ -291,6 +291,10 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
     return this.activity?.extras?.strava?.activityId > 0;
   }
 
+  public hasGarminActivityId(): boolean {
+    return this.activity?.extras?.garmin?.activityId > 0;
+  }
+
   public hasActivityFilePath(): boolean {
     return !!this.activity?.extras?.file?.path;
   }
@@ -309,6 +313,7 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
   }
 
   public onOpenSourceActivity(sourceType: ConnectorType): void {
+    console.log("onOpenSource Activity ID: ", this.activity.id);
     this.openResourceResolver.openSourceActivity(this.activity.id, sourceType);
   }
 

@@ -6,7 +6,9 @@ import { StravaConnectorComponent } from "./strava-connector/strava-connector.co
 import { StravaConnectorService } from "./strava-connector/strava-connector.service";
 import { FileConnectorComponent } from "./file-connector/file-connector.component";
 import { FileConnectorService } from "./file-connector/file-connector.service";
-import { GarminConnectComponent } from "./garmin-connect/garmin-connect.component";
+import { GarminConnectorComponent } from "./garmin-connector/garmin-connector.component";
+import { GarminConnectorService } from "./garmin-connector/garmin-connector.service";
+import { ReactiveFormsModule } from "@angular/forms";
 
 const routes: Routes = [
   {
@@ -16,8 +18,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CoreModule, RouterModule.forChild(routes)],
-  declarations: [ConnectorsComponent, StravaConnectorComponent, FileConnectorComponent, GarminConnectComponent],
-  providers: [StravaConnectorService, FileConnectorService]
+  imports: [CoreModule, ReactiveFormsModule, RouterModule.forChild(routes)],
+  declarations: [ConnectorsComponent, StravaConnectorComponent, FileConnectorComponent, GarminConnectorComponent],
+  providers: [StravaConnectorService, FileConnectorService, GarminConnectorService]
 })
 export class ConnectorsModule {}
