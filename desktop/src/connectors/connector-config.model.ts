@@ -4,6 +4,7 @@ import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connecto
 import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import BaseUserSettings = UserSettings.BaseUserSettings;
+import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-connector-info.model";
 
 export interface ConnectorConfig {
   athleteModel: AthleteModel;
@@ -21,5 +22,5 @@ export interface FileConnectorConfig extends ConnectorConfig {
 }
 
 export interface GarminConnectorConfig extends ConnectorConfig {
-  info: GarminConnectorConfig;
+  info: GarminConnectorInfo;
 }

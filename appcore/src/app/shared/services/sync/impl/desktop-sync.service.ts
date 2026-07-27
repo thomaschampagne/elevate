@@ -376,6 +376,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         this.logger.debug(completeSyncEvent);
         this.isSyncing$.next(false);
         syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
+      })
+      .catch(error => {
+        this.logger.error(`handleSyncCompleteEvents chain failed: ${error}`);
+        console.error("handleSyncCompleteEvents chain failed:", error);
       });
   }
 

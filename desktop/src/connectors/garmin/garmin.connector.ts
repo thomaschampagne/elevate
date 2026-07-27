@@ -10,12 +10,12 @@ import { GarminApiClient, GarminActivitySummary } from "../../clients/garmin-api
 import { GarminAuthenticator } from "../../clients/garmin-authenticator";
 import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.enum";
 import { ActivityFileType } from "@elevate/shared/sync/connectors/activity-file-type.enum";
-import { GarminConnectorConfig } from "../connector-config.model";
+import { ConnectorConfig, GarminConnectorConfig } from "../connector-config.model";
 import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-connector-info.model";
 import { AppService } from "../../app-service";
 import { Environment, EnvironmentToken } from "../../environments/environment.interface";
 import { Logger } from "../../logger";
-import { Activity } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityExtras } from "@elevate/shared/models/sync/activity.model";
 import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
 import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
 import { GenericSyncEvent } from "@elevate/shared/sync/events/generic-sync.event";
@@ -26,12 +26,14 @@ import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
 import { IpcSyncMessageSender } from "src/senders/ipc-sync-message.sender";
 import { WorkerService } from "src/worker-service";
 import { HttpClient } from "src/clients/http.client";
+import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
+import _ from "lodash";
 
 @injectable()
 export class GarminConnector extends BaseConnector {
   private static readonly ENABLED = true;
 
-  private garminConnectorConfig: GarminConnectorConfig;
+  public garminConnectorConfig: GarminConnectorConfig;
 
   constructor(
     @inject(AppService) protected readonly appService: AppService,
@@ -50,9 +52,9 @@ export class GarminConnector extends BaseConnector {
     this.enabled = GarminConnector.ENABLED;
   }
 
-  public configure(garminConnectorConfig: GarminConnectorConfig): this {
-    super.configure(garminConnectorConfig);
-    this.garminConnectorConfig = garminConnectorConfig;
+  public configure(connectorConfig: ConnectorConfig): this {
+    super.configure(connectorConfig);
+    this.garminConnectorConfig = this.connectorConfig as GarminConnectorConfig;
     return this;
   }
 
@@ -80,7 +82,6 @@ export class GarminConnector extends BaseConnector {
       this.isSyncing = true;
 
       this.logger.info(`Starting new sync on '${this.type}' connector`);
-
       this.syncActivities(this.syncEvents$).then(
         () => {
           this.isSyncing = false;
@@ -133,9 +134,26 @@ export class GarminConnector extends BaseConnector {
 
         await new Promise(resolve => setTimeout(resolve, throttleMs));
       }
+    } catch (error) {
+      if (error instanceof SyncEvent) {
+        throw error;
+      }
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      this.logger.error(`[GarminConnector] Iteration error: ${errorMessage}`);
+      throw ErrorSyncEvent.UNHANDLED_ERROR_SYNC.create(ConnectorType.GARMIN, errorMessage);
     } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
+  }
+
+  /**
+   * Check if activity just has default FileConnector Name
+   */
+  private isDefaultHumanizedName(localActivity: Activity): boolean {
+    const startDate = new Date(localActivity.startTime);
+    const dayMoment = FileConnector["HumanizedDayMoment"].resolve(startDate);
+    const expectedDefaultName = `${dayMoment} ${localActivity.type}`;
+    return localActivity.name?.trim() === expectedDefaultName;
   }
 
   /**
@@ -149,57 +167,87 @@ export class GarminConnector extends BaseConnector {
   private async processActivity(summary: GarminActivitySummary, syncEvents$: Subject<SyncEvent>): Promise<void> {
     const filePath = summary.path;
 
-    const activityFile = new ActivityFile(ActivityFileType.FIT, filePath, new Date(summary.startTimeLocal));
+    try {
+      const activityFile = new ActivityFile(ActivityFileType.FIT, filePath, new Date(summary.startTimeLocal));
 
-    const { event } = await this.fileConnector.computeSportsLibEvent(activityFile);
+      const { event } = await this.fileConnector.computeSportsLibEvent(activityFile);
 
-    const sportsLibActivity = event.activities.find(a => a.type !== "Transition");
-    if (!sportsLibActivity) {
-      fs.unlinkSync(filePath);
-      return;
-    }
+      const sportsLibActivity = event.activities.find(a => a.type !== "Transition");
+      if (!sportsLibActivity) {
+        fs.unlinkSync(filePath);
+        return;
+      }
 
-    const startDate = new Date(sportsLibActivity.startDate);
-    const endDate = new Date(sportsLibActivity.endDate);
+      const startDate = new Date(sportsLibActivity.startDate);
+      const endDate = new Date(sportsLibActivity.endDate);
 
-    const localActivities = await this.findLocalActivities(startDate.toISOString(), endDate.toISOString());
-    if (localActivities.length > 0 && !this.environment.allowActivitiesOverLapping) {
-      const existing = localActivities[0];
-      syncEvents$.next(
-        new GenericSyncEvent(
-          ConnectorType.GARMIN,
-          `Skipped "${summary.activityName}" (${summary.startTimeLocal}) — already synced as ` +
-            `"${existing.name}" from ${startDate.toISOString()} to ${endDate.toISOString()}.`
-        )
+      const localActivities = await this.findLocalActivities(startDate.toISOString(), endDate.toISOString());
+      if (localActivities.length > 0 && !this.environment.allowActivitiesOverLapping) {
+        const existing = localActivities[0];
+        if (this.garminConnectorConfig.info.updateExistingNames && summary.activityName !== "Untitled") {
+          let localActivity: Activity = existing;
+          if (this.isDefaultHumanizedName(localActivity)) {
+            // Update name
+            localActivity.name = summary.activityName;
+            localActivity.extras = _.merge<ActivityExtras, ActivityExtras>(localActivity.extras, {
+              garmin: {
+                activityId: summary.activityId as number
+              }
+            });
+          }
+
+          syncEvents$.next(new ActivitySyncEvent(this.type, null, localActivity, false));
+        } else {
+          syncEvents$.next(
+            new GenericSyncEvent(
+              ConnectorType.GARMIN,
+              `Skipped "${summary.activityName}" (${summary.startTimeLocal}) — already synced as ` +
+                `"${existing.name}" from ${startDate.toISOString()} to ${endDate.toISOString()}.`
+            )
+          );
+        }
+        fs.unlinkSync(filePath);
+        return;
+      }
+
+      let activity: Partial<Activity> = this.fileConnector.createBareActivity(sportsLibActivity);
+      const streams = this.fileConnector.mapStreams(sportsLibActivity);
+      activity = this.assignBaseProperties(activity, streams);
+
+      activity.extras = {
+        garmin: { activityId: summary.activityId }
+      };
+
+      const athleteSnapshot = this.athleteSnapshotResolver.resolve(activity.startTime);
+      activity.name = summary.activityName;
+      activity.srcStats = this.fileConnector.getSourceStats(activity.type, sportsLibActivity, streams);
+      activity.laps = this.fileConnector.processLaps(activity.type, sportsLibActivity.laps);
+      activity.notes = null;
+
+      const { computedActivity, deflatedStreams } = await this.computeActivity(
+        activity,
+        athleteSnapshot,
+        this.garminConnectorConfig.userSettings,
+        streams,
+        true
       );
+
       fs.unlinkSync(filePath);
-      return;
+
+      syncEvents$.next(new ActivitySyncEvent(ConnectorType.GARMIN, null, computedActivity, true, deflatedStreams));
+    } catch (error) {
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch {}
+      }
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
+        ConnectorType.GARMIN,
+        `Failed to process ${summary.activityName} (${summary.activityId}): ${errorMessage}`
+      );
+      syncEvents$.next(errorSyncEvent);
     }
-
-    let activity: Partial<Activity> = this.fileConnector.createBareActivity(sportsLibActivity);
-    const streams = this.fileConnector.mapStreams(sportsLibActivity);
-    activity = this.assignBaseProperties(activity, streams);
-
-    activity.extras = {
-      garmin: { activityId: summary.activityId }
-    };
-
-    const athleteSnapshot = this.athleteSnapshotResolver.resolve(activity.startTime);
-    activity.srcStats = this.fileConnector.getSourceStats(activity.type, sportsLibActivity, streams);
-    activity.laps = this.fileConnector.processLaps(activity.type, sportsLibActivity.laps);
-    activity.notes = null;
-
-    const { computedActivity, deflatedStreams } = await this.computeActivity(
-      activity,
-      athleteSnapshot,
-      this.garminConnectorConfig.userSettings,
-      streams,
-      true
-    );
-
-    fs.unlinkSync(filePath);
-
-    syncEvents$.next(new ActivitySyncEvent(ConnectorType.GARMIN, null, computedActivity, true, deflatedStreams));
   }
 
   public getSourceStats(): any {

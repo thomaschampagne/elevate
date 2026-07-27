@@ -42,7 +42,7 @@ export class GarminCliRunner {
       return path.join(process.resourcesPath, "bin", binaryName);
     }
     // Dev
-    return path.join(__dirname, "../dist", binaryName);
+    return path.join(__dirname, "../dist/bin", binaryName);
   }
 
   public run(args: string[], options: RunOptions = {}): Promise<any> {

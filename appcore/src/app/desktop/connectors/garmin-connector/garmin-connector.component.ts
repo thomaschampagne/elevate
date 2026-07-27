@@ -16,6 +16,7 @@ import { ConnectorType } from "@elevate/shared/sync/connectors/connector-type.en
 import { AppService } from "../../../shared/services/app-service/app.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { StatusCodes } from "http-status-codes";
+import { GarminConnectorInfoService } from "../../../shared/services/garmin-connector-info/garmin-connector-info.service";
 
 /**
  * Mirrors strava-connector.component.ts, but instead of a "Connect with
@@ -50,6 +51,7 @@ export class GarminConnectorComponent extends ConnectorsComponent implements OnI
   constructor(
     @Inject(AppService) public readonly appService: AppService,
     @Inject(GarminConnectorService) private readonly garminConnectorService: GarminConnectorService,
+    @Inject(GarminConnectorInfoService) private readonly garminConnectorInfoService: GarminConnectorInfoService,
     @Inject(SyncService) protected readonly desktopSyncService: DesktopSyncService,
     @Inject(OPEN_RESOURCE_RESOLVER) protected readonly openResourceResolver: OpenResourceResolver,
     @Inject(Router) protected readonly router: Router,
@@ -64,6 +66,7 @@ export class GarminConnectorComponent extends ConnectorsComponent implements OnI
 
   public ngOnInit(): void {
     this.garminConnectorService.fetch().then((garminConnectorInfo: GarminConnectorInfo) => {
+      this.garminConnectorInfo = garminConnectorInfo;
       this.updateSyncDateTimeText();
     });
     this.historyChangesSub = this.appService.historyChanges$.subscribe(() => {
@@ -98,6 +101,14 @@ export class GarminConnectorComponent extends ConnectorsComponent implements OnI
   }
 
   public resetTokens(): void {}
+
+  public onUpdateActivitiesNameChanged(): void {
+    this.garminConnectorInfoService
+      .update(this.garminConnectorInfo)
+      .then((garminConnectorInfo: GarminConnectorInfo) => {
+        this.garminConnectorInfo = garminConnectorInfo;
+      });
+  }
 
   public ngOnDestroy(): void {
     this.mfaRequestedSub?.unsubscribe();

@@ -1,9 +1,4 @@
 #!/usr/bin/env -S uv run --script
-# /// script
-# requires-python = ">=3.11"
-# dependencies = [
-#     "garminconnect>=0.3.6",
-# ]
 # ///
 """
 garmin_sync.py — one-shot CLI invoked by Node (via `uv run`) to authenticate
@@ -136,23 +131,32 @@ def init_api(
         ) from err
 
 
-def download_fit(api: Garmin, activity_id: int, dest_path: str) -> None:
-    data = api.download_activity(
-        activity_id, dl_fmt=Garmin.ActivityDownloadFormat.ORIGINAL
-    )
+def download_fit(api: Garmin, activity_id: int, dest_path: str) -> bool:
+    try:
+        data = api.download_activity(
+            activity_id, dl_fmt=Garmin.ActivityDownloadFormat.ORIGINAL
+        )
+    except Exception as err:
+        log(f"WARNING: API error downloading activity {activity_id}: {err}. Skipping.")
+        return False
 
-    # Garmin sometimes wraps the "original" download in a zip (observed with
-    # some device families / multi-sport activities) — unwrap so Node always
-    # gets a bare .fit on disk.
+    # Garmin sometimes wraps the "original" download in a zip (PK header check)
     if data[:2] == b"PK":
         with zipfile.ZipFile(io.BytesIO(data)) as zf:
-            fit_members = [n for n in zf.namelist() if n.lower().endswith(".fit")]
-            if not fit_members:
-                raise RuntimeError(f"zip_contained_no_fit_file: activity {activity_id}")
-            data = zf.read(fit_members[0])
+            namelist = zf.namelist()
+            fit_members = [n for n in namelist if n.lower().endswith(".fit")]
+            if fit_members:
+                data = zf.read(fit_members[0])
+            else:
+                # No parseable track files found, log to STDERR
+                sys.stderr.write(
+                    f"WARNING: Activity {activity_id} zip contains no .fit/.tcx/.gpx files. Skipping.\n"
+                )
+                return False
 
     with open(dest_path, "wb") as f:
         f.write(data)
+    return True
 
 
 def main() -> None:
@@ -194,12 +198,19 @@ def main() -> None:
         if not args.outdir:
             raise RuntimeError("outdir_required")
 
-        after_dt = datetime.fromisoformat(args.after) if args.after else None
+        after_dt = (
+            datetime.fromisoformat(args.after.replace("Z", "+00:00")).replace(
+                tzinfo=None
+            )
+            if args.after
+            else None
+        )
         os.makedirs(args.outdir, exist_ok=True)
 
         start = args.start
         page_size = 20
         manifest = []
+        skipped = []
         exhausted = False
 
         while len(manifest) < args.limit:
@@ -226,12 +237,25 @@ def main() -> None:
                 log(
                     f"Downloading activity {activity_id} ({activity.get('activityName')})..."
                 )
-                download_fit(api, activity_id, file_path)
+                start += 1
+                success = download_fit(api, activity_id, file_path)
+                if not success:
+                    log(
+                        f"Skipping activity {activity_id}: no FIT file inside download."
+                    )
+                    skipped.append(
+                        {
+                            "activityId": activity_id,
+                            "activityName": activity.get("activityName"),
+                            "reason": "no_fit_data",
+                        }
+                    )
+                    continue
 
                 manifest.append(
                     {
                         "activityId": activity_id,
-                        "activityName": activity.get("activityName"),
+                        "activityName": activity.get("activityName", "Untitled"),
                         "startTimeLocal": start_local,
                         "activityType": (activity.get("activityType") or {}).get(
                             "typeKey"
@@ -239,7 +263,6 @@ def main() -> None:
                         "path": file_path,
                     }
                 )
-                start += 1
 
                 if len(manifest) >= args.limit:
                     break
@@ -254,6 +277,7 @@ def main() -> None:
                     "status": "success",
                     "profile": profile,
                     "files": manifest,
+                    "skipped": skipped,
                     "nextStart": start,
                     "exhausted": exhausted,
                 }
