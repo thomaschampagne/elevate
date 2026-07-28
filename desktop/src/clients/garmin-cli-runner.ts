@@ -20,6 +20,14 @@ export interface RunOptions {
   mfaTimeoutMs?: number;
 }
 
+export interface GarminCliResponse {
+  /** Expected JSON response from garmin_sync */
+  status: "success" | "error" | "mfa_required" | string;
+  message?: string;
+  manifest?: unknown[];
+  [key: string]: unknown;
+}
+
 /**
  * Spawns desktop/resources/garmin_sync/garmin_sync.py and talks
  * to it over stdio. Streams stdout line-by-line, because garmin_sync.py can
@@ -45,7 +53,7 @@ export class GarminCliRunner {
     return path.join(__dirname, "../dist/bin", binaryName);
   }
 
-  public run(args: string[], options: RunOptions = {}): Promise<any> {
+  public run(args: string[], options: RunOptions = {}): Promise<GarminCliResponse> {
     const binaryPath = this.scriptPath;
     if (!fs.existsSync(binaryPath)) {
       throw new Error(`Garmin binary not found at '${binaryPath}'.`);
@@ -75,7 +83,7 @@ export class GarminCliRunner {
           return;
         }
 
-        let parsed: any;
+        let parsed: GarminCliResponse;
         try {
           parsed = JSON.parse(line);
         } catch {

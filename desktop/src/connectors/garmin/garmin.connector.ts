@@ -15,7 +15,7 @@ import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-conn
 import { AppService } from "../../app-service";
 import { Environment, EnvironmentToken } from "../../environments/environment.interface";
 import { Logger } from "../../logger";
-import { Activity, ActivityExtras } from "@elevate/shared/models/sync/activity.model";
+import { Activity, ActivityExtras, ActivityStats } from "@elevate/shared/models/sync/activity.model";
 import { ActivitySyncEvent } from "@elevate/shared/sync/events/activity-sync.event";
 import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
 import { GenericSyncEvent } from "@elevate/shared/sync/events/generic-sync.event";
@@ -26,7 +26,6 @@ import { SyncEvent } from "@elevate/shared/sync/events/sync.event";
 import { IpcSyncMessageSender } from "src/senders/ipc-sync-message.sender";
 import { WorkerService } from "src/worker-service";
 import { HttpClient } from "src/clients/http.client";
-import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.event";
 import _ from "lodash";
 
 @injectable()
@@ -185,7 +184,7 @@ export class GarminConnector extends BaseConnector {
       if (localActivities.length > 0 && !this.environment.allowActivitiesOverLapping) {
         const existing = localActivities[0];
         if (this.garminConnectorConfig.info.updateExistingNames && summary.activityName !== "Untitled") {
-          let localActivity: Activity = existing;
+          const localActivity: Activity = existing;
           if (this.isDefaultHumanizedName(localActivity)) {
             // Update name
             localActivity.name = summary.activityName;
@@ -239,7 +238,9 @@ export class GarminConnector extends BaseConnector {
       if (fs.existsSync(filePath)) {
         try {
           fs.unlinkSync(filePath);
-        } catch {}
+        } catch {
+          //Ignore temp file cleanup errors during failure recovery
+        }
       }
       const errorMessage = error instanceof Error ? error.message : String(error);
       const errorSyncEvent = ErrorSyncEvent.SYNC_ERROR_COMPUTE.create(
@@ -250,7 +251,7 @@ export class GarminConnector extends BaseConnector {
     }
   }
 
-  public getSourceStats(): any {
+  public getSourceStats(): Partial<ActivityStats> {
     // Delegated entirely to FileConnector during processActivity(); BaseConnector
     // requires this method to exist on the class.
     throw new Error("Use FileConnector.getSourceStats() via composition instead.");
