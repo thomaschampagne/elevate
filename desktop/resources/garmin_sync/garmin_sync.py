@@ -1,10 +1,8 @@
 #!/usr/bin/env -S uv run --script
 # ///
 """
-garmin_sync.py — one-shot CLI invoked by Node (via `uv run`) to authenticate
-with Garmin Connect and download activity files. Based on a verified-working
-reference implementation using the `garminconnect` library directly, rather
-than a hand-rolled stdio JSON-RPC protocol.
+garmin_sync.py — one-shot CLI invoked by Node to authenticate
+with Garmin Connect and download activity files.
 
 Design: one-shot, not a long-lived process. Node spawns this once per
 operation (auth-check, or a full sync run), waits for it to exit, and parses
@@ -58,9 +56,9 @@ def log(msg: str) -> None:
 
 def prompt_mfa_via_stdio() -> str:
     """
-    MFA callback that never touches a TTY. Signals the caller (Node, via
-    stdout) that a code is needed, then blocks reading exactly one line from
-    stdin for it. Node's GarminCliRunner watches stdout for this signal,
+    MFA callback that. Signals the caller (Node, via stdout) that a code is needed,
+    then blocks reading exactly one line from stdin for it.
+    Node's GarminCliRunner watches stdout for this signal,
     round-trips to the UI to collect the code, and writes it (plus a
     newline) to this process's stdin — see garmin-cli-runner.ts.
 
@@ -199,9 +197,7 @@ def main() -> None:
             raise RuntimeError("outdir_required")
 
         after_dt = (
-            datetime.fromisoformat(args.after.replace("Z", "+00:00")).replace(
-                tzinfo=None
-            )
+            datetime.fromisoformat(args.after).replace(tzinfo=None)
             if args.after
             else None
         )
