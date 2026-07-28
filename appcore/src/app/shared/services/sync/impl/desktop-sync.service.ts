@@ -42,6 +42,8 @@ import { CompleteSyncEvent } from "@elevate/shared/sync/events/complete-sync.eve
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import BaseUserSettings = UserSettings.BaseUserSettings;
+import { GarminConnectorInfoService } from "../../garmin-connector-info/garmin-connector-info.service";
+import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-connector-info.model";
 
 @Injectable()
 export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> implements OnDestroy {
@@ -56,6 +58,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
   >([
     [
       ConnectorType.STRAVA,
+      () => this.activityService.findMostRecent().then(activity => Promise.resolve(activity.startTimestamp * 1000))
+    ],
+    [
+      ConnectorType.GARMIN,
       () => this.activityService.findMostRecent().then(activity => Promise.resolve(activity.startTimestamp * 1000))
     ],
     [
@@ -79,6 +85,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcSyncMessagesListener) public readonly ipcSyncMessagesListener: IpcSyncMessagesListener,
     @Inject(IpcSyncMessageSender) public readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
+    @Inject(GarminConnectorInfoService) public readonly garminConnectorInfoService: GarminConnectorInfoService,
     @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
     @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
@@ -143,6 +150,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
     } else if (this.currentConnectorType === ConnectorType.FILE) {
       promisedDataToSync.push(Promise.resolve(this.fsConnectorInfoService.fetch()));
+    } else if (this.currentConnectorType === ConnectorType.GARMIN) {
+      promisedDataToSync.push(this.garminConnectorInfoService.fetch());
     } else {
       const errorMessage = "Unknown connector type to sync";
       this.logger.error(errorMessage);
@@ -191,6 +200,17 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
           startSyncParamPromise = Promise.resolve({
             connectorType: this.currentConnectorType,
             connectorInfo: stravaConnectorInfo,
+            athleteModel: athleteModel,
+            userSettings: userSettings,
+            syncFromDateTime: syncFromDateTime
+          });
+        } else if (this.currentConnectorType === ConnectorType.GARMIN) {
+          const garminConnectorInfo: GarminConnectorInfo = result[4] as GarminConnectorInfo;
+
+          // Create message to start sync on connector
+          startSyncParamPromise = Promise.resolve({
+            connectorType: this.currentConnectorType,
+            connectorInfo: garminConnectorInfo,
             athleteModel: athleteModel,
             userSettings: userSettings,
             syncFromDateTime: syncFromDateTime
@@ -356,6 +376,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         this.logger.debug(completeSyncEvent);
         this.isSyncing$.next(false);
         syncEvents$.next(completeSyncEvent); // Forward for upward UI use.
+      })
+      .catch(error => {
+        this.logger.error(`handleSyncCompleteEvents chain failed: ${error}`);
+        console.error("handleSyncCompleteEvents chain failed:", error);
       });
   }
 

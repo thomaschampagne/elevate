@@ -584,7 +584,7 @@ export class FileConnector extends BaseConnector {
     );
   }
 
-  private processLaps(sport: ElevateSport, sportsLibLaps: LapJSONInterface[]): Lap[] {
+  public processLaps(sport: ElevateSport, sportsLibLaps: LapJSONInterface[]): Lap[] {
     if (!sportsLibLaps || sportsLibLaps.length <= 1) {
       return null;
     }

@@ -60,6 +60,10 @@
                 (click)="onOpenSourceActivity(ConnectorType.STRAVA)">
           <mat-icon fontSet="material-icons-outlined" svgIcon="strava"></mat-icon>
         </button>
+        <button mat-icon-button matTooltip="Open in Garmin" *ngIf="hasGarminActivityId()"
+                (click)="onOpenSourceActivity(ConnectorType.GARMIN)">
+          <mat-icon fontSet="material-icons-outlined" svgIcon="garmin"></mat-icon>
+        </button>
         <!--<button mat-icon-button matTooltip="View/edit notes coming during beta">
                   <mat-icon fontSet="material-icons-outlined">description</mat-icon>
                 </button>-->

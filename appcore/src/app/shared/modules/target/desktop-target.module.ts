@@ -37,6 +37,8 @@ import { DesktopWindowService } from "../../services/window/desktop-window.servi
 import { MachineService } from "../../../desktop/machine/machine.service";
 import { RuntimeInfoService } from "../../../desktop/machine/runtime-info.service";
 import { MapTokenService } from "../../../desktop/mapbox/map-token.service";
+import { GarminConnectorInfoService } from "../../services/garmin-connector-info/garmin-connector-info.service";
+import { GarminConnectorInfoDao } from "../../dao/garmin-connector-info/garmin-connector-info.dao";
 
 @NgModule({
   imports: [CoreModule, DesktopRoutingModule],
@@ -52,9 +54,11 @@ import { MapTokenService } from "../../../desktop/mapbox/map-token.service";
     DesktopSyncService,
     DesktopBackupService,
     StravaConnectorInfoService,
+    GarminConnectorInfoService,
     ConnectorSyncDateTimeDao,
     PropertiesDao,
     StravaConnectorInfoDao,
+    GarminConnectorInfoDao,
     FileConnectorInfoService,
     DesktopInsightsService,
     MapTokenService,

@@ -6,3 +6,9 @@
 
 # OS
 .DS_Store
+
+
+**/.venv
+**/__pycache__
+**/build/garmin_sync
+**/*.spec
