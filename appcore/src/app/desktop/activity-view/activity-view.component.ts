@@ -291,6 +291,10 @@ export class ActivityViewComponent implements OnInit, OnDestroy {
     return this.activity?.extras?.strava?.activityId > 0;
   }
 
+  public hasIntervalsIcuActivityId(): boolean {
+    return !!this.activity?.extras?.intervalsIcu?.activityId;
+  }
+
   public hasActivityFilePath(): boolean {
     return !!this.activity?.extras?.file?.path;
   }

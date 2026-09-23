@@ -8,6 +8,7 @@ import { PropertiesDao } from "../../dao/properties/properties.dao";
 import { StravaConnectorInfoService } from "../../services/strava-connector-info/strava-connector-info.service";
 import { StravaConnectorInfoDao } from "../../dao/strava-connector-info/strava-connector-info.dao";
 import { FileConnectorInfoService } from "../../services/file-connector-info/file-connector-info.service";
+import { IntervalsIcuConnectorInfoService } from "../../services/intervals-icu-connector-info/intervals-icu-connector-info.service";
 import { DataStore } from "../../data-store/data-store";
 import { DesktopDataStore } from "../../data-store/impl/desktop-data-store.service";
 import { IPC_TUNNEL_SERVICE } from "../../../desktop/ipc/ipc-tunnel-service.token";
@@ -56,6 +57,7 @@ import { MapTokenService } from "../../../desktop/mapbox/map-token.service";
     PropertiesDao,
     StravaConnectorInfoDao,
     FileConnectorInfoService,
+    IntervalsIcuConnectorInfoService,
     DesktopInsightsService,
     MapTokenService,
     MachineService,

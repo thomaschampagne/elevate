@@ -13,6 +13,7 @@ import { SyncState } from "../sync-state.enum";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { StreamsService } from "../../streams/streams.service";
 import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
+import { IntervalsIcuConnectorInfoService } from "../../intervals-icu-connector-info/intervals-icu-connector-info.service";
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { Router } from "@angular/router";
@@ -34,6 +35,7 @@ import { Activity } from "@elevate/shared/models/sync/activity.model";
 import { SyncException } from "@elevate/shared/exceptions/sync.exception";
 import { RestoreEvent } from "@elevate/shared/models/backup/restore-event.int";
 import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { IntervalsIcuConnectorInfo } from "@elevate/shared/sync/connectors/intervals-icu-connector-info.model";
 import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import { ErrorSyncEvent } from "@elevate/shared/sync/events/error-sync.event";
 import { SyncEventType } from "@elevate/shared/sync/events/sync-event-type";
@@ -64,6 +66,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         this.connectorSyncDateTimeDao
           .findOne({ connectorType: ConnectorType.FILE })
           .then(connector => Promise.resolve(connector.syncDateTime))
+    ],
+    [
+      ConnectorType.INTERVALS_ICU,
+      () => this.activityService.findMostRecent().then(activity => Promise.resolve(activity.startTimestamp * 1000))
     ]
   ]);
 
@@ -80,6 +86,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcSyncMessageSender) public readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
+    @Inject(IntervalsIcuConnectorInfoService)
+    public readonly intervalsIcuConnectorInfoService: IntervalsIcuConnectorInfoService,
     @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
@@ -143,6 +151,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
     } else if (this.currentConnectorType === ConnectorType.FILE) {
       promisedDataToSync.push(Promise.resolve(this.fsConnectorInfoService.fetch()));
+    } else if (this.currentConnectorType === ConnectorType.INTERVALS_ICU) {
+      promisedDataToSync.push(Promise.resolve(this.intervalsIcuConnectorInfoService.fetch()));
     } else {
       const errorMessage = "Unknown connector type to sync";
       this.logger.error(errorMessage);
@@ -220,6 +230,22 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 });
               }
             });
+        } else if (this.currentConnectorType === ConnectorType.INTERVALS_ICU) {
+          const intervalsIcuConnectorInfo: IntervalsIcuConnectorInfo = result[4] as IntervalsIcuConnectorInfo;
+
+          startSyncParamPromise = IntervalsIcuConnectorInfoService.isConfigured(intervalsIcuConnectorInfo)
+            ? Promise.resolve({
+                connectorType: this.currentConnectorType,
+                connectorInfo: intervalsIcuConnectorInfo,
+                athleteModel: athleteModel,
+                userSettings: userSettings,
+                syncFromDateTime: syncFromDateTime
+              })
+            : Promise.reject(
+                new WarningException("Intervals.icu connector is not configured", null, "Go to connectors", () => {
+                  this.router.navigate([AppRoutes.connectors]);
+                })
+              );
         }
 
         // Trigger sync start
@@ -301,7 +327,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_FORBIDDEN.code ||
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.code ||
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.code ||
-      errorSyncEvent.code === ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code
+      errorSyncEvent.code === ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code ||
+      errorSyncEvent.code === ErrorSyncEvent.INTERVALS_ICU_API_UNAUTHORIZED.code
     ) {
       syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
 
@@ -314,7 +341,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       errorSyncEvent.code === ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code ||
       errorSyncEvent.code === ErrorSyncEvent.SYNC_ALREADY_STARTED.code ||
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code ||
-      errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code
+      errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code ||
+      errorSyncEvent.code === ErrorSyncEvent.INTERVALS_ICU_API_RESOURCE_NOT_FOUND.code
     ) {
       syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
     } else {
@@ -416,7 +444,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
 
         syncEvents$.next(
           ErrorSyncEvent.SYNC_ERROR_UPSERT_ACTIVITY_DATABASE.create(
-            ConnectorType.STRAVA,
+            this.currentConnectorType,
             activitySyncEvent.activity,
             upsertError
           )
