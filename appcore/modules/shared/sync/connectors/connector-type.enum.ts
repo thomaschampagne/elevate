@@ -1,4 +1,5 @@
 export enum ConnectorType {
   STRAVA = "STRAVA",
-  FILE = "FILE"
+  FILE = "FILE",
+  INTERVALS_ICU = "INTERVALS_ICU"
 }

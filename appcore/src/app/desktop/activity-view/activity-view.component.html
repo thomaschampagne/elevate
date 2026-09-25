@@ -68,6 +68,11 @@
         </button>
       </div>
       <mat-menu #moreMenu="matMenu">
+        <button mat-menu-item *ngIf="hasIntervalsIcuActivityId()"
+                (click)="onOpenSourceActivity(ConnectorType.INTERVALS_ICU)">
+          <mat-icon fontSet="material-icons-outlined">open_in_new</mat-icon>
+          Open in intervals.icu
+        </button>
         <button mat-menu-item *ngIf="hasActivityFilePath()"
                 (click)="onOpenSourceActivity(ConnectorType.FILE)">
           <mat-icon fontSet="material-icons-outlined">folder</mat-icon>

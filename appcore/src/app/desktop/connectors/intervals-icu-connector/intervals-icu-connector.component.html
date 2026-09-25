@@ -1,0 +1,68 @@
+<mat-card>
+  <mat-card-title>
+    Intervals.icu
+  </mat-card-title>
+  <mat-card-subtitle *ngIf="intervalsIcuConnectorInfo">
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}} </span>
+    <span *ngIf="!isConfigured">Not configured. </span>
+    <span *ngIf="isConfigured">Configured&nbsp;➔&nbsp;<i>athlete {{intervalsIcuConnectorInfo.athleteId}}</i></span>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <div>
+      <button [disabled]="appService.isSyncing" (click)="sync(true)" *ngIf="syncDateTime && isConfigured"
+              color="primary"
+              mat-stroked-button
+              matTooltip="Activities performed after date '{{syncDateTime | date:'medium'}}' will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync new activities
+      </button>
+      <button [disabled]="appService.isSyncing" (click)="sync(false)" *ngIf="isConfigured"
+              color="primary"
+              mat-stroked-button
+              matTooltip="All intervals.icu activities will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync all activities
+      </button>
+      <button [disabled]="appService.isSyncing" (click)="showConfigure = !showConfigure"
+              *ngIf="!showConfigure" color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        Configure
+      </button>
+    </div>
+    <div *ngIf="showConfigure && intervalsIcuConnectorInfo" class="configureView">
+      <div class="primary-note">
+        Open your <a class="clickable" (click)="onOpenSettings()">intervals.icu settings</a> page, then in the
+        <strong>Developer Settings</strong> section copy your <strong>Athlete ID</strong> and generate/copy your
+        <strong>API Key</strong>.
+      </div>
+      <div>
+        <mat-form-field fxFlex="50">
+          <input (change)="saveChanges()" [(ngModel)]="intervalsIcuConnectorInfo.athleteId" matInput
+                 placeholder="Athlete ID (e.g. i12345)"
+                 type="text">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field fxFlex="50">
+          <input (change)="saveChanges()" [(ngModel)]="intervalsIcuConnectorInfo.apiKey"
+                 [type]="showApiKey.checked ? 'text' : 'password'"
+                 matInput placeholder="API Key">
+          <button (click)="showApiKey.checked = !showApiKey.checked" mat-icon-button matSuffix>
+            <mat-icon
+              fontSet="material-icons-outlined">{{showApiKey.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-checkbox #showApiKey fxHide></mat-checkbox>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-checkbox (change)="saveChanges()" [(ngModel)]="intervalsIcuConnectorInfo.updateExistingNamesTypesCommutes">
+          Override existing activities names, types and commute statuses with those fetched from intervals.icu.
+        </mat-checkbox>
+      </div>
+      <div class="primary-note">
+        <strong>Note:</strong> activities imported into intervals.icu from Strava can't be downloaded through the
+        intervals.icu API and will be skipped. Use the Strava connector for those.
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

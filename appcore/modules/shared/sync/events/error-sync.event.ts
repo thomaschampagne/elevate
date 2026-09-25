@@ -155,6 +155,28 @@ export class ErrorSyncEvent extends SyncEvent {
     }
   };
 
+  public static INTERVALS_ICU_API_UNAUTHORIZED = {
+    code: "INTERVALS_ICU_API_UNAUTHORIZED",
+    create: (): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.INTERVALS_ICU, {
+        code: ErrorSyncEvent.INTERVALS_ICU_API_UNAUTHORIZED.code,
+        description: `Unauthorized call to intervals.icu api. Please check your athlete id and api key.`,
+        sourceError: null
+      });
+    }
+  };
+
+  public static INTERVALS_ICU_API_RESOURCE_NOT_FOUND = {
+    code: "INTERVALS_ICU_API_RESOURCE_NOT_FOUND",
+    create: (url: string): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.INTERVALS_ICU, {
+        code: ErrorSyncEvent.INTERVALS_ICU_API_RESOURCE_NOT_FOUND.code,
+        description: `Resource not found at url: '${url}'`,
+        sourceError: null
+      });
+    }
+  };
+
   public static FS_SOURCE_DIRECTORY_DONT_EXISTS = {
     code: "FS_SOURCE_DIRECTORY_DONT_EXISTS",
     create: (sourceDirectory: string, sourceError: Error = null): ErrorSyncEvent => {
