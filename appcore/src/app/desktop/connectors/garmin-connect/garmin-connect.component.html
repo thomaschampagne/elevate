@@ -3,8 +3,78 @@
     Garmin Connect
   </mat-card-title>
   <mat-card-subtitle>
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}}</span>
+    <span *ngIf="!isLinked">Not connected. </span>
+    <span *ngIf="isLinked">
+			Connected as {{garminConnectorInfo?.displayName || garminConnectorInfo?.username}}.
+		</span>
   </mat-card-subtitle>
   <mat-card-content>
-    Coming during beta
+    <div *ngIf="!isLinked">
+      <div class="mat-title">Connect your Garmin Connect account</div>
+      <div class="garmin-warning">
+        Garmin Connect has no public OAuth application flow. Enter your Garmin Connect credentials to link your
+        account. Your <strong>password is never stored</strong>: it is only used once to obtain secure access tokens
+        which are then reused for every synchronization.
+        <br><br>
+        If your account uses <strong>two-factor authentication (MFA)</strong>, create a Garmin
+        <em>App Password</em> and use it here.
+      </div>
+
+      <div class="garmin-form">
+        <mat-form-field fxFlex="50">
+          <input [(ngModel)]="username"
+                 autocomplete="off"
+                 matInput
+                 placeholder="Garmin Connect email">
+        </mat-form-field>
+        <mat-form-field fxFlex="50">
+          <input [(ngModel)]="password"
+                 autocomplete="off"
+                 matInput
+                 placeholder="Password (or App Password)"
+                 type="password">
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button (click)="onLinkAccount()"
+                [disabled]="isLinking || !username || !password"
+                color="primary"
+                mat-stroked-button>
+          <mat-icon fontSet="material-icons-outlined">power</mat-icon>
+          <span>{{isLinking ? 'Connecting...' : 'Connect to Garmin'}}</span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="isLinked">
+      <div>
+        <button (click)="onSync(true)"
+                [disabled]="isSyncing"
+                color="primary"
+                mat-stroked-button
+                matTooltip="Sync only new activities since last sync">
+          <mat-icon fontSet="material-icons-outlined">update</mat-icon>
+          <span>{{isSyncing ? 'Syncing...' : 'Sync'}}</span>
+        </button>
+        <button (click)="onSync(false)"
+                [disabled]="isSyncing"
+                color="primary"
+                mat-stroked-button
+                matTooltip="Re-sync all activities from your Garmin Connect account">
+          <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+          <span>Sync all</span>
+        </button>
+        <button (click)="onUnlinkAccount()"
+                [disabled]="isUnlinking || isSyncing"
+                color="warn"
+                mat-stroked-button>
+          <mat-icon fontSet="material-icons-outlined">power_settings_new</mat-icon>
+          <span>{{isUnlinking ? 'Disconnecting...' : 'Disconnect'}}</span>
+        </button>
+      </div>
+    </div>
   </mat-card-content>
 </mat-card>
+

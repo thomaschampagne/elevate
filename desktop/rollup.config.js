@@ -31,7 +31,13 @@ module.exports = [
     output: [
       {
         file: "./dist/desktop.bundle.js",
-        format: "cjs"
+        format: "cjs",
+        // Executed before anything else in the bundle. The "app-root-path" package
+        // (transitive dep of "garmin-connect") crashes in the packaged Electron main
+        // process: bundling makes require.main undefined and there is no
+        // process.argv[1], so its resolver calls path.dirname(undefined).
+        // APP_ROOT_PATH short-circuits that resolver before it can fail.
+        banner: "if(!process.env.APP_ROOT_PATH){process.env.APP_ROOT_PATH=__dirname;}"
       }
     ],
     watch: {

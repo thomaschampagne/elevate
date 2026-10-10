@@ -584,7 +584,7 @@ export class FileConnector extends BaseConnector {
     );
   }
 
-  private processLaps(sport: ElevateSport, sportsLibLaps: LapJSONInterface[]): Lap[] {
+  public processLaps(sport: ElevateSport, sportsLibLaps: LapJSONInterface[]): Lap[] {
     if (!sportsLibLaps || sportsLibLaps.length <= 1) {
       return null;
     }
@@ -1168,7 +1168,7 @@ export class FileConnector extends BaseConnector {
       });
   }
 
-  protected fetchAndHandleDeviceName(activityFile: ActivityFile, creator: CreatorJSONInterface): string {
+  public fetchAndHandleDeviceName(activityFile: ActivityFile, creator: CreatorJSONInterface): string {
     const isDeviceNameUnknown = creator?.name?.match(/unknown/i);
     const deviceName = isDeviceNameUnknown ? null : creator.name;
 

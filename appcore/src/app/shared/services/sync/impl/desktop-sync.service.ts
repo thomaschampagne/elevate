@@ -30,6 +30,8 @@ import { ConnectorInfo } from "@elevate/shared/sync/connectors/connector-info.mo
 import { WarningException } from "@elevate/shared/exceptions/warning.exception";
 import { DeflatedActivityStreams } from "@elevate/shared/models/sync/deflated-activity.streams";
 import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
+import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-connector-info.model";
+import { GarminConnectorInfoService } from "../../garmin-connector-info/garmin-connector-info.service";
 import { Activity } from "@elevate/shared/models/sync/activity.model";
 import { SyncException } from "@elevate/shared/exceptions/sync.exception";
 import { RestoreEvent } from "@elevate/shared/models/backup/restore-event.int";
@@ -64,6 +66,13 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         this.connectorSyncDateTimeDao
           .findOne({ connectorType: ConnectorType.FILE })
           .then(connector => Promise.resolve(connector.syncDateTime))
+    ],
+    [
+      ConnectorType.GARMIN,
+      () =>
+        this.connectorSyncDateTimeDao
+          .findOne({ connectorType: ConnectorType.GARMIN })
+          .then(connector => Promise.resolve(connector.syncDateTime))
     ]
   ]);
 
@@ -80,6 +89,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcSyncMessageSender) public readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
+    @Inject(GarminConnectorInfoService) public readonly garminConnectorInfoService: GarminConnectorInfoService,
     @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
@@ -143,6 +153,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
     } else if (this.currentConnectorType === ConnectorType.FILE) {
       promisedDataToSync.push(Promise.resolve(this.fsConnectorInfoService.fetch()));
+    } else if (this.currentConnectorType === ConnectorType.GARMIN) {
+      promisedDataToSync.push(Promise.resolve(this.garminConnectorInfoService.fetch()));
     } else {
       const errorMessage = "Unknown connector type to sync";
       this.logger.error(errorMessage);
@@ -220,6 +232,24 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
                 });
               }
             });
+        } else if (this.currentConnectorType === ConnectorType.GARMIN) {
+          const garminConnectorInfo: GarminConnectorInfo = result[4] as GarminConnectorInfo;
+
+          if (!garminConnectorInfo || !garminConnectorInfo.oauth1Token || !garminConnectorInfo.oauth2Token) {
+            startSyncParamPromise = Promise.reject(
+              new WarningException("Garmin Connect account is not linked", null, "Go to connectors", () => {
+                this.router.navigate([AppRoutes.connectors]);
+              })
+            );
+          } else {
+            startSyncParamPromise = Promise.resolve({
+              connectorType: this.currentConnectorType,
+              connectorInfo: garminConnectorInfo,
+              athleteModel: athleteModel,
+              userSettings: userSettings,
+              syncFromDateTime: syncFromDateTime
+            });
+          }
         }
 
         // Trigger sync start

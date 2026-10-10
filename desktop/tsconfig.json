@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowJs": true,
+    "skipLibCheck": true,
     "paths": {
       "@elevate/shared/constants/*": [
         "../appcore/modules/shared/constants/*"

@@ -2,6 +2,7 @@ import { AthleteModel } from "@elevate/shared/models/athlete/athlete.model";
 import { ConnectorInfo } from "@elevate/shared/sync/connectors/connector-info.model";
 import { FileConnectorInfo } from "@elevate/shared/sync/connectors/file-connector-info.model";
 import { StravaConnectorInfo } from "@elevate/shared/sync/connectors/strava-connector-info.model";
+import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-connector-info.model";
 import { UserSettings } from "@elevate/shared/models/user-settings/user-settings.namespace";
 import BaseUserSettings = UserSettings.BaseUserSettings;
 
@@ -18,4 +19,8 @@ export interface StravaConnectorConfig extends ConnectorConfig {
 
 export interface FileConnectorConfig extends ConnectorConfig {
   info: FileConnectorInfo;
+}
+
+export interface GarminConnectorConfig extends ConnectorConfig {
+  info: GarminConnectorInfo;
 }
