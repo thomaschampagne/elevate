@@ -2,6 +2,7 @@ import { container, inject, InjectionToken, singleton } from "tsyringe";
 import { BaseConnector } from "./base.connector";
 import { StravaConnector } from "./strava/strava.connector";
 import { FileConnector } from "./file/file.connector";
+import { GarminConnector } from "./garmin/garmin.connector";
 import { ConnectorConfig } from "./connector-config.model";
 import { IpcSyncMessageSender } from "../senders/ipc-sync-message.sender";
 import { Logger } from "../logger";
@@ -20,7 +21,8 @@ import BaseUserSettings = UserSettings.BaseUserSettings;
 export class ConnectorSyncService {
   private static readonly TOKENS_MAP = new Map<ConnectorType, InjectionToken<BaseConnector>>([
     [ConnectorType.STRAVA, StravaConnector],
-    [ConnectorType.FILE, FileConnector]
+    [ConnectorType.FILE, FileConnector],
+    [ConnectorType.GARMIN, GarminConnector]
   ]);
 
   public currentConnector: BaseConnector;

@@ -268,6 +268,9 @@ export interface ActivityExtras {
     activityId: number;
   };
   file?: { path: string; type: ActivityFileType };
+  garmin?: {
+    activityId: number;
+  };
 }
 
 export enum ActivityFlag {

@@ -20,6 +20,7 @@ import { IpcMainTunnelService } from "./ipc-main-tunnel.service";
 import { IpcSyncMessageListener } from "./listeners/ipc-sync-message.listener";
 import { IpcComputeActivityListener } from "./listeners/ipc-compute-activity.listener";
 import { IpcStravaLinkListener } from "./listeners/ipc-strava-link.listener";
+import { IpcGarminApiKeyListener } from "./listeners/ipc-garmin-api-key.listener";
 import { IpcProfileBackupListener } from "./listeners/ipc-profile-backup.listener";
 import { Logger } from "./logger";
 import { UpdateHandler } from "./updates/update-handler";
@@ -58,6 +59,7 @@ class Main {
     @inject(IpcComputeActivityListener) private readonly ipcComputeActivityListener: IpcComputeActivityListener,
     @inject(IpcComputeSplitsListener) private readonly ipcComputeSplitsListener: IpcComputeSplitsListener,
     @inject(IpcStravaLinkListener) private readonly ipcStravaLinkListener: IpcStravaLinkListener,
+    @inject(IpcGarminApiKeyListener) private readonly ipcGarminApiKeyListener: IpcGarminApiKeyListener,
     @inject(IpcProfileBackupListener) private readonly ipcProfileBackupListener: IpcProfileBackupListener,
     @inject(IpcSharedStorageListener) private readonly ipcSharedStorageListener: IpcSharedStorageListener,
     @inject(IpcStorageService) private readonly ipcStorage: IpcStorageService,
@@ -463,6 +465,9 @@ class Main {
 
     // Listen for strava account linking
     this.ipcStravaLinkListener.startListening(this.ipcTunnelService);
+
+    // Listen for garmin personal api key checks
+    this.ipcGarminApiKeyListener.startListening(this.ipcTunnelService);
 
     // Listen for backup profile requests
     this.ipcProfileBackupListener.startListening(this.ipcTunnelService);

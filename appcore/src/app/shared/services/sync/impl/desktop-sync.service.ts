@@ -13,6 +13,8 @@ import { SyncState } from "../sync-state.enum";
 import { ConnectorSyncDateTimeDao } from "../../../dao/sync/connector-sync-date-time.dao";
 import { StreamsService } from "../../streams/streams.service";
 import { FileConnectorInfoService } from "../../file-connector-info/file-connector-info.service";
+import { GarminConnectorInfoService } from "../../garmin-connector-info/garmin-connector-info.service";
+import { GarminConnectorInfo } from "@elevate/shared/sync/connectors/garmin-connector-info.model";
 import { DataStore } from "../../../data-store/data-store";
 import { DesktopDataStore } from "../../../data-store/impl/desktop-data-store.service";
 import { Router } from "@angular/router";
@@ -64,6 +66,13 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
         this.connectorSyncDateTimeDao
           .findOne({ connectorType: ConnectorType.FILE })
           .then(connector => Promise.resolve(connector.syncDateTime))
+    ],
+    [
+      ConnectorType.GARMIN,
+      () =>
+        this.connectorSyncDateTimeDao
+          .findOne({ connectorType: ConnectorType.GARMIN })
+          .then(connector => Promise.resolve(connector ? connector.syncDateTime : null))
     ]
   ]);
 
@@ -80,6 +89,7 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
     @Inject(IpcSyncMessageSender) public readonly ipcSyncMessageSender: IpcSyncMessageSender,
     @Inject(StravaConnectorInfoService) public readonly stravaConnectorInfoService: StravaConnectorInfoService,
     @Inject(FileConnectorInfoService) public readonly fsConnectorInfoService: FileConnectorInfoService,
+    @Inject(GarminConnectorInfoService) public readonly garminConnectorInfoService: GarminConnectorInfoService,
     @Inject(DesktopInsightsService) private readonly insightsService: DesktopInsightsService,
     @Inject(LoggerService) public readonly logger: LoggerService,
     @Inject(ConnectorSyncDateTimeDao) public readonly connectorSyncDateTimeDao: ConnectorSyncDateTimeDao,
@@ -143,6 +153,8 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       promisedDataToSync.push(this.stravaConnectorInfoService.fetch());
     } else if (this.currentConnectorType === ConnectorType.FILE) {
       promisedDataToSync.push(Promise.resolve(this.fsConnectorInfoService.fetch()));
+    } else if (this.currentConnectorType === ConnectorType.GARMIN) {
+      promisedDataToSync.push(this.garminConnectorInfoService.fetch());
     } else {
       const errorMessage = "Unknown connector type to sync";
       this.logger.error(errorMessage);
@@ -195,6 +207,22 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
             userSettings: userSettings,
             syncFromDateTime: syncFromDateTime
           });
+        } else if (this.currentConnectorType === ConnectorType.GARMIN) {
+          const garminConnectorInfo: GarminConnectorInfo = result[4] as GarminConnectorInfo;
+
+          startSyncParamPromise = this.garminConnectorInfoService.isConfigured(garminConnectorInfo)
+            ? Promise.resolve({
+                connectorType: this.currentConnectorType,
+                connectorInfo: garminConnectorInfo,
+                athleteModel: athleteModel,
+                userSettings: userSettings,
+                syncFromDateTime: syncFromDateTime
+              })
+            : Promise.reject(
+                new WarningException("Garmin connector is not configured", null, "Go to connectors", () => {
+                  this.router.navigate([AppRoutes.connectors]);
+                })
+              );
         } else if (this.currentConnectorType === ConnectorType.FILE) {
           const fileConnectorInfo: FileConnectorInfo = result[4] as FileConnectorInfo;
 
@@ -301,6 +329,9 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_FORBIDDEN.code ||
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_INSTANT_QUOTA_REACHED.code ||
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_DAILY_QUOTA_REACHED.code ||
+      errorSyncEvent.code === ErrorSyncEvent.GARMIN_API_UNAUTHORIZED.code ||
+      errorSyncEvent.code === ErrorSyncEvent.GARMIN_API_FORBIDDEN.code ||
+      errorSyncEvent.code === ErrorSyncEvent.GARMIN_API_QUOTA_REACHED.code ||
       errorSyncEvent.code === ErrorSyncEvent.FS_SOURCE_DIRECTORY_DONT_EXISTS.code
     ) {
       syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
@@ -314,7 +345,10 @@ export class DesktopSyncService extends SyncService<ConnectorSyncDateTime[]> imp
       errorSyncEvent.code === ErrorSyncEvent.MULTIPLE_ACTIVITIES_FOUND.code ||
       errorSyncEvent.code === ErrorSyncEvent.SYNC_ALREADY_STARTED.code ||
       errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_RESOURCE_NOT_FOUND.code ||
-      errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code
+      errorSyncEvent.code === ErrorSyncEvent.STRAVA_API_TIMEOUT.code ||
+      errorSyncEvent.code === ErrorSyncEvent.GARMIN_API_RESOURCE_NOT_FOUND.code ||
+      errorSyncEvent.code === ErrorSyncEvent.GARMIN_API_HTTP_ERROR.code ||
+      errorSyncEvent.code === ErrorSyncEvent.GARMIN_API_TIMEOUT.code
     ) {
       syncEvents$.next(errorSyncEvent); // Forward for upward UI use.
     } else {

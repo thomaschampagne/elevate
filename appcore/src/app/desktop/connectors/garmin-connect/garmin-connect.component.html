@@ -2,9 +2,88 @@
   <mat-card-title>
     Garmin Connect
   </mat-card-title>
-  <mat-card-subtitle>
+  <mat-card-subtitle *ngIf="garminConnectorInfo">
+    <span *ngIf="humanSyncDateTime">{{humanSyncDateTime}} </span>
+    <span *ngIf="!isConfigured">Not configured. </span>
+    <span *ngIf="isConfigured">Configured with your personal API key.</span>
   </mat-card-subtitle>
   <mat-card-content>
-    Coming during beta
+    <div *ngIf="garminConnectorInfo" class="connector">
+
+      <button [disabled]="appService.isSyncing" (click)="sync(true)" *ngIf="syncDateTime && isConfigured"
+              color="primary"
+              mat-stroked-button
+              matTooltip="Activities performed since a week before '{{syncDateTime | date:'medium'}}' will be checked">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync new activities
+      </button>
+
+      <button [disabled]="appService.isSyncing" (click)="sync()" *ngIf="isConfigured"
+              color="primary"
+              mat-stroked-button
+              matTooltip="All Garmin Connect activities will be synced">
+        <mat-icon fontSet="material-icons-outlined">sync</mat-icon>
+        Sync all activities
+      </button>
+
+      <button [disabled]="appService.isSyncing" (click)="onConfigure()" *ngIf="!showConfigure"
+              color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">build</mat-icon>
+        Configure
+      </button>
+
+      <button [disabled]="appService.isSyncing" (click)="onDisconnect()" *ngIf="isConfigured"
+              color="primary" mat-stroked-button>
+        <mat-icon fontSet="material-icons-outlined">power_off</mat-icon>
+        Disconnect
+      </button>
+
+      <div *ngIf="showConfigure" class="configureView">
+        <div class="mat-title">Connect with your Garmin personal API key</div>
+        <ol>
+          <li>
+            Sign in to Garmin Connect on the web and open the
+            <a (click)="onOpenApiKeyPage()">Personal API Key</a> settings page.
+          </li>
+          <li>
+            Create a key, accept Garmin's terms and choose how long it stays valid (30 days to 1 year).
+            <strong>Garmin shows the key only once</strong>, so copy it right away.
+          </li>
+          <li>Paste the key below and save it. Elevate checks it with Garmin before saving.</li>
+        </ol>
+        <div class="mat-caption">
+          The personal API gives read access to your own Garmin Connect data only.
+          When the key expires, create a new one and paste it here.
+          <a (click)="onOpenApiDocs()">Learn more</a>.
+        </div>
+
+        <div>
+          <mat-form-field fxFlex="60">
+            <input [(ngModel)]="apiKeyDraft" [type]="showKey.checked ? 'text' : 'password'"
+                   autocomplete="off" matInput placeholder="Garmin personal API key">
+            <button (click)="showKey.checked = !showKey.checked" mat-icon-button matSuffix>
+              <mat-icon fontSet="material-icons-outlined">{{showKey.checked ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-checkbox #showKey fxHide></mat-checkbox>
+          </mat-form-field>
+        </div>
+
+        <div class="others-options">
+          <mat-checkbox (change)="onUpdateActivitiesNameAndTypeChanged()"
+                        [(ngModel)]="garminConnectorInfo.updateExistingNamesTypes">
+            Override existing activities names and types with those fetched from Garmin Connect.
+          </mat-checkbox>
+        </div>
+
+        <div>
+          <button (click)="onSaveApiKey()" [disabled]="!apiKeyDraft || isTestingKey"
+                  color="primary" mat-stroked-button>
+            <mat-icon fontSet="material-icons-outlined">power</mat-icon>
+            <span>{{ isTestingKey ? 'Checking key...' : 'Save & check key' }}</span>
+          </button>
+          <button (click)="showConfigure = false" color="primary" mat-button>Close</button>
+        </div>
+      </div>
+    </div>
   </mat-card-content>
 </mat-card>

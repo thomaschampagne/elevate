@@ -142,5 +142,12 @@ export class DesktopErrorsSyncDetailsDialogComponent implements OnInit {
         this.logger.error(error);
       });
     }
+
+    if (extras?.garmin?.activityId) {
+      this.openResourceResolver.openGarminActivity(extras.garmin.activityId).catch(error => {
+        this.snackBar.open(`Unable to open Garmin activity id: "${extras.garmin.activityId}"`, "Close");
+        this.logger.error(error);
+      });
+    }
   }
 }

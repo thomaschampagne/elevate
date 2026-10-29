@@ -50,5 +50,6 @@ export enum Channel {
   // Others
   ipcStorage = "ipcStorage",
   stravaLink = "stravaLink",
+  garminTestApiKey = "garminTestApiKey",
   runtimeInfo = "runtimeInfo"
 }

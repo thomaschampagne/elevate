@@ -166,6 +166,74 @@ export class ErrorSyncEvent extends SyncEvent {
     }
   };
 
+  public static GARMIN_API_UNAUTHORIZED = {
+    code: "GARMIN_API_UNAUTHORIZED",
+    create: (description: string = null): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.GARMIN, {
+        code: ErrorSyncEvent.GARMIN_API_UNAUTHORIZED.code,
+        description:
+          description ||
+          "Garmin rejected the personal API key. It may be expired or deleted: create a new key in Garmin Connect and update the Garmin connector.",
+        sourceError: null
+      });
+    }
+  };
+
+  public static GARMIN_API_FORBIDDEN = {
+    code: "GARMIN_API_FORBIDDEN",
+    create: (url: string): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.GARMIN, {
+        code: ErrorSyncEvent.GARMIN_API_FORBIDDEN.code,
+        description: `Garmin refused access to '${url}' with this personal API key.`,
+        sourceError: null
+      });
+    }
+  };
+
+  public static GARMIN_API_QUOTA_REACHED = {
+    code: "GARMIN_API_QUOTA_REACHED",
+    create: (): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.GARMIN, {
+        code: ErrorSyncEvent.GARMIN_API_QUOTA_REACHED.code,
+        description: "Garmin api calls limit reached. Please retry the sync later.",
+        sourceError: null
+      });
+    }
+  };
+
+  public static GARMIN_API_RESOURCE_NOT_FOUND = {
+    code: "GARMIN_API_RESOURCE_NOT_FOUND",
+    create: (url: string): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.GARMIN, {
+        code: ErrorSyncEvent.GARMIN_API_RESOURCE_NOT_FOUND.code,
+        description: `Resource not found at url: '${url}'`,
+        sourceError: null
+      });
+    }
+  };
+
+  public static GARMIN_API_HTTP_ERROR = {
+    code: "GARMIN_API_HTTP_ERROR",
+    create: (url: string, status: number, statusText: string): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.GARMIN, {
+        code: ErrorSyncEvent.GARMIN_API_HTTP_ERROR.code,
+        description: `Garmin responded with HTTP ${status}${statusText ? ` (${statusText})` : ""} on '${url}'`,
+        sourceError: null
+      });
+    }
+  };
+
+  public static GARMIN_API_TIMEOUT = {
+    code: "GARMIN_API_TIMEOUT",
+    create: (url: string): ErrorSyncEvent => {
+      return new ErrorSyncEvent(ConnectorType.GARMIN, {
+        code: ErrorSyncEvent.GARMIN_API_TIMEOUT.code,
+        description: `Request Timeout at url: '${url}'`,
+        sourceError: null
+      });
+    }
+  };
+
   public readonly code: string;
   public readonly details: string;
   public readonly stack: string;

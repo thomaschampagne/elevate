@@ -14,6 +14,10 @@ export abstract class OpenResourceResolver {
     return this.openLink("https://www.strava.com/activities/" + id);
   }
 
+  public openGarminActivity(id: number): Promise<void> {
+    return this.openLink("https://connect.garmin.com/modern/activity/" + id);
+  }
+
   public openActivities(ids: (number | string)[]): void {
     if (ids.length > 0) {
       ids.forEach(id => this.openActivity(id));

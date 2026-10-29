@@ -7,6 +7,8 @@ import { ConnectorSyncDateTimeDao } from "../../dao/sync/connector-sync-date-tim
 import { PropertiesDao } from "../../dao/properties/properties.dao";
 import { StravaConnectorInfoService } from "../../services/strava-connector-info/strava-connector-info.service";
 import { StravaConnectorInfoDao } from "../../dao/strava-connector-info/strava-connector-info.dao";
+import { GarminConnectorInfoDao } from "../../dao/garmin-connector-info/garmin-connector-info.dao";
+import { GarminConnectorInfoService } from "../../services/garmin-connector-info/garmin-connector-info.service";
 import { FileConnectorInfoService } from "../../services/file-connector-info/file-connector-info.service";
 import { DataStore } from "../../data-store/data-store";
 import { DesktopDataStore } from "../../data-store/impl/desktop-data-store.service";
@@ -55,6 +57,8 @@ import { MapTokenService } from "../../../desktop/mapbox/map-token.service";
     ConnectorSyncDateTimeDao,
     PropertiesDao,
     StravaConnectorInfoDao,
+    GarminConnectorInfoService,
+    GarminConnectorInfoDao,
     FileConnectorInfoService,
     DesktopInsightsService,
     MapTokenService,
